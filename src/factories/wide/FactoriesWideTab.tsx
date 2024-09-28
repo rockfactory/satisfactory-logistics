@@ -1,19 +1,14 @@
 import { Button, Divider, Group, Stack } from '@mantine/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../core/store';
+import { useDispatch } from 'react-redux';
 import { FactoriesFiltersSection } from '../filters/FactoriesFiltersSection';
-import { factoryActions } from '../store/FactoriesSlice';
+import { factoryActions, useFactories } from '../store/FactoriesSlice';
 import { FactoryWideCard } from './FactoryWideCard';
 
 export interface IFactoriesWideTabProps {}
 
 export function FactoriesWideTab(_props: IFactoriesWideTabProps) {
   const dispatch = useDispatch();
-  const factories = useSelector(
-    (state: RootState) => state.factories.factories,
-  );
-
-  const filters = useSelector((state: RootState) => state.factories.filters);
+  const factories = useFactories();
 
   return (
     <div>

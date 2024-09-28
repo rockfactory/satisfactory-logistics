@@ -1,19 +1,16 @@
 import { Button, Divider, Group } from '@mantine/core';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../core/store';
+import { useDispatch } from 'react-redux';
 import { FactoryRow } from './FactoryRow';
 import { FactoriesFiltersSection } from './filters/FactoriesFiltersSection';
-import { factoryActions } from './store/FactoriesSlice';
+import { ImportFactoriesModal } from './import/ImportFactoriesModal';
+import { factoryActions, useFactories } from './store/FactoriesSlice';
+import { FactoryUndoButtons } from './store/FactoryUndoButtons';
 
 export interface IFactoriesTabProps {}
 
 export function FactoriesTab(_props: IFactoriesTabProps) {
   const dispatch = useDispatch();
-  const factories = useSelector(
-    (state: RootState) => state.factories.factories,
-  );
-
-  const filters = useSelector((state: RootState) => state.factories.filters);
+  const factories = useFactories();
 
   return (
     <div>
@@ -49,6 +46,8 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
         <Button onClick={() => dispatch(factoryActions.add({}))}>
           Add Factory
         </Button>
+        <ImportFactoriesModal />
+        <FactoryUndoButtons />
       </Group>
     </div>
   );

@@ -1,21 +1,22 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../core/store";
+import { useSelector } from 'react-redux';
+import { RootState } from '../core/store';
+import { useFactories } from './store/FactoriesSlice';
 
 export function useIsFactoryVisible(
   factoryId: string,
   isRoot: boolean,
-  resource?: string | null | undefined
+  resource?: string | null | undefined,
 ) {
-  const filters = useSelector((state: RootState) => state.factories.filters);
-  const factories = useSelector(
-    (state: RootState) => state.factories.factories
+  const filters = useSelector(
+    (state: RootState) => state.factories.present.filters,
   );
-  const source = factories.find((f) => f.id === factoryId);
+  const factories = useFactories();
+  const source = factories.find(f => f.id === factoryId);
   console.log(filters);
 
   if (
     filters?.name &&
-    !source?.name?.toLowerCase().includes(filters.name?.toLowerCase() ?? "")
+    !source?.name?.toLowerCase().includes(filters.name?.toLowerCase() ?? '')
   ) {
     return false;
   }
@@ -27,9 +28,9 @@ export function useIsFactoryVisible(
   if (
     filters?.resource &&
     isRoot &&
-    (source?.outputs ?? []).filter((o) => o.resource === filters.resource)
+    (source?.outputs ?? []).filter(o => o.resource === filters.resource)
       .length === 0 &&
-    (source?.inputs ?? []).filter((i) => i.resource === filters.resource)
+    (source?.inputs ?? []).filter(i => i.resource === filters.resource)
       .length === 0
   ) {
     return false;

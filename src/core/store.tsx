@@ -1,4 +1,4 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
   FLUSH,
   PAUSE,
@@ -8,26 +8,27 @@ import {
   PURGE,
   REGISTER,
   REHYDRATE,
-} from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
-import { factorySliceReducer } from "../factories/store/FactoriesSlice";
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
+import undoable from 'redux-undo';
+import { factorySliceReducer } from '../factories/store/FactoriesSlice';
 
 const persistConfig = {
-  key: "root",
+  key: 'root',
   version: 1,
   storage,
 };
 
 const rootReducer = combineReducers({
-  factories: factorySliceReducer,
+  factories: undoable(factorySliceReducer),
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  devTools: process.env.NODE_ENV !== "production",
-  middleware: (getDefaultMiddleware) =>
+  devTools: process.env.NODE_ENV !== 'production',
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],

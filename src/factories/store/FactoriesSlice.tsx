@@ -1,6 +1,8 @@
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
 import { set } from 'lodash';
+import { useSelector } from 'react-redux';
 import { v4 } from 'uuid';
+import { RootState } from '../../core/store';
 
 export interface GameFactory {
   id: string;
@@ -37,6 +39,7 @@ export const FactoriesSlice = createSlice({
       name: null,
       resource: null,
     } as FactoriesFilters | undefined,
+    highlightedOutput: null as { factoryId: string; resource: string } | null,
   },
   reducers: {
     add: (state, action: PayloadAction<{ name?: string }>) => {
@@ -62,6 +65,26 @@ export const FactoriesSlice = createSlice({
         }
         return 0;
       });
+    },
+    highlightOutput: (
+      state,
+      action: PayloadAction<{ id: string; index: number } | null>,
+    ) => {
+      if (!action.payload) {
+        state.highlightedOutput = null;
+        return;
+      }
+
+      const factory = state.factories.find(
+        factory => factory.id === action.payload!.id,
+      );
+      if (!factory) return;
+      const output = factory.outputs?.[action.payload.index];
+      if (!output) return;
+      state.highlightedOutput = {
+        factoryId: action.payload.id,
+        resource: output.resource!,
+      };
     },
     updateAtPath: (
       state,
@@ -134,9 +157,21 @@ export const FactoriesSlice = createSlice({
       if (!state.filters) state.filters = { name: null, resource: null };
       state.filters[action.payload.name] = action.payload.value;
     },
+    import: (state, action: PayloadAction<{ json: string }>) => {
+      const data = JSON.parse(action.payload.json);
+      state.factories = data.factories;
+    },
   },
 });
 
 export const factoryActions = FactoriesSlice.actions;
 
 export const factorySliceReducer = FactoriesSlice.reducer;
+
+export const useFactories = () =>
+  useSelector((state: RootState) => state.factories.present.factories);
+
+export const useFactory = (id: string) =>
+  useSelector((state: RootState) =>
+    state.factories.present.factories.find(factory => factory.id === id),
+  );

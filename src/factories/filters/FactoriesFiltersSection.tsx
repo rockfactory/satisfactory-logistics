@@ -13,7 +13,9 @@ export interface IFactoriesFiltersSectionProps {}
 
 export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
   const dispatch = useDispatch();
-  const filters = useSelector((state: RootState) => state.factories.filters);
+  const filters = useSelector(
+    (state: RootState) => state.factories.present.filters,
+  );
   return (
     <Group mb="lg">
       <TextInput

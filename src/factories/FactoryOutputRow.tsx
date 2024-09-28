@@ -1,5 +1,5 @@
 import { ActionIcon, Group, Image, NumberInput } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
+import { IconEye, IconTrash } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
 import { FactoryChangeHandler } from './FactoryRow';
 import { FactoryUsage } from './FactoryUsage';
@@ -103,6 +103,21 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
         }
       >
         <IconTrash size={16} stroke={1.5} />
+      </ActionIcon>
+      <ActionIcon
+        variant="outline"
+        color="blue.4"
+        size="md"
+        onClick={() =>
+          dispatch(
+            factoryActions.highlightOutput({
+              id: factory.id,
+              index: index,
+            }),
+          )
+        }
+      >
+        <IconEye size={16} stroke={1.5} />
       </ActionIcon>
       <FactoryUsage factoryId={factory.id} output={output.resource} />
     </Group>

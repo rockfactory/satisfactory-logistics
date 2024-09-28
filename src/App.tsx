@@ -1,5 +1,7 @@
 import { Container, MantineProvider, Tabs } from '@mantine/core';
 import '@mantine/core/styles.css';
+import { Notifications } from '@mantine/notifications';
+import '@mantine/notifications/styles.css';
 import { useState } from 'react';
 import { ChartsTab } from './factories/charts/ChartsTab';
 import { FactoriesTab } from './factories/FactoriesTab';
@@ -13,6 +15,7 @@ export default function App() {
   const [currentTab, setCurrentTab] = useState(tabs[0] as string | null);
   return (
     <MantineProvider theme={theme}>
+      <Notifications position="top-right" zIndex={1000} />
       <MainLayout
         tabs={['Factories', 'Wide View', 'Charts']}
         activeTab={currentTab}

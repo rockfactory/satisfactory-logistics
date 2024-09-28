@@ -1,54 +1,46 @@
-import { Group, RingProgress, Text } from "@mantine/core";
-import chroma from "chroma-js";
-import { sum } from "lodash";
-import { useSelector } from "react-redux";
-import { RootState } from "../core/store";
+import { Group, RingProgress, Text } from '@mantine/core';
+import chroma from 'chroma-js';
+import { sum } from 'lodash';
+import { useFactories } from './store/FactoriesSlice';
 
 export interface IFactoryUsageProps {
   factoryId: string;
   output: string | null | undefined;
 }
 
-const PercentageFormatter = new Intl.NumberFormat("it-IT", {
-  style: "percent",
+const PercentageFormatter = new Intl.NumberFormat('it-IT', {
+  style: 'percent',
   minimumFractionDigits: 0,
   maximumFractionDigits: 0,
 });
 
 const colorScale = chroma
-  .scale(["#E03C32", "#e6c111", "#7BB662"])
-  .mode("lrgb")
+  .scale(['#E03C32', '#e6c111', '#7BB662'])
+  .mode('lrgb')
   .padding(-0.1)
   .domain([1, 0]);
 
 export function FactoryUsage(props: IFactoryUsageProps) {
-  const factories = useSelector((state: RootState) => state.factories);
-  const source = factories.factories.find((f) => f.id === props.factoryId);
-  const sourceOutput = source?.outputs?.find(
-    (o) => o.resource === props.output
-  );
+  const factories = useFactories();
+  const source = factories.find(f => f.id === props.factoryId);
+  const sourceOutput = source?.outputs?.find(o => o.resource === props.output);
   const producedAmount = sourceOutput?.amount ?? 1;
   const usedAmount = sum(
-    factories.factories.flatMap(
-      (f) =>
+    factories.flatMap(
+      f =>
         f.inputs
           ?.filter(
-            (input) =>
+            input =>
               input.factoryId === props.factoryId &&
-              input.resource === sourceOutput?.resource
+              input.resource === sourceOutput?.resource,
           )
-          .map((input) => input.amount ?? 0) ?? []
-    )
+          .map(input => input.amount ?? 0) ?? [],
+    ),
   );
 
   return (
     <Group gap={0}>
       <RingProgress
-        // label={
-        //   <Text size="xs" ta="center">
-        //     {PercentageFormatter.format(usedAmount / producedAmount)}
-        //   </Text>
-        // }
         size={36}
         thickness={6}
         roundCaps
@@ -59,17 +51,15 @@ export function FactoryUsage(props: IFactoryUsageProps) {
           },
         ]}
       />
-      {/* <Badge color={colorScale(usedAmount / producedAmount).hex()} w={55}> */}
       <Text
         size="xs"
         ta="right"
-        fw={"bold"}
+        fw={'bold'}
         c={colorScale(usedAmount / producedAmount).hex()}
         w={30}
       >
         {PercentageFormatter.format(usedAmount / producedAmount)}
       </Text>
-      {/* </Badge> */}
     </Group>
   );
 }

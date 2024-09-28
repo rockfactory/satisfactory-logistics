@@ -1,18 +1,19 @@
-import { ActionIcon, Group, NumberInput, Tooltip } from "@mantine/core";
-import { IconTrash } from "@tabler/icons-react";
-import { useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../core/store";
-import { FactoryChangeHandler } from "./FactoryRow";
-import { FactoryUsage } from "./FactoryUsage";
-import { FactoryInput } from "./inputs/FactoryInput";
-import { FactoryItemInput } from "./inputs/FactoryItemInput";
+import { ActionIcon, Group, NumberInput, Tooltip } from '@mantine/core';
+import { IconTrash } from '@tabler/icons-react';
+import { useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../core/store';
+import { FactoryChangeHandler } from './FactoryRow';
+import { FactoryUsage } from './FactoryUsage';
+import { FactoryInput } from './inputs/FactoryInput';
+import { FactoryItemInput } from './inputs/FactoryItemInput';
 import {
   factoryActions,
   GameFactory,
   GameFactoryInput,
-} from "./store/FactoriesSlice";
-import { useIsFactoryVisible } from "./useIsFactoryVisible";
+  useFactories,
+} from './store/FactoriesSlice';
+import { useIsFactoryVisible } from './useIsFactoryVisible';
 
 export interface IFactoryInputRowProps {
   factory: GameFactory;
@@ -24,22 +25,30 @@ export interface IFactoryInputRowProps {
 export function FactoryInputRow(props: IFactoryInputRowProps) {
   const { index, input, factory, onChangeFactory } = props;
   const dispatch = useDispatch();
-  const factories = useSelector(
-    (state: RootState) => state.factories.factories
+  const factories = useFactories();
+  const highlightedOutput = useSelector(
+    (state: RootState) => state.factories.present.highlightedOutput,
   );
 
   const sourceFactory = useMemo(
-    () => factories.find((f) => f.id === input.factoryId),
-    [factories, input.factoryId]
+    () => factories.find(f => f.id === input.factoryId),
+    [factories, input.factoryId],
   );
 
   const [focused, setFocused] = useState(false);
+
+  const isHighlighted = useMemo(
+    () =>
+      highlightedOutput?.factoryId === input.factoryId &&
+      highlightedOutput?.resource === input.resource,
+    [highlightedOutput, input.factoryId, input.resource],
+  );
 
   const isVisible = useIsFactoryVisible(factory.id, false, input.resource);
   if (!isVisible) return null;
 
   return (
-    <Group key={index} gap="sm">
+    <Group key={index} gap="sm" bg={isHighlighted ? 'blue.2' : undefined}>
       <FactoryInput
         value={input.factoryId}
         w={180}
@@ -49,8 +58,8 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         value={input.resource}
         allowedItems={
           sourceFactory?.outputs
-            ?.filter((o) => o.resource)
-            .map((o) => o.resource!) ?? undefined
+            ?.filter(o => o.resource)
+            .map(o => o.resource!) ?? undefined
         }
         size="sm"
         width={320}
@@ -66,7 +75,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
                 output={input.resource}
               />
             ) : (
-              "N/A (Choose factory & resource)"
+              'N/A (Choose factory & resource)'
             )}
           </Group>
         }
@@ -90,7 +99,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
             factoryActions.update({
               id: factory.id,
               inputs: factory.inputs?.filter((_, i) => i !== index),
-            })
+            }),
           )
         }
       >

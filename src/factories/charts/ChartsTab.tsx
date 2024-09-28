@@ -1,9 +1,8 @@
 import { Box, Paper, Text } from '@mantine/core';
 import { DefaultLink, DefaultNode, ResponsiveSankey } from '@nivo/sankey';
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../core/store';
 import { AllFactoryItemsMap } from '../../recipes/FactoryItem';
+import { useFactories } from '../store/FactoriesSlice';
 
 export interface IChartsTabProps {}
 
@@ -20,9 +19,7 @@ type Link = DefaultLink & {
 };
 
 export function ChartsTab(_props: IChartsTabProps) {
-  const factories = useSelector(
-    (state: RootState) => state.factories.factories,
-  );
+  const factories = useFactories();
 
   const data: {
     nodes: Node[];

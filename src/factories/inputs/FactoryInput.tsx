@@ -7,7 +7,7 @@ export interface IFactoryInputProps extends SelectProps {}
 
 export function FactoryInput(props: IFactoryInputProps) {
   const factories = useSelector(
-    (state: RootState) => state.factories.factories,
+    (state: RootState) => state.factories.present.factories,
   );
 
   const data = useMemo(
