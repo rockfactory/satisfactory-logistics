@@ -1,6 +1,7 @@
 import { ActionIcon, Group, Image, NumberInput } from '@mantine/core';
-import { IconEye, IconTrash } from '@tabler/icons-react';
+import { IconTrash } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
+import { OutputDependenciesPeekModal } from './components/peek/OutputDependenciesPeekModal';
 import { FactoryChangeHandler } from './FactoryRow';
 import { FactoryUsage } from './FactoryUsage';
 import { FactoryItemInput } from './inputs/FactoryItemInput';
@@ -104,7 +105,8 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       >
         <IconTrash size={16} stroke={1.5} />
       </ActionIcon>
-      <ActionIcon
+      <OutputDependenciesPeekModal factoryId={factory.id} output={output} />
+      {/* <ActionIcon
         variant="outline"
         color="blue.4"
         size="md"
@@ -118,7 +120,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
         }
       >
         <IconEye size={16} stroke={1.5} />
-      </ActionIcon>
+      </ActionIcon> */}
       <FactoryUsage factoryId={factory.id} output={output.resource} />
     </Group>
   );

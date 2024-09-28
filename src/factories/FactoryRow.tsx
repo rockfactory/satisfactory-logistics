@@ -119,7 +119,7 @@ export function FactoryRow(props: IFactoryRowProps) {
                 key={index}
                 index={index}
                 input={input}
-                factory={factory}
+                factoryId={factory.id}
                 onChangeFactory={onChangeFactory}
               />
             ))}

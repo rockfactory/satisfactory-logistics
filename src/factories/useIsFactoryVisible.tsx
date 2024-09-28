@@ -12,7 +12,6 @@ export function useIsFactoryVisible(
   );
   const factories = useFactories();
   const source = factories.find(f => f.id === factoryId);
-  console.log(filters);
 
   if (
     filters?.name &&

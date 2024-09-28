@@ -20,5 +20,6 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "plugins": [{ "name": "typescript-plugin-css-modules" }]
 }

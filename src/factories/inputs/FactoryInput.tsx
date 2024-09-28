@@ -1,14 +1,11 @@
 import { Select, SelectProps } from '@mantine/core';
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../core/store';
+import { useFactories } from '../store/FactoriesSlice';
 
 export interface IFactoryInputProps extends SelectProps {}
 
 export function FactoryInput(props: IFactoryInputProps) {
-  const factories = useSelector(
-    (state: RootState) => state.factories.present.factories,
-  );
+  const factories = useFactories();
 
   const data = useMemo(
     () =>

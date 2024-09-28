@@ -7,32 +7,21 @@ import { FactoryChangeHandler } from './FactoryRow';
 import { FactoryUsage } from './FactoryUsage';
 import { FactoryInput } from './inputs/FactoryInput';
 import { FactoryItemInput } from './inputs/FactoryItemInput';
-import {
-  factoryActions,
-  GameFactory,
-  GameFactoryInput,
-  useFactories,
-} from './store/FactoriesSlice';
+import { factoryActions, GameFactoryInput } from './store/FactoriesSlice';
 import { useIsFactoryVisible } from './useIsFactoryVisible';
 
 export interface IFactoryInputRowProps {
-  factory: GameFactory;
+  factoryId: string;
   input: GameFactoryInput;
   index: number;
   onChangeFactory: FactoryChangeHandler;
 }
 
 export function FactoryInputRow(props: IFactoryInputRowProps) {
-  const { index, input, factory, onChangeFactory } = props;
+  const { index, input, factoryId, onChangeFactory } = props;
   const dispatch = useDispatch();
-  const factories = useFactories();
   const highlightedOutput = useSelector(
     (state: RootState) => state.factories.present.highlightedOutput,
-  );
-
-  const sourceFactory = useMemo(
-    () => factories.find(f => f.id === input.factoryId),
-    [factories, input.factoryId],
   );
 
   const [focused, setFocused] = useState(false);
@@ -44,7 +33,19 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
     [highlightedOutput, input.factoryId, input.resource],
   );
 
-  const isVisible = useIsFactoryVisible(factory.id, false, input.resource);
+  const sourceOutputs = useSelector(
+    (state: RootState) =>
+      state.factories.present.factories.find(f => f.id === input.factoryId)
+        ?.outputs,
+  );
+
+  const allowedItems = useMemo(() => {
+    return (
+      sourceOutputs?.filter(o => o.resource).map(o => o.resource!) ?? undefined
+    );
+  }, [sourceOutputs]);
+
+  const isVisible = useIsFactoryVisible(factoryId, false, input.resource);
   if (!isVisible) return null;
 
   return (
@@ -52,18 +53,14 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
       <FactoryInput
         value={input.factoryId}
         w={180}
-        onChange={onChangeFactory(factory.id, `inputs[${index}].factoryId`)}
+        onChange={onChangeFactory(factoryId, `inputs[${index}].factoryId`)}
       />
       <FactoryItemInput
         value={input.resource}
-        allowedItems={
-          sourceFactory?.outputs
-            ?.filter(o => o.resource)
-            .map(o => o.resource!) ?? undefined
-        }
+        allowedItems={allowedItems}
         size="sm"
         width={320}
-        onChange={onChangeFactory(factory.id, `inputs[${index}].resource`)}
+        onChange={onChangeFactory(factoryId, `inputs[${index}].resource`)}
       />
       <Tooltip
         label={
@@ -87,7 +84,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           w={100}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          onChange={onChangeFactory(factory.id, `inputs[${index}].amount`)}
+          onChange={onChangeFactory(factoryId, `inputs[${index}].amount`)}
         />
       </Tooltip>
       <ActionIcon
@@ -96,9 +93,9 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         size="md"
         onClick={() =>
           dispatch(
-            factoryActions.update({
-              id: factory.id,
-              inputs: factory.inputs?.filter((_, i) => i !== index),
+            factoryActions.removeInput({
+              id: factoryId,
+              index,
             }),
           )
         }

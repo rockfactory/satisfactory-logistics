@@ -1,18 +1,13 @@
 import { Group, RingProgress, Text } from '@mantine/core';
 import chroma from 'chroma-js';
 import { sum } from 'lodash';
+import { PercentageFormatter } from '../core/intl/PercentageFormatter';
 import { useFactories } from './store/FactoriesSlice';
 
 export interface IFactoryUsageProps {
   factoryId: string;
   output: string | null | undefined;
 }
-
-const PercentageFormatter = new Intl.NumberFormat('it-IT', {
-  style: 'percent',
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-});
 
 const colorScale = chroma
   .scale(['#E03C32', '#e6c111', '#7BB662'])

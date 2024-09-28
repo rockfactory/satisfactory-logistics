@@ -133,7 +133,7 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
               {(factory.inputs ?? []).map((input, i) => (
                 <FactoryInputRow
                   key={i}
-                  factory={factory}
+                  factoryId={factory.id}
                   input={input}
                   index={i}
                   onChangeFactory={onChangeFactory}

@@ -1,60 +1,57 @@
 .header {
-    padding-top: var(--mantine-spacing-sm);
-    background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
-    border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-2), transparent);
+  padding-top: var(--mantine-spacing-sm);
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-6)
+  );
+  border-bottom: rem(1px) solid
+    light-dark(var(--mantine-color-gray-2), transparent);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.mainSection {
+  padding-bottom: var(--mantine-spacing-sm);
+}
+
+.tabsList {
+  &::before {
+    display: none;
   }
-  
-  .mainSection {
-    padding-bottom: var(--mantine-spacing-sm);
+}
+
+.tab {
+  font-weight: 500;
+  height: rem(38);
+  background-color: transparent;
+  position: relative;
+  bottom: -1px;
+
+  &::before,
+  &::after {
+    background-color: light-dark(
+      var(--mantine-color-gray-2),
+      var(--mantine-color-dark-7)
+    ) !important;
   }
-  
-  .user {
-    color: light-dark(var(--mantine-color-black), var(--mantine-color-dark-0));
-    padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
-    border-radius: var(--mantine-radius-sm);
-    transition: background-color 100ms ease;
-  
-    &:hover {
-      background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
-    }
-  
-    @media (max-width: --mantine-breakpoint-xs) {
-      display: none;
-    }
+
+  &:hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-1),
+      var(--mantine-color-dark-5)
+    );
   }
-  
-  .userActive {
-    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
+
+  &[data-active] {
+    background-color: light-dark(
+      var(--mantine-color-white),
+      var(--mantine-color-dark-7)
+    );
+    border-color: light-dark(
+      var(--mantine-color-gray-2),
+      var(--mantine-color-dark-7)
+    );
+    border-bottom-color: transparent;
   }
-  
-  .tabsList {
-    &::before {
-      display: none;
-    }
-  }
-  
-  .tab {
-    font-weight: 500;
-    height: rem(38);
-    background-color: transparent;
-    position: relative;
-    bottom: -1px;
-  
-    &::before,
-    &::after {
-      background-color: light-dark(
-        var(--mantine-color-gray-2),
-        var(--mantine-color-dark-7)
-      ) !important;
-    }
-  
-    &:hover {
-      background-color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
-    }
-  
-    &[data-active] {
-      background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
-      border-color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-7));
-      border-bottom-color: transparent;
-    }
-  }
+}

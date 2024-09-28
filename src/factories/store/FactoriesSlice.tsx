@@ -1,4 +1,4 @@
-import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { set } from 'lodash';
 import { useSelector } from 'react-redux';
 import { v4 } from 'uuid';
@@ -31,16 +31,22 @@ interface FactoriesFilters {
   resource: string | null;
 }
 
+interface FactoriesState {
+  factories: GameFactory[];
+  filters: FactoriesFilters | null;
+  highlightedOutput: { factoryId: string; resource: string } | null;
+}
+
 export const FactoriesSlice = createSlice({
   name: 'Factories',
   initialState: {
-    factories: [] as GameFactory[],
+    factories: [],
     filters: {
       name: null,
       resource: null,
-    } as FactoriesFilters | undefined,
-    highlightedOutput: null as { factoryId: string; resource: string } | null,
-  },
+    },
+    highlightedOutput: null,
+  } as FactoriesState,
   reducers: {
     add: (state, action: PayloadAction<{ name?: string }>) => {
       state.factories.push({ ...action.payload, id: v4() });
@@ -90,12 +96,12 @@ export const FactoriesSlice = createSlice({
       state,
       action: PayloadAction<{ id: string; path: string; value: any }>,
     ) => {
-      console.log(
-        action.payload,
-        current(state).factories.find(
-          factory => factory.id === action.payload.id,
-        ),
-      );
+      // console.log(
+      //   action.payload,
+      //   current(state).factories.find(
+      //     factory => factory.id === action.payload.id,
+      //   ),
+      // );
 
       const target = state.factories.find(
         factory => factory.id === action.payload.id,
@@ -142,6 +148,16 @@ export const FactoriesSlice = createSlice({
       if (!factory.inputs) factory.inputs = [];
       factory.inputs.push({ factoryId: null, amount: 0 });
     },
+    removeInput: (
+      state,
+      action: PayloadAction<{ id: string; index: number }>,
+    ) => {
+      const factory = state.factories.find(
+        factory => factory.id === action.payload.id,
+      );
+      if (!factory) return;
+      factory.inputs?.splice(action.payload.index, 1);
+    },
     addOutput: (state, action: PayloadAction<{ id: string }>) => {
       const factory = state.factories.find(
         factory => factory.id === action.payload.id,
@@ -160,6 +176,11 @@ export const FactoriesSlice = createSlice({
     import: (state, action: PayloadAction<{ json: string }>) => {
       const data = JSON.parse(action.payload.json);
       state.factories = data.factories;
+    },
+    loadFromRemote: (state, action: PayloadAction<Partial<FactoriesState>>) => {
+      state.factories = action.payload.factories ?? [];
+      state.filters = action.payload.filters ?? { name: null, resource: null };
+      state.highlightedOutput = action.payload.highlightedOutput ?? null;
     },
   },
 });
