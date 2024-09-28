@@ -6,7 +6,10 @@ import { factoryActions } from '../../factories/store/FactoriesSlice';
 import { authActions } from '../AuthSlice';
 import { ISerializedState } from './useSyncLocalAndRemoteStore';
 
-export async function loadFromRemote(session: Session | null) {
+export async function loadFromRemote(
+  session: Session | null,
+  forceRemote = false,
+) {
   if (!session) {
     console.log('No session');
     return;
@@ -32,14 +35,16 @@ export async function loadFromRemote(session: Session | null) {
   }
 
   const remoteUpdatedAt = new Date(data!.updated_at).getTime();
-  const localUpdatedAt = store.getState().auth?.sync?.syncedAt ?? 0;
-  const isRemoteNewerThanLocal = remoteUpdatedAt > localUpdatedAt;
+  const localUpdatedAt =
+    store.getState().auth?.sync?.latestChangeDetectedAt ?? 0;
+  const isRemoteNewerThanLocal =
+    forceRemote || remoteUpdatedAt > localUpdatedAt;
 
   console.log('Setting versionId:', data?.id, 'is remote newer?', isRemoteNewerThanLocal); // prettier-ignore
   store.dispatch(
     authActions.setSync({
       versionId: data?.id,
-      syncedAt: Date.now(),
+      syncedAt: remoteUpdatedAt,
       isSynced: true,
       latestChangeDetectedAt: isRemoteNewerThanLocal
         ? remoteUpdatedAt

@@ -29,6 +29,7 @@ export interface GameFactoryOutput {
 interface FactoriesFilters {
   name: string | null;
   resource: string | null;
+  viewMode?: 'compact' | 'wide';
 }
 
 interface FactoriesState {
@@ -44,6 +45,7 @@ export const FactoriesSlice = createSlice({
     filters: {
       name: null,
       resource: null,
+      viewMode: 'wide',
     },
     highlightedOutput: null,
   } as FactoriesState,
@@ -181,6 +183,11 @@ export const FactoriesSlice = createSlice({
       state.factories = action.payload.factories ?? [];
       state.filters = action.payload.filters ?? { name: null, resource: null };
       state.highlightedOutput = action.payload.highlightedOutput ?? null;
+    },
+    clear: state => {
+      state.factories = [];
+      state.filters = { name: null, resource: null };
+      state.highlightedOutput = null;
     },
   },
 });

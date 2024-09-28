@@ -1,7 +1,7 @@
 {
-  "name": "vite-min-template",
+  "name": "satisfactory-logistics",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,6 +19,7 @@
     "@mantine/notifications": "^7.13.0",
     "@nivo/sankey": "^0.87.0",
     "@reduxjs/toolkit": "^2.2.7",
+    "@sentry/react": "^8.32.0",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.45.4",

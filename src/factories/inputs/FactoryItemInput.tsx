@@ -7,30 +7,31 @@ import {
   ScrollArea,
   Text,
   useCombobox,
-} from "@mantine/core";
-import { useMemo, useState } from "react";
+} from '@mantine/core';
+import { useMemo, useState } from 'react';
 import {
   AllFactoryItems,
   AllFactoryItemsMap,
   FactoryItem,
-} from "../../recipes/FactoryItem";
+} from '../../recipes/FactoryItem';
 
 export interface IFactoryItemInputProps
-  extends Omit<InputWrapperProps, "value" | "onChange"> {
+  extends Omit<InputWrapperProps, 'value' | 'onChange'> {
   value?: string | null;
   onChange?: (value: string | null) => void;
   allowedItems?: string[];
-  size?: "md" | "lg" | "sm";
+  size?: 'md' | 'lg' | 'sm';
   width?: number;
+  placeholder?: string;
 }
 
 interface FactoryItemOptionProps {
   item: FactoryItem;
-  size: "md" | "lg" | "sm";
+  size: 'md' | 'lg' | 'sm';
 }
 
 function FactoryItemOption({ item, size }: FactoryItemOptionProps) {
-  const imageSize = size === "sm" ? 22 : size === "md" ? 24 : 32;
+  const imageSize = size === 'sm' ? 22 : size === 'md' ? 24 : 32;
   return (
     <Group gap="sm">
       <Image src={item.imagePath} w={imageSize} h={imageSize} radius="sm" />
@@ -38,8 +39,8 @@ function FactoryItemOption({ item, size }: FactoryItemOptionProps) {
         <Text size="sm" truncate="end" maw="300px">
           {item.displayName}
         </Text>
-        {size === "lg" && (
-          <Text size="xs" opacity={0.5} truncate="end" maw={"280px"}>
+        {size === 'lg' && (
+          <Text size="xs" opacity={0.5} truncate="end" maw={'280px'}>
             {item.description}
           </Text>
         )}
@@ -50,23 +51,24 @@ function FactoryItemOption({ item, size }: FactoryItemOptionProps) {
 
 export function FactoryItemInput(props: IFactoryItemInputProps) {
   const {
-    size = "lg",
+    size = 'lg',
     width = 300,
     onChange,
     value,
-    variant = "default",
+    variant = 'default',
     allowedItems,
+    placeholder = 'Select item...',
     ...inputProps
   } = props;
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [rawSelectedItem, setSelectedItem] = useState<string | null>(null);
   const selectedItem = value ?? rawSelectedItem;
   const combobox = useCombobox({
     onDropdownClose: () => {
       combobox.resetSelectedOption();
       combobox.focusTarget();
-      setSearch("");
+      setSearch('');
     },
     onDropdownOpen: () => {
       combobox.focusSearchInput();
@@ -76,17 +78,17 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
   const options = useMemo(
     () =>
       AllFactoryItems.filter(
-        (item) =>
+        item =>
           item.displayName
             .toLowerCase()
             .includes(search.toLowerCase().trim()) &&
-          (allowedItems ? allowedItems.includes(item.id) : true)
-      ).map((item) => (
+          (allowedItems ? allowedItems.includes(item.id) : true),
+      ).map(item => (
         <Combobox.Option value={item.id} key={item.id}>
           <FactoryItemOption item={item} size={size} />
         </Combobox.Option>
       )),
-    [search, allowedItems]
+    [search, allowedItems],
   );
 
   return (
@@ -98,7 +100,7 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
         width={300}
         position="bottom-start"
         withArrow
-        onOptionSubmit={(val) => {
+        onOptionSubmit={val => {
           if (val === selectedItem) {
             setSelectedItem(null);
             onChange?.(null);
@@ -117,11 +119,11 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
               component="button"
               onClick={() => combobox.toggleDropdown()}
               variant={variant}
-              ta={"left"}
+              ta={'left'}
               size={size}
               w={width}
-              onKeyDown={(event) => {
-                if (event.key === "Backspace" || event.key === "Delete") {
+              onKeyDown={event => {
+                if (event.key === 'Backspace' || event.key === 'Delete') {
                   combobox.closeDropdown();
                   setSelectedItem(null);
                   onChange?.(null);
@@ -136,8 +138,8 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
                   size={size}
                 />
               ) : (
-                <Text c="gray.5" size="sm">
-                  Select item...
+                <Text c="dimmed" size="sm">
+                  {placeholder}
                 </Text>
               )}
             </Input>
@@ -147,7 +149,7 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
         <Combobox.Dropdown>
           <Combobox.Search
             value={search}
-            onChange={(event) => setSearch(event.currentTarget.value)}
+            onChange={event => setSearch(event.currentTarget.value)}
             placeholder="Search items"
           />
           <ScrollArea.Autosize type="scroll" mah={200}>

@@ -55,7 +55,7 @@ export function FactoryRow(props: IFactoryRowProps) {
   if (!isVisible) return null;
 
   return (
-    <Card key={factory.id} mb="xs" withBorder>
+    <Card key={factory.id} withBorder>
       {/* <Text size="sm" fw="bold">
             {factory.name}
           </Text> */}
@@ -63,7 +63,7 @@ export function FactoryRow(props: IFactoryRowProps) {
         {/* <Grid.Col span={6}> */}
         <TextInput
           variant="unstyled"
-          placeholder="Shenanigans..."
+          placeholder="Factory..."
           fw={'bold'}
           w={180}
           defaultValue={factory.name ?? ''}

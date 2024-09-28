@@ -5,6 +5,7 @@ import { RootState } from '../core/store';
 
 interface SyncState {
   isSynced: boolean;
+  isSyncing: boolean;
   latestChangeDetectedAt: number;
   syncedAt: number;
   versionId: number | null;
@@ -19,6 +20,7 @@ export const authSlice = createSlice({
       latestChangeDetectedAt: 0,
       syncedAt: 0,
       versionId: null,
+      isSyncing: false,
     } as SyncState,
   },
   reducers: {
@@ -32,6 +34,7 @@ export const authSlice = createSlice({
           syncedAt: 0,
           versionId: null,
           latestChangeDetectedAt: 0,
+          isSyncing: false,
         };
       Object.assign(state.sync, action.payload);
     },

@@ -1,6 +1,9 @@
 import {
+  Avatar,
   Button,
+  Divider,
   Group,
+  Loader,
   Menu,
   Modal,
   rem,
@@ -8,13 +11,20 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconChevronDown, IconHeart, IconLogin2 } from '@tabler/icons-react';
+import {
+  IconChevronDown,
+  IconDownload,
+  IconLogin2,
+  IconLogout,
+} from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
+import { store } from '../core/store';
 import { supabaseClient } from '../core/supabase';
 import { useSession } from './AuthSlice';
 import classes from './UserMenu.module.css';
 import { DiscordLoginButton } from './providers/DiscordLoginButton';
+import { loadFromRemote } from './sync/loadFromRemote';
 
 export interface IUserMenuProps {}
 
@@ -22,23 +32,32 @@ export function UserMenu(props: IUserMenuProps) {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const session = useSession();
   const [loginOpened, loginOpenedHandler] = useDisclosure(false);
+  const [loadingFactories, setLoadingFactories] = useState(false);
 
   if (!session) {
     return (
       <>
         <Button
           rightSection={<IconLogin2 size={16} />}
-          variant="default"
+          variant="outline"
+          size="sm"
           onClick={loginOpenedHandler.open}
         >
           Login
         </Button>
         <Modal
+          size="sm"
           opened={loginOpened}
           onClose={loginOpenedHandler.close}
-          title="Login"
+          title="Authentication"
+          // centered
         >
           <DiscordLoginButton />
+          <Divider mt="xl" mb="md" />
+          <Text ta="center" size="sm" c="dark.2">
+            After login you can save your factories on the server, so you can
+            access them from any device.
+          </Text>
         </Modal>
       </>
     );
@@ -46,7 +65,7 @@ export function UserMenu(props: IUserMenuProps) {
 
   return (
     <Menu
-      width={260}
+      width={240}
       position="bottom-end"
       transitionProps={{ transition: 'pop-top-right' }}
       onClose={() => setUserMenuOpened(false)}
@@ -60,8 +79,9 @@ export function UserMenu(props: IUserMenuProps) {
           })}
         >
           <Group gap={7}>
+            <Avatar src={session.user.user_metadata.avatar_url} size={32} />
             <Text fw={500} size="sm" lh={1} mr={3}>
-              {session.user.email}
+              {session.user.user_metadata.name ?? session.user.email}
             </Text>
             <IconChevronDown
               style={{ width: rem(12), height: rem(12) }}
@@ -72,6 +92,7 @@ export function UserMenu(props: IUserMenuProps) {
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Item
+          leftSection={<IconLogout size={16} />}
           onClick={async () => {
             await supabaseClient.auth.signOut();
           }}
@@ -80,14 +101,15 @@ export function UserMenu(props: IUserMenuProps) {
         </Menu.Item>
         <Menu.Item
           leftSection={
-            <IconHeart
-              style={{ width: rem(16), height: rem(16) }}
-              color="red.6"
-              stroke={1.5}
-            />
+            loadingFactories ? <Loader size={16} /> : <IconDownload size={16} />
           }
+          onClick={async () => {
+            setLoadingFactories(true);
+            await loadFromRemote(store.getState().auth.session, true);
+            setLoadingFactories(false);
+          }}
         >
-          Liked posts
+          Load saved factories
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

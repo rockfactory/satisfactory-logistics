@@ -1,4 +1,4 @@
-import { Box, Paper, Text } from '@mantine/core';
+import { Box, Container, Paper, Text } from '@mantine/core';
 import { DefaultLink, DefaultNode, ResponsiveSankey } from '@nivo/sankey';
 import { useMemo } from 'react';
 import { AllFactoryItemsMap } from '../../recipes/FactoryItem';
@@ -50,21 +50,23 @@ export function ChartsTab(_props: IChartsTabProps) {
 
   return (
     <div>
-      <Box h={400}>
-        <ResponsiveSankey
-          data={data}
-          linkTooltip={info => {
-            return (
-              <Paper shadow="sm" radius="sm" p="md">
-                <Text size="md">
-                  {info.link.source.id} → {info.link.target.id}:{' '}
-                  {info.link.resourceLabel} ({info.link.value})
-                </Text>
-              </Paper>
-            );
-          }}
-        />
-      </Box>
+      <Container size="lg" mt="lg">
+        <Box h={400}>
+          <ResponsiveSankey
+            data={data}
+            linkTooltip={info => {
+              return (
+                <Paper shadow="sm" radius="sm" p="md">
+                  <Text size="md">
+                    {info.link.source.id} → {info.link.target.id}:{' '}
+                    {info.link.resourceLabel} ({info.link.value})
+                  </Text>
+                </Paper>
+              );
+            }}
+          />
+        </Box>
+      </Container>
     </div>
   );
 }

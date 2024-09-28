@@ -31,11 +31,12 @@ export function DiscordLoginButton(props: IDiscordLoginButtonProps) {
   return (
     <Button
       onClick={handleLogin}
-      bg="purple.7"
+      bg="#7289da"
+      w={'100%'}
       loading={loading}
       leftSection={<IconBrandDiscordFilled size={18} />}
     >
-      Login with Discord
+      Log in with Discord
     </Button>
   );
 }

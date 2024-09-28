@@ -19,10 +19,16 @@ export async function saveLocalState() {
     console.log('No session, skipping save, previous at ' + auth.sync.syncedAt);
   }
 
-  if (Date.now() - auth.sync.syncedAt < 15_000) {
-    console.log('Skipping save, previous at ' + auth.sync.syncedAt);
-    return;
-  }
+  // if (Date.now() - auth.sync.syncedAt < 15_000) {
+  //   console.log('Skipping save, previous at ' + auth.sync.syncedAt);
+  //   return;
+  // }
+
+  store.dispatch(
+    authActions.setSync({
+      isSyncing: true,
+    }),
+  );
 
   const { data, error } = await supabaseClient
     .from('factories')
@@ -44,12 +50,19 @@ export async function saveLocalState() {
       title: 'Error syncing factories',
       message: error.message,
     });
+    store.dispatch(
+      authActions.setSync({
+        isSyncing: false,
+      }),
+    );
     return;
   }
+
   console.log('Saved factories to remote:', data);
   store.dispatch(
     authActions.setSync({
       isSynced: true,
+      isSyncing: false,
       syncedAt: Date.now(),
       versionId: data?.id,
     }),
