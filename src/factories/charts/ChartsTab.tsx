@@ -1,5 +1,7 @@
-import { Box, Container, Paper, Text } from '@mantine/core';
+import { Alert, Box, Container, Paper, Text } from '@mantine/core';
 import { DefaultLink, DefaultNode, ResponsiveSankey } from '@nivo/sankey';
+import { ErrorBoundary } from '@sentry/react';
+import { IconAlertCircle } from '@tabler/icons-react';
 import { useMemo } from 'react';
 import { AllFactoryItemsMap } from '../../recipes/FactoryItem';
 import { useFactories } from '../store/FactoriesSlice';
@@ -46,26 +48,49 @@ export function ChartsTab(_props: IChartsTabProps) {
     return { nodes, links };
   }, [factories]);
 
-  console.log(data);
+  if (factories.length === 0) {
+    return (
+      <Container size="lg" mt="lg">
+        <Box ta="center">
+          <IconAlertCircle size={60} stroke={1.2} />
+          <Text size="xl">No factories to display</Text>
+        </Box>
+      </Container>
+    );
+  }
 
   return (
     <div>
       <Container size="lg" mt="lg">
-        <Box h={400}>
-          <ResponsiveSankey
-            data={data}
-            linkTooltip={info => {
-              return (
-                <Paper shadow="sm" radius="sm" p="md">
-                  <Text size="md">
-                    {info.link.source.id} → {info.link.target.id}:{' '}
-                    {info.link.resourceLabel} ({info.link.value})
-                  </Text>
-                </Paper>
-              );
-            }}
-          />
-        </Box>
+        <ErrorBoundary
+          fallback={
+            <Alert
+              title="An error occurred while rendering chart"
+              color="red"
+              icon={<IconAlertCircle />}
+              variant="light"
+            >
+              Make sure to avoid circular paths in your logistics chain.
+            </Alert>
+          }
+          showDialog
+        >
+          <Box h={400}>
+            <ResponsiveSankey
+              data={data}
+              linkTooltip={info => {
+                return (
+                  <Paper shadow="sm" radius="sm" p="md">
+                    <Text size="md">
+                      {info.link.source.id} → {info.link.target.id}:{' '}
+                      {info.link.resourceLabel} ({info.link.value})
+                    </Text>
+                  </Paper>
+                );
+              }}
+            />
+          </Box>
+        </ErrorBoundary>
       </Container>
     </div>
   );

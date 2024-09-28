@@ -6,5 +6,6 @@ export default defineConfig({
   plugins: [react()],
   define: {
     APP_VERSION: JSON.stringify(require('./package.json').version),
+    SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN),
   },
 });

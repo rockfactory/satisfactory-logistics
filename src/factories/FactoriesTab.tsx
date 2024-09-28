@@ -39,22 +39,28 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
     return () => resizeObserver.disconnect();
   }, []);
 
+  const hasFactories = useSelector(
+    (state: RootState) => state.factories.present.factories.length > 0,
+  );
+
   return (
     <div>
-      <Box
-        bg="dark.7"
-        w="100%"
-        style={{
-          position: 'sticky',
-          top: headerTop,
-          zIndex: 10,
-          boxShadow: '0 4px 4px rgba(0, 0, 0, 0.1)',
-        }}
-      >
-        <Container size="lg" pt="md" pb="md">
-          <FactoriesFiltersSection />
-        </Container>
-      </Box>
+      {hasFactories && (
+        <Box
+          bg="dark.7"
+          w="100%"
+          style={{
+            position: 'sticky',
+            top: headerTop,
+            zIndex: 10,
+            boxShadow: '0 4px 4px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          <Container size="lg" pt="md" pb="md">
+            <FactoriesFiltersSection />
+          </Container>
+        </Box>
+      )}
 
       <Container size="lg" mt="lg">
         {factories.length === 0 && (
