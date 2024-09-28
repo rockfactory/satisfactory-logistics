@@ -2,13 +2,11 @@ import {
   Burger,
   Container,
   Group,
-  rem,
+  Image,
   Tabs,
-  Text,
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconBuildingFactory2 } from '@tabler/icons-react';
 import { UserMenu } from '../auth/UserMenu';
 import classes from './MainLayout.module.css';
 
@@ -32,22 +30,27 @@ export function MainLayout(props: MainLayoutProps) {
 
   return (
     <div className={classes.header}>
-      <Container className={classes.mainSection} size="md">
+      <Container className={classes.mainSection} size="lg">
         <Group justify="space-between">
           <Group>
-            <IconBuildingFactory2
+            <Image
+              height={32}
+              src="/images/logo/satisfactory-logistics-logo.png"
+              alt="Satisfactory Logistics Planner"
+            />
+            {/* <IconBuildingFactory2
               stroke={2}
               style={{ width: rem(32), height: rem(32) }}
             />
             <Text size="lg" fw={700}>
               Satisfactory Logistics <i>Planner</i>
-            </Text>
+            </Text> */}
           </Group>
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
           <UserMenu />
         </Group>
       </Container>
-      <Container size="md">
+      <Container size="lg">
         <Tabs
           defaultValue="Factories"
           value={props.activeTab}
