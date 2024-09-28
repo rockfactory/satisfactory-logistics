@@ -1,11 +1,9 @@
 import {
   Combobox,
-  ComboboxItem,
   Group,
   Image,
   Input,
   InputWrapperProps,
-  OptionsFilter,
   ScrollArea,
   Text,
   useCombobox,
@@ -21,7 +19,6 @@ export interface IFactoryItemInputProps
   width?: number;
 }
 
-const AllFactoryItemsIds = AllFactoryItems.map((item) => item.id);
 const AllFactoryItemsMap = AllFactoryItems.reduce(
   (acc, item) => {
     acc[item.id] = item;
@@ -29,18 +26,6 @@ const AllFactoryItemsMap = AllFactoryItems.reduce(
   },
   {} as Record<string, FactoryItem>
 );
-
-const optionsFilter: OptionsFilter = ({ options, search }) => {
-  const filtered = (options as ComboboxItem[]).filter((option) =>
-    AllFactoryItemsMap[option.value].displayName
-      .toLowerCase()
-      .trim()
-      .includes(search.toLowerCase().trim())
-  );
-
-  filtered.sort((a, b) => a.label.localeCompare(b.label));
-  return filtered;
-};
 
 interface FactoryItemOptionProps {
   item: FactoryItem;

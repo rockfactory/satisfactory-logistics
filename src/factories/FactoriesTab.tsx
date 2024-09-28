@@ -21,7 +21,7 @@ import { factoryActions } from "./store/FactoriesSlice";
 
 export interface IFactoriesTabProps {}
 
-export function FactoriesTab(props: IFactoriesTabProps) {
+export function FactoriesTab(_props: IFactoriesTabProps) {
   const dispatch = useDispatch();
   const factories = useSelector(
     (state: RootState) => state.factories.factories
