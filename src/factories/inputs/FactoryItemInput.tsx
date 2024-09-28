@@ -1,18 +1,25 @@
 import {
-  Button,
   Combobox,
   ComboboxItem,
   Group,
   Image,
+  Input,
+  InputWrapperProps,
   OptionsFilter,
   ScrollArea,
   Text,
   useCombobox,
 } from "@mantine/core";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AllFactoryItems, FactoryItem } from "../../recipes/FactoryItem";
 
-export interface IFactoryItemInputProps {}
+export interface IFactoryItemInputProps
+  extends Omit<InputWrapperProps, "value" | "onChange"> {
+  value?: string | null;
+  onChange?: (value: string | null) => void;
+  size?: "md" | "lg" | "sm";
+  width?: number;
+}
 
 const AllFactoryItemsIds = AllFactoryItems.map((item) => item.id);
 const AllFactoryItemsMap = AllFactoryItems.reduce(
@@ -37,73 +44,102 @@ const optionsFilter: OptionsFilter = ({ options, search }) => {
 
 interface FactoryItemOptionProps {
   item: FactoryItem;
+  size: "md" | "lg" | "sm";
 }
 
-function FactoryItemOption({ item }: FactoryItemOptionProps) {
+function FactoryItemOption({ item, size }: FactoryItemOptionProps) {
+  const imageSize = size === "sm" ? 22 : size === "md" ? 24 : 32;
   return (
     <Group gap="sm">
-      <Image src={item.imagePath} w={32} h={32} radius="sm" />
+      <Image src={item.imagePath} w={imageSize} h={imageSize} radius="sm" />
       <div>
-        <Text size="sm">{item.displayName}</Text>
-        <Text size="xs" opacity={0.5} truncate="end" maw={"300px"}>
-          {item.description}
+        <Text size="sm" truncate="end" maw="300px">
+          {item.displayName}
         </Text>
+        {size === "lg" && (
+          <Text size="xs" opacity={0.5} truncate="end" maw={"280px"}>
+            {item.description}
+          </Text>
+        )}
       </div>
     </Group>
   );
 }
 
 export function FactoryItemInput(props: IFactoryItemInputProps) {
+  const {
+    size = "lg",
+    width = 300,
+    onChange,
+    value,
+    variant = "default",
+    ...inputProps
+  } = props;
+
   const [search, setSearch] = useState("");
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [rawSelectedItem, setSelectedItem] = useState<string | null>(null);
+  const selectedItem = value ?? rawSelectedItem;
   const combobox = useCombobox({
     onDropdownClose: () => {
       combobox.resetSelectedOption();
       combobox.focusTarget();
       setSearch("");
     },
-
     onDropdownOpen: () => {
       combobox.focusSearchInput();
     },
   });
 
-  const options = AllFactoryItems.filter((item) =>
-    item.displayName.toLowerCase().includes(search.toLowerCase().trim())
-  ).map((item) => (
-    <Combobox.Option value={item.id} key={item.id}>
-      <FactoryItemOption item={item} />
-    </Combobox.Option>
-  ));
+  const options = useMemo(
+    () =>
+      AllFactoryItems.filter((item) =>
+        item.displayName.toLowerCase().includes(search.toLowerCase().trim())
+      ).map((item) => (
+        <Combobox.Option value={item.id} key={item.id}>
+          <FactoryItemOption item={item} size={size} />
+        </Combobox.Option>
+      )),
+    [search]
+  );
 
   return (
     <>
       <Combobox
         store={combobox}
-        width={400}
+        // Not accessible, but it's faster
+        keepMounted={false}
+        width={300}
         position="bottom-start"
         withArrow
         onOptionSubmit={(val) => {
           setSelectedItem(val);
+          onChange?.(val);
           combobox.closeDropdown();
         }}
       >
-        <Combobox.Target withAriaAttributes={false}>
-          <Button
-            onClick={() => combobox.toggleDropdown()}
-            variant="default"
-            ta={"left"}
-            size="lg"
-            justify="space-between"
-            rightSection={<Combobox.Chevron />}
-          >
-            {selectedItem ? (
-              <FactoryItemOption item={AllFactoryItemsMap[selectedItem]} />
-            ) : (
-              "Select item"
-            )}
-          </Button>
-        </Combobox.Target>
+        <Input.Wrapper {...inputProps}>
+          <Combobox.Target withAriaAttributes={false}>
+            <Input
+              component="button"
+              onClick={() => combobox.toggleDropdown()}
+              variant={variant}
+              ta={"left"}
+              size={size}
+              w={width}
+              // justify="space-between"
+              rightSection={<Combobox.Chevron />}
+            >
+              {selectedItem ? (
+                <FactoryItemOption
+                  item={AllFactoryItemsMap[selectedItem]}
+                  size={size}
+                />
+              ) : (
+                "Select item"
+              )}
+            </Input>
+          </Combobox.Target>
+        </Input.Wrapper>
 
         <Combobox.Dropdown>
           <Combobox.Search

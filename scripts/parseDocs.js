@@ -6,10 +6,17 @@ const docsJson = JSON.parse(fs.readFileSync("./data/docs-it.json", "utf8"));
 const toolsJson = JSON.parse(fs.readFileSync("./data/docs-tools.json", "utf8"));
 
 function parseDocs() {
-  const rawItems = docsJson.find((nativeClass) => {
+  const rawItems = docsJson.flatMap((nativeClass) => {
     console.log(nativeClass.NativeClass);
-    return nativeClass.NativeClass?.includes("FGItemDescriptor");
-  }).Classes;
+    if (
+      nativeClass.NativeClass?.includes("FGItemDescriptor") ||
+      nativeClass.NativeClass?.includes("FGResourceDescriptor")
+    ) {
+      return nativeClass.Classes;
+    }
+
+    return [];
+  });
 
   const items = rawItems.map(parseFactoryItem).filter((item) => item !== null);
   fs.writeFileSync(
