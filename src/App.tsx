@@ -25,7 +25,7 @@ export default function App() {
 
   // const [currentTab, setCurrentTab] = useState(tabs[0] as string | null);
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider theme={theme} forceColorScheme="dark">
       <AuthSessionManager />
       <SyncManager />
       <Notifications position="top-right" zIndex={1000} />

@@ -112,7 +112,7 @@ export function FactoryRow(props: IFactoryRowProps) {
         {/* </Grid.Col> */}
       </Group>
       <Collapse mt="sm" ml="-12px" in={!!factory.inputs?.length}>
-        <Card bg="gray.1" p="sm" radius="sm" mb="-12">
+        <Card bg="dark.7" p="sm" radius="sm" mb="-12">
           <Stack gap="xs">
             {factory.inputs?.map((input, index) => (
               <FactoryInputRow

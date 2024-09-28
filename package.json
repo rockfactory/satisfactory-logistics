@@ -13,6 +13,7 @@
     "parse-docs": "node scripts/parseDocs.js"
   },
   "dependencies": {
+    "@mantine/colors-generator": "^7.13.0",
     "@mantine/core": "7.13.0",
     "@mantine/hooks": "7.13.0",
     "@mantine/notifications": "^7.13.0",
@@ -22,7 +23,7 @@
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/supabase-js": "^2.45.4",
     "@tabler/icons-react": "^3.17.0",
-    "chroma-js": "^3.1.1",
+    "chroma-js": "2.4",
     "dot-prop": "^9.0.0",
     "lodash": "^4.17.21",
     "moize": "^6.1.6",
