@@ -27,7 +27,7 @@ export function AuthSessionManager(props: IAuthSessionManagerProps) {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [dispatch]);
 
   return null;
 }

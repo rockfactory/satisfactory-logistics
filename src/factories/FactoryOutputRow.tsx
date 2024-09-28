@@ -82,7 +82,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
         }}
         rightSection={
           <Image
-            src="/public/images/somersloop_256.png"
+            src="/images/somersloop_256.png"
             alt="Somerloops"
             width={20}
             height={20}

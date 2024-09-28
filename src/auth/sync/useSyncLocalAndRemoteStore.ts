@@ -91,7 +91,7 @@ export function useSyncLocalAndRemoteStore() {
     }
 
     update().catch(console.error);
-  }, [factories]);
+  }, [factories, dispatch]);
 
   useEffect(() => {
     if (!session || session?.user.id === latestSessionId.current) {
