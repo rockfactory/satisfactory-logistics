@@ -2,7 +2,7 @@ import fs from "node:fs";
 
 const ImageRegex = /(?:UI|QuantumEnergy)\/(?:IconDesc_)?(.*)_256\./;
 
-const docsJson = JSON.parse(fs.readFileSync("./data/docs-it.json", "utf8"));
+const docsJson = JSON.parse(fs.readFileSync("./data/docs-en.json", "utf8"));
 const toolsJson = JSON.parse(fs.readFileSync("./data/docs-tools.json", "utf8"));
 
 function parseDocs() {

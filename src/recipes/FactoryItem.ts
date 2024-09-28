@@ -22,3 +22,11 @@ export enum FactoryItemForm {
 import RawFactoryItems from "./FactoryItems.json";
 
 export const AllFactoryItems: FactoryItem[] = RawFactoryItems as FactoryItem[];
+
+export const AllFactoryItemsMap = AllFactoryItems.reduce(
+  (acc, item) => {
+    acc[item.id] = item;
+    return acc;
+  },
+  {} as Record<string, FactoryItem>
+);

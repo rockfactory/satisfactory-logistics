@@ -1,4 +1,4 @@
-import { RingProgress, Text } from "@mantine/core";
+import { Group, RingProgress, Text } from "@mantine/core";
 import chroma from "chroma-js";
 import { sum } from "lodash";
 import { useSelector } from "react-redux";
@@ -6,6 +6,7 @@ import { RootState } from "../core/store";
 
 export interface IFactoryUsageProps {
   factoryId: string;
+  output: string | null | undefined;
 }
 
 const PercentageFormatter = new Intl.NumberFormat("it-IT", {
@@ -15,7 +16,7 @@ const PercentageFormatter = new Intl.NumberFormat("it-IT", {
 });
 
 const colorScale = chroma
-  .scale(["#E03C32", "#FFD301", "#7BB662"])
+  .scale(["#E03C32", "#e6c111", "#7BB662"])
   .mode("lrgb")
   .padding(-0.1)
   .domain([1, 0]);
@@ -23,7 +24,10 @@ const colorScale = chroma
 export function FactoryUsage(props: IFactoryUsageProps) {
   const factories = useSelector((state: RootState) => state.factories);
   const source = factories.factories.find((f) => f.id === props.factoryId);
-  const producedAmount = source?.amount ?? 1;
+  const sourceOutput = source?.outputs?.find(
+    (o) => o.resource === props.output
+  );
+  const producedAmount = sourceOutput?.amount ?? 1;
   const usedAmount = sum(
     factories.factories.flatMap(
       (f) =>
@@ -31,28 +35,41 @@ export function FactoryUsage(props: IFactoryUsageProps) {
           ?.filter(
             (input) =>
               input.factoryId === props.factoryId &&
-              input.resource === source?.output
+              input.resource === sourceOutput?.resource
           )
           .map((input) => input.amount ?? 0) ?? []
     )
   );
 
   return (
-    <RingProgress
-      label={
-        <Text size="xs" ta="center">
-          {PercentageFormatter.format(usedAmount / producedAmount)}
-        </Text>
-      }
-      size={60}
-      thickness={8}
-      roundCaps
-      sections={[
-        {
-          value: (usedAmount / producedAmount) * 100,
-          color: colorScale(usedAmount / producedAmount).hex(),
-        },
-      ]}
-    />
+    <Group gap={0}>
+      <RingProgress
+        // label={
+        //   <Text size="xs" ta="center">
+        //     {PercentageFormatter.format(usedAmount / producedAmount)}
+        //   </Text>
+        // }
+        size={36}
+        thickness={6}
+        roundCaps
+        sections={[
+          {
+            value: (usedAmount / producedAmount) * 100,
+            color: colorScale(usedAmount / producedAmount).hex(),
+          },
+        ]}
+      />
+      {/* <Badge color={colorScale(usedAmount / producedAmount).hex()} w={55}> */}
+      <Text
+        size="xs"
+        ta="right"
+        fw={"bold"}
+        c={colorScale(usedAmount / producedAmount).hex()}
+        w={30}
+      >
+        {PercentageFormatter.format(usedAmount / producedAmount)}
+      </Text>
+      {/* </Badge> */}
+    </Group>
   );
 }

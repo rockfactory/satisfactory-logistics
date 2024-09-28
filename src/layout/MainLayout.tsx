@@ -1,34 +1,27 @@
 import {
-  Avatar,
   Burger,
   Container,
   Group,
-  Menu,
   rem,
   Tabs,
   Text,
-  UnstyledButton,
   useMantineTheme,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import {
-  IconBuildingFactory2,
-  IconChevronDown,
-  IconHeart,
-} from "@tabler/icons-react";
-import cx from "clsx";
-import { useState } from "react";
-import classes from "./MainLayout.module.css";
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { IconBuildingFactory2 } from '@tabler/icons-react';
+import { useState } from 'react';
+import classes from './MainLayout.module.css';
 
 const user = {
-  name: "Jane Spoonfighter",
-  email: "janspoon@fighter.dev",
+  name: 'Jane Spoonfighter',
+  email: 'janspoon@fighter.dev',
   image:
-    "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png",
+    'https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-5.png',
 };
 
 interface MainLayoutProps {
   tabs: string[];
+  activeTab: string | null;
   children?: React.ReactNode;
   onChangeTab: (tab: string | null) => void;
 }
@@ -45,14 +38,14 @@ export function MainLayout(props: MainLayoutProps) {
           <Group>
             <IconBuildingFactory2
               stroke={2}
-              style={{ width: rem(26), height: rem(26) }}
+              style={{ width: rem(32), height: rem(32) }}
             />
-            <Text size="md" fw={700} ml={5}>
-              Satisfactory Planner
+            <Text size="lg" fw={700}>
+              Satisfactory Logistics <i>Planner</i>
             </Text>
           </Group>
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-          <Menu
+          {/* <Menu
             width={260}
             position="bottom-end"
             transitionProps={{ transition: "pop-top-right" }}
@@ -96,15 +89,16 @@ export function MainLayout(props: MainLayoutProps) {
                 Liked posts
               </Menu.Item>
             </Menu.Dropdown>
-          </Menu>
+          </Menu> */}
         </Group>
       </Container>
       <Container size="md">
         <Tabs
-          defaultValue="Home"
+          defaultValue="Factories"
+          value={props.activeTab}
           variant="outline"
           visibleFrom="sm"
-          onChange={(tab) => props.onChangeTab(tab)}
+          onChange={tab => props.onChangeTab(tab)}
           classNames={{
             root: classes.tabs,
             list: classes.tabsList,
@@ -112,7 +106,7 @@ export function MainLayout(props: MainLayoutProps) {
           }}
         >
           <Tabs.List>
-            {props.tabs.map((tab) => (
+            {props.tabs.map(tab => (
               <Tabs.Tab value={tab} key={tab}>
                 {tab}
               </Tabs.Tab>

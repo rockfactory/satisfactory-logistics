@@ -9,23 +9,20 @@ import {
   useCombobox,
 } from "@mantine/core";
 import { useMemo, useState } from "react";
-import { AllFactoryItems, FactoryItem } from "../../recipes/FactoryItem";
+import {
+  AllFactoryItems,
+  AllFactoryItemsMap,
+  FactoryItem,
+} from "../../recipes/FactoryItem";
 
 export interface IFactoryItemInputProps
   extends Omit<InputWrapperProps, "value" | "onChange"> {
   value?: string | null;
   onChange?: (value: string | null) => void;
+  allowedItems?: string[];
   size?: "md" | "lg" | "sm";
   width?: number;
 }
-
-const AllFactoryItemsMap = AllFactoryItems.reduce(
-  (acc, item) => {
-    acc[item.id] = item;
-    return acc;
-  },
-  {} as Record<string, FactoryItem>
-);
 
 interface FactoryItemOptionProps {
   item: FactoryItem;
@@ -58,6 +55,7 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
     onChange,
     value,
     variant = "default",
+    allowedItems,
     ...inputProps
   } = props;
 
@@ -77,14 +75,18 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
 
   const options = useMemo(
     () =>
-      AllFactoryItems.filter((item) =>
-        item.displayName.toLowerCase().includes(search.toLowerCase().trim())
+      AllFactoryItems.filter(
+        (item) =>
+          item.displayName
+            .toLowerCase()
+            .includes(search.toLowerCase().trim()) &&
+          (allowedItems ? allowedItems.includes(item.id) : true)
       ).map((item) => (
         <Combobox.Option value={item.id} key={item.id}>
           <FactoryItemOption item={item} size={size} />
         </Combobox.Option>
       )),
-    [search]
+    [search, allowedItems]
   );
 
   return (
@@ -97,6 +99,13 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
         position="bottom-start"
         withArrow
         onOptionSubmit={(val) => {
+          if (val === selectedItem) {
+            setSelectedItem(null);
+            onChange?.(null);
+            combobox.closeDropdown();
+            return;
+          }
+
           setSelectedItem(val);
           onChange?.(val);
           combobox.closeDropdown();
@@ -111,6 +120,13 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
               ta={"left"}
               size={size}
               w={width}
+              onKeyDown={(event) => {
+                if (event.key === "Backspace" || event.key === "Delete") {
+                  combobox.closeDropdown();
+                  setSelectedItem(null);
+                  onChange?.(null);
+                }
+              }}
               // justify="space-between"
               rightSection={<Combobox.Chevron />}
             >
@@ -120,7 +136,9 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
                   size={size}
                 />
               ) : (
-                "Select item"
+                <Text c="gray.5" size="sm">
+                  Select item...
+                </Text>
               )}
             </Input>
           </Combobox.Target>

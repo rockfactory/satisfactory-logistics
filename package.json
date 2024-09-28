@@ -12,6 +12,7 @@
   "dependencies": {
     "@mantine/core": "7.13.0",
     "@mantine/hooks": "7.13.0",
+    "@nivo/sankey": "^0.87.0",
     "@reduxjs/toolkit": "^2.2.7",
     "@tabler/icons-react": "^3.17.0",
     "chroma-js": "^3.1.1",
