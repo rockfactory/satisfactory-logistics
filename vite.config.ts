@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     sentryVitePlugin({
       org: 'leonardfactory',
-      project: 'javascript-react',
+      project: 'satisfactory-logistics',
     }),
   ],
 
