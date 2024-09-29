@@ -2,7 +2,7 @@ import { Group, RingProgress, Text } from '@mantine/core';
 import chroma from 'chroma-js';
 import { sum } from 'lodash';
 import { PercentageFormatter } from '../core/intl/PercentageFormatter';
-import { useFactories } from './store/FactoriesSlice';
+import { useFactories, useFactorySettings } from './store/FactoriesSlice';
 
 export interface IFactoryUsageProps {
   /** The _source_ factory (input.factoryId) */
@@ -54,6 +54,13 @@ export function FactoryUsage(props: IFactoryUsageProps) {
 
 export function BaseFactoryUsage(props: { percentage: number }) {
   const { percentage } = props;
+  const settings = useFactorySettings();
+  const is100Percent = Math.abs(percentage - 1) < Number.EPSILON;
+  const color =
+    is100Percent && !settings?.noHighlight100PercentUsage
+      ? (settings?.highlight100PercentColor ?? '#339af0')
+      : colorScale(percentage).hex();
+
   return (
     <Group gap={0}>
       <RingProgress
@@ -63,17 +70,11 @@ export function BaseFactoryUsage(props: { percentage: number }) {
         sections={[
           {
             value: percentage * 100,
-            color: colorScale(percentage).hex(),
+            color: color,
           },
         ]}
       />
-      <Text
-        size="xs"
-        ta="right"
-        fw={'bold'}
-        c={colorScale(percentage).hex()}
-        w={30}
-      >
+      <Text size="xs" ta="right" fw={'bold'} c={color} w={30}>
         {PercentageFormatter.format(percentage)}
       </Text>
     </Group>

@@ -24,6 +24,7 @@ import { RootState } from '../core/store';
 import { FactoryRow } from './FactoryRow';
 import { FactoriesFiltersSection } from './filters/FactoriesFiltersSection';
 import { ImportFactoriesModal } from './import/ImportFactoriesModal';
+import { FactoriesSettings } from './settings/FactoriesSettings';
 import { factoryActions, useFactories } from './store/FactoriesSlice';
 import { FactoryUndoButtons } from './store/FactoryUndoButtons';
 import { FactoryWideCard } from './wide/FactoryWideCard';
@@ -164,6 +165,7 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
               Clear All
             </Button>
             <ImportFactoriesModal />
+            <FactoriesSettings />
           </Group>
         </Group>
       </Container>

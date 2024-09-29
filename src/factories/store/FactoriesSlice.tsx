@@ -32,10 +32,16 @@ interface FactoriesFilters {
   viewMode?: 'compact' | 'wide';
 }
 
+interface FactoriesSettings {
+  noHighlight100PercentUsage?: boolean;
+  highlight100PercentColor?: string;
+}
+
 interface FactoriesState {
   factories: GameFactory[];
   filters: FactoriesFilters | null;
   highlightedOutput: { factoryId: string; resource: string } | null;
+  settings?: FactoriesSettings;
 }
 
 export const FactoriesSlice = createSlice({
@@ -48,6 +54,10 @@ export const FactoriesSlice = createSlice({
       viewMode: 'wide',
     },
     highlightedOutput: null,
+    settings: {
+      noHighlight100PercentUsage: false,
+      highlight100PercentColor: '#339af0',
+    },
   } as FactoriesState,
   reducers: {
     add: (state, action: PayloadAction<{ name?: string }>) => {
@@ -189,6 +199,9 @@ export const FactoriesSlice = createSlice({
       state.filters = { name: null, resource: null };
       state.highlightedOutput = null;
     },
+    setSettings: (state, action: PayloadAction<Partial<FactoriesSettings>>) => {
+      state.settings = { ...state.settings, ...action.payload };
+    },
   },
 });
 
@@ -203,3 +216,6 @@ export const useFactory = (id: string) =>
   useSelector((state: RootState) =>
     state.factories.present.factories.find(factory => factory.id === id),
   );
+
+export const useFactorySettings = () =>
+  useSelector((state: RootState) => state.factories.present.settings);

@@ -104,6 +104,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         variant="outline"
         color="red"
         size="md"
+        mt={3}
         onClick={() =>
           dispatch(
             factoryActions.removeInput({
