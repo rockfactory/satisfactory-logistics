@@ -10,8 +10,10 @@ function parseDocs() {
     console.log(nativeClass.NativeClass);
     if (
       nativeClass.NativeClass?.includes('FGItemDescriptor') ||
-      nativeClass.NativeClass?.includes('FGResourceDescriptor')
+      nativeClass.NativeClass?.includes('FGResourceDescriptor') ||
+      nativeClass.NativeClass?.includes('FGAmmoType')
     ) {
+      console.log(`Importing -> `, nativeClass.NativeClass);
       return nativeClass.Classes;
     }
 
