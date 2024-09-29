@@ -48,12 +48,19 @@ export function ChartsTab(_props: IChartsTabProps) {
     return { nodes, links };
   }, [factories]);
 
-  if (factories.length === 0) {
+  if (
+    factories.length === 0 ||
+    data.nodes.length === 0 ||
+    data.links.length === 0
+  ) {
     return (
-      <Container size="lg" mt="lg">
+      <Container size="lg" mt="xl">
         <Box ta="center">
           <IconAlertCircle size={60} stroke={1.2} />
           <Text size="xl">No factories to display</Text>
+          <Text size="sm">
+            Add atleast two factories with inputs and outputs to see the chart
+          </Text>
         </Box>
       </Container>
     );
