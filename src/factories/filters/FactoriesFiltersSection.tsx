@@ -45,6 +45,7 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
           size="sm"
           placeholder="Filter by resource..."
           value={filters?.resource ?? ''}
+          clearable
           onChange={resource =>
             dispatch(
               factoryActions.setFilter({

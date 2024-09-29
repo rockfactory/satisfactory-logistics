@@ -1,4 +1,5 @@
 import {
+  CloseButton,
   Combobox,
   Group,
   Image,
@@ -23,6 +24,7 @@ export interface IFactoryItemInputProps
   size?: 'md' | 'lg' | 'sm';
   width?: number;
   placeholder?: string;
+  clearable?: boolean;
 }
 
 interface FactoryItemOptionProps {
@@ -58,6 +60,7 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
     variant = 'default',
     allowedItems,
     placeholder = 'Select item...',
+    clearable = false,
     ...inputProps
   } = props;
 
@@ -130,7 +133,25 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
                 }
               }}
               // justify="space-between"
-              rightSection={<Combobox.Chevron />}
+              rightSectionPointerEvents={
+                !selectedItem || !clearable ? 'none' : 'all'
+              }
+              rightSection={
+                selectedItem && clearable ? (
+                  <CloseButton
+                    size="sm"
+                    variant="transparent"
+                    onMouseDown={event => event.preventDefault()}
+                    onClick={() => {
+                      setSelectedItem(null);
+                      onChange?.(null);
+                    }}
+                    aria-label="Clear value"
+                  />
+                ) : (
+                  <Combobox.Chevron />
+                )
+              }
             >
               {selectedItem ? (
                 <FactoryItemOption
