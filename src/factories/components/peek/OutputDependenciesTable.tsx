@@ -1,4 +1,4 @@
-import { Table } from '@mantine/core';
+import { Stack, Table, Text } from '@mantine/core';
 import { useMemo } from 'react';
 import { PercentageFormatter } from '../../../core/intl/PercentageFormatter';
 import { GameFactoryOutput, useFactories } from '../../store/FactoriesSlice';
@@ -22,6 +22,18 @@ export function OutputDependenciesTable(props: IOutputDependenciesTableProps) {
           .map(input => ({ source, input })) ?? [],
     );
   }, [factories, factoryId, output]);
+
+  if (dependencies.length === 0)
+    return (
+      <div>
+        <Stack gap="xs" justify="center" align="center">
+          No dependencies found.
+          <Text size="xs" ta="center" c="dimmed">
+            Add a factory that uses this output as an input.
+          </Text>
+        </Stack>
+      </div>
+    );
 
   return (
     <div>

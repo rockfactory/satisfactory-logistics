@@ -9,11 +9,15 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { IconDownload, IconTrash, IconUpload } from '@tabler/icons-react';
+import { IconTrash } from '@tabler/icons-react';
 import moize from 'moize';
 import * as React from 'react';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import {
+  FactoryInputIcon,
+  FactoryOutputIcon,
+} from '../components/peek/icons/OutputInputIcons';
 import { FactoryInputRow } from '../FactoryInputRow';
 import { FactoryOutputRow } from '../FactoryOutputRow';
 import { factoryActions, GameFactory } from '../store/FactoriesSlice';
@@ -69,7 +73,7 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
               onClick={() =>
                 dispatch(factoryActions.addInput({ id: factory.id }))
               }
-              leftSection={<IconDownload stroke={2} size={16} />}
+              leftSection={<FactoryInputIcon stroke={2} size={16} />}
             >
               Add Input
             </Button>
@@ -80,7 +84,7 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
               onClick={() =>
                 dispatch(factoryActions.addOutput({ id: factory.id }))
               }
-              leftSection={<IconUpload stroke={2} size={16} />}
+              leftSection={<FactoryOutputIcon stroke={2} size={16} />}
             >
               Add Output
             </Button>

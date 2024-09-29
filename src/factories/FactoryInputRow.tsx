@@ -1,8 +1,12 @@
-import { ActionIcon, Group, NumberInput, Tooltip } from '@mantine/core';
+import { ActionIcon, Group, NumberInput, Text, Tooltip } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../core/store';
+import {
+  FactoryInputIcon,
+  FactoryOutputIcon,
+} from './components/peek/icons/OutputInputIcons';
 import { FactoryChangeHandler } from './FactoryRow';
 import { BaseFactoryUsage, useOutputUsage } from './FactoryUsage';
 import { FactoryInput } from './inputs/FactoryInput';
@@ -82,6 +86,17 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
             ) : (
               'N/A (Choose factory & resource)'
             )}
+            {usage.percentage > 1 && (
+              <Group gap="sm" align="center">
+                Missing {usage.usedAmount - usage.producedAmount}
+                <Text size="sm">
+                  <FactoryOutputIcon size={16} /> {usage.producedAmount}
+                </Text>
+                <Text size="sm">
+                  <FactoryInputIcon size={16} /> {usage.usedAmount}
+                </Text>
+              </Group>
+            )}
           </Group>
         }
         position="top-start"
@@ -91,11 +106,17 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           value={input.amount ?? 0}
           w={100}
           min={0}
+          rightSection={
+            <FactoryInputIcon
+              size={16}
+              color={usage.percentage > 1 ? 'red' : undefined}
+            />
+          }
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           error={
             usage.percentage > 1
-              ? `Usage: ${Math.round(usage.percentage * 100)}%`
+              ? `Missing ${usage.usedAmount - usage.producedAmount}`
               : undefined
           }
           onChange={onChangeFactory(factoryId, `inputs[${index}].amount`)}

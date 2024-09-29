@@ -7,11 +7,15 @@ import {
   TextInput,
   Tooltip,
 } from '@mantine/core';
-import { IconDownload, IconTrash, IconUpload } from '@tabler/icons-react';
+import { IconTrash } from '@tabler/icons-react';
 import moize from 'moize';
 import * as React from 'react';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import {
+  FactoryInputIcon,
+  FactoryOutputIcon,
+} from './components/peek/icons/OutputInputIcons';
 import { FactoryInputRow } from './FactoryInputRow';
 import { FactoryOutputRow } from './FactoryOutputRow';
 import { factoryActions, GameFactory } from './store/FactoriesSlice';
@@ -93,7 +97,7 @@ export function FactoryRow(props: IFactoryRowProps) {
                 dispatch(factoryActions.addInput({ id: factory.id }))
               }
             >
-              <IconDownload stroke={2} size={16} />
+              <FactoryInputIcon stroke={2} size={16} />
             </ActionIcon>
           </Tooltip>
           <Tooltip label="Add Output" position="top">
@@ -105,7 +109,7 @@ export function FactoryRow(props: IFactoryRowProps) {
                 dispatch(factoryActions.addOutput({ id: factory.id }))
               }
             >
-              <IconUpload stroke={2} size={16} />
+              <FactoryOutputIcon stroke={2} size={16} />
             </ActionIcon>
           </Tooltip>
 

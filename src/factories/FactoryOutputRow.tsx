@@ -1,6 +1,7 @@
 import { ActionIcon, Group, Image, NumberInput, Tooltip } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
+import { FactoryOutputIcon } from './components/peek/icons/OutputInputIcons';
 import { OutputDependenciesPeekModal } from './components/peek/OutputDependenciesPeekModal';
 import { FactoryChangeHandler } from './FactoryRow';
 import { FactoryUsage } from './FactoryUsage';
@@ -40,6 +41,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
         value={output.amount ?? 0}
         w={100}
         min={0}
+        rightSection={<FactoryOutputIcon size={16} />}
         fw={!output.somersloops ? 'normal' : 'bold'}
         styles={{
           input: {
