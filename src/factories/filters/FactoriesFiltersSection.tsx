@@ -7,14 +7,15 @@ import {
 } from '@mantine/core';
 import {
   IconChevronDown,
+  IconPlus,
   IconSearch,
   IconTextGrammar,
 } from '@tabler/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { SyncButton } from '../../auth/sync/SyncButton';
 import { RootState } from '../../core/store';
 import { FactoryItemInput } from '../inputs/FactoryItemInput';
 import { factoryActions } from '../store/FactoriesSlice';
+import { FactoryUndoButtons } from '../store/FactoryUndoButtons';
 
 export interface IFactoriesFiltersSectionProps {}
 
@@ -99,8 +100,11 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
         />
       </Group>
       <Group>
-        <SyncButton />
-        <Button onClick={() => dispatch(factoryActions.add({}))}>
+        <FactoryUndoButtons />
+        <Button
+          onClick={() => dispatch(factoryActions.add({}))}
+          leftSection={<IconPlus size={16} />}
+        >
           Add Factory
         </Button>
       </Group>

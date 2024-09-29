@@ -26,7 +26,7 @@ export function SyncButton(props: ISyncButtonProps) {
   ) : (
     <Button
       leftSection={<IconUpload size={16} />}
-      variant="subtle"
+      variant="default"
       onClick={handleSync}
       loading={sync.isSyncing}
     >

@@ -5,6 +5,7 @@ import {
   Group,
   Stack,
   TextInput,
+  Tooltip,
 } from '@mantine/core';
 import { IconDownload, IconTrash, IconUpload } from '@tabler/icons-react';
 import moize from 'moize';
@@ -55,58 +56,71 @@ export function FactoryRow(props: IFactoryRowProps) {
       {/* <Text size="sm" fw="bold">
             {factory.name}
           </Text> */}
-      <Group gap="sm" align="flex-start">
-        {/* <Grid.Col span={6}> */}
-        <TextInput
-          variant="unstyled"
-          placeholder="Factory..."
-          fw={'bold'}
-          w={180}
-          defaultValue={factory.name ?? ''}
-          onChange={onChangeFactory(factory.id, 'name')}
-        />
-        {/* </Grid.Col>
+      <Group gap="sm" align="flex-start" justify="space-between">
+        <Group gap="sm" align="flex-start">
+          {/* <Grid.Col span={6}> */}
+          <TextInput
+            variant="unstyled"
+            placeholder="Factory..."
+            fw={'bold'}
+            w={180}
+            defaultValue={factory.name ?? ''}
+            onChange={onChangeFactory(factory.id, 'name')}
+          />
+          {/* </Grid.Col>
             <Grid.Col span={9}> */}
-        <Stack gap={'sm'}>
-          {(factory.outputs ?? [{ resource: null, amount: null }]).map(
-            (output, index) => (
-              <FactoryOutputRow
-                key={index}
-                index={index}
-                output={output}
-                factory={factory}
-                onChangeFactory={onChangeFactory}
-              />
-            ),
-          )}
-        </Stack>
-        <ActionIcon
-          variant="light"
-          color="blue"
-          size="lg"
-          onClick={() => dispatch(factoryActions.addInput({ id: factory.id }))}
-        >
-          <IconDownload stroke={2} size={16} />
-        </ActionIcon>
-        <ActionIcon
-          variant="filled"
-          color="blue"
-          size="lg"
-          onClick={() => dispatch(factoryActions.addOutput({ id: factory.id }))}
-        >
-          <IconUpload stroke={2} size={16} />
-        </ActionIcon>
+          <Stack gap={'sm'}>
+            {(factory.outputs ?? [{ resource: null, amount: null }]).map(
+              (output, index) => (
+                <FactoryOutputRow
+                  key={index}
+                  index={index}
+                  output={output}
+                  factory={factory}
+                  onChangeFactory={onChangeFactory}
+                />
+              ),
+            )}
+          </Stack>
+        </Group>
+        <Group align="flex-end" gap="xs">
+          <Tooltip label="Add Input" position="top">
+            <ActionIcon
+              variant="light"
+              color="blue"
+              size="lg"
+              onClick={() =>
+                dispatch(factoryActions.addInput({ id: factory.id }))
+              }
+            >
+              <IconDownload stroke={2} size={16} />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip label="Add Output" position="top">
+            <ActionIcon
+              variant="filled"
+              color="blue"
+              size="lg"
+              onClick={() =>
+                dispatch(factoryActions.addOutput({ id: factory.id }))
+              }
+            >
+              <IconUpload stroke={2} size={16} />
+            </ActionIcon>
+          </Tooltip>
 
-        <ActionIcon
-          variant="filled"
-          color="red"
-          size="lg"
-          onClick={() => dispatch(factoryActions.remove({ id: factory.id }))}
-        >
-          <IconTrash stroke={2} size={16} />
-        </ActionIcon>
-        {/* </Grid.Col> */}
+          <ActionIcon
+            variant="filled"
+            color="red"
+            size="lg"
+            onClick={() => dispatch(factoryActions.remove({ id: factory.id }))}
+          >
+            <IconTrash stroke={2} size={16} />
+          </ActionIcon>
+        </Group>
       </Group>
+      {/* </Grid.Col> */}
+
       <Collapse mt="sm" ml="-12px" in={!!factory.inputs?.length}>
         <Card bg="dark.7" p="sm" radius="sm" mb="-12">
           <Stack gap="xs">

@@ -1,4 +1,4 @@
-import { ActionIcon, Group, Image, NumberInput } from '@mantine/core';
+import { ActionIcon, Group, Image, NumberInput, Tooltip } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
 import { OutputDependenciesPeekModal } from './components/peek/OutputDependenciesPeekModal';
@@ -58,37 +58,43 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
           );
         }}
       />
-      <NumberInput
-        value={output.somersloops ?? 0}
-        w={60}
-        variant="filled"
-        fw={!output.somersloops ? 'normal' : 'bold'}
-        styles={{
-          input: {
-            color: !output.somersloops ? '' : 'white',
-            backgroundColor: !output.somersloops
-              ? ''
-              : 'var(--mantine-color-grape-5)',
-          },
-        }}
-        onChange={value => {
-          dispatch(
-            factoryActions.updateSomersloops({
-              id: factory.id,
-              outputIndex: index,
-              value: Number(value),
-            }),
-          );
-        }}
-        rightSection={
-          <Image
-            src="/images/somersloop_256.png"
-            alt="Somerloops"
-            width={20}
-            height={20}
-          />
-        }
-      />
+      <Tooltip
+        label="Somersloops number. It will double the output amount if set."
+        position="top"
+        withArrow
+      >
+        <NumberInput
+          value={output.somersloops ?? 0}
+          w={60}
+          variant="filled"
+          fw={!output.somersloops ? 'normal' : 'bold'}
+          styles={{
+            input: {
+              color: !output.somersloops ? '' : 'white',
+              backgroundColor: !output.somersloops
+                ? ''
+                : 'var(--mantine-color-grape-5)',
+            },
+          }}
+          onChange={value => {
+            dispatch(
+              factoryActions.updateSomersloops({
+                id: factory.id,
+                outputIndex: index,
+                value: Number(value),
+              }),
+            );
+          }}
+          rightSection={
+            <Image
+              src="/images/somersloop_256.png"
+              alt="Somerloops"
+              width={20}
+              height={20}
+            />
+          }
+        />
+      </Tooltip>
       <ActionIcon
         variant="outline"
         color="red"
@@ -106,21 +112,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
         <IconTrash size={16} stroke={1.5} />
       </ActionIcon>
       <OutputDependenciesPeekModal factoryId={factory.id} output={output} />
-      {/* <ActionIcon
-        variant="outline"
-        color="blue.4"
-        size="md"
-        onClick={() =>
-          dispatch(
-            factoryActions.highlightOutput({
-              id: factory.id,
-              index: index,
-            }),
-          )
-        }
-      >
-        <IconEye size={16} stroke={1.5} />
-      </ActionIcon> */}
+
       <FactoryUsage factoryId={factory.id} output={output.resource} />
     </Group>
   );

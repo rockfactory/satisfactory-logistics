@@ -1,8 +1,10 @@
-import { Button, FileButton, Modal } from '@mantine/core';
+import { Button, Divider, FileButton, Modal, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconFileImport } from '@tabler/icons-react';
+import dayjs from 'dayjs';
 import { useDispatch } from 'react-redux';
+import { store } from '../../core/store';
 import { factoryActions } from '../store/FactoriesSlice';
 
 export interface IImportFactoriesModalProps {}
@@ -13,7 +15,36 @@ export function ImportFactoriesModal(_props: IImportFactoriesModalProps) {
 
   return (
     <>
-      <Modal opened={opened} onClose={close} title="Import factories" centered>
+      <Modal opened={opened} onClose={close} title="Import/Export">
+        <Text fz="h4" mb="md">
+          Export factories to file
+        </Text>
+        <Button
+          onClick={() => {
+            const json = JSON.stringify(
+              {
+                factories: store.getState().factories.present.factories,
+              },
+              null,
+              2,
+            );
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SatisfactoryLogistics_Factories_${dayjs().format('YYYY_MM_DD[T]HH_mm_ss')}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+          }}
+        >
+          Download factories
+        </Button>
+
+        <Divider mt="lg" mb="lg" />
+
+        <Text fz="h4" mb="md">
+          Import factories from file
+        </Text>
         <FileButton
           onChange={file => {
             if (!file) {
@@ -38,9 +69,9 @@ export function ImportFactoriesModal(_props: IImportFactoriesModalProps) {
             };
             reader.readAsText(file);
           }}
-          accept="*/*"
+          accept="application/json"
         >
-          {props => <Button {...props}>Select exported factories file</Button>}
+          {props => <Button {...props}>Upload exported factories</Button>}
         </FileButton>
       </Modal>
 
@@ -48,7 +79,7 @@ export function ImportFactoriesModal(_props: IImportFactoriesModalProps) {
         onClick={open}
         leftSection={<IconFileImport stroke={1.5} size={16} />}
       >
-        Import
+        Import/Export
       </Button>
     </>
   );

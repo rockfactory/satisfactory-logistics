@@ -19,7 +19,7 @@ export function FactoryUsage(props: IFactoryUsageProps) {
   const factories = useFactories();
   const source = factories.find(f => f.id === props.factoryId);
   const sourceOutput = source?.outputs?.find(o => o.resource === props.output);
-  const producedAmount = sourceOutput?.amount ?? 1;
+  const producedAmount = Math.max(sourceOutput?.amount ?? 1, 0.00001);
   const usedAmount = sum(
     factories.flatMap(
       f =>

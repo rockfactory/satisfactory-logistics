@@ -1,5 +1,6 @@
-import { Button, Group } from '@mantine/core';
+import { ActionIcon, Group, Tooltip } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
+import { IconArrowBackUp, IconArrowForwardUp } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
 import { ActionCreators } from 'redux-undo';
 
@@ -24,9 +25,25 @@ export function FactoryUndoButtons(props: IFactoryUndoButtonsProps) {
     ],
   ]);
   return (
-    <Group gap="sm">
-      <Button onClick={() => dispatch(ActionCreators.undo())}>Undo</Button>
-      <Button onClick={() => dispatch(ActionCreators.redo())}>Redo</Button>
+    <Group gap="xs">
+      <Tooltip label="Undo (Cmd+Z)" position="top">
+        <ActionIcon
+          variant="light"
+          size="lg"
+          onClick={() => dispatch(ActionCreators.undo())}
+        >
+          <IconArrowBackUp size={16} />
+        </ActionIcon>
+      </Tooltip>
+      <Tooltip label="Redo (Shift+Cmd+Z)" position="top">
+        <ActionIcon
+          variant="light"
+          size="lg"
+          onClick={() => dispatch(ActionCreators.redo())}
+        >
+          <IconArrowForwardUp size={16} />
+        </ActionIcon>
+      </Tooltip>
     </Group>
   );
 }

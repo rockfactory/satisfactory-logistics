@@ -18,6 +18,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSession } from '../auth/AuthSlice';
 import { loadFromRemote } from '../auth/sync/loadFromRemote';
+import { SyncButton } from '../auth/sync/SyncButton';
 import { RootState } from '../core/store';
 import { FactoryRow } from './FactoryRow';
 import { FactoriesFiltersSection } from './filters/FactoriesFiltersSection';
@@ -133,17 +134,28 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
         </Stack>
         <Divider mb="lg" />
         {/* <FactoryItemInput /> */}
-        <Group mt="lg">
-          <Button
-            leftSection={<IconTrash size={16} />}
-            color="red"
-            variant="light"
-            onClick={() => dispatch(factoryActions.clear())}
-          >
-            Clear All
-          </Button>
-          <ImportFactoriesModal />
-          <FactoryUndoButtons />
+        <Group mt="lg" justify="space-between">
+          <Group>
+            <Button
+              onClick={() => dispatch(factoryActions.add({}))}
+              leftSection={<IconPlus size={16} />}
+            >
+              Add Factory
+            </Button>
+            <FactoryUndoButtons />
+          </Group>
+          <Group>
+            <SyncButton />
+            <Button
+              leftSection={<IconTrash size={16} />}
+              color="red"
+              variant="light"
+              onClick={() => dispatch(factoryActions.clear())}
+            >
+              Clear All
+            </Button>
+            <ImportFactoriesModal />
+          </Group>
         </Group>
       </Container>
     </div>
