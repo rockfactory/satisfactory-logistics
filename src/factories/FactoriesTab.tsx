@@ -4,12 +4,20 @@ import {
   Container,
   Divider,
   Group,
+  Loader,
   Stack,
   Text,
 } from '@mantine/core';
-import { IconBuildingFactory, IconPlus, IconTrash } from '@tabler/icons-react';
+import {
+  IconBuildingFactory,
+  IconDownload,
+  IconPlus,
+  IconTrash,
+} from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSession } from '../auth/AuthSlice';
+import { loadFromRemote } from '../auth/sync/loadFromRemote';
 import { RootState } from '../core/store';
 import { FactoryRow } from './FactoryRow';
 import { FactoriesFiltersSection } from './filters/FactoriesFiltersSection';
@@ -23,10 +31,12 @@ export interface IFactoriesTabProps {}
 export function FactoriesTab(_props: IFactoriesTabProps) {
   const dispatch = useDispatch();
   const factories = useFactories();
+  const session = useSession();
   const viewMode = useSelector(
     (state: RootState) => state.factories.present.filters?.viewMode ?? 'wide',
   );
 
+  const [loadingFactories, setLoadingFactories] = useState(false);
   const [headerTop, setHeaderTop] = useState(0);
 
   useEffect(() => {
@@ -78,6 +88,33 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
             >
               Add first factory
             </Button>
+            {session && (
+              <>
+                <Divider
+                  w="60%"
+                  mt="lg"
+                  mb="lg"
+                  label="Or, if you saved on another device"
+                />
+                <Button
+                  size="lg"
+                  leftSection={
+                    loadingFactories ? (
+                      <Loader size={16} />
+                    ) : (
+                      <IconDownload size={16} />
+                    )
+                  }
+                  onClick={async () => {
+                    setLoadingFactories(true);
+                    await loadFromRemote(session, true);
+                    setLoadingFactories(false);
+                  }}
+                >
+                  Load saved factories
+                </Button>
+              </>
+            )}
           </Stack>
         )}
         <Stack gap="md">

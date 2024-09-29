@@ -56,6 +56,7 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
         <Menu shadow="md" width={120}>
           <Menu.Target>
             <Button
+              variant="default"
               rightSection={
                 <IconChevronDown color="white" width={16} height={16} />
               }

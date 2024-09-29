@@ -6,11 +6,7 @@ import {
   Stack,
   TextInput,
 } from '@mantine/core';
-import {
-  IconArrowDownToArc,
-  IconArrowLeftFromArc,
-  IconTrash,
-} from '@tabler/icons-react';
+import { IconDownload, IconTrash, IconUpload } from '@tabler/icons-react';
 import moize from 'moize';
 import * as React from 'react';
 import { useCallback } from 'react';
@@ -90,7 +86,7 @@ export function FactoryRow(props: IFactoryRowProps) {
           size="lg"
           onClick={() => dispatch(factoryActions.addInput({ id: factory.id }))}
         >
-          <IconArrowDownToArc stroke={2} size={16} />
+          <IconDownload stroke={2} size={16} />
         </ActionIcon>
         <ActionIcon
           variant="filled"
@@ -98,7 +94,7 @@ export function FactoryRow(props: IFactoryRowProps) {
           size="lg"
           onClick={() => dispatch(factoryActions.addOutput({ id: factory.id }))}
         >
-          <IconArrowLeftFromArc stroke={2} size={16} />
+          <IconUpload stroke={2} size={16} />
         </ActionIcon>
 
         <ActionIcon

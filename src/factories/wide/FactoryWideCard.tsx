@@ -9,11 +9,7 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import {
-  IconArrowDownToArc,
-  IconArrowLeftFromArc,
-  IconTrash,
-} from '@tabler/icons-react';
+import { IconDownload, IconTrash, IconUpload } from '@tabler/icons-react';
 import moize from 'moize';
 import * as React from 'react';
 import { useCallback } from 'react';
@@ -60,7 +56,7 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
           fz={'h1'}
           size="lg"
           mb="xs"
-          w={180}
+          w={380}
           defaultValue={factory.name ?? ''}
           onChange={onChangeFactory(factory.id, 'name')}
         />
@@ -73,7 +69,7 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
               onClick={() =>
                 dispatch(factoryActions.addInput({ id: factory.id }))
               }
-              leftSection={<IconArrowDownToArc stroke={2} size={16} />}
+              leftSection={<IconDownload stroke={2} size={16} />}
             >
               Add Input
             </Button>
@@ -84,7 +80,7 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
               onClick={() =>
                 dispatch(factoryActions.addOutput({ id: factory.id }))
               }
-              leftSection={<IconArrowLeftFromArc stroke={2} size={16} />}
+              leftSection={<IconUpload stroke={2} size={16} />}
             >
               Add Output
             </Button>
