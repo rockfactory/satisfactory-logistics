@@ -10,10 +10,15 @@ export function AuthSessionManager(props: IAuthSessionManagerProps) {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    supabaseClient.auth.getSession().then(({ data: { session } }) => {
-      console.log('Session changed:', session);
-      dispatch(authActions.setSession(session));
-    });
+    supabaseClient.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        console.log('Session changed:', session);
+        dispatch(authActions.setSession(session));
+      })
+      .catch(err => {
+        console.log('No session', err);
+      });
 
     const {
       data: { subscription },

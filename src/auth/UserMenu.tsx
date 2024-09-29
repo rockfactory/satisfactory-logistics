@@ -7,10 +7,12 @@ import {
   Menu,
   Modal,
   rem,
+  Stack,
   Text,
   UnstyledButton,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
 import {
   IconChevronDown,
   IconDownload,
@@ -19,11 +21,13 @@ import {
 } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { store } from '../core/store';
 import { supabaseClient } from '../core/supabase';
-import { useSession } from './AuthSlice';
+import { authActions, useSession } from './AuthSlice';
 import classes from './UserMenu.module.css';
 import { DiscordLoginButton } from './providers/DiscordLoginButton';
+import { GoogleLoginButton } from './providers/GoogleLoginButton';
 import { loadFromRemote } from './sync/loadFromRemote';
 
 export interface IUserMenuProps {}
@@ -31,6 +35,7 @@ export interface IUserMenuProps {}
 export function UserMenu(props: IUserMenuProps) {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const session = useSession();
+  const dispatch = useDispatch();
   const [loginOpened, loginOpenedHandler] = useDisclosure(false);
   const [loadingFactories, setLoadingFactories] = useState(false);
 
@@ -52,7 +57,10 @@ export function UserMenu(props: IUserMenuProps) {
           title="Authentication"
           // centered
         >
-          <DiscordLoginButton />
+          <Stack gap="xs">
+            <DiscordLoginButton />
+            <GoogleLoginButton />
+          </Stack>
           <Divider mt="xl" mb="md" />
           <Text ta="center" size="sm" c="dark.2">
             After login you can save your factories on the server, so you can
@@ -94,7 +102,16 @@ export function UserMenu(props: IUserMenuProps) {
         <Menu.Item
           leftSection={<IconLogout size={16} />}
           onClick={async () => {
-            await supabaseClient.auth.signOut();
+            const result = await supabaseClient.auth.signOut();
+            if (result.error && result.error.code === 'session_not_found') {
+              dispatch(authActions.setSession(null));
+              return;
+            }
+            notifications.show({
+              title: 'Logged out',
+              message: 'You have been successfully logged out',
+              color: 'blue',
+            });
           }}
         >
           Logout
