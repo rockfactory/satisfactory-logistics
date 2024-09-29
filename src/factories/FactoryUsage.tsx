@@ -5,7 +5,8 @@ import { PercentageFormatter } from '../core/intl/PercentageFormatter';
 import { useFactories } from './store/FactoriesSlice';
 
 export interface IFactoryUsageProps {
-  factoryId: string;
+  /** The _source_ factory (input.factoryId) */
+  factoryId: string | null | undefined;
   output: string | null | undefined;
 }
 
@@ -15,10 +16,14 @@ const colorScale = chroma
   .padding(-0.1)
   .domain([1, 0]);
 
-export function FactoryUsage(props: IFactoryUsageProps) {
+export function useOutputUsage(
+  options: Pick<IFactoryUsageProps, 'factoryId' | 'output'>,
+) {
   const factories = useFactories();
-  const source = factories.find(f => f.id === props.factoryId);
-  const sourceOutput = source?.outputs?.find(o => o.resource === props.output);
+  const source = factories.find(f => f.id === options.factoryId);
+  const sourceOutput = source?.outputs?.find(
+    o => o.resource === options.output,
+  );
   const producedAmount = Math.max(sourceOutput?.amount ?? 1, 0.00001);
   const usedAmount = sum(
     factories.flatMap(
@@ -26,7 +31,7 @@ export function FactoryUsage(props: IFactoryUsageProps) {
         f.inputs
           ?.filter(
             input =>
-              input.factoryId === props.factoryId &&
+              input.factoryId === options.factoryId &&
               input.resource === sourceOutput?.resource,
           )
           .map(input => Math.max(0, input.amount ?? 0)) ?? [],
@@ -38,6 +43,17 @@ export function FactoryUsage(props: IFactoryUsageProps) {
     percentage = 0;
   }
 
+  return { percentage, producedAmount, usedAmount };
+}
+
+export function FactoryUsage(props: IFactoryUsageProps) {
+  const { percentage } = useOutputUsage(props);
+
+  return <BaseFactoryUsage percentage={percentage} />;
+}
+
+export function BaseFactoryUsage(props: { percentage: number }) {
+  const { percentage } = props;
   return (
     <Group gap={0}>
       <RingProgress

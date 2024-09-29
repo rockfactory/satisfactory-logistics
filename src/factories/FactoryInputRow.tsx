@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../core/store';
 import { FactoryChangeHandler } from './FactoryRow';
-import { FactoryUsage } from './FactoryUsage';
+import { BaseFactoryUsage, useOutputUsage } from './FactoryUsage';
 import { FactoryInput } from './inputs/FactoryInput';
 import { FactoryItemInput } from './inputs/FactoryItemInput';
 import { factoryActions, GameFactoryInput } from './store/FactoriesSlice';
@@ -45,11 +45,21 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
     );
   }, [sourceOutputs]);
 
+  const usage = useOutputUsage({
+    factoryId: input.factoryId,
+    output: input.resource,
+  });
+
   const isVisible = useIsFactoryVisible(factoryId, false, input.resource);
   if (!isVisible) return null;
 
   return (
-    <Group key={index} gap="sm" bg={isHighlighted ? 'blue.2' : undefined}>
+    <Group
+      key={index}
+      align="flex-start"
+      gap="sm"
+      bg={isHighlighted ? 'blue.2' : undefined}
+    >
       <FactoryInput
         value={input.factoryId}
         w={180}
@@ -67,10 +77,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           <Group gap="sm">
             Usage
             {input.factoryId && input.resource ? (
-              <FactoryUsage
-                factoryId={input.factoryId}
-                output={input.resource}
-              />
+              <BaseFactoryUsage percentage={usage.percentage} />
             ) : (
               'N/A (Choose factory & resource)'
             )}
@@ -85,6 +92,11 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           min={0}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
+          error={
+            usage.percentage > 1
+              ? `Usage: ${Math.round(usage.percentage * 100)}%`
+              : undefined
+          }
           onChange={onChangeFactory(factoryId, `inputs[${index}].amount`)}
         />
       </Tooltip>
