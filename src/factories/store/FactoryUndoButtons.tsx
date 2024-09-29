@@ -26,7 +26,7 @@ export function FactoryUndoButtons(props: IFactoryUndoButtonsProps) {
   ]);
   return (
     <Group gap="xs">
-      <Tooltip label="Undo (Cmd+Z)" position="top">
+      <Tooltip label="Undo (Ctrl+Z)" position="top">
         <ActionIcon
           variant="light"
           size="lg"
@@ -35,7 +35,7 @@ export function FactoryUndoButtons(props: IFactoryUndoButtonsProps) {
           <IconArrowBackUp size={16} />
         </ActionIcon>
       </Tooltip>
-      <Tooltip label="Redo (Shift+Cmd+Z)" position="top">
+      <Tooltip label="Redo (Shift+Ctrl+Z)" position="top">
         <ActionIcon
           variant="light"
           size="lg"

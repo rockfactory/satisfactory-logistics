@@ -8,6 +8,7 @@ import {
   Stack,
   Text,
 } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import {
   IconBuildingFactory,
   IconDownload,
@@ -150,7 +151,15 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
               leftSection={<IconTrash size={16} />}
               color="red"
               variant="light"
-              onClick={() => dispatch(factoryActions.clear())}
+              onClick={() => {
+                dispatch(factoryActions.clear());
+                notifications.show({
+                  title: 'Factories cleared',
+                  message:
+                    'All factories have been removed. You can undo this action with Ctrl+Z or using the undo/redo buttons in the command bar.',
+                  color: 'blue',
+                });
+              }}
             >
               Clear All
             </Button>

@@ -77,6 +77,7 @@ export function ImportFactoriesModal(_props: IImportFactoriesModalProps) {
 
       <Button
         onClick={open}
+        variant="default"
         leftSection={<IconFileImport stroke={1.5} size={16} />}
       >
         Import/Export
