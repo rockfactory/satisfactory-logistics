@@ -61,6 +61,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
       bg={isHighlighted ? 'blue.2' : undefined}
     >
       <FactoryInput
+        exceptId={factoryId}
         value={input.factoryId}
         w={180}
         onChange={onChangeFactory(factoryId, `inputs[${index}].factoryId`)}
