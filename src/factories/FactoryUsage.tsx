@@ -24,7 +24,7 @@ export function useOutputUsage(
   const sourceOutput = source?.outputs?.find(
     o => o.resource === options.output,
   );
-  const producedAmount = Math.max(sourceOutput?.amount ?? 1, 0.00001);
+  const producedAmount = Math.max(sourceOutput?.amount ?? 0, 0);
   const usedAmount = sum(
     factories.flatMap(
       f =>
@@ -32,13 +32,16 @@ export function useOutputUsage(
           ?.filter(
             input =>
               input.factoryId === options.factoryId &&
-              input.resource === sourceOutput?.resource,
+              input.resource === options.output,
           )
           .map(input => Math.max(0, input.amount ?? 0)) ?? [],
     ),
   );
 
   let percentage = usedAmount / producedAmount;
+  if (producedAmount === 0) {
+    percentage = Number.POSITIVE_INFINITY;
+  }
   if (Number.isNaN(percentage)) {
     percentage = 0;
   }
