@@ -82,6 +82,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         <NumberInput
           value={input.amount ?? 0}
           w={100}
+          min={0}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           onChange={onChangeFactory(factoryId, `inputs[${index}].amount`)}

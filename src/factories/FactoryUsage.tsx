@@ -29,9 +29,14 @@ export function FactoryUsage(props: IFactoryUsageProps) {
               input.factoryId === props.factoryId &&
               input.resource === sourceOutput?.resource,
           )
-          .map(input => input.amount ?? 0) ?? [],
+          .map(input => Math.max(0, input.amount ?? 0)) ?? [],
     ),
   );
+
+  let percentage = usedAmount / producedAmount;
+  if (Number.isNaN(percentage)) {
+    percentage = 0;
+  }
 
   return (
     <Group gap={0}>
@@ -41,8 +46,8 @@ export function FactoryUsage(props: IFactoryUsageProps) {
         roundCaps
         sections={[
           {
-            value: (usedAmount / producedAmount) * 100,
-            color: colorScale(usedAmount / producedAmount).hex(),
+            value: percentage * 100,
+            color: colorScale(percentage).hex(),
           },
         ]}
       />
@@ -50,10 +55,10 @@ export function FactoryUsage(props: IFactoryUsageProps) {
         size="xs"
         ta="right"
         fw={'bold'}
-        c={colorScale(usedAmount / producedAmount).hex()}
+        c={colorScale(percentage).hex()}
         w={30}
       >
-        {PercentageFormatter.format(usedAmount / producedAmount)}
+        {PercentageFormatter.format(percentage)}
       </Text>
     </Group>
   );

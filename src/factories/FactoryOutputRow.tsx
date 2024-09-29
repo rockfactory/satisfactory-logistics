@@ -39,6 +39,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       <NumberInput
         value={output.amount ?? 0}
         w={100}
+        min={0}
         fw={!output.somersloops ? 'normal' : 'bold'}
         styles={{
           input: {
@@ -66,6 +67,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
         <NumberInput
           value={output.somersloops ?? 0}
           w={60}
+          min={0}
           variant="filled"
           fw={!output.somersloops ? 'normal' : 'bold'}
           styles={{
