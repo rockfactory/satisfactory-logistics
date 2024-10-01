@@ -9,7 +9,7 @@ export function SyncButton(props: ISyncButtonProps) {
   const sync = useSync();
   const session = useSession();
   const isSynced = sync.latestChangeDetectedAt <= sync.syncedAt;
-  console.log('isSynced', isSynced, sync.latestChangeDetectedAt, sync.syncedAt);
+  // console.log('isSynced', isSynced, sync.latestChangeDetectedAt, sync.syncedAt);
   const handleSync = async () => {
     await saveLocalState();
   };

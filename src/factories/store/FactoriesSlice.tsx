@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { v4 } from 'uuid';
 import { RootState } from '../../core/store';
 
+export const WORLD_SOURCE_ID = 'WORLD';
+
 export interface GameFactory {
   id: string;
   name?: string | null;
@@ -18,6 +20,7 @@ export interface GameFactoryInput {
   factoryId?: string | null;
   resource?: string | null;
   amount?: number | null;
+  note?: string | null;
 }
 
 export interface GameFactoryOutput {

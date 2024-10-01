@@ -34,6 +34,11 @@ export function ChartsTab(_props: IChartsTabProps) {
         _originalId: f.id,
       }));
 
+    nodes.push({
+      id: 'World Resources',
+      _originalId: 'WORLD',
+    });
+
     const links: Link[] = factories.flatMap(target => {
       return (target.inputs ?? [])
         .filter(i => i.factoryId && target.name)

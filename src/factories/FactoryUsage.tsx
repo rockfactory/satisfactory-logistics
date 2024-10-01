@@ -2,7 +2,12 @@ import { Group, RingProgress, Text } from '@mantine/core';
 import chroma from 'chroma-js';
 import { sum } from 'lodash';
 import { PercentageFormatter } from '../core/intl/PercentageFormatter';
-import { useFactories, useFactorySettings } from './store/FactoriesSlice';
+import { getWorldResourceMax } from '../recipes/WorldResources';
+import {
+  useFactories,
+  useFactorySettings,
+  WORLD_SOURCE_ID,
+} from './store/FactoriesSlice';
 
 export interface IFactoryUsageProps {
   /** The _source_ factory (input.factoryId) */
@@ -24,7 +29,11 @@ export function useOutputUsage(
   const sourceOutput = source?.outputs?.find(
     o => o.resource === options.output,
   );
-  const producedAmount = Math.max(sourceOutput?.amount ?? 0, 0);
+  const producedAmount =
+    options.factoryId === WORLD_SOURCE_ID
+      ? getWorldResourceMax(options.output)
+      : Math.max(sourceOutput?.amount ?? 0, 0);
+
   const usedAmount = sum(
     factories.flatMap(
       f =>

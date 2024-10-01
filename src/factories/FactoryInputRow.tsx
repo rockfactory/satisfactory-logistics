@@ -1,8 +1,17 @@
-import { ActionIcon, Group, NumberInput, Text, Tooltip } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
+import {
+  ActionIcon,
+  Group,
+  NumberInput,
+  Popover,
+  Text,
+  TextInput,
+  Tooltip,
+} from '@mantine/core';
+import { IconTrash, IconWorld } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../core/store';
+import { WorldResourcesList } from '../recipes/WorldResources';
 import {
   FactoryInputIcon,
   FactoryOutputIcon,
@@ -11,7 +20,11 @@ import { FactoryChangeHandler } from './FactoryRow';
 import { BaseFactoryUsage, useOutputUsage } from './FactoryUsage';
 import { FactoryInput } from './inputs/FactoryInput';
 import { FactoryItemInput } from './inputs/FactoryItemInput';
-import { factoryActions, GameFactoryInput } from './store/FactoriesSlice';
+import {
+  factoryActions,
+  GameFactoryInput,
+  WORLD_SOURCE_ID,
+} from './store/FactoriesSlice';
 import { useIsFactoryVisible } from './useIsFactoryVisible';
 
 export interface IFactoryInputRowProps {
@@ -44,10 +57,11 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   );
 
   const allowedItems = useMemo(() => {
-    return (
-      sourceOutputs?.filter(o => o.resource).map(o => o.resource!) ?? undefined
-    );
-  }, [sourceOutputs]);
+    return input.factoryId === WORLD_SOURCE_ID
+      ? WorldResourcesList
+      : (sourceOutputs?.filter(o => o.resource).map(o => o.resource!) ??
+          undefined);
+  }, [input.factoryId, sourceOutputs]);
 
   const usage = useOutputUsage({
     factoryId: input.factoryId,
@@ -67,6 +81,30 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
       <FactoryInput
         exceptId={factoryId}
         value={input.factoryId}
+        worldSection={
+          <Popover width={200} position="bottom-start" withArrow shadow="md">
+            <Popover.Target>
+              <ActionIcon
+                size="sm"
+                color="blue"
+                variant={input.note ? 'filled' : 'outline'}
+                title={input.note ?? 'Add note'}
+              >
+                <IconWorld size={16} />
+              </ActionIcon>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <TextInput
+                size="xs"
+                description="Helps to remember where this input is sourced from"
+                label="Notes"
+                placeholder="Note"
+                value={input.note ?? ''}
+                onChange={onChangeFactory(factoryId, `inputs[${index}].note`)}
+              />
+            </Popover.Dropdown>
+          </Popover>
+        }
         w={180}
         onChange={onChangeFactory(factoryId, `inputs[${index}].factoryId`)}
       />
