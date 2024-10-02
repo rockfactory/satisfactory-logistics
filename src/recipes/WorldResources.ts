@@ -33,11 +33,17 @@ export const WorldResources = {
     max: 2100,
   },
   Desc_SAM_C: {
-    max: 10200,
+    max: 10, // 10200,
   },
   Desc_Water_C: {
     max: Number.POSITIVE_INFINITY,
   },
+  // Desc_Wood_C: {
+  //   max: 100,
+  // },
+  // Desc_Mycelia_C: {
+  //   max: 100,
+  // },
 };
 
 export const getWorldResourceMax = (resource: string | null | undefined) => {

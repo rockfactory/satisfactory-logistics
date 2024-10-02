@@ -31,6 +31,7 @@
     "chroma-js": "2.4",
     "dayjs": "^1.11.13",
     "dot-prop": "^9.0.0",
+    "graphology": "^0.25.4",
     "highs": "^1.0.1",
     "lodash": "^4.17.21",
     "moize": "^6.1.6",

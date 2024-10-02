@@ -13,7 +13,8 @@ function parseDocs() {
     if (
       nativeClass.NativeClass?.includes('FGItemDescriptor') ||
       nativeClass.NativeClass?.includes('FGResourceDescriptor') ||
-      nativeClass.NativeClass?.includes('FGAmmoType')
+      nativeClass.NativeClass?.includes('FGAmmoType') ||
+      nativeClass.NativeClass?.includes('FGPowerShardDescriptor')
     ) {
       console.log(`Importing -> `, nativeClass.NativeClass);
       return nativeClass.Classes;
@@ -22,7 +23,9 @@ function parseDocs() {
     return [];
   });
 
-  const items = rawItems.map(parseFactoryItem).filter(item => item !== null);
+  const items = rawItems
+    .map((item, index) => parseFactoryItem(item, index))
+    .filter(item => item !== null);
   fs.writeFileSync(
     './src/recipes/FactoryItems.json',
     JSON.stringify(items, null, 2),
@@ -54,7 +57,7 @@ function convertImageName(className) {
   return mappedSlug;
 }
 
-function parseFactoryItem(json) {
+function parseFactoryItem(json, index) {
   if (!toolsJson.items[json.ClassName]) {
     console.log(`Missing item: ${json.ClassName}`);
     return null;
@@ -62,6 +65,7 @@ function parseFactoryItem(json) {
 
   return {
     id: json.ClassName,
+    index,
     name: json.mDisplayName,
     displayName: json.mDisplayName,
     description: json.mDescription,
@@ -107,7 +111,7 @@ function parseRecipe(recipe, index) {
     name: recipe.mDisplayName,
     description: recipe.mDescription,
     ingredients: parseIngredients(recipe.mIngredients),
-    product: parseProduct(recipe.mProduct),
+    products: parseProducts(recipe.mProduct),
     time: parseFloat(recipe.mManufactoringDuration),
     producedIn: parseBestProducedIn(recipe.mProducedIn),
     powerConsumption: parseFloat(recipe.mVariablePowerConsumptionConstant),
@@ -125,12 +129,12 @@ function parseIngredients(ingredients) {
   }));
 }
 
-function parseProduct(product) {
+function parseProducts(product) {
   const matches = [...product.matchAll(IngredientRegex)];
   return matches.map(([_, resource, amount]) => ({
     resource,
     amount: parseFloat(amount),
-  }))[0];
+  }));
 }
 
 function parseBestProducedIn(producedIn) {

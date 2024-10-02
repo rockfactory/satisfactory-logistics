@@ -9,10 +9,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_IronPlate_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 2
+      }
+    ],
     "time": 6,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -28,10 +30,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_IronRod_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 1
+      }
+    ],
     "time": 4,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -47,10 +51,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_IronIngot_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_IronIngot_C",
+        "amount": 1
+      }
+    ],
     "time": 2,
     "producedIn": "Smelter",
     "powerConsumption": 0,
@@ -78,10 +84,16 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_RocketFuel_C",
-      "amount": 6000
-    },
+    "products": [
+      {
+        "resource": "Desc_RocketFuel_C",
+        "amount": 6000
+      },
+      {
+        "resource": "Desc_CompactedCoal_C",
+        "amount": 1
+      }
+    ],
     "time": 2.4,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -101,10 +113,16 @@
         "amount": 1000
       }
     ],
-    "product": {
-      "resource": "Desc_RocketFuel_C",
-      "amount": 10000
-    },
+    "products": [
+      {
+        "resource": "Desc_RocketFuel_C",
+        "amount": 10000
+      },
+      {
+        "resource": "Desc_CompactedCoal_C",
+        "amount": 1
+      }
+    ],
     "time": 6,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -124,10 +142,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_PackagedRocketFuel_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_PackagedRocketFuel_C",
+        "amount": 1
+      }
+    ],
     "time": 1,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -143,10 +163,16 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_RocketFuel_C",
-      "amount": 2000
-    },
+    "products": [
+      {
+        "resource": "Desc_RocketFuel_C",
+        "amount": 2000
+      },
+      {
+        "resource": "Desc_GasTank_C",
+        "amount": 1
+      }
+    ],
     "time": 1,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -166,10 +192,16 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "Desc_IonizedFuel_C",
-      "amount": 10000
-    },
+    "products": [
+      {
+        "resource": "Desc_IonizedFuel_C",
+        "amount": 10000
+      },
+      {
+        "resource": "Desc_CompactedCoal_C",
+        "amount": 2
+      }
+    ],
     "time": 3,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -185,10 +217,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_DarkEnergy_C",
-      "amount": 10000
-    },
+    "products": [
+      {
+        "resource": "Desc_DarkEnergy_C",
+        "amount": 10000
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -199,10 +233,12 @@
     "id": "Recipe_QuantumEnergy_C",
     "name": "Excited Photonic Matter",
     "ingredients": [],
-    "product": {
-      "resource": "Desc_QuantumEnergy_C",
-      "amount": 10000
-    },
+    "products": [
+      {
+        "resource": "Desc_QuantumEnergy_C",
+        "amount": 10000
+      }
+    ],
     "time": 3,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -222,10 +258,12 @@
         "amount": 5000
       }
     ],
-    "product": {
-      "resource": "Desc_DarkMatter_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_DarkMatter_C",
+        "amount": 1
+      }
+    ],
     "time": 2,
     "producedIn": "ParticleAccelerator",
     "powerConsumption": 500,
@@ -253,10 +291,16 @@
         "amount": 25000
       }
     ],
-    "product": {
-      "resource": "Desc_QuantumOscillator_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_QuantumOscillator_C",
+        "amount": 1
+      },
+      {
+        "resource": "Desc_DarkEnergy_C",
+        "amount": 25000
+      }
+    ],
     "time": 12,
     "producedIn": "QuantumEncoder",
     "powerConsumption": 0,
@@ -284,10 +328,16 @@
         "amount": 25000
       }
     ],
-    "product": {
-      "resource": "Desc_TemporalProcessor_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_TemporalProcessor_C",
+        "amount": 1
+      },
+      {
+        "resource": "Desc_DarkEnergy_C",
+        "amount": 25000
+      }
+    ],
     "time": 20,
     "producedIn": "QuantumEncoder",
     "powerConsumption": 0,
@@ -315,10 +365,16 @@
         "amount": 25000
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_12_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_12_C",
+        "amount": 1
+      },
+      {
+        "resource": "Desc_DarkEnergy_C",
+        "amount": 25000
+      }
+    ],
     "time": 15,
     "producedIn": "QuantumEncoder",
     "powerConsumption": 0,
@@ -338,10 +394,16 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_IonizedFuel_C",
-      "amount": 16000
-    },
+    "products": [
+      {
+        "resource": "Desc_IonizedFuel_C",
+        "amount": 16000
+      },
+      {
+        "resource": "Desc_CompactedCoal_C",
+        "amount": 2
+      }
+    ],
     "time": 24,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -361,10 +423,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_PackagedIonizedFuel_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_PackagedIonizedFuel_C",
+        "amount": 2
+      }
+    ],
     "time": 3,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -380,10 +444,16 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_IonizedFuel_C",
-      "amount": 4000
-    },
+    "products": [
+      {
+        "resource": "Desc_IonizedFuel_C",
+        "amount": 4000
+      },
+      {
+        "resource": "Desc_GasTank_C",
+        "amount": 2
+      }
+    ],
     "time": 3,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -403,10 +473,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Diamond_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_Diamond_C",
+        "amount": 3
+      }
+    ],
     "time": 3,
     "producedIn": "ParticleAccelerator",
     "powerConsumption": 250,
@@ -430,10 +502,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_SAMFluctuator_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SAMFluctuator_C",
+        "amount": 1
+      }
+    ],
     "time": 6,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -449,10 +523,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_FicsiteMesh_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_FicsiteMesh_C",
+        "amount": 3
+      }
+    ],
     "time": 6,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -472,10 +548,12 @@
         "amount": 24
       }
     ],
-    "product": {
-      "resource": "Desc_FicsiteIngot_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_FicsiteIngot_C",
+        "amount": 1
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -491,10 +569,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_TimeCrystal_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_TimeCrystal_C",
+        "amount": 1
+      }
+    ],
     "time": 10,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -510,10 +590,12 @@
         "amount": 20
       }
     ],
-    "product": {
-      "resource": "Desc_Diamond_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Diamond_C",
+        "amount": 1
+      }
+    ],
     "time": 2,
     "producedIn": "ParticleAccelerator",
     "powerConsumption": 250,
@@ -529,10 +611,12 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "Desc_SAMIngot_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SAMIngot_C",
+        "amount": 1
+      }
+    ],
     "time": 2,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -556,10 +640,12 @@
         "amount": 20000
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_10_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_10_C",
+        "amount": 4
+      }
+    ],
     "time": 120,
     "producedIn": "Blender",
     "powerConsumption": 500,
@@ -579,10 +665,12 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "Desc_FicsiteIngot_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_FicsiteIngot_C",
+        "amount": 1
+      }
+    ],
     "time": 2,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -602,10 +690,12 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "Desc_FicsiteIngot_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_FicsiteIngot_C",
+        "amount": 1
+      }
+    ],
     "time": 4,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -625,10 +715,12 @@
         "amount": 15
       }
     ],
-    "product": {
-      "resource": "Desc_OreBauxite_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_OreBauxite_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -648,10 +740,12 @@
         "amount": 18
       }
     ],
-    "product": {
-      "resource": "Desc_OreBauxite_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_OreBauxite_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -671,10 +765,12 @@
         "amount": 15
       }
     ],
-    "product": {
-      "resource": "Desc_OreGold_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_OreGold_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -694,10 +790,12 @@
         "amount": 12
       }
     ],
-    "product": {
-      "resource": "Desc_OreGold_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_OreGold_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -717,10 +815,12 @@
         "amount": 18
       }
     ],
-    "product": {
-      "resource": "Desc_Coal_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_Coal_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -740,10 +840,12 @@
         "amount": 36
       }
     ],
-    "product": {
-      "resource": "Desc_Coal_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_Coal_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -763,10 +865,12 @@
         "amount": 10
       }
     ],
-    "product": {
-      "resource": "Desc_OreCopper_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_OreCopper_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -786,10 +890,12 @@
         "amount": 12
       }
     ],
-    "product": {
-      "resource": "Desc_OreCopper_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_OreCopper_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -809,10 +915,12 @@
         "amount": 24
       }
     ],
-    "product": {
-      "resource": "Desc_OreIron_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_OreIron_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -832,10 +940,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Stone_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_Stone_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -855,10 +965,12 @@
         "amount": 10
       }
     ],
-    "product": {
-      "resource": "Desc_NitrogenGas_C",
-      "amount": 12000
-    },
+    "products": [
+      {
+        "resource": "Desc_NitrogenGas_C",
+        "amount": 12000
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -878,10 +990,12 @@
         "amount": 12
       }
     ],
-    "product": {
-      "resource": "Desc_NitrogenGas_C",
-      "amount": 12000
-    },
+    "products": [
+      {
+        "resource": "Desc_NitrogenGas_C",
+        "amount": 12000
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -901,10 +1015,12 @@
         "amount": 10
       }
     ],
-    "product": {
-      "resource": "Desc_RawQuartz_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_RawQuartz_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -924,10 +1040,12 @@
         "amount": 24
       }
     ],
-    "product": {
-      "resource": "Desc_RawQuartz_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_RawQuartz_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -947,10 +1065,12 @@
         "amount": 20
       }
     ],
-    "product": {
-      "resource": "Desc_Sulfur_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_Sulfur_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -970,10 +1090,12 @@
         "amount": 30
       }
     ],
-    "product": {
-      "resource": "Desc_Sulfur_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_Sulfur_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -993,10 +1115,12 @@
         "amount": 48
       }
     ],
-    "product": {
-      "resource": "Desc_OreUranium_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_OreUranium_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -1016,10 +1140,12 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "Desc_LiquidTurboFuel_C",
-      "amount": 5000
-    },
+    "products": [
+      {
+        "resource": "Desc_LiquidTurboFuel_C",
+        "amount": 5000
+      }
+    ],
     "time": 16,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1039,10 +1165,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_TurboFuel_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_TurboFuel_C",
+        "amount": 2
+      }
+    ],
     "time": 6,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -1058,10 +1186,16 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_LiquidTurboFuel_C",
-      "amount": 2000
-    },
+    "products": [
+      {
+        "resource": "Desc_LiquidTurboFuel_C",
+        "amount": 2000
+      },
+      {
+        "resource": "Desc_FluidCanister_C",
+        "amount": 2
+      }
+    ],
     "time": 6,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -1077,10 +1211,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_Coal_C",
-      "amount": 10
-    },
+    "products": [
+      {
+        "resource": "Desc_Coal_C",
+        "amount": 10
+      }
+    ],
     "time": 4,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -1096,10 +1232,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_Coal_C",
-      "amount": 6
-    },
+    "products": [
+      {
+        "resource": "Desc_Coal_C",
+        "amount": 6
+      }
+    ],
     "time": 8,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -1119,10 +1257,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_CompactedCoal_C",
-      "amount": 5
-    },
+    "products": [
+      {
+        "resource": "Desc_CompactedCoal_C",
+        "amount": 5
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -1142,10 +1282,12 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "Desc_CircuitBoard_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_CircuitBoard_C",
+        "amount": 1
+      }
+    ],
     "time": 8,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -1161,10 +1303,16 @@
         "amount": 6000
       }
     ],
-    "product": {
-      "resource": "Desc_LiquidFuel_C",
-      "amount": 4000
-    },
+    "products": [
+      {
+        "resource": "Desc_LiquidFuel_C",
+        "amount": 4000
+      },
+      {
+        "resource": "Desc_PolymerResin_C",
+        "amount": 3
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1180,10 +1328,12 @@
         "amount": 4000
       }
     ],
-    "product": {
-      "resource": "Desc_PetroleumCoke_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_PetroleumCoke_C",
+        "amount": 12
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1199,10 +1349,16 @@
         "amount": 3000
       }
     ],
-    "product": {
-      "resource": "Desc_Plastic_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Plastic_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_HeavyOilResidue_C",
+        "amount": 1000
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1218,10 +1374,16 @@
         "amount": 3000
       }
     ],
-    "product": {
-      "resource": "Desc_Rubber_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Rubber_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_HeavyOilResidue_C",
+        "amount": 2000
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1237,10 +1399,12 @@
         "amount": 6000
       }
     ],
-    "product": {
-      "resource": "Desc_LiquidFuel_C",
-      "amount": 4000
-    },
+    "products": [
+      {
+        "resource": "Desc_LiquidFuel_C",
+        "amount": 4000
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1260,10 +1424,12 @@
         "amount": 2000
       }
     ],
-    "product": {
-      "resource": "Desc_Plastic_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Plastic_C",
+        "amount": 2
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1283,10 +1449,12 @@
         "amount": 4000
       }
     ],
-    "product": {
-      "resource": "Desc_Rubber_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Rubber_C",
+        "amount": 2
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1306,10 +1474,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_Diamond_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Diamond_C",
+        "amount": 1
+      }
+    ],
     "time": 4,
     "producedIn": "Converter",
     "powerConsumption": 100,
@@ -1325,10 +1495,12 @@
         "amount": 24
       }
     ],
-    "product": {
-      "resource": "Desc_Diamond_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Diamond_C",
+        "amount": 1
+      }
+    ],
     "time": 2,
     "producedIn": "ParticleAccelerator",
     "powerConsumption": 250,
@@ -1344,10 +1516,12 @@
         "amount": 10000
       }
     ],
-    "product": {
-      "resource": "Desc_Diamond_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Diamond_C",
+        "amount": 2
+      }
+    ],
     "time": 3,
     "producedIn": "ParticleAccelerator",
     "powerConsumption": 250,
@@ -1367,10 +1541,12 @@
         "amount": 24
       }
     ],
-    "product": {
-      "resource": "Desc_Diamond_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Diamond_C",
+        "amount": 1
+      }
+    ],
     "time": 3,
     "producedIn": "ParticleAccelerator",
     "powerConsumption": 250,
@@ -1390,10 +1566,12 @@
         "amount": 5000
       }
     ],
-    "product": {
-      "resource": "Desc_DarkMatter_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_DarkMatter_C",
+        "amount": 2
+      }
+    ],
     "time": 2,
     "producedIn": "ParticleAccelerator",
     "powerConsumption": 500,
@@ -1409,10 +1587,12 @@
         "amount": 10000
       }
     ],
-    "product": {
-      "resource": "Desc_DarkMatter_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_DarkMatter_C",
+        "amount": 1
+      }
+    ],
     "time": 3,
     "producedIn": "ParticleAccelerator",
     "powerConsumption": 500,
@@ -1432,10 +1612,12 @@
         "amount": 5000
       }
     ],
-    "product": {
-      "resource": "Desc_Cement_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 4
+      }
+    ],
     "time": 3,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1455,10 +1637,12 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "Desc_LiquidTurboFuel_C",
-      "amount": 4000
-    },
+    "products": [
+      {
+        "resource": "Desc_LiquidTurboFuel_C",
+        "amount": 4000
+      }
+    ],
     "time": 8,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1474,10 +1658,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_IronRod_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 4
+      }
+    ],
     "time": 5,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -1493,10 +1679,12 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "Desc_SteelPlate_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SteelPlate_C",
+        "amount": 1
+      }
+    ],
     "time": 4,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -1512,10 +1700,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_SteelPipe_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 2
+      }
+    ],
     "time": 6,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -1535,10 +1725,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_SteelIngot_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_SteelIngot_C",
+        "amount": 3
+      }
+    ],
     "time": 4,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -1558,10 +1750,12 @@
         "amount": 12
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_2_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_2_C",
+        "amount": 2
+      }
+    ],
     "time": 24,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -1577,10 +1771,12 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "Desc_FluidCanister_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_FluidCanister_C",
+        "amount": 4
+      }
+    ],
     "time": 6,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -1596,10 +1792,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_FluidCanister_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_FluidCanister_C",
+        "amount": 4
+      }
+    ],
     "time": 4,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -1619,10 +1817,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Fuel_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Fuel_C",
+        "amount": 2
+      }
+    ],
     "time": 3,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -1642,10 +1842,12 @@
         "amount": 3000
       }
     ],
-    "product": {
-      "resource": "Desc_LiquidBiofuel_C",
-      "amount": 4000
-    },
+    "products": [
+      {
+        "resource": "Desc_LiquidBiofuel_C",
+        "amount": 4000
+      }
+    ],
     "time": 4,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1665,10 +1867,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_PackagedBiofuel_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_PackagedBiofuel_C",
+        "amount": 2
+      }
+    ],
     "time": 3,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -1688,10 +1892,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_PackagedOil_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_PackagedOil_C",
+        "amount": 2
+      }
+    ],
     "time": 4,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -1711,10 +1917,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_PackagedOilResidue_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_PackagedOilResidue_C",
+        "amount": 2
+      }
+    ],
     "time": 4,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -1734,10 +1942,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_PackagedWater_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_PackagedWater_C",
+        "amount": 2
+      }
+    ],
     "time": 2,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -1753,10 +1963,16 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_LiquidBiofuel_C",
-      "amount": 2000
-    },
+    "products": [
+      {
+        "resource": "Desc_LiquidBiofuel_C",
+        "amount": 2000
+      },
+      {
+        "resource": "Desc_FluidCanister_C",
+        "amount": 2
+      }
+    ],
     "time": 2,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -1772,10 +1988,16 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_LiquidFuel_C",
-      "amount": 2000
-    },
+    "products": [
+      {
+        "resource": "Desc_LiquidFuel_C",
+        "amount": 2000
+      },
+      {
+        "resource": "Desc_FluidCanister_C",
+        "amount": 2
+      }
+    ],
     "time": 2,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -1791,10 +2013,16 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_LiquidOil_C",
-      "amount": 2000
-    },
+    "products": [
+      {
+        "resource": "Desc_LiquidOil_C",
+        "amount": 2000
+      },
+      {
+        "resource": "Desc_FluidCanister_C",
+        "amount": 2
+      }
+    ],
     "time": 2,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -1810,10 +2038,16 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_HeavyOilResidue_C",
-      "amount": 2000
-    },
+    "products": [
+      {
+        "resource": "Desc_HeavyOilResidue_C",
+        "amount": 2000
+      },
+      {
+        "resource": "Desc_FluidCanister_C",
+        "amount": 2
+      }
+    ],
     "time": 6,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -1829,10 +2063,16 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Water_C",
-      "amount": 2000
-    },
+    "products": [
+      {
+        "resource": "Desc_Water_C",
+        "amount": 2000
+      },
+      {
+        "resource": "Desc_FluidCanister_C",
+        "amount": 2
+      }
+    ],
     "time": 1,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -1852,10 +2092,12 @@
         "amount": 3000
       }
     ],
-    "product": {
-      "resource": "Desc_CopperSheet_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_CopperSheet_C",
+        "amount": 3
+      }
+    ],
     "time": 8,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1875,10 +2117,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Cement_C",
-      "amount": 9
-    },
+    "products": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 9
+      }
+    ],
     "time": 6,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -1898,10 +2142,12 @@
         "amount": 6000
       }
     ],
-    "product": {
-      "resource": "Desc_Rubber_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_Rubber_C",
+        "amount": 12
+      }
+    ],
     "time": 12,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1921,10 +2167,12 @@
         "amount": 5000
       }
     ],
-    "product": {
-      "resource": "Desc_QuartzCrystal_C",
-      "amount": 7
-    },
+    "products": [
+      {
+        "resource": "Desc_QuartzCrystal_C",
+        "amount": 7
+      }
+    ],
     "time": 8,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1940,10 +2188,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_QuartzCrystal_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_QuartzCrystal_C",
+        "amount": 3
+      }
+    ],
     "time": 8,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -1963,10 +2213,12 @@
         "amount": 4000
       }
     ],
-    "product": {
-      "resource": "Desc_IronIngot_C",
-      "amount": 13
-    },
+    "products": [
+      {
+        "resource": "Desc_IronIngot_C",
+        "amount": 13
+      }
+    ],
     "time": 12,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -1986,10 +2238,12 @@
         "amount": 4000
       }
     ],
-    "product": {
-      "resource": "Desc_CopperIngot_C",
-      "amount": 15
-    },
+    "products": [
+      {
+        "resource": "Desc_CopperIngot_C",
+        "amount": 15
+      }
+    ],
     "time": 24,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -2009,10 +2263,12 @@
         "amount": 2000
       }
     ],
-    "product": {
-      "resource": "Desc_GoldIngot_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_GoldIngot_C",
+        "amount": 1
+      }
+    ],
     "time": 5,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -2028,10 +2284,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_AluminumIngot_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminumIngot_C",
+        "amount": 1
+      }
+    ],
     "time": 2,
     "producedIn": "Smelter",
     "powerConsumption": 0,
@@ -2047,10 +2305,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_AluminumCasing_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminumCasing_C",
+        "amount": 2
+      }
+    ],
     "time": 2,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -2070,10 +2330,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_AluminumPlate_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminumPlate_C",
+        "amount": 3
+      }
+    ],
     "time": 6,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2093,10 +2355,16 @@
         "amount": 18000
       }
     ],
-    "product": {
-      "resource": "Desc_AluminaSolution_C",
-      "amount": 12000
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminaSolution_C",
+        "amount": 12000
+      },
+      {
+        "resource": "Desc_Silica_C",
+        "amount": 5
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -2116,10 +2384,16 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_AluminumScrap_C",
-      "amount": 6
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminumScrap_C",
+        "amount": 6
+      },
+      {
+        "resource": "Desc_Water_C",
+        "amount": 2000
+      }
+    ],
     "time": 1,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -2139,10 +2413,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_PackagedAlumina_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_PackagedAlumina_C",
+        "amount": 2
+      }
+    ],
     "time": 1,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -2162,10 +2438,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_AluminumIngot_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminumIngot_C",
+        "amount": 4
+      }
+    ],
     "time": 4,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -2181,10 +2459,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_Silica_C",
-      "amount": 5
-    },
+    "products": [
+      {
+        "resource": "Desc_Silica_C",
+        "amount": 5
+      }
+    ],
     "time": 8,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -2208,10 +2488,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_CrystalOscillator_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_CrystalOscillator_C",
+        "amount": 2
+      }
+    ],
     "time": 120,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -2227,10 +2509,16 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_AluminaSolution_C",
-      "amount": 2000
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminaSolution_C",
+        "amount": 2000
+      },
+      {
+        "resource": "Desc_FluidCanister_C",
+        "amount": 2
+      }
+    ],
     "time": 1,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -2246,10 +2534,16 @@
         "amount": 6000
       }
     ],
-    "product": {
-      "resource": "Desc_PolymerResin_C",
-      "amount": 13
-    },
+    "products": [
+      {
+        "resource": "Desc_PolymerResin_C",
+        "amount": 13
+      },
+      {
+        "resource": "Desc_HeavyOilResidue_C",
+        "amount": 2000
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -2273,10 +2567,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_1_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_1_C",
+        "amount": 2
+      }
+    ],
     "time": 24,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -2300,10 +2596,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_3_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_3_C",
+        "amount": 4
+      }
+    ],
     "time": 32,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -2323,10 +2621,12 @@
         "amount": 6
       }
     ],
-    "product": {
-      "resource": "Desc_SteelPlateReinforced_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 1
+      }
+    ],
     "time": 10,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2346,10 +2646,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Motor_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Motor_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2369,10 +2671,12 @@
         "amount": 8
       }
     ],
-    "product": {
-      "resource": "Desc_Stator_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Stator_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2392,10 +2696,12 @@
         "amount": 20
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_3_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_3_C",
+        "amount": 1
+      }
+    ],
     "time": 24,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2415,10 +2721,12 @@
         "amount": 20
       }
     ],
-    "product": {
-      "resource": "Desc_CircuitBoardHighSpeed_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_CircuitBoardHighSpeed_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2434,10 +2742,16 @@
         "amount": 3000
       }
     ],
-    "product": {
-      "resource": "Desc_HeavyOilResidue_C",
-      "amount": 4000
-    },
+    "products": [
+      {
+        "resource": "Desc_HeavyOilResidue_C",
+        "amount": 4000
+      },
+      {
+        "resource": "Desc_PolymerResin_C",
+        "amount": 2
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -2465,10 +2779,12 @@
         "amount": 104
       }
     ],
-    "product": {
-      "resource": "Desc_ModularFrameHeavy_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_ModularFrameHeavy_C",
+        "amount": 1
+      }
+    ],
     "time": 16,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -2492,10 +2808,12 @@
         "amount": 16
       }
     ],
-    "product": {
-      "resource": "Desc_Computer_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Computer_C",
+        "amount": 1
+      }
+    ],
     "time": 24,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -2523,10 +2841,12 @@
         "amount": 120
       }
     ],
-    "product": {
-      "resource": "Desc_ModularFrameHeavy_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_ModularFrameHeavy_C",
+        "amount": 1
+      }
+    ],
     "time": 30,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -2550,10 +2870,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_4_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_4_C",
+        "amount": 1
+      }
+    ],
     "time": 60,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -2581,10 +2903,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_5_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_5_C",
+        "amount": 1
+      }
+    ],
     "time": 60,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -2604,10 +2928,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_Wire_C",
-      "amount": 30
-    },
+    "products": [
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 30
+      }
+    ],
     "time": 20,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2631,10 +2957,12 @@
         "amount": 8
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_2_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_2_C",
+        "amount": 2
+      }
+    ],
     "time": 16,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -2654,10 +2982,12 @@
         "amount": 8
       }
     ],
-    "product": {
-      "resource": "Desc_CircuitBoard_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_CircuitBoard_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2677,10 +3007,16 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "Desc_AluminumScrap_C",
-      "amount": 20
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminumScrap_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_Water_C",
+        "amount": 7000
+      }
+    ],
     "time": 4,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -2700,10 +3036,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Fuel_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Fuel_C",
+        "amount": 2
+      }
+    ],
     "time": 2,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -2723,10 +3061,12 @@
         "amount": 52
       }
     ],
-    "product": {
-      "resource": "Desc_Rotor_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_Rotor_C",
+        "amount": 3
+      }
+    ],
     "time": 16,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2746,10 +3086,12 @@
         "amount": 12
       }
     ],
-    "product": {
-      "resource": "Desc_ModularFrame_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_ModularFrame_C",
+        "amount": 2
+      }
+    ],
     "time": 60,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2769,10 +3111,12 @@
         "amount": 25
       }
     ],
-    "product": {
-      "resource": "Desc_Rotor_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Rotor_C",
+        "amount": 1
+      }
+    ],
     "time": 15,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2788,10 +3132,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_CopperSheet_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_CopperSheet_C",
+        "amount": 1
+      }
+    ],
     "time": 6,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -2811,10 +3157,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_1_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_1_C",
+        "amount": 1
+      }
+    ],
     "time": 30,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2834,10 +3182,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_CopperIngot_C",
-      "amount": 10
-    },
+    "products": [
+      {
+        "resource": "Desc_CopperIngot_C",
+        "amount": 10
+      }
+    ],
     "time": 6,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -2857,10 +3207,12 @@
         "amount": 15
       }
     ],
-    "product": {
-      "resource": "Desc_SteelIngot_C",
-      "amount": 20
-    },
+    "products": [
+      {
+        "resource": "Desc_SteelIngot_C",
+        "amount": 20
+      }
+    ],
     "time": 12,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -2880,10 +3232,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_IronPlate_C",
-      "amount": 10
-    },
+    "products": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 10
+      }
+    ],
     "time": 8,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2903,10 +3257,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_FluidCanister_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_FluidCanister_C",
+        "amount": 4
+      }
+    ],
     "time": 4,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2926,10 +3282,12 @@
         "amount": 2000
       }
     ],
-    "product": {
-      "resource": "Desc_Cable_C",
-      "amount": 9
-    },
+    "products": [
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 9
+      }
+    ],
     "time": 8,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -2949,10 +3307,12 @@
         "amount": 56
       }
     ],
-    "product": {
-      "resource": "Desc_ModularFrame_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_ModularFrame_C",
+        "amount": 2
+      }
+    ],
     "time": 24,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -2972,10 +3332,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_IronPlateReinforced_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_IronPlateReinforced_C",
+        "amount": 1
+      }
+    ],
     "time": 16,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -3003,10 +3365,12 @@
         "amount": 8
       }
     ],
-    "product": {
-      "resource": "Desc_MotorLightweight_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_MotorLightweight_C",
+        "amount": 2
+      }
+    ],
     "time": 32,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -3026,10 +3390,12 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "Desc_PlutoniumCell_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_PlutoniumCell_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -3049,10 +3415,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_PressureConversionCube_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_PressureConversionCube_C",
+        "amount": 1
+      }
+    ],
     "time": 60,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -3076,10 +3444,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_NitricAcid_C",
-      "amount": 3000
-    },
+    "products": [
+      {
+        "resource": "Desc_NitricAcid_C",
+        "amount": 3000
+      }
+    ],
     "time": 6,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -3107,10 +3477,16 @@
         "amount": 6000
       }
     ],
-    "product": {
-      "resource": "Desc_NonFissibleUranium_C",
-      "amount": 20
-    },
+    "products": [
+      {
+        "resource": "Desc_NonFissibleUranium_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_Water_C",
+        "amount": 6000
+      }
+    ],
     "time": 24,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -3126,10 +3502,12 @@
         "amount": 30
       }
     ],
-    "product": {
-      "resource": "Desc_CopperDust_C",
-      "amount": 5
-    },
+    "products": [
+      {
+        "resource": "Desc_CopperDust_C",
+        "amount": 5
+      }
+    ],
     "time": 6,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -3149,10 +3527,12 @@
         "amount": 25
       }
     ],
-    "product": {
-      "resource": "Desc_PlutoniumPellet_C",
-      "amount": 30
-    },
+    "products": [
+      {
+        "resource": "Desc_PlutoniumPellet_C",
+        "amount": 30
+      }
+    ],
     "time": 60,
     "producedIn": "ParticleAccelerator",
     "powerConsumption": 250,
@@ -3180,10 +3560,12 @@
         "amount": 10
       }
     ],
-    "product": {
-      "resource": "Desc_PlutoniumFuelRod_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_PlutoniumFuelRod_C",
+        "amount": 1
+      }
+    ],
     "time": 240,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -3203,10 +3585,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_PackagedNitricAcid_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_PackagedNitricAcid_C",
+        "amount": 1
+      }
+    ],
     "time": 2,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -3226,10 +3610,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_9_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_9_C",
+        "amount": 1
+      }
+    ],
     "time": 120,
     "producedIn": "ParticleAccelerator",
     "powerConsumption": 500,
@@ -3245,10 +3631,16 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_NitricAcid_C",
-      "amount": 1000
-    },
+    "products": [
+      {
+        "resource": "Desc_NitricAcid_C",
+        "amount": 1000
+      },
+      {
+        "resource": "Desc_GasTank_C",
+        "amount": 1
+      }
+    ],
     "time": 3,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -3276,10 +3668,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_LiquidTurboFuel_C",
-      "amount": 6000
-    },
+    "products": [
+      {
+        "resource": "Desc_LiquidTurboFuel_C",
+        "amount": 6000
+      }
+    ],
     "time": 8,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -3303,10 +3697,16 @@
         "amount": 8000
       }
     ],
-    "product": {
-      "resource": "Desc_UraniumCell_C",
-      "amount": 5
-    },
+    "products": [
+      {
+        "resource": "Desc_UraniumCell_C",
+        "amount": 5
+      },
+      {
+        "resource": "Desc_SulfuricAcid_C",
+        "amount": 2000
+      }
+    ],
     "time": 12,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -3334,10 +3734,12 @@
         "amount": 25000
       }
     ],
-    "product": {
-      "resource": "Desc_CoolingSystem_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_CoolingSystem_C",
+        "amount": 1
+      }
+    ],
     "time": 10,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -3361,10 +3763,16 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_Battery_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Battery_C",
+        "amount": 1
+      },
+      {
+        "resource": "Desc_Water_C",
+        "amount": 1500
+      }
+    ],
     "time": 3,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -3392,10 +3800,12 @@
         "amount": 28
       }
     ],
-    "product": {
-      "resource": "Desc_ComputerSuper_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_ComputerSuper_C",
+        "amount": 1
+      }
+    ],
     "time": 32,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -3419,10 +3829,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_ModularFrameLightweight_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_ModularFrameLightweight_C",
+        "amount": 2
+      }
+    ],
     "time": 48,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -3442,10 +3854,12 @@
         "amount": 5000
       }
     ],
-    "product": {
-      "resource": "Desc_SulfuricAcid_C",
-      "amount": 5000
-    },
+    "products": [
+      {
+        "resource": "Desc_SulfuricAcid_C",
+        "amount": 5000
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -3465,10 +3879,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_PackagedSulfuricAcid_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_PackagedSulfuricAcid_C",
+        "amount": 2
+      }
+    ],
     "time": 3,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -3488,10 +3904,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_7_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_7_C",
+        "amount": 1
+      }
+    ],
     "time": 80,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -3515,10 +3933,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_HighSpeedConnector_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_HighSpeedConnector_C",
+        "amount": 1
+      }
+    ],
     "time": 16,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -3534,10 +3954,16 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_SulfuricAcid_C",
-      "amount": 1000
-    },
+    "products": [
+      {
+        "resource": "Desc_SulfuricAcid_C",
+        "amount": 1000
+      },
+      {
+        "resource": "Desc_FluidCanister_C",
+        "amount": 1
+      }
+    ],
     "time": 1,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -3565,10 +3991,12 @@
         "amount": 25
       }
     ],
-    "product": {
-      "resource": "Desc_ComputerSuper_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_ComputerSuper_C",
+        "amount": 1
+      }
+    ],
     "time": 25,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -3588,10 +4016,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_ElectromagneticControlRod_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_ElectromagneticControlRod_C",
+        "amount": 2
+      }
+    ],
     "time": 30,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -3615,10 +4045,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_NuclearFuelRod_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_NuclearFuelRod_C",
+        "amount": 1
+      }
+    ],
     "time": 150,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -3638,10 +4070,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_6_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_6_C",
+        "amount": 2
+      }
+    ],
     "time": 120,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -3661,10 +4095,12 @@
         "amount": 10000
       }
     ],
-    "product": {
-      "resource": "Desc_AluminaSolution_C",
-      "amount": 12000
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminaSolution_C",
+        "amount": 12000
+      }
+    ],
     "time": 3,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -3692,10 +4128,12 @@
         "amount": 30
       }
     ],
-    "product": {
-      "resource": "Desc_ModularFrameLightweight_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_ModularFrameLightweight_C",
+        "amount": 3
+      }
+    ],
     "time": 40,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -3715,10 +4153,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_PlutoniumFuelRod_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_PlutoniumFuelRod_C",
+        "amount": 1
+      }
+    ],
     "time": 120,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -3738,10 +4178,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_ComputerSuper_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_ComputerSuper_C",
+        "amount": 1
+      }
+    ],
     "time": 20,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -3761,10 +4203,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_AluminumPlateReinforced_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminumPlateReinforced_C",
+        "amount": 1
+      }
+    ],
     "time": 8,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -3788,10 +4232,12 @@
         "amount": 25000
       }
     ],
-    "product": {
-      "resource": "Desc_ModularFrameFused_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_ModularFrameFused_C",
+        "amount": 1
+      }
+    ],
     "time": 40,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -3807,10 +4253,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_GasTank_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_GasTank_C",
+        "amount": 1
+      }
+    ],
     "time": 1,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -3830,10 +4278,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_PackagedNitrogenGas_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_PackagedNitrogenGas_C",
+        "amount": 1
+      }
+    ],
     "time": 1,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -3849,10 +4299,16 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_NitrogenGas_C",
-      "amount": 4000
-    },
+    "products": [
+      {
+        "resource": "Desc_NitrogenGas_C",
+        "amount": 4000
+      },
+      {
+        "resource": "Desc_GasTank_C",
+        "amount": 1
+      }
+    ],
     "time": 1,
     "producedIn": "Packager",
     "powerConsumption": 0,
@@ -3880,10 +4336,16 @@
         "amount": 6000
       }
     ],
-    "product": {
-      "resource": "Desc_AluminumScrap_C",
-      "amount": 30
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminumScrap_C",
+        "amount": 30
+      },
+      {
+        "resource": "Desc_Water_C",
+        "amount": 5000
+      }
+    ],
     "time": 6,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -3903,10 +4365,12 @@
         "amount": 20
       }
     ],
-    "product": {
-      "resource": "Desc_PlutoniumCell_C",
-      "amount": 20
-    },
+    "products": [
+      {
+        "resource": "Desc_PlutoniumCell_C",
+        "amount": 20
+      }
+    ],
     "time": 120,
     "producedIn": "ParticleAccelerator",
     "powerConsumption": 250,
@@ -3934,10 +4398,12 @@
         "amount": 10000
       }
     ],
-    "product": {
-      "resource": "Desc_ModularFrameFused_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_ModularFrameFused_C",
+        "amount": 1
+      }
+    ],
     "time": 20,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -3965,10 +4431,16 @@
         "amount": 5000
       }
     ],
-    "product": {
-      "resource": "Desc_NonFissibleUranium_C",
-      "amount": 20
-    },
+    "products": [
+      {
+        "resource": "Desc_NonFissibleUranium_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_Water_C",
+        "amount": 8000
+      }
+    ],
     "time": 12,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -3988,10 +4460,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Motor_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Motor_C",
+        "amount": 2
+      }
+    ],
     "time": 16,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -4011,10 +4485,12 @@
         "amount": 10000
       }
     ],
-    "product": {
-      "resource": "Desc_LiquidFuel_C",
-      "amount": 10000
-    },
+    "products": [
+      {
+        "resource": "Desc_LiquidFuel_C",
+        "amount": 10000
+      }
+    ],
     "time": 6,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -4038,10 +4514,12 @@
         "amount": 24000
       }
     ],
-    "product": {
-      "resource": "Desc_CoolingSystem_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_CoolingSystem_C",
+        "amount": 2
+      }
+    ],
     "time": 24,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -4069,10 +4547,12 @@
         "amount": 12
       }
     ],
-    "product": {
-      "resource": "Desc_Battery_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_Battery_C",
+        "amount": 4
+      }
+    ],
     "time": 8,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -4092,10 +4572,12 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "BP_ItemDescriptorPortableMiner_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "BP_ItemDescriptorPortableMiner_C",
+        "amount": 1
+      }
+    ],
     "time": 60,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -4115,10 +4597,12 @@
         "amount": 10
       }
     ],
-    "product": {
-      "resource": "Desc_AluminumCasing_C",
-      "amount": 15
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminumCasing_C",
+        "amount": 15
+      }
+    ],
     "time": 8,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -4138,10 +4622,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_SteelPipe_C",
-      "amount": 5
-    },
+    "products": [
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 5
+      }
+    ],
     "time": 6,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -4157,10 +4643,12 @@
         "amount": 20
       }
     ],
-    "product": {
-      "resource": "Desc_SteelPipe_C",
-      "amount": 5
-    },
+    "products": [
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 5
+      }
+    ],
     "time": 12,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -4180,10 +4668,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_IronPlate_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 3
+      }
+    ],
     "time": 4,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -4203,10 +4693,12 @@
         "amount": 16
       }
     ],
-    "product": {
-      "resource": "Desc_SteelPlate_C",
-      "amount": 9
-    },
+    "products": [
+      {
+        "resource": "Desc_SteelPlate_C",
+        "amount": 9
+      }
+    ],
     "time": 12,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -4222,10 +4714,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_SteelPlate_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_SteelPlate_C",
+        "amount": 3
+      }
+    ],
     "time": 8,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -4241,10 +4735,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_IronRod_C",
-      "amount": 7
-    },
+    "products": [
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 7
+      }
+    ],
     "time": 8,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -4264,10 +4760,12 @@
         "amount": 7
       }
     ],
-    "product": {
-      "resource": "Desc_CircuitBoardHighSpeed_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_CircuitBoardHighSpeed_C",
+        "amount": 2
+      }
+    ],
     "time": 15,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -4291,10 +4789,16 @@
         "amount": 10000
       }
     ],
-    "product": {
-      "resource": "Desc_Silica_C",
-      "amount": 27
-    },
+    "products": [
+      {
+        "resource": "Desc_Silica_C",
+        "amount": 27
+      },
+      {
+        "resource": "Desc_Water_C",
+        "amount": 8000
+      }
+    ],
     "time": 6,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -4314,10 +4818,16 @@
         "amount": 2000
       }
     ],
-    "product": {
-      "resource": "Desc_QuartzCrystal_C",
-      "amount": 15
-    },
+    "products": [
+      {
+        "resource": "Desc_QuartzCrystal_C",
+        "amount": 15
+      },
+      {
+        "resource": "Desc_DissolvedSilica_C",
+        "amount": 12000
+      }
+    ],
     "time": 12,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -4337,10 +4847,12 @@
         "amount": 12
       }
     ],
-    "product": {
-      "resource": "Desc_QuartzCrystal_C",
-      "amount": 18
-    },
+    "products": [
+      {
+        "resource": "Desc_QuartzCrystal_C",
+        "amount": 18
+      }
+    ],
     "time": 20,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -4360,10 +4872,12 @@
         "amount": 1000
       }
     ],
-    "product": {
-      "resource": "Desc_IronIngot_C",
-      "amount": 10
-    },
+    "products": [
+      {
+        "resource": "Desc_IronIngot_C",
+        "amount": 10
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -4383,10 +4897,12 @@
         "amount": 8
       }
     ],
-    "product": {
-      "resource": "Desc_IronIngot_C",
-      "amount": 10
-    },
+    "products": [
+      {
+        "resource": "Desc_IronIngot_C",
+        "amount": 10
+      }
+    ],
     "time": 12,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -4406,10 +4922,12 @@
         "amount": 8
       }
     ],
-    "product": {
-      "resource": "Desc_CopperIngot_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_CopperIngot_C",
+        "amount": 12
+      }
+    ],
     "time": 12,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -4429,10 +4947,12 @@
         "amount": 5000
       }
     ],
-    "product": {
-      "resource": "Desc_CopperIngot_C",
-      "amount": 22
-    },
+    "products": [
+      {
+        "resource": "Desc_CopperIngot_C",
+        "amount": 22
+      }
+    ],
     "time": 12,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -4452,10 +4972,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_GoldIngot_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_GoldIngot_C",
+        "amount": 3
+      }
+    ],
     "time": 8,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -4475,10 +4997,12 @@
         "amount": 5000
       }
     ],
-    "product": {
-      "resource": "Desc_GoldIngot_C",
-      "amount": 6
-    },
+    "products": [
+      {
+        "resource": "Desc_GoldIngot_C",
+        "amount": 6
+      }
+    ],
     "time": 10,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -4494,10 +5018,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_Wire_C",
-      "amount": 8
-    },
+    "products": [
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 8
+      }
+    ],
     "time": 4,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -4513,10 +5039,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_Wire_C",
-      "amount": 9
-    },
+    "products": [
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 9
+      }
+    ],
     "time": 24,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -4544,10 +5072,12 @@
         "amount": 15
       }
     ],
-    "product": {
-      "resource": "Desc_UraniumCell_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_UraniumCell_C",
+        "amount": 4
+      }
+    ],
     "time": 12,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -4563,10 +5093,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_GoldIngot_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_GoldIngot_C",
+        "amount": 1
+      }
+    ],
     "time": 4,
     "producedIn": "Smelter",
     "powerConsumption": 0,
@@ -4594,10 +5126,12 @@
         "amount": 7
       }
     ],
-    "product": {
-      "resource": "Desc_MotorLightweight_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_MotorLightweight_C",
+        "amount": 3
+      }
+    ],
     "time": 64,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -4625,10 +5159,12 @@
         "amount": 24
       }
     ],
-    "product": {
-      "resource": "Desc_MotorLightweight_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_MotorLightweight_C",
+        "amount": 1
+      }
+    ],
     "time": 32,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -4656,10 +5192,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_8_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_8_C",
+        "amount": 2
+      }
+    ],
     "time": 120,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -4679,10 +5217,12 @@
         "amount": 15
       }
     ],
-    "product": {
-      "resource": "Desc_Stator_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Stator_C",
+        "amount": 2
+      }
+    ],
     "time": 15,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -4702,10 +5242,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_Silica_C",
-      "amount": 7
-    },
+    "products": [
+      {
+        "resource": "Desc_Silica_C",
+        "amount": 7
+      }
+    ],
     "time": 8,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -4721,10 +5263,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_IronScrew_C",
-      "amount": 52
-    },
+    "products": [
+      {
+        "resource": "Desc_IronScrew_C",
+        "amount": 52
+      }
+    ],
     "time": 12,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -4740,10 +5284,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_IronScrew_C",
-      "amount": 20
-    },
+    "products": [
+      {
+        "resource": "Desc_IronScrew_C",
+        "amount": 20
+      }
+    ],
     "time": 24,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -4763,10 +5309,12 @@
         "amount": 6
       }
     ],
-    "product": {
-      "resource": "Desc_Rotor_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Rotor_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -4786,10 +5334,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_SteelPlateReinforced_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 1
+      }
+    ],
     "time": 15,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -4809,10 +5359,12 @@
         "amount": 20
       }
     ],
-    "product": {
-      "resource": "Desc_IronPlateReinforced_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_IronPlateReinforced_C",
+        "amount": 3
+      }
+    ],
     "time": 32,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -4832,10 +5384,12 @@
         "amount": 50
       }
     ],
-    "product": {
-      "resource": "Desc_IronPlateReinforced_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_IronPlateReinforced_C",
+        "amount": 3
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -4859,10 +5413,12 @@
         "amount": 12
       }
     ],
-    "product": {
-      "resource": "Desc_ModularFrameLightweight_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_ModularFrameLightweight_C",
+        "amount": 1
+      }
+    ],
     "time": 16,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -4882,10 +5438,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_HighSpeedWire_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_HighSpeedWire_C",
+        "amount": 12
+      }
+    ],
     "time": 8,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -4905,10 +5463,12 @@
         "amount": 6000
       }
     ],
-    "product": {
-      "resource": "Desc_Plastic_C",
-      "amount": 12
-    },
+    "products": [
+      {
+        "resource": "Desc_Plastic_C",
+        "amount": 12
+      }
+    ],
     "time": 12,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -4936,10 +5496,12 @@
         "amount": 10
       }
     ],
-    "product": {
-      "resource": "Desc_NuclearFuelRod_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_NuclearFuelRod_C",
+        "amount": 3
+      }
+    ],
     "time": 300,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -4963,10 +5525,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_Motor_C",
-      "amount": 6
-    },
+    "products": [
+      {
+        "resource": "Desc_Motor_C",
+        "amount": 6
+      }
+    ],
     "time": 48,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -4986,10 +5550,12 @@
         "amount": 10
       }
     ],
-    "product": {
-      "resource": "Desc_ModularFrame_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_ModularFrame_C",
+        "amount": 3
+      }
+    ],
     "time": 60,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5009,10 +5575,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_SteelIngot_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_SteelIngot_C",
+        "amount": 4
+      }
+    ],
     "time": 24,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -5032,10 +5600,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_SteelIngot_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_SteelIngot_C",
+        "amount": 3
+      }
+    ],
     "time": 3,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -5055,10 +5625,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_IronIngot_C",
-      "amount": 15
-    },
+    "products": [
+      {
+        "resource": "Desc_IronIngot_C",
+        "amount": 15
+      }
+    ],
     "time": 12,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -5082,10 +5654,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_HighSpeedConnector_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_HighSpeedConnector_C",
+        "amount": 2
+      }
+    ],
     "time": 40,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -5113,10 +5687,12 @@
         "amount": 22
       }
     ],
-    "product": {
-      "resource": "Desc_ModularFrameHeavy_C",
-      "amount": 3
-    },
+    "products": [
+      {
+        "resource": "Desc_ModularFrameHeavy_C",
+        "amount": 3
+      }
+    ],
     "time": 64,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -5136,10 +5712,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_AluminumPlateReinforced_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_AluminumPlateReinforced_C",
+        "amount": 1
+      }
+    ],
     "time": 6,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5159,10 +5737,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Gunpowder_C",
-      "amount": 6
-    },
+    "products": [
+      {
+        "resource": "Desc_Gunpowder_C",
+        "amount": 6
+      }
+    ],
     "time": 8,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5182,10 +5762,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_ElectromagneticControlRod_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_ElectromagneticControlRod_C",
+        "amount": 2
+      }
+    ],
     "time": 15,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5209,10 +5791,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_CrystalOscillator_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_CrystalOscillator_C",
+        "amount": 1
+      }
+    ],
     "time": 32,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -5232,10 +5816,12 @@
         "amount": 12
       }
     ],
-    "product": {
-      "resource": "Desc_Cement_C",
-      "amount": 10
-    },
+    "products": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 10
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5255,10 +5841,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_Computer_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Computer_C",
+        "amount": 2
+      }
+    ],
     "time": 36,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5282,10 +5870,12 @@
         "amount": 6
       }
     ],
-    "product": {
-      "resource": "Desc_Computer_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Computer_C",
+        "amount": 1
+      }
+    ],
     "time": 16,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -5305,10 +5895,12 @@
         "amount": 30
       }
     ],
-    "product": {
-      "resource": "Desc_CircuitBoard_C",
-      "amount": 7
-    },
+    "products": [
+      {
+        "resource": "Desc_CircuitBoard_C",
+        "amount": 7
+      }
+    ],
     "time": 48,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5328,10 +5920,12 @@
         "amount": 11
       }
     ],
-    "product": {
-      "resource": "Desc_CircuitBoard_C",
-      "amount": 5
-    },
+    "products": [
+      {
+        "resource": "Desc_CircuitBoard_C",
+        "amount": 5
+      }
+    ],
     "time": 24,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5351,10 +5945,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Cable_C",
-      "amount": 11
-    },
+    "products": [
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 11
+      }
+    ],
     "time": 24,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5374,10 +5970,12 @@
         "amount": 6
       }
     ],
-    "product": {
-      "resource": "Desc_Cable_C",
-      "amount": 20
-    },
+    "products": [
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 20
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5401,10 +5999,12 @@
         "amount": 20000
       }
     ],
-    "product": {
-      "resource": "Desc_Ficsonium_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Ficsonium_C",
+        "amount": 1
+      }
+    ],
     "time": 6,
     "producedIn": "ParticleAccelerator",
     "powerConsumption": 500,
@@ -5432,10 +6032,16 @@
         "amount": 20000
       }
     ],
-    "product": {
-      "resource": "Desc_FicsoniumFuelRod_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_FicsoniumFuelRod_C",
+        "amount": 1
+      },
+      {
+        "resource": "Desc_DarkEnergy_C",
+        "amount": 20000
+      }
+    ],
     "time": 24,
     "producedIn": "QuantumEncoder",
     "powerConsumption": 0,
@@ -5463,10 +6069,12 @@
         "amount": 200
       }
     ],
-    "product": {
-      "resource": "Desc_SingularityCell_C",
-      "amount": 10
-    },
+    "products": [
+      {
+        "resource": "Desc_SingularityCell_C",
+        "amount": 10
+      }
+    ],
     "time": 60,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -5494,10 +6102,12 @@
         "amount": 40
       }
     ],
-    "product": {
-      "resource": "Desc_SpaceElevatorPart_11_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SpaceElevatorPart_11_C",
+        "amount": 1
+      }
+    ],
     "time": 60,
     "producedIn": "Manufacturer",
     "powerConsumption": 500,
@@ -5521,10 +6131,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_HazmatFilter_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_HazmatFilter_C",
+        "amount": 1
+      }
+    ],
     "time": 16,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -5540,10 +6152,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_HighSpeedWire_C",
-      "amount": 5
-    },
+    "products": [
+      {
+        "resource": "Desc_HighSpeedWire_C",
+        "amount": 5
+      }
+    ],
     "time": 5,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5559,10 +6173,12 @@
         "amount": 8
       }
     ],
-    "product": {
-      "resource": "Desc_Biofuel_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_Biofuel_C",
+        "amount": 4
+      }
+    ],
     "time": 4,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5578,10 +6194,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_AlienProtein_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_AlienProtein_C",
+        "amount": 1
+      }
+    ],
     "time": 3,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5597,10 +6215,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_AlienProtein_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_AlienProtein_C",
+        "amount": 1
+      }
+    ],
     "time": 3,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5616,10 +6236,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_GenericBiomass_C",
-      "amount": 10
-    },
+    "products": [
+      {
+        "resource": "Desc_GenericBiomass_C",
+        "amount": 10
+      }
+    ],
     "time": 4,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5635,10 +6257,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_CrystalShard_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_CrystalShard_C",
+        "amount": 1
+      }
+    ],
     "time": 8,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5658,10 +6282,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_Gunpowder_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Gunpowder_C",
+        "amount": 2
+      }
+    ],
     "time": 4,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5689,10 +6315,16 @@
         "amount": 24000
       }
     ],
-    "product": {
-      "resource": "Desc_AlienPowerFuel_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_AlienPowerFuel_C",
+        "amount": 1
+      },
+      {
+        "resource": "Desc_DarkEnergy_C",
+        "amount": 24000
+      }
+    ],
     "time": 24,
     "producedIn": "QuantumEncoder",
     "powerConsumption": 0,
@@ -5708,10 +6340,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_AlienProtein_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_AlienProtein_C",
+        "amount": 1
+      }
+    ],
     "time": 3,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5727,10 +6361,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_AlienProtein_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_AlienProtein_C",
+        "amount": 1
+      }
+    ],
     "time": 3,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5746,10 +6382,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_AlienDNACapsule_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_AlienDNACapsule_C",
+        "amount": 1
+      }
+    ],
     "time": 6,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5765,10 +6403,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_GenericBiomass_C",
-      "amount": 100
-    },
+    "products": [
+      {
+        "resource": "Desc_GenericBiomass_C",
+        "amount": 100
+      }
+    ],
     "time": 4,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5784,10 +6424,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_SpikedRebar_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SpikedRebar_C",
+        "amount": 1
+      }
+    ],
     "time": 4,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5807,10 +6449,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_CartridgeSmartProjectile_C",
-      "amount": 10
-    },
+    "products": [
+      {
+        "resource": "Desc_CartridgeSmartProjectile_C",
+        "amount": 10
+      }
+    ],
     "time": 24,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5830,10 +6474,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_Rebar_Stunshot_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Rebar_Stunshot_C",
+        "amount": 1
+      }
+    ],
     "time": 6,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5857,10 +6503,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Filter_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Filter_C",
+        "amount": 1
+      }
+    ],
     "time": 8,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -5880,10 +6528,12 @@
         "amount": 1000
       }
     ],
-    "product": {
-      "resource": "Desc_Fabric_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Fabric_C",
+        "amount": 1
+      }
+    ],
     "time": 2,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -5903,10 +6553,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_Fabric_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Fabric_C",
+        "amount": 1
+      }
+    ],
     "time": 4,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -5934,10 +6586,16 @@
         "amount": 12000
       }
     ],
-    "product": {
-      "resource": "Desc_CrystalShard_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_CrystalShard_C",
+        "amount": 1
+      },
+      {
+        "resource": "Desc_DarkEnergy_C",
+        "amount": 12000
+      }
+    ],
     "time": 12,
     "producedIn": "QuantumEncoder",
     "powerConsumption": 0,
@@ -5953,10 +6611,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_CrystalShard_C",
-      "amount": 5
-    },
+    "products": [
+      {
+        "resource": "Desc_CrystalShard_C",
+        "amount": 5
+      }
+    ],
     "time": 24,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5972,10 +6632,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_CrystalShard_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_CrystalShard_C",
+        "amount": 2
+      }
+    ],
     "time": 12,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -5995,10 +6657,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_Rebar_Spreadshot_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Rebar_Spreadshot_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -6022,10 +6686,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_CartridgeChaos_C",
-      "amount": 50
-    },
+    "products": [
+      {
+        "resource": "Desc_CartridgeChaos_C",
+        "amount": 50
+      }
+    ],
     "time": 12,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -6049,10 +6715,12 @@
         "amount": 3000
       }
     ],
-    "product": {
-      "resource": "Desc_CartridgeChaos_C",
-      "amount": 50
-    },
+    "products": [
+      {
+        "resource": "Desc_CartridgeChaos_C",
+        "amount": 50
+      }
+    ],
     "time": 12,
     "producedIn": "Blender",
     "powerConsumption": 0,
@@ -6072,10 +6740,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_CartridgeStandard_C",
-      "amount": 15
-    },
+    "products": [
+      {
+        "resource": "Desc_CartridgeStandard_C",
+        "amount": 15
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -6099,10 +6769,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Rebar_Explosive_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Rebar_Explosive_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Manufacturer",
     "powerConsumption": 0,
@@ -6122,10 +6794,12 @@
         "amount": 1000
       }
     ],
-    "product": {
-      "resource": "Desc_GunpowderMK2_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_GunpowderMK2_C",
+        "amount": 2
+      }
+    ],
     "time": 6,
     "producedIn": "Refinery",
     "powerConsumption": 0,
@@ -6141,10 +6815,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_SnowballProjectile_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_SnowballProjectile_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -6164,10 +6840,12 @@
         "amount": 20
       }
     ],
-    "product": {
-      "resource": "Desc_XmasStar_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_XmasStar_C",
+        "amount": 1
+      }
+    ],
     "time": 60,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -6187,10 +6865,12 @@
         "amount": 6
       }
     ],
-    "product": {
-      "resource": "Desc_XmasWreath_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_XmasWreath_C",
+        "amount": 2
+      }
+    ],
     "time": 60,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -6210,10 +6890,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_XmasBallCluster_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_XmasBallCluster_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -6229,10 +6911,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_XmasBall1_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_XmasBall1_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Smelter",
     "powerConsumption": 0,
@@ -6248,10 +6932,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_XmasBall2_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_XmasBall2_C",
+        "amount": 2
+      }
+    ],
     "time": 12,
     "producedIn": "Smelter",
     "powerConsumption": 0,
@@ -6271,10 +6957,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_XmasBall3_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_XmasBall3_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -6294,10 +6982,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_XmasBall4_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_XmasBall4_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Foundry",
     "powerConsumption": 0,
@@ -6313,10 +7003,12 @@
         "amount": 5
       }
     ],
-    "product": {
-      "resource": "Desc_Snow_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Snow_C",
+        "amount": 2
+      }
+    ],
     "time": 12,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -6332,10 +7024,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_XmasBranch_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_XmasBranch_C",
+        "amount": 1
+      }
+    ],
     "time": 6,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -6351,10 +7045,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_XmasBow_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_XmasBow_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -6370,10 +7066,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_CandyCane_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_CandyCane_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -6389,10 +7087,12 @@
         "amount": 10
       }
     ],
-    "product": {
-      "resource": "Desc_GenericBiomass_C",
-      "amount": 5
-    },
+    "products": [
+      {
+        "resource": "Desc_GenericBiomass_C",
+        "amount": 5
+      }
+    ],
     "time": 5,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -6408,10 +7108,12 @@
         "amount": 4
       }
     ],
-    "product": {
-      "resource": "Desc_GenericBiomass_C",
-      "amount": 20
-    },
+    "products": [
+      {
+        "resource": "Desc_GenericBiomass_C",
+        "amount": 20
+      }
+    ],
     "time": 4,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -6431,10 +7133,12 @@
         "amount": 12
       }
     ],
-    "product": {
-      "resource": "Desc_IronPlateReinforced_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_IronPlateReinforced_C",
+        "amount": 1
+      }
+    ],
     "time": 12,
     "producedIn": "Assembler",
     "powerConsumption": 0,
@@ -6450,10 +7154,12 @@
         "amount": 3
       }
     ],
-    "product": {
-      "resource": "Desc_Cement_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 1
+      }
+    ],
     "time": 4,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -6469,10 +7175,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_IronScrew_C",
-      "amount": 4
-    },
+    "products": [
+      {
+        "resource": "Desc_IronScrew_C",
+        "amount": 4
+      }
+    ],
     "time": 6,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -6488,10 +7196,12 @@
         "amount": 2
       }
     ],
-    "product": {
-      "resource": "Desc_Cable_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 1
+      }
+    ],
     "time": 2,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -6507,10 +7217,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_Wire_C",
-      "amount": 2
-    },
+    "products": [
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 2
+      }
+    ],
     "time": 4,
     "producedIn": "Constructor",
     "powerConsumption": 0,
@@ -6526,10 +7238,12 @@
         "amount": 1
       }
     ],
-    "product": {
-      "resource": "Desc_CopperIngot_C",
-      "amount": 1
-    },
+    "products": [
+      {
+        "resource": "Desc_CopperIngot_C",
+        "amount": 1
+      }
+    ],
     "time": 2,
     "producedIn": "Smelter",
     "powerConsumption": 0,

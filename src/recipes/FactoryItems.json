@@ -1,6 +1,7 @@
 [
   {
     "id": "Desc_NuclearWaste_C",
+    "index": 0,
     "name": "Uranium Waste",
     "displayName": "Uranium Waste",
     "description": "The by-product of consuming Uranium Fuel Rods in a Nuclear Power Plant.\r\nNon-Fissile Uranium can be extracted. Handle with caution.\r\n\r\nCaution: HIGHLY Radioactive.",
@@ -15,6 +16,7 @@
   },
   {
     "id": "Desc_PlutoniumWaste_C",
+    "index": 1,
     "name": "Plutonium Waste",
     "displayName": "Plutonium Waste",
     "description": "The by-product of consuming Plutonium Fuel Rods in a Nuclear Power Plant.\r\nMust be stored in a safe location. Handle with caution.\r\n\r\nCaution: EXTREMELY Radioactive.",
@@ -29,6 +31,7 @@
   },
   {
     "id": "Desc_Cement_C",
+    "index": 2,
     "name": "Concrete",
     "displayName": "Concrete",
     "description": "Used for building.\r\nGood for stable Foundations.",
@@ -43,6 +46,7 @@
   },
   {
     "id": "Desc_Silica_C",
+    "index": 3,
     "name": "Silica",
     "displayName": "Silica",
     "description": "Derived from Raw Quartz. Commonly used to create glass structures, in advanced refinement processes, and for alternative production of electronics.",
@@ -57,6 +61,7 @@
   },
   {
     "id": "Desc_IronPlate_C",
+    "index": 4,
     "name": "Iron Plate",
     "displayName": "Iron Plate",
     "description": "Used for crafting.\r\nOne of the most basic parts.",
@@ -71,6 +76,7 @@
   },
   {
     "id": "Desc_SteelPlate_C",
+    "index": 5,
     "name": "Steel Beam",
     "displayName": "Steel Beam",
     "description": "Primarily used when constructing slightly more advanced buildings.",
@@ -85,6 +91,7 @@
   },
   {
     "id": "Desc_AluminumIngot_C",
+    "index": 6,
     "name": "Aluminum Ingot",
     "displayName": "Aluminum Ingot",
     "description": "Smelted from Aluminum Scrap, which is refined from Alumina Solution.\r\nUsed to produce specialized aluminum-based parts.",
@@ -99,6 +106,7 @@
   },
   {
     "id": "Desc_Battery_C",
+    "index": 7,
     "name": "Battery",
     "displayName": "Battery",
     "description": "Primarily used as fuel for Drones and vehicles.",
@@ -113,6 +121,7 @@
   },
   {
     "id": "Desc_Fuel_C",
+    "index": 8,
     "name": "Packaged Fuel",
     "displayName": "Packaged Fuel",
     "description": "Fuel, packaged for alternative transport. Can be used as fuel for vehicles and the Jetpack.",
@@ -127,6 +136,7 @@
   },
   {
     "id": "Desc_PackagedIonizedFuel_C",
+    "index": 9,
     "name": "Packaged Ionized Fuel",
     "displayName": "Packaged Ionized Fuel",
     "description": "Ionized Fuel, packaged for alternative transport. Can be used as fuel for vehicles and the Jetpack.",
@@ -141,6 +151,7 @@
   },
   {
     "id": "Desc_PackagedRocketFuel_C",
+    "index": 10,
     "name": "Packaged Rocket Fuel",
     "displayName": "Packaged Rocket Fuel",
     "description": "Rocket Fuel, packaged for alternative transport. Can be used as fuel for vehicles and the Jetpack.",
@@ -155,6 +166,7 @@
   },
   {
     "id": "Desc_TurboFuel_C",
+    "index": 11,
     "name": "Packaged Turbofuel",
     "displayName": "Packaged Turbofuel",
     "description": "Turbofuel, packaged for alternative transport. Can be used as fuel for vehicles and the Jetpack.",
@@ -169,6 +181,7 @@
   },
   {
     "id": "Desc_HazmatFilter_C",
+    "index": 12,
     "name": "Iodine-Infused Filter",
     "displayName": "Iodine-Infused Filter",
     "description": "Absorbs radioactive particles when used with the Hazmat Suit.",
@@ -183,6 +196,7 @@
   },
   {
     "id": "Desc_CompactedCoal_C",
+    "index": 13,
     "name": "Compacted Coal",
     "displayName": "Compacted Coal",
     "description": "A much more efficient alternative to Coal. Used as fuel for vehicles and Coal-Powered Generators.",
@@ -197,6 +211,7 @@
   },
   {
     "id": "Desc_PackagedOilResidue_C",
+    "index": 14,
     "name": "Packaged Heavy Oil Residue",
     "displayName": "Packaged Heavy Oil Residue",
     "description": "Heavy Oil Residue, packaged for alternative transport. Can be used as fuel for vehicles.",
@@ -211,6 +226,7 @@
   },
   {
     "id": "Desc_PetroleumCoke_C",
+    "index": 15,
     "name": "Petroleum Coke",
     "displayName": "Petroleum Coke",
     "description": "Used for crafting.\r\nA carbon-rich material distilled from Heavy Oil Residue. \r\nUsed as a less efficient Coal replacement.",
@@ -225,6 +241,7 @@
   },
   {
     "id": "Desc_PackagedOil_C",
+    "index": 16,
     "name": "Packaged Oil",
     "displayName": "Packaged Oil",
     "description": "Crude Oil, packaged for alternative transport. Can be used as fuel for vehicles.",
@@ -239,6 +256,7 @@
   },
   {
     "id": "Desc_IronRod_C",
+    "index": 17,
     "name": "Iron Rod",
     "displayName": "Iron Rod",
     "description": "Used for crafting.\r\nOne of the most basic parts.",
@@ -253,6 +271,7 @@
   },
   {
     "id": "Desc_Wire_C",
+    "index": 18,
     "name": "Wire",
     "displayName": "Wire",
     "description": "Used for crafting.\r\nOne of the most basic parts.",
@@ -267,6 +286,7 @@
   },
   {
     "id": "Desc_Cable_C",
+    "index": 19,
     "name": "Cable",
     "displayName": "Cable",
     "description": "Used for crafting.\r\nPrimarily used to build Power Lines.",
@@ -281,6 +301,7 @@
   },
   {
     "id": "Desc_IronIngot_C",
+    "index": 20,
     "name": "Iron Ingot",
     "displayName": "Iron Ingot",
     "description": "Used for crafting the most basic parts.",
@@ -295,6 +316,7 @@
   },
   {
     "id": "Desc_IronPlateReinforced_C",
+    "index": 21,
     "name": "Reinforced Iron Plate",
     "displayName": "Reinforced Iron Plate",
     "description": "Used for crafting.\r\nA sturdier and more durable Iron Plate.",
@@ -309,6 +331,7 @@
   },
   {
     "id": "Desc_Rotor_C",
+    "index": 22,
     "name": "Rotor",
     "displayName": "Rotor",
     "description": "Used for crafting.\r\nThe moving parts of a motor.",
@@ -323,6 +346,7 @@
   },
   {
     "id": "Desc_LiquidFuel_C",
+    "index": 23,
     "name": "Fuel",
     "displayName": "Fuel",
     "description": "Can be used as-is to generate power, or packaged to be used as fuel for vehicles or the Jetpack.",
@@ -337,6 +361,7 @@
   },
   {
     "id": "Desc_RocketFuel_C",
+    "index": 24,
     "name": "Rocket Fuel",
     "displayName": "Rocket Fuel",
     "description": "A high-impulse compressed gas fuel.\r\nCan be used as-is to power Fuel-Powered Generators, or packaged to be used as fuel for vehicles or the Jetpack.",
@@ -351,6 +376,7 @@
   },
   {
     "id": "Desc_CopperSheet_C",
+    "index": 25,
     "name": "Copper Sheet",
     "displayName": "Copper Sheet",
     "description": "Used for crafting.\r\nPrimarily used for Pipelines due to its high corrosion resistance.",
@@ -365,6 +391,7 @@
   },
   {
     "id": "Desc_ModularFrame_C",
+    "index": 26,
     "name": "Modular Frame",
     "displayName": "Modular Frame",
     "description": "Used for crafting.\r\nA multipurpose building block.",
@@ -379,6 +406,7 @@
   },
   {
     "id": "Desc_IronScrew_C",
+    "index": 27,
     "name": "Screw",
     "displayName": "Screw",
     "description": "Used for crafting.\r\nOne of the most basic parts.",
@@ -393,6 +421,7 @@
   },
   {
     "id": "Desc_NitricAcid_C",
+    "index": 28,
     "name": "Nitric Acid",
     "displayName": "Nitric Acid",
     "description": "Produced when Nitrogen Gas reacts with Water. Its high corrosiveness and oxidizing properties make it an excellent choice for refinement and fuel production processes.",
@@ -407,6 +436,7 @@
   },
   {
     "id": "Desc_LiquidTurboFuel_C",
+    "index": 29,
     "name": "Turbofuel",
     "displayName": "Turbofuel",
     "description": "A more efficient alternative to Fuel. Can be used as-is to generate power, or packaged to be used as fuel for vehicles.",
@@ -421,6 +451,7 @@
   },
   {
     "id": "Desc_GasTank_C",
+    "index": 30,
     "name": "Empty Fluid Tank",
     "displayName": "Empty Fluid Tank",
     "description": "Used to package gases and volatile liquids for transportation.",
@@ -435,6 +466,7 @@
   },
   {
     "id": "Desc_CrystalOscillator_C",
+    "index": 31,
     "name": "Crystal Oscillator",
     "displayName": "Crystal Oscillator",
     "description": "An electronic oscillator circuit that uses the mechanical resonance of a vibrating crystal to create an electrical signal with a precise frequency.",
@@ -449,6 +481,7 @@
   },
   {
     "id": "Desc_Motor_C",
+    "index": 32,
     "name": "Motor",
     "displayName": "Motor",
     "description": "Creates a mechanical force that is used to move things from machines to vehicles.",
@@ -463,6 +496,7 @@
   },
   {
     "id": "Desc_DarkMatter_C",
+    "index": 33,
     "name": "Dark Matter Crystal",
     "displayName": "Dark Matter Crystal",
     "description": "Concentrated Dark Matter Residue that is isolated within a crystalline vessel. This form of containment allows for utilising Dark Matter reliably in other production processes.\r\n\r\nPower Usage: 500-1500 MW (1000 MW average).",
@@ -477,6 +511,7 @@
   },
   {
     "id": "Desc_IonizedFuel_C",
+    "index": 34,
     "name": "Ionized Fuel",
     "displayName": "Ionized Fuel",
     "description": "Fuel that has been ionized, allowing it to deliver incredible output.\r\nCan be used as-is to power Fuel-Powered Generators, or packaged to be used as fuel for vehicles or the Jetpack.",
@@ -491,6 +526,7 @@
   },
   {
     "id": "Desc_ComputerSuper_C",
+    "index": 35,
     "name": "Supercomputer",
     "displayName": "Supercomputer",
     "description": "The next-gen version of a Computer.",
@@ -505,6 +541,7 @@
   },
   {
     "id": "Desc_CoolingSystem_C",
+    "index": 36,
     "name": "Cooling System",
     "displayName": "Cooling System",
     "description": "Keeps advanced parts and buildings from exceeding efficient temperature levels.",
@@ -519,6 +556,7 @@
   },
   {
     "id": "Desc_FicsiteMesh_C",
+    "index": 37,
     "name": "Ficsite Trigon",
     "displayName": "Ficsite Trigon",
     "description": "The Ficsite Trigon, made from Ficsite Ingots, is perfectly shaped for all construction challenges. It's performance is so exceptional, it basically solved structural engineering.",
@@ -533,6 +571,7 @@
   },
   {
     "id": "Desc_MotorLightweight_C",
+    "index": 38,
     "name": "Turbo Motor",
     "displayName": "Turbo Motor",
     "description": "A more complex and powerful version of the regular Motor.",
@@ -547,6 +586,7 @@
   },
   {
     "id": "Desc_TimeCrystal_C",
+    "index": 39,
     "name": "Time Crystal",
     "displayName": "Time Crystal",
     "description": "Time Crystals are Diamonds that have been reconfigured on a sub-atomic level in the Converter to retain a time-periodic self-organizing structure. This allows them to be used in the development of quantum processing and storage technologies.",
@@ -561,6 +601,7 @@
   },
   {
     "id": "Desc_DarkEnergy_C",
+    "index": 40,
     "name": "Dark Matter Residue",
     "displayName": "Dark Matter Residue",
     "description": "Produced as a by-product of Quantum Encoding processes and alternatively generated in the Converter.\r\n\r\nVarious fields of science are still debating the nature and properties of Dark Matter. Meanwhile, FICSIT has found several applications for it in space-time manipulation.",
@@ -575,6 +616,7 @@
   },
   {
     "id": "Desc_SAMIngot_C",
+    "index": 41,
     "name": "Reanimated SAM",
     "displayName": "Reanimated SAM",
     "description": "The active and contained form of the Strange Alien Matter.\r\n\r\nProper electromagnetic containment is required, as it appears to be able to manipulate the atomic bonds of any matter it comes into contact with.",
@@ -589,6 +631,7 @@
   },
   {
     "id": "Desc_QuantumEnergy_C",
+    "index": 42,
     "name": "Excited Photonic Matter",
     "displayName": "Excited Photonic Matter",
     "description": "Excited Photonic Matter is essential for all production processes in the Quantum Encoder.\r\n\r\nFormed in the Converter by inducing intense photon interactions through exposure to SAM in a high-energy environment.",
@@ -603,6 +646,7 @@
   },
   {
     "id": "Desc_Diamond_C",
+    "index": 43,
     "name": "Diamonds",
     "displayName": "Diamonds",
     "description": "Synthetic Diamonds produced by exposing Coal to extreme heat and pressure.\r\n\r\nUsed in the production of Time Crystals and Dark Matter Crystals.\r\n\r\nPower Usage: 250-750 MW (500 MW average).",
@@ -617,6 +661,7 @@
   },
   {
     "id": "Desc_AluminumPlate_C",
+    "index": 44,
     "name": "Alclad Aluminum Sheet",
     "displayName": "Alclad Aluminum Sheet",
     "description": "Used to make products that require high heat conduction or a high specific strength. Thin, lightweight, and highly durable.",
@@ -631,6 +676,7 @@
   },
   {
     "id": "Desc_QuantumOscillator_C",
+    "index": 45,
     "name": "Superposition Oscillator",
     "displayName": "Superposition Oscillator",
     "description": "An oscillator circuit that uses the mechanical resonance of a vibrating crystal to create a string vibration with a precise frequency. Often used in teleportation technology and dimensional manipulation.",
@@ -645,6 +691,7 @@
   },
   {
     "id": "Desc_TemporalProcessor_C",
+    "index": 46,
     "name": "Neural-Quantum Processor",
     "displayName": "Neural-Quantum Processor",
     "description": "The Neural-Quantum Processor utilizes a combination of neural network architecture and quantum computing techniques to achieve unprecedented performance. This technology has enabled some of FICSIT's biggest advancements in artificial intelligence and relativistic engineering.",
@@ -659,6 +706,7 @@
   },
   {
     "id": "Desc_SpaceElevatorPart_12_C",
+    "index": 47,
     "name": "AI Expansion Server",
     "displayName": "AI Expansion Server",
     "description": "Project Part #12. Ship via the Space Elevator to complete phases of Project Assembly.\r\nPower Usage: 1500-2500 MW (2000 MW average).\r\n\r\nGrowth is the metric by which we measure success.",
@@ -673,6 +721,7 @@
   },
   {
     "id": "Desc_SpaceElevatorPart_6_C",
+    "index": 48,
     "name": "Magnetic Field Generator",
     "displayName": "Magnetic Field Generator",
     "description": "Project Part #7. Ship via the Space Elevator to complete phases of Project Assembly.\r\n\r\nThese modular generators use superconducting magnets and vast amounts of electricity to produce a powerful and easily expandable magnetic field.",
@@ -687,6 +736,7 @@
   },
   {
     "id": "Desc_SAMFluctuator_C",
+    "index": 49,
     "name": "SAM Fluctuator",
     "displayName": "SAM Fluctuator",
     "description": "The SAM Fluctuator is able to regulate and direct the behaviour of Reanimated SAM through the application of electric charges with varying frequencies.\r\nThis control facilitates technologies such as matter-to-energy conversion and spatiotemporal matter manipulation.",
@@ -701,6 +751,7 @@
   },
   {
     "id": "Desc_SteelPipe_C",
+    "index": 50,
     "name": "Steel Pipe",
     "displayName": "Steel Pipe",
     "description": "Primarily used when constructing slightly more advanced buildings.",
@@ -715,6 +766,7 @@
   },
   {
     "id": "Desc_ModularFrameFused_C",
+    "index": 51,
     "name": "Fused Modular Frame",
     "displayName": "Fused Modular Frame",
     "description": "A corrosion-resistant, nitride-hardened, highly-robust-yet-lightweight modular frame.",
@@ -729,6 +781,7 @@
   },
   {
     "id": "Desc_ModularFrameLightweight_C",
+    "index": 52,
     "name": "Radio Control Unit",
     "displayName": "Radio Control Unit",
     "description": "Enhances and directs radio signals.",
@@ -743,6 +796,7 @@
   },
   {
     "id": "Desc_FicsiteIngot_C",
+    "index": 53,
     "name": "Ficsite Ingot",
     "displayName": "Ficsite Ingot",
     "description": "Produced by reconstructing other metals on a molecular level using Strange Alien Matter.\r\n\r\nSynthesized by FICSIT to be the perfect construction material, and used in the most high-end processes.",
@@ -757,6 +811,7 @@
   },
   {
     "id": "Desc_SpaceElevatorPart_10_C",
+    "index": 54,
     "name": "Biochemical Sculptor",
     "displayName": "Biochemical Sculptor",
     "description": "Project Part #10. Ship via the Space Elevator to complete phases of Project Assembly.\r\n\r\nYears ahead of the competition, this top-of-the-line 3D printer is used for the production of synthetic biological resources.",
@@ -771,6 +826,7 @@
   },
   {
     "id": "Desc_SpaceElevatorPart_7_C",
+    "index": 55,
     "name": "Assembly Director System",
     "displayName": "Assembly Director System",
     "description": "Project Part #6. Ship via the Space Elevator to complete phases of Project Assembly.\r\n\r\nThis extremely fast and precise computing system is specifically designed to direct the Project Assembly: Assembly Phase.",
@@ -785,6 +841,7 @@
   },
   {
     "id": "Desc_GoldIngot_C",
+    "index": 56,
     "name": "Caterium Ingot",
     "displayName": "Caterium Ingot",
     "description": "Smelted from Caterium Ore. Primarily used for advanced electronics.",
@@ -799,6 +856,7 @@
   },
   {
     "id": "Desc_FluidCanister_C",
+    "index": 57,
     "name": "Empty Canister",
     "displayName": "Empty Canister",
     "description": "Used to package fluids for transportation.",
@@ -813,6 +871,7 @@
   },
   {
     "id": "Desc_CircuitBoard_C",
+    "index": 58,
     "name": "Circuit Board",
     "displayName": "Circuit Board",
     "description": "Advanced electronics that have a plethora of different uses.",
@@ -827,6 +886,7 @@
   },
   {
     "id": "Desc_Plastic_C",
+    "index": 59,
     "name": "Plastic",
     "displayName": "Plastic",
     "description": "Versatile and easy to manufacture, this material has a wide range of uses.",
@@ -841,6 +901,7 @@
   },
   {
     "id": "Desc_SteelPlateReinforced_C",
+    "index": 60,
     "name": "Encased Industrial Beam",
     "displayName": "Encased Industrial Beam",
     "description": "Simultaneously utilizes the compressive strength of concrete and the tensile strength of steel.\r\nMostly used as a stable base for constructing buildings.",
@@ -855,6 +916,7 @@
   },
   {
     "id": "Desc_Rubber_C",
+    "index": 61,
     "name": "Rubber",
     "displayName": "Rubber",
     "description": "A very flexible material that has a lot of friction.",
@@ -869,6 +931,7 @@
   },
   {
     "id": "Desc_PolymerResin_C",
+    "index": 62,
     "name": "Polymer Resin",
     "displayName": "Polymer Resin",
     "description": "A by-product of Crude Oil refinement into Fuel. Commonly used to manufacture Plastic and Rubber.",
@@ -883,6 +946,7 @@
   },
   {
     "id": "Desc_HeavyOilResidue_C",
+    "index": 63,
     "name": "Heavy Oil Residue",
     "displayName": "Heavy Oil Residue",
     "description": "A by-product of Plastic and Rubber production. Can be further refined into Fuel and Petroleum Coke.",
@@ -897,6 +961,7 @@
   },
   {
     "id": "Desc_QuartzCrystal_C",
+    "index": 64,
     "name": "Quartz Crystal",
     "displayName": "Quartz Crystal",
     "description": "Derived from Raw Quartz. Used in the production of advanced radar technology and high-quality display screens.",
@@ -911,6 +976,7 @@
   },
   {
     "id": "Desc_SteelIngot_C",
+    "index": 65,
     "name": "Steel Ingot",
     "displayName": "Steel Ingot",
     "description": "Smelted from a combination of Iron Ore and Coal. Can be made into several parts used in building construction.",
@@ -925,6 +991,7 @@
   },
   {
     "id": "Desc_SpaceElevatorPart_2_C",
+    "index": 66,
     "name": "Versatile Framework",
     "displayName": "Versatile Framework",
     "description": "Project Part #2. Ship via the Space Elevator to complete phases of Project Assembly.",
@@ -939,6 +1006,7 @@
   },
   {
     "id": "Desc_PackagedWater_C",
+    "index": 67,
     "name": "Packaged Water",
     "displayName": "Packaged Water",
     "description": "Water, packaged for alternative transport.",
@@ -953,6 +1021,7 @@
   },
   {
     "id": "Desc_CopperIngot_C",
+    "index": 68,
     "name": "Copper Ingot",
     "displayName": "Copper Ingot",
     "description": "Used for crafting the most basic parts.",
@@ -967,6 +1036,7 @@
   },
   {
     "id": "Desc_AluminumScrap_C",
+    "index": 69,
     "name": "Aluminum Scrap",
     "displayName": "Aluminum Scrap",
     "description": "Refined from Alumina. Can be smelted into Aluminum Ingots for industrial usage.",
@@ -981,6 +1051,7 @@
   },
   {
     "id": "Desc_AluminumCasing_C",
+    "index": 70,
     "name": "Aluminum Casing",
     "displayName": "Aluminum Casing",
     "description": "A versatile container cast from Aluminum Ingots.",
@@ -995,6 +1066,7 @@
   },
   {
     "id": "Desc_AluminaSolution_C",
+    "index": 71,
     "name": "Alumina Solution",
     "displayName": "Alumina Solution",
     "description": "Dissolved Alumina, extracted from Bauxite. Can be further refined into Aluminum Scrap for Aluminum Ingot production.",
@@ -1009,6 +1081,7 @@
   },
   {
     "id": "Desc_Computer_C",
+    "index": 72,
     "name": "Computer",
     "displayName": "Computer",
     "description": "A complex logic machine that is used to control advanced behavior in other machines.",
@@ -1023,6 +1096,7 @@
   },
   {
     "id": "Desc_ModularFrameHeavy_C",
+    "index": 73,
     "name": "Heavy Modular Frame",
     "displayName": "Heavy Modular Frame",
     "description": "A more robust multipurpose frame.",
@@ -1037,6 +1111,7 @@
   },
   {
     "id": "Desc_SpaceElevatorPart_1_C",
+    "index": 74,
     "name": "Smart Plating",
     "displayName": "Smart Plating",
     "description": "Project Part #1. Ship via the Space Elevator to complete phases of Project Assembly.",
@@ -1051,6 +1126,7 @@
   },
   {
     "id": "Desc_HighSpeedConnector_C",
+    "index": 75,
     "name": "High-Speed Connector",
     "displayName": "High-Speed Connector",
     "description": "Connects multiple cables and wires in a very efficient way. Uses a standard pattern, so it has many varied applications.",
@@ -1065,6 +1141,7 @@
   },
   {
     "id": "Desc_SpaceElevatorPart_3_C",
+    "index": 76,
     "name": "Automated Wiring",
     "displayName": "Automated Wiring",
     "description": "Project Part #3. Ship via the Space Elevator to complete phases of Project Assembly.",
@@ -1079,6 +1156,7 @@
   },
   {
     "id": "Desc_Stator_C",
+    "index": 77,
     "name": "Stator",
     "displayName": "Stator",
     "description": "Used for crafting.\r\nThe static parts of a motor.",
@@ -1093,6 +1171,7 @@
   },
   {
     "id": "Desc_CircuitBoardHighSpeed_C",
+    "index": 78,
     "name": "AI Limiter",
     "displayName": "AI Limiter",
     "description": "Controls AIs and keeps them from evolving in malicious ways. Super advanced electronics.",
@@ -1107,6 +1186,7 @@
   },
   {
     "id": "Desc_HighSpeedWire_C",
+    "index": 79,
     "name": "Quickwire",
     "displayName": "Quickwire",
     "description": "Caterium's high conductivity and resistance to corrosion make it ideal for small, advanced electronics.",
@@ -1121,6 +1201,7 @@
   },
   {
     "id": "Desc_SpaceElevatorPart_4_C",
+    "index": 80,
     "name": "Modular Engine",
     "displayName": "Modular Engine",
     "description": "Project Part #4. Ship via the Space Elevator to complete phases of Project Assembly.",
@@ -1135,6 +1216,7 @@
   },
   {
     "id": "Desc_SpaceElevatorPart_5_C",
+    "index": 81,
     "name": "Adaptive Control Unit",
     "displayName": "Adaptive Control Unit",
     "description": "Project Part #5. Ship via the Space Elevator to complete phases of Project Assembly.",
@@ -1149,6 +1231,7 @@
   },
   {
     "id": "Desc_PressureConversionCube_C",
+    "index": 82,
     "name": "Pressure Conversion Cube",
     "displayName": "Pressure Conversion Cube",
     "description": "Converts outgoing force into internal pressure. Required to contain unstable, high-energy matter.",
@@ -1163,6 +1246,7 @@
   },
   {
     "id": "Desc_PlutoniumCell_C",
+    "index": 83,
     "name": "Encased Plutonium Cell",
     "displayName": "Encased Plutonium Cell",
     "description": "Plutonium Pellets encased in concrete.\r\nUsed to produce Plutonium Fuel Rods for Nuclear Power production.\r\n\r\nCaution: Moderately Radioactive.",
@@ -1177,6 +1261,7 @@
   },
   {
     "id": "Desc_PlutoniumPellet_C",
+    "index": 84,
     "name": "Plutonium Pellet",
     "displayName": "Plutonium Pellet",
     "description": "Produced in the Particle Accelerator through conversion of Non-fissile Uranium.\r\nUsed to produce Encased Plutonium Cells for Plutonium Fuel Rods.\r\n\r\nPower Usage: 250-750 MW (500 MW average).\r\nCaution: Moderately Radioactive.",
@@ -1191,6 +1276,7 @@
   },
   {
     "id": "Desc_NonFissibleUranium_C",
+    "index": 85,
     "name": "Non-Fissile Uranium",
     "displayName": "Non-Fissile Uranium",
     "description": "The Uranium-238 isotope is non-fissile, meaning it cannot be used for nuclear fission. It can, however, be converted into fissile Plutonium in the Particle Accelerator.\r\n\r\nCaution: Mildly Radioactive.",
@@ -1205,6 +1291,7 @@
   },
   {
     "id": "Desc_SulfuricAcid_C",
+    "index": 86,
     "name": "Sulfuric Acid",
     "displayName": "Sulfuric Acid",
     "description": "Produced by combining Sulfur and Water in a complex reaction. Primarily used in refinement processes and Battery production.",
@@ -1219,6 +1306,7 @@
   },
   {
     "id": "Desc_CopperDust_C",
+    "index": 87,
     "name": "Copper Powder",
     "displayName": "Copper Powder",
     "description": "Ground-up Copper Ingots.\r\nThe high natural density of Copper, combined with the granularity of the powder, makes this part perfect for producing Nuclear Pasta in the Particle Accelerator.",
@@ -1233,6 +1321,7 @@
   },
   {
     "id": "Desc_AluminumPlateReinforced_C",
+    "index": 88,
     "name": "Heat Sink",
     "displayName": "Heat Sink",
     "description": "Used to dissipate heat faster.",
@@ -1247,6 +1336,7 @@
   },
   {
     "id": "Desc_ElectromagneticControlRod_C",
+    "index": 89,
     "name": "Electromagnetic Control Rod",
     "displayName": "Electromagnetic Control Rod",
     "description": "Regulates power output via electromagnetism.",
@@ -1261,6 +1351,7 @@
   },
   {
     "id": "Desc_SpaceElevatorPart_9_C",
+    "index": 90,
     "name": "Nuclear Pasta",
     "displayName": "Nuclear Pasta",
     "description": "Project Part #9. Ship via the Space Elevator to complete phases of Project Assembly.\r\nPower Usage: 500-1500 MW (1000 MW average).\r\n\r\nNuclear Pasta is extremely dense degenerate matter, formed when extreme pressure forces protons and electrons together into neutrons. It is theorized to exist naturally within the crust of neutron stars.",
@@ -1275,6 +1366,7 @@
   },
   {
     "id": "Desc_UraniumCell_C",
+    "index": 91,
     "name": "Encased Uranium Cell",
     "displayName": "Encased Uranium Cell",
     "description": "Used to produce Uranium Fuel Rods for Nuclear Power production. Made from Uranium Ore.\r\n\r\nCaution: Mildly Radioactive.",
@@ -1289,6 +1381,7 @@
   },
   {
     "id": "Desc_DissolvedSilica_C",
+    "index": 92,
     "name": "Dissolved Silica",
     "displayName": "Dissolved Silica",
     "description": "Silica dissolved in Water, produced as part of the alternative refinement of Raw Quartz.\r\nThe Silica can be extracted from the Water to complete the refinement process.",
@@ -1303,6 +1396,7 @@
   },
   {
     "id": "Desc_SpaceElevatorPart_8_C",
+    "index": 93,
     "name": "Thermal Propulsion Rocket",
     "displayName": "Thermal Propulsion Rocket",
     "description": "Project Part #8. Ship via the Space Elevator to complete phases of Project Assembly.\r\n\r\nUses extreme heat to produce the high-pressure plasma required to get Project Assembly into motion.",
@@ -1317,6 +1411,7 @@
   },
   {
     "id": "Desc_Gunpowder_C",
+    "index": 94,
     "name": "Black Powder",
     "displayName": "Black Powder",
     "description": "An explosive powder that is commonly used to produce simple explosives.",
@@ -1331,6 +1426,7 @@
   },
   {
     "id": "Desc_Ficsonium_C",
+    "index": 95,
     "name": "Ficsonium",
     "displayName": "Ficsonium",
     "description": "Usage and production of this material is strictly prohibited. On Earth, that is. There are no rules in space, only efficiency. \r\n\r\nPower Usage: 500-1500 MW (1000 MW average).",
@@ -1345,6 +1441,7 @@
   },
   {
     "id": "Desc_SingularityCell_C",
+    "index": 96,
     "name": "Singularity Cell",
     "displayName": "Singularity Cell",
     "description": "Used to break down space and time. Required to power Portals.",
@@ -1359,6 +1456,7 @@
   },
   {
     "id": "Desc_SpaceElevatorPart_11_C",
+    "index": 97,
     "name": "Ballistic Warp Drive",
     "displayName": "Ballistic Warp Drive",
     "description": "Project Part #11. Ship via the Space Elevator to complete phases of Project Assembly.\r\nPower Usage: 1000-2000 MW (1500 MW average).\r\n\r\nA large amount of force is required for the Warp Drives to activate, so sticking them to rockets was the logical next step. Additionally, results improved immensely when the observers were further removed from the Warp Drives upon activation.",
@@ -1373,6 +1471,7 @@
   },
   {
     "id": "Desc_Filter_C",
+    "index": 98,
     "name": "Gas Filter",
     "displayName": "Gas Filter",
     "description": "Filters out toxins and pollutants from the air when used with a Gas Mask.",
@@ -1387,6 +1486,7 @@
   },
   {
     "id": "Desc_AlienProtein_C",
+    "index": 99,
     "name": "Alien Protein",
     "displayName": "Alien Protein",
     "description": "Ground-up Alien Remains in a neat little package.\r\nUsed for medical purposes and to research alien organisms.",
@@ -1401,6 +1501,7 @@
   },
   {
     "id": "Desc_Crystal_C",
+    "index": 100,
     "name": "Blue Power Slug",
     "displayName": "Blue Power Slug",
     "description": "A strange slug radiating an unknown weak power.",
@@ -1415,6 +1516,7 @@
   },
   {
     "id": "Desc_AlienDNACapsule_C",
+    "index": 101,
     "name": "Alien DNA Capsule",
     "displayName": "Alien DNA Capsule",
     "description": "Translates organic chemicals into readable alien genetic information.\r\nUsed for researching alien organisms.\r\n\r\nGo the extra kilometer! Knowledge is power, and power is just efficiency with fewer steps. Depositing Alien DNA Capsules in the AWESOME Sink provides FICSIT with knowledge, and pioneers with Coupons.",
@@ -1429,6 +1531,7 @@
   },
   {
     "id": "Desc_WAT2_C",
+    "index": 102,
     "name": "Mercer Sphere",
     "displayName": "Mercer Sphere",
     "description": "A weird alien phenomenon. While the sphere appears liquid, it behaves like a solid and does not have any detectable mass. It seems to somehow interact with and have awareness of its environment.",
@@ -1443,6 +1546,7 @@
   },
   {
     "id": "Desc_Crystal_mk3_C",
+    "index": 103,
     "name": "Purple Power Slug",
     "displayName": "Purple Power Slug",
     "description": "A strange slug radiating a powerful unknown power.",
@@ -1457,6 +1561,7 @@
   },
   {
     "id": "Desc_Crystal_mk2_C",
+    "index": 104,
     "name": "Yellow Power Slug",
     "displayName": "Yellow Power Slug",
     "description": "A strange slug radiating an unknown power.",
@@ -1471,6 +1576,7 @@
   },
   {
     "id": "Desc_GunpowderMK2_C",
+    "index": 105,
     "name": "Smokeless Powder",
     "displayName": "Smokeless Powder",
     "description": "An explosive powder that is commonly used to produce modern firearms.",
@@ -1485,6 +1591,7 @@
   },
   {
     "id": "Desc_NuclearFuelRod_C",
+    "index": 118,
     "name": "Uranium Fuel Rod",
     "displayName": "Uranium Fuel Rod",
     "description": "Used as fuel for Nuclear Power Plants.\r\n\r\nCaution: Produces radioactive Uranium Waste when consumed.\r\nCaution: Moderately Radioactive.",
@@ -1499,6 +1606,7 @@
   },
   {
     "id": "Desc_PlutoniumFuelRod_C",
+    "index": 119,
     "name": "Plutonium Fuel Rod",
     "displayName": "Plutonium Fuel Rod",
     "description": "Used as fuel for Nuclear Power Plants.\r\n\r\nCaution: Produces radioactive Plutonium Waste when consumed.\r\nCaution: HIGHLY Radioactive.",
@@ -1513,6 +1621,7 @@
   },
   {
     "id": "Desc_FicsoniumFuelRod_C",
+    "index": 120,
     "name": "Ficsonium Fuel Rod",
     "displayName": "Ficsonium Fuel Rod",
     "description": "Used as fuel for Nuclear Power Plants.\r\nThe power source that put FICSIT on the map. Literally. The crater is still there.\r\n\r\nCaution: Moderately Radioactive.",
@@ -1527,6 +1636,7 @@
   },
   {
     "id": "Desc_Rebar_Explosive_C",
+    "index": 121,
     "name": "Explosive Rebar",
     "displayName": "Explosive Rebar",
     "description": "Explodes on impact, dealing heavy damage.",
@@ -1541,6 +1651,7 @@
   },
   {
     "id": "Desc_Rebar_Stunshot_C",
+    "index": 122,
     "name": "Stun Rebar",
     "displayName": "Stun Rebar",
     "description": "Electrocutes the target on impact, stunning it for a short time.\r\n\r\nStun Duration: 5 seconds",
@@ -1555,6 +1666,7 @@
   },
   {
     "id": "Desc_CartridgeSmartProjectile_C",
+    "index": 123,
     "name": "Homing Rifle Ammo",
     "displayName": "Homing Rifle Ammo",
     "description": "The bullet guidance system built into this ammunition allows it to accurately hit any target within the reticle area.\r\nEspecially useful when dealing with agile threats, or for pioneers who can't be bothered to aim properly.",
@@ -1569,6 +1681,7 @@
   },
   {
     "id": "Desc_NobeliskCluster_C",
+    "index": 124,
     "name": "Cluster Nobelisk",
     "displayName": "Cluster Nobelisk",
     "description": "Detonates into multiple smaller explosions. Practical for clearing out large areas of vegetation and other inconveniences.",
@@ -1583,6 +1696,7 @@
   },
   {
     "id": "Desc_NobeliskExplosive_C",
+    "index": 125,
     "name": "Nobelisk",
     "displayName": "Nobelisk",
     "description": "A simple explosive, useful for clearing boulders, vegetation, and other obstacles.",
@@ -1597,6 +1711,7 @@
   },
   {
     "id": "Desc_NobeliskGas_C",
+    "index": 126,
     "name": "Gas Nobelisk",
     "displayName": "Gas Nobelisk",
     "description": "Creates a deadly gas cloud instead of a regular explosion.",
@@ -1611,6 +1726,7 @@
   },
   {
     "id": "Desc_NobeliskNuke_C",
+    "index": 127,
     "name": "Nuke Nobelisk",
     "displayName": "Nuke Nobelisk",
     "description": "Uses a nuclear fission reaction to generate a massive explosion.\r\nWARNING: Ensure all FICSIT property is clear of the blast zone before detonation.\r\n",
@@ -1625,6 +1741,7 @@
   },
   {
     "id": "Desc_NobeliskShockwave_C",
+    "index": 128,
     "name": "Pulse Nobelisk",
     "displayName": "Pulse Nobelisk",
     "description": "Generates a powerful shockwave instead of a regular explosion.",
@@ -1639,6 +1756,7 @@
   },
   {
     "id": "Desc_SpikedRebar_C",
+    "index": 133,
     "name": "Iron Rebar",
     "displayName": "Iron Rebar",
     "description": "Can be shot using the Rebar Gun for self-defense purposes.",
@@ -1653,6 +1771,7 @@
   },
   {
     "id": "Desc_Rebar_Spreadshot_C",
+    "index": 134,
     "name": "Shatter Rebar",
     "displayName": "Shatter Rebar",
     "description": "Fractures when shot, launching deadly debris with wide spread but limited range.",
@@ -1667,6 +1786,7 @@
   },
   {
     "id": "Desc_CartridgeChaos_C",
+    "index": 135,
     "name": "Turbo Rifle Ammo",
     "displayName": "Turbo Rifle Ammo",
     "description": "Lightweight, compact, and volatile. These rounds provide extreme capacity and rate of fire at the cost of accuracy.",
@@ -1681,6 +1801,7 @@
   },
   {
     "id": "Desc_CartridgeStandard_C",
+    "index": 136,
     "name": "Rifle Ammo",
     "displayName": "Rifle Ammo",
     "description": "Standard issue Rifle ammunition, useful for establishing dominance.",
@@ -1695,6 +1816,7 @@
   },
   {
     "id": "Desc_OreIron_C",
+    "index": 137,
     "name": "Iron Ore",
     "displayName": "Iron Ore",
     "description": "Used for crafting.\r\nThe most essential basic resource.",
@@ -1709,6 +1831,7 @@
   },
   {
     "id": "Desc_Coal_C",
+    "index": 138,
     "name": "Coal",
     "displayName": "Coal",
     "description": "Mainly used as fuel for vehicles & Coal-Powered Generators, or in Steel production.",
@@ -1723,6 +1846,7 @@
   },
   {
     "id": "Desc_Water_C",
+    "index": 139,
     "name": "Water",
     "displayName": "Water",
     "description": "It's water.",
@@ -1737,6 +1861,7 @@
   },
   {
     "id": "Desc_NitrogenGas_C",
+    "index": 140,
     "name": "Nitrogen Gas",
     "displayName": "Nitrogen Gas",
     "description": "Has a variety of uses, including metallurgy, cooling, and Nitric Acid production. On MASSAGE-2 (AB)b, it can be extracted from underground gas wells.",
@@ -1751,6 +1876,7 @@
   },
   {
     "id": "Desc_Sulfur_C",
+    "index": 141,
     "name": "Sulfur",
     "displayName": "Sulfur",
     "description": "Primarily used to produce Black Powder.",
@@ -1765,6 +1891,7 @@
   },
   {
     "id": "Desc_SAM_C",
+    "index": 142,
     "name": "SAM",
     "displayName": "SAM",
     "description": "Strange Alien Matter, commonly referred to as SAM, doesn't seem to follow the known laws of physics. It whispers of new possibilities.",
@@ -1779,6 +1906,7 @@
   },
   {
     "id": "Desc_OreBauxite_C",
+    "index": 143,
     "name": "Bauxite",
     "displayName": "Bauxite",
     "description": "Used to produce Alumina, which can be further refined into the Aluminum Scrap required to produce Aluminum Ingots.",
@@ -1793,6 +1921,7 @@
   },
   {
     "id": "Desc_OreGold_C",
+    "index": 144,
     "name": "Caterium Ore",
     "displayName": "Caterium Ore",
     "description": "Smelted into Caterium Ingots, which are primarily used for advanced electronics.",
@@ -1807,6 +1936,7 @@
   },
   {
     "id": "Desc_OreCopper_C",
+    "index": 145,
     "name": "Copper Ore",
     "displayName": "Copper Ore",
     "description": "Used for crafting.\r\nA basic resource primarily used for electricity.",
@@ -1821,6 +1951,7 @@
   },
   {
     "id": "Desc_RawQuartz_C",
+    "index": 146,
     "name": "Raw Quartz",
     "displayName": "Raw Quartz",
     "description": "Can be processed into Quartz Crystals and Silica, which both offer a variety of applications.",
@@ -1835,6 +1966,7 @@
   },
   {
     "id": "Desc_Stone_C",
+    "index": 147,
     "name": "Limestone",
     "displayName": "Limestone",
     "description": "Used for crafting.\r\nA basic resource primarily used for stable Foundations.",
@@ -1849,6 +1981,7 @@
   },
   {
     "id": "Desc_OreUranium_C",
+    "index": 148,
     "name": "Uranium",
     "displayName": "Uranium",
     "description": "A radioactive element. \r\nUsed to produce Encased Uranium Cells for Uranium Fuel Rods.\r\n\r\nCaution: Moderately Radioactive.",
@@ -1863,6 +1996,7 @@
   },
   {
     "id": "Desc_LiquidOil_C",
+    "index": 149,
     "name": "Crude Oil",
     "displayName": "Crude Oil",
     "description": "Refined into all kinds of Oil-based resources, like Fuel and Plastic.",
@@ -1877,6 +2011,7 @@
   },
   {
     "id": "Desc_Biofuel_C",
+    "index": 150,
     "name": "Solid Biofuel",
     "displayName": "Solid Biofuel",
     "description": "The most energy-efficient form of solid Biomass. Can be used as fuel for the Chainsaw.",
@@ -1891,6 +2026,7 @@
   },
   {
     "id": "Desc_PackagedBiofuel_C",
+    "index": 151,
     "name": "Packaged Liquid Biofuel",
     "displayName": "Packaged Liquid Biofuel",
     "description": "Liquid Biofuel, packaged for alternative transport. Can be used as fuel for vehicles and the Jetpack.",
@@ -1905,6 +2041,7 @@
   },
   {
     "id": "Desc_GenericBiomass_C",
+    "index": 152,
     "name": "Biomass",
     "displayName": "Biomass",
     "description": "Primarily used as fuel.\r\nBiomass Burners and vehicles can use it for power.\r\nBiomass is much more energy-efficient than raw biological matter.",
@@ -1919,6 +2056,7 @@
   },
   {
     "id": "Desc_Leaves_C",
+    "index": 153,
     "name": "Leaves",
     "displayName": "Leaves",
     "description": "Primarily used as fuel.\r\nBiomass Burners and vehicles can use Leaves for power.",
@@ -1933,6 +2071,7 @@
   },
   {
     "id": "Desc_Mycelia_C",
+    "index": 154,
     "name": "Mycelia",
     "displayName": "Mycelia",
     "description": "Used for crafting.\r\nBiomass Burners and vehicles can also use Mycelia for power.",
@@ -1947,6 +2086,7 @@
   },
   {
     "id": "Desc_Wood_C",
+    "index": 155,
     "name": "Wood",
     "displayName": "Wood",
     "description": "Primarily used as fuel.\r\nBiomass Burners and vehicles can use Wood for power.",
@@ -1961,6 +2101,7 @@
   },
   {
     "id": "Desc_LiquidBiofuel_C",
+    "index": 156,
     "name": "Liquid Biofuel",
     "displayName": "Liquid Biofuel",
     "description": "Liquid Biofuel can be used as-is to generate power, or packaged to be used as fuel for vehicles.",
@@ -1975,6 +2116,7 @@
   },
   {
     "id": "Desc_PackagedAlumina_C",
+    "index": 157,
     "name": "Packaged Alumina Solution",
     "displayName": "Packaged Alumina Solution",
     "description": "Alumina Solution, packaged for alternative transport.",
@@ -1989,6 +2131,7 @@
   },
   {
     "id": "Desc_PackagedNitrogenGas_C",
+    "index": 158,
     "name": "Packaged Nitrogen Gas",
     "displayName": "Packaged Nitrogen Gas",
     "description": "Nitrogen Gas, packaged for alternative transport.",
@@ -2003,6 +2146,7 @@
   },
   {
     "id": "Desc_PackagedNitricAcid_C",
+    "index": 159,
     "name": "Packaged Nitric Acid",
     "displayName": "Packaged Nitric Acid",
     "description": "Nitric Acid, packaged for alternative transport.",
@@ -2017,6 +2161,7 @@
   },
   {
     "id": "Desc_PackagedSulfuricAcid_C",
+    "index": 160,
     "name": "Packaged Sulfuric Acid",
     "displayName": "Packaged Sulfuric Acid",
     "description": "Sulfuric Acid, packaged for alternative transport.",
@@ -2031,6 +2176,7 @@
   },
   {
     "id": "Desc_Fabric_C",
+    "index": 161,
     "name": "Fabric",
     "displayName": "Fabric",
     "description": "Used to craft equipment.\r\nFlexible but durable fabric.",
@@ -2045,6 +2191,7 @@
   },
   {
     "id": "Desc_HogParts_C",
+    "index": 162,
     "name": "Hog Remains",
     "displayName": "Hog Remains",
     "description": "The carapace of an alien Hog creature.\r\nUsed for MAM research.",
@@ -2059,6 +2206,7 @@
   },
   {
     "id": "Desc_SpitterParts_C",
+    "index": 163,
     "name": "Spitter Remains",
     "displayName": "Spitter Remains",
     "description": "The remains of a plasma-spitting alien creature.\r\nUsed for MAM research.",
@@ -2073,6 +2221,7 @@
   },
   {
     "id": "Desc_StingerParts_C",
+    "index": 164,
     "name": "Stinger Remains",
     "displayName": "Stinger Remains",
     "description": "The remains of whatever that creepy thing was.\r\nUsed for MAM research.",
@@ -2087,6 +2236,7 @@
   },
   {
     "id": "Desc_HatcherParts_C",
+    "index": 165,
     "name": "Hatcher Remains",
     "displayName": "Hatcher Remains",
     "description": "The shell-like remains of an alien... thing.\r\nUsed for MAM research.",
@@ -2100,7 +2250,38 @@
     "imagePath": "./images/hatcher-remains_256.png"
   },
   {
+    "id": "Desc_CrystalShard_C",
+    "index": 166,
+    "name": "Power Shard",
+    "displayName": "Power Shard",
+    "description": "Power Slug mucus compressed into a solid crystal-like shard. \r\nIt radiates a strange power.",
+    "form": "Solid",
+    "sinkPoints": 0,
+    "sinkable": false,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": false,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/power-shard_256.png"
+  },
+  {
+    "id": "Desc_WAT1_C",
+    "index": 167,
+    "name": "Somersloop",
+    "displayName": "Somersloop",
+    "description": "An odd alien object with a mind-bending, yet somehow familiar shape. It emits an unsettling energy.",
+    "form": "Solid",
+    "sinkPoints": 0,
+    "sinkable": false,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": false,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/somersloop_256.png"
+  },
+  {
     "id": "Desc_AlienPowerFuel_C",
+    "index": 168,
     "name": "Alien Power Matrix",
     "displayName": "Alien Power Matrix",
     "description": "This intricate condensed-matter matrix is used to enhance the output of the Alien Power Augmenter. \r\n\r\nInitially developed in efforts to create a human-made Somersloop, the Alien Power Matrix cannot sustain the extra-dimensional energy connection on its own. However, it can effectively stabilize the energy stream of the Somersloop.",

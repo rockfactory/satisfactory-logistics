@@ -4,9 +4,16 @@ import { memo } from 'react';
 import { AllFactoryItemsMap } from '../../FactoryItem';
 import { FactoryRecipe } from '../../FactoryRecipe';
 
+export interface IMachineNodeData {
+  label: string;
+  value: number;
+  recipe: FactoryRecipe;
+  [key: string]: unknown;
+}
+
 export type IMachineNodeProps = NodeProps & {
-  data: any;
-  type: any;
+  data: IMachineNodeData;
+  type: 'Machine';
 };
 
 const MachineTypes = {
@@ -52,8 +59,8 @@ const MachineTypes = {
 };
 
 export const MachineNode = memo((props: IMachineNodeProps) => {
-  const recipe: FactoryRecipe = props.data.recipe;
-  const product = AllFactoryItemsMap[recipe.product.resource];
+  const { recipe } = props.data;
+  const product = AllFactoryItemsMap[recipe.products[0].resource];
   const isAlt = recipe.name.includes('Alternate');
   return (
     <Box p="sm" style={{ borderRadius: 4 }} bg="dark.4">

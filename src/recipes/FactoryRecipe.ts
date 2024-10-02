@@ -7,7 +7,7 @@ export interface FactoryRecipe {
   tier?: number;
   cost?: string;
   ingredients: RecipeIngredient[];
-  product: RecipeIngredient;
+  products: RecipeIngredient[];
   time: number;
   powerConsumption: number;
   powerConsumptionFactor: number;

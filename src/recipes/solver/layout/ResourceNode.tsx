@@ -3,13 +3,19 @@ import { Handle, NodeProps, Position } from '@xyflow/react';
 import { memo } from 'react';
 import { FactoryItem } from '../../FactoryItem';
 
+export interface IResourceNodeData {
+  resource: FactoryItem;
+  value: number;
+  [key: string]: unknown;
+}
+
 export type IResourceNodeProps = NodeProps & {
-  data: any;
-  type: any;
+  data: IResourceNodeData;
+  type: 'Resource';
 };
 
 export const ResourceNode = memo((props: IResourceNodeProps) => {
-  const resource: FactoryItem = props.data.resource;
+  const { resource } = props.data;
   return (
     <Box p="sm" style={{ borderRadius: 4 }} bg="blue.8">
       <Group gap="sm">
