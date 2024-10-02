@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 
 const ImageRegex = /(?:UI|QuantumEnergy)\/(?:IconDesc_)?(.*)_256\./;
+const IngredientRegex =
+  /\(ItemClass=(?:[^\)]*)\.([^']*)(?:[^)]*)Amount=([\d.]+)\)/gm;
 
 const docsJson = JSON.parse(fs.readFileSync('./data/docs-en.json', 'utf8'));
 const toolsJson = JSON.parse(fs.readFileSync('./data/docs-tools.json', 'utf8'));
@@ -24,6 +26,22 @@ function parseDocs() {
   fs.writeFileSync(
     './src/recipes/FactoryItems.json',
     JSON.stringify(items, null, 2),
+  );
+
+  const rawRecipes = docsJson.flatMap(nativeClass => {
+    if (nativeClass.NativeClass?.includes('FGRecipe')) {
+      return nativeClass.Classes;
+    }
+    return [];
+  });
+
+  const recipes = rawRecipes
+    .map((recipe, index) => parseRecipe(recipe, index))
+    .filter(Boolean);
+
+  fs.writeFileSync(
+    './src/recipes/FactoryRecipes.json',
+    JSON.stringify(recipes, null, 2),
   );
 }
 
@@ -70,4 +88,108 @@ function parseFactoryItemForm(form) {
     default:
       throw new Error(`Unknown form: ${form}`);
   }
+}
+
+function parseRecipe(recipe, index) {
+  const producedIn = parseBestProducedIn(recipe.mProducedIn);
+  if (
+    producedIn === 'BuildGun' ||
+    producedIn === 'WorkBench' ||
+    producedIn === 'None' ||
+    producedIn == null
+  ) {
+    return null;
+  }
+
+  return {
+    index,
+    id: recipe.ClassName,
+    name: recipe.mDisplayName,
+    description: recipe.mDescription,
+    ingredients: parseIngredients(recipe.mIngredients),
+    product: parseProduct(recipe.mProduct),
+    time: parseFloat(recipe.mManufactoringDuration),
+    producedIn: parseBestProducedIn(recipe.mProducedIn),
+    powerConsumption: parseFloat(recipe.mVariablePowerConsumptionConstant),
+    powerConsumptionFactor: parseFloat(recipe.mVariablePowerConsumptionFactor),
+  };
+}
+
+function parseIngredients(ingredients) {
+  console.log(ingredients);
+  const matches = [...ingredients.matchAll(IngredientRegex)];
+  console.log(matches);
+  return matches.map(([_, resource, amount]) => ({
+    resource,
+    amount: parseFloat(amount),
+  }));
+}
+
+function parseProduct(product) {
+  const matches = [...product.matchAll(IngredientRegex)];
+  return matches.map(([_, resource, amount]) => ({
+    resource,
+    amount: parseFloat(amount),
+  }))[0];
+}
+
+function parseBestProducedIn(producedIn) {
+  const producedInArray = producedIn.split(',').map(s => parseProducedIn(s));
+  if (producedInArray.length === 1 && producedInArray[0] === 'BuildGun') {
+    return producedInArray[0];
+  }
+
+  return producedInArray.find(p => p !== 'BuildGun');
+}
+
+function parseProducedIn(producedIn) {
+  if (producedIn.includes('BuildGun')) {
+    return 'BuildGun';
+  }
+  if (producedIn.includes('WorkBench')) {
+    return 'WorkBench';
+  }
+  if (producedIn === '') {
+    return 'None';
+  }
+  if (producedIn.includes('Constructor')) {
+    return 'Constructor';
+  }
+  if (producedIn.includes('Assembler')) {
+    return 'Assembler';
+  }
+  if (producedIn.includes('Manufacturer')) {
+    return 'Manufacturer';
+  }
+  if (producedIn.includes('Refinery')) {
+    return 'Refinery';
+  }
+  if (producedIn.includes('Foundry')) {
+    return 'Foundry';
+  }
+  if (producedIn.includes('Converter')) {
+    return 'Converter';
+  }
+  if (producedIn.includes('Smelter')) {
+    return 'Smelter';
+  }
+  if (producedIn.includes('HadronCollider')) {
+    return 'ParticleAccelerator';
+  }
+  if (producedIn.includes('QuantumEncoder')) {
+    return 'QuantumEncoder';
+  }
+  if (producedIn.includes('Packager')) {
+    return 'Packager';
+  }
+  if (producedIn.includes('WaterExtractor')) {
+    return 'WaterExtractor';
+  }
+  if (producedIn.includes('Extractor')) {
+    return 'Extractor';
+  }
+  if (producedIn.includes('Blender')) {
+    return 'Blender';
+  }
+  return 'NA';
 }

@@ -21,6 +21,7 @@ import { useSession } from '../auth/AuthSlice';
 import { loadFromRemote } from '../auth/sync/loadFromRemote';
 import { SyncButton } from '../auth/sync/SyncButton';
 import { RootState } from '../core/store';
+import { RecipeSolverDemo } from '../recipes/solver/RecipeSolverDemo';
 import { FactoryRow } from './FactoryRow';
 import { FactoriesFiltersSection } from './filters/FactoriesFiltersSection';
 import { ImportFactoriesModal } from './import/ImportFactoriesModal';
@@ -76,6 +77,7 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
       )}
 
       <Container size="lg" mt="lg">
+        <RecipeSolverDemo />
         {factories.length === 0 && (
           <Stack gap="xs" align="center" mih={200} mt={60} mb={90}>
             <IconBuildingFactory size={64} stroke={1.2} />

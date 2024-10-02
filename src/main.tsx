@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/react';
 import { supabaseIntegration } from '@supabase/sentry-js-integration';
+import '@xyflow/react/dist/style.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';

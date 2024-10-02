@@ -7,6 +7,7 @@ import { AuthSessionManager } from './auth/AuthSessionManager';
 import { LoginPage } from './auth/LoginPage';
 import { PrivacyPolicy } from './auth/privacy/PrivacyPolicy';
 import { SyncManager } from './auth/sync/SyncManager';
+import { RecipeSolverDemo } from './recipes/solver/RecipeSolverDemo';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
 import { theme } from './theme';
 
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <LoginPage />,
+  },
+  {
+    path: '/solver',
+    element: <RecipeSolverDemo />,
   },
 ]);
 

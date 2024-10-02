@@ -35,6 +35,9 @@ export const WorldResources = {
   Desc_SAM_C: {
     max: 10200,
   },
+  Desc_Water_C: {
+    max: Number.POSITIVE_INFINITY,
+  },
 };
 
 export const getWorldResourceMax = (resource: string | null | undefined) => {
