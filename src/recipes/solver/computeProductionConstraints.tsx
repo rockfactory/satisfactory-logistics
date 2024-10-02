@@ -1,8 +1,20 @@
 import Graph from 'graphology';
 import voca from 'voca';
+import { log } from '../../core/logger/log';
 import { AllFactoryItemsMap, FactoryItem } from '../FactoryItem';
-import { AllFactoryRecipes, FactoryRecipe } from '../FactoryRecipe';
-import { WorldResources } from '../WorldResources';
+import {
+  FactoryRecipe,
+  getAllRecipesForItem,
+  NotProducibleItems,
+} from '../FactoryRecipe';
+import {
+  getWorldResourceMax,
+  isWorldResource,
+  WorldResourcesList,
+} from '../WorldResources';
+
+const logger = log.getLogger('recipes:solver');
+logger.setLevel('info');
 
 export const encodeResource = (resource: string) =>
   voca
@@ -159,6 +171,7 @@ type SolverEdge = {
   source: FactoryRecipe | 'world';
   target: FactoryRecipe;
   variable: string;
+  label: string;
 };
 
 export class SolverContext {
@@ -166,6 +179,8 @@ export class SolverContext {
   processedRecipes = new Set<string>();
   graph = new Graph<SolverNode, SolverEdge>();
   constraints: string[] = [];
+  bounds: string[] = [];
+  objective?: string;
 
   private aliasIndex = 0;
   private aliases: Record<string, string> = {};
@@ -188,60 +203,84 @@ export class SolverContext {
   decodeVar(varName: string) {
     return this.aliasesReverse[varName];
   }
-}
 
-function getAllRecipesForItem(ctx: SolverContext, item: string) {
-  const recipes = AllFactoryRecipes.filter(r =>
-    r.products.some(p => p.resource === item),
-  );
-  return recipes;
-}
+  pretty(problem: string) {
+    return problem.replace(
+      /([a-z][\w]+)/g,
+      (substring, rawVariable: string) => {
+        const variable = rawVariable.startsWith('a')
+          ? this.decodeVar(rawVariable)
+          : rawVariable;
 
-function isWorldResource(resource: string) {
-  return resource in WorldResources;
+        if (this.graph.hasNode(variable)) {
+          const node = this.graph.getNodeAttributes(variable);
+          return '[' + node.label + ']';
+        }
+        if (this.graph.hasEdge(variable)) {
+          const edge = this.graph.getEdgeAttributes(variable);
+          return '[' + edge.label + ']';
+        }
+
+        return variable;
+      },
+    );
+  }
+
+  formulateProblem() {
+    if (!this.objective) {
+      throw new Error('Objective not set');
+    }
+
+    const problem = [
+      `MINIMIZE`, // TODO make configurable
+      this.objective,
+      `SUBJECT TO`,
+      ...this.constraints,
+      `BOUNDS`,
+      ...WorldResourcesList.map(
+        r =>
+          `0 <= r${AllFactoryItemsMap[r].index} <= ${getWorldResourceMax(r)}`,
+      ),
+      ...this.bounds,
+      `END`,
+    ].join('\n');
+    logger.log('Problem:\n', problem);
+    return problem;
+  }
 }
 
 export function consolidateProductionConstraints(ctx: SolverContext) {
   const resourceNodes = ctx.graph.filterNodes(
     (node, attributes) => attributes.type === 'resource',
   );
-
+  // Resource nodes mixing recipe outputs to all ingredients
   for (const nodeName of resourceNodes) {
     const node = ctx.graph.getNodeAttributes(nodeName);
-    const inbound = ctx.graph.inboundNeighbors(nodeName);
-    const outbound = ctx.graph.outboundNeighbors(nodeName);
+    const producers = ctx.graph.inboundNeighbors(nodeName);
+    const consumers = ctx.graph.outboundNeighbors(nodeName);
 
-    // Wood, ecc.
-    // if (
-    //   (inbound.length === 0 && outbound.length !== 0) ||
-    //   (inbound.length !== 0 && outbound.length === 0)
-    // ) {
-    //   console.error('Invalid node', { node, inbound, outbound });
-    //   throw new Error('Invalid node');
-    // }
-
-    if (inbound.length > 0) {
+    if (producers.length > 0) {
       ctx.constraints.push(
-        `${inbound.join(' + ')} - p${node.resource.index} = 0`,
+        `${producers.join(' + ')} - p${node.resource.index} = 0`,
       );
     }
-    if (outbound.length > 0) {
+    if (consumers.length > 0) {
       ctx.constraints.push(
-        `p${node.resource.index} - ${outbound.join(' - ')} >= 0`,
+        `p${node.resource.index} - ${consumers.join(' - ')} >= 0`,
       );
     }
 
-    for (const inboundVar of inbound) {
+    for (const inboundVar of producers) {
       const inbound = ctx.graph.getNodeAttributes(inboundVar);
       if (inbound.type !== 'output' && inbound.type !== 'raw') {
-        console.error('Invalid inbound node type', inbound, node);
+        logger.error('Invalid inbound node type', inbound, node);
         throw new Error('Invalid inbound node type');
       }
 
-      for (const outboundVar of outbound) {
+      for (const outboundVar of consumers) {
         const outbound = ctx.graph.getNodeAttributes(outboundVar);
         if (outbound.type !== 'input') {
-          console.error('Invalid outbound node type', outbound, node);
+          logger.error('Invalid outbound node type', outbound, node);
           throw new Error('Invalid outbound node type');
         }
         const [edge, inserted] = ctx.graph.mergeEdgeWithKey(
@@ -254,34 +293,34 @@ export function consolidateProductionConstraints(ctx: SolverContext) {
             source: inbound.type === 'output' ? inbound.recipe : 'world',
             target: outbound.recipe,
             variable: ctx.encodeVar(`l_${inboundVar}_${outboundVar}`),
+            label: `Link: ${inbound.label} -> ${outbound.label}`,
           },
         );
-        console.log('Link:', { inboundVar, outboundVar, edge, inserted });
       }
     }
 
-    for (const inboundVar of inbound) {
-      const inbound = ctx.graph.getNodeAttributes(inboundVar);
-      if (node.resource.id === 'Desc_AlienPowerFuel_C') {
-        console.log('Inbound:', inboundVar, outbound);
-      }
-      if (outbound.length === 0) continue;
+    for (const producerVar of producers) {
+      const producer = ctx.graph.getNodeAttributes(producerVar);
+      if (consumers.length === 0) continue;
       ctx.constraints.push(
-        `${inboundVar} - ${outbound.map(outboundVar => ctx.encodeVar(`l_${inboundVar}_${outboundVar}`)).join(' - ')} = 0`,
+        `${producerVar} - ${consumers.map(consumerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} = 0`,
       );
     }
 
-    for (const outboundVar of outbound) {
-      if (inbound.length === 0) continue;
-      if (node.resource.id === 'Desc_AlienPowerFuel_C') {
-        console.log('Outbound:', outboundVar, inbound);
-      }
-      const outbound = ctx.graph.getNodeAttributes(outboundVar);
+    for (const consumerVar of consumers) {
+      if (producers.length === 0) continue;
+      const consumer = ctx.graph.getNodeAttributes(consumerVar);
       ctx.constraints.push(
-        `${outboundVar} - ${inbound.map(inboundVar => ctx.encodeVar(`l_${inboundVar}_${outboundVar}`)).join(' - ')} >= 0`,
+        `${consumerVar} - ${producers.map(producerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} <= 0`,
       );
     }
   }
+}
+
+export function avoidUnproducibleResources(ctx: SolverContext) {
+  NotProducibleItems.forEach(resource => {
+    ctx.bounds.push(`p${AllFactoryItemsMap[resource].index} = 0`);
+  });
 }
 
 function setGraphResource(ctx: SolverContext, resource: string) {
@@ -298,13 +337,13 @@ export function computeProductionConstraints(
   resource: string,
   amount?: number,
 ) {
-  console.log('Processing recipes for: ', resource);
+  logger.debug('Processing recipes for: ', resource);
 
   const resourceItem = AllFactoryItemsMap[resource];
-  const recipes = getAllRecipesForItem(ctx, resource);
+  const recipes = getAllRecipesForItem(resource);
   const rawVar = `r${resourceItem.index}`;
   if (isWorldResource(resource) && !ctx.graph.hasNode(rawVar)) {
-    console.log('Adding raw resource:', resource);
+    logger.debug('Adding raw resource:', resource);
     setGraphResource(ctx, resource);
     ctx.graph.mergeNode(rawVar, {
       type: 'raw',
@@ -323,10 +362,10 @@ export function computeProductionConstraints(
     if (ctx.processedRecipes.has(recipe.id)) continue;
     ctx.processedRecipes.add(recipe.id);
     const mainProductItem = AllFactoryItemsMap[recipe.products[0].resource];
-    console.log(' Processing recipe:', recipe.name, { mainProductItem, recipe }); // prettier-ignore
+    logger.debug(' Processing recipe:', recipe.name, { mainProductItem, recipe }); // prettier-ignore
 
     for (const ingredient of recipe.ingredients) {
-      console.log('  Processing ingredient:', ingredient.resource);
+      logger.debug('  Processing ingredient:', ingredient.resource);
       const ingredientItem = AllFactoryItemsMap[ingredient.resource];
       const recipeIngredientVar = `i${ingredientItem.index}r${recipe.index}`;
       setGraphResource(ctx, ingredient.resource);
@@ -342,7 +381,7 @@ export function computeProductionConstraints(
     }
 
     for (const product of recipe.products) {
-      console.log('  Processing product:', product.resource);
+      logger.debug('  Processing product:', product.resource);
       const isTarget = product.resource === resource;
 
       const productItem = AllFactoryItemsMap[product.resource];
@@ -374,65 +413,3 @@ export function computeProductionConstraints(
     }
   }
 }
-
-// export function findAllRecipesForItem(
-//   ctx: SolverContext,
-//   item: string,
-//   amount?: number,
-// ) {
-//   console.log('Finding recipes for', item);
-//   if (ctx.variables.processedItems.has(item)) return;
-//   console.log('Not found, continuing');
-//   ctx.variables.processedItems.add(item);
-
-//   const recipes = AllFactoryRecipes.filter(r => r.product.resource === item);
-
-//   const variables = ctx.variables;
-//   const productSumVar = variables.getProductVar(item);
-//   const productVariables = [] as string[];
-
-//   for (const recipe of recipes) {
-//     const recipeAmount = (recipe.product.amount * 60) / recipe.time;
-//     const productVar = variables.getRecipeProductVar(recipe);
-//     productVariables.push(productVar);
-
-//     for (const ingredient of recipe.ingredients) {
-//       const ingredientVar = variables.getRecipeIngredientVar(
-//         recipe,
-//         ingredient.resource,
-//       );
-//       const ingredientAmount = (ingredient.amount * 60) / recipe.time;
-//       const factor = recipeAmount / ingredientAmount;
-//       ctx.constraints.push(`${factor} ${ingredientVar} - ${productVar} = 0`);
-
-//       if (!variables.isWorld(ingredient.resource)) {
-//         const ingredientLinkVars = getAllRecipesForItem(
-//           ctx,
-//           ingredient.resource,
-//         ).map(inputRecipe => {
-//           const linkVar = variables.getRecipesIngredientLinkVar(
-//             inputRecipe,
-//             recipe,
-//             ingredient.resource,
-//           );
-//           return linkVar;
-//         });
-//         ctx.constraints.push(
-//           `${ingredientVar} - ${ingredientLinkVars.join(' - ')} = 0`,
-//         );
-
-//         findAllRecipesForItem(ctx, ingredient.resource);
-//       } else {
-//         ctx.variables.worldResources.add(ingredient.resource);
-//       }
-//     }
-//   }
-
-//   ctx.constraints.push(
-//     `${productVariables.join(' + ')} - ${productSumVar} = 0`,
-//   );
-
-//   if (amount) {
-//     ctx.constraints.push(`${productSumVar} = ${amount}`);
-//   }
-// }

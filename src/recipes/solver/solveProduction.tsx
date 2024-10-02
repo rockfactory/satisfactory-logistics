@@ -1,14 +1,18 @@
 import { Edge, Node } from '@xyflow/react';
 import highloader, { Highs } from 'highs';
-import { AllFactoryItemsMap } from '../FactoryItem';
-import { getWorldResourceMax, WorldResourcesList } from '../WorldResources';
+import { log } from '../../core/logger/log';
+import { getWorldResourceMax } from '../WorldResources';
 import {
+  avoidUnproducibleResources,
   computeProductionConstraints,
   consolidateProductionConstraints,
   SolverContext,
 } from './computeProductionConstraints';
 import { IMachineNodeData } from './layout/MachineNode';
 import { IResourceNodeData } from './layout/ResourceNode';
+
+const logger = log.getLogger('solver:production');
+logger.setLevel('debug');
 
 export async function loadHighs() {
   const highs = await highloader({
@@ -21,21 +25,16 @@ export function solveProduction(highs: Highs, item: string, amount: number) {
   const ctx = new SolverContext();
   computeProductionConstraints(ctx, item, amount);
   consolidateProductionConstraints(ctx);
-  // ctx.variables.ingredientsMap.forEach((vars, ingredient) => {
-  //   const constraint = `${ingredient} - ${vars.join(' - ')} >= 0`;
-  //   ctx.constraints.push(constraint);
-  // });
-  // ctx.variables.ingredientOutboundLinks.forEach((vars, ingredient) => {
-  //   const constraint = `${ingredient} - ${vars.join(' - ')} >= 0`;
-  //   ctx.constraints.push(constraint);
-  // });
-  const objective = `MINIMIZE ${Array.from(ctx.getWorldVars())
+  avoidUnproducibleResources(ctx);
+
+  ctx.objective = /* MINIMIZE */ `${Array.from(ctx.getWorldVars())
     .map(v => `${1 / getWorldResourceMax(v.resource.id)} r${v.resource.index}`)
     .join(' + ')}\n`;
 
-  const problem = `${objective}SUBJECT TO\n${ctx.constraints.join('\n')}\nBOUNDS\n${WorldResourcesList.map(r => `0 <= r${AllFactoryItemsMap[r].index} <= ${getWorldResourceMax(r)}`).join('\n')}\nEND`;
-  console.log('Problem:\n', problem);
+  const problem = ctx.formulateProblem();
   const result = highs.solve(problem, {});
+
+  // console.log('Pretty:', ctx.pretty(problem));
 
   const nodes: Node<IResourceNodeData | IMachineNodeData>[] = [];
   const edges: Edge[] = [];
@@ -43,13 +42,14 @@ export function solveProduction(highs: Highs, item: string, amount: number) {
   if (result.Status === 'Optimal') {
     for (const [varName, value] of Object.entries(result.Columns)) {
       if (Math.abs(value.Primal) < Number.EPSILON) continue;
+      logger.debug(`${varName} = ${value.Primal}`);
 
       if (ctx.graph.hasNode(varName)) {
         const node = ctx.graph.getNodeAttributes(varName);
         if (node.type === 'output') {
           const recipe = node.recipe;
           if (recipe.products[0].resource !== node.resource.id) {
-            console.log('Recipe:', recipe, ' - skipping byproducts');
+            logger.log('Recipe:', recipe, ' - skipping byproducts');
             continue;
           }
 
@@ -64,7 +64,9 @@ export function solveProduction(highs: Highs, item: string, amount: number) {
             },
             position: { x: 0, y: 0 },
           });
+          continue;
         }
+
         if (node.type === 'raw') {
           nodes.push({
             id: varName,
@@ -76,7 +78,12 @@ export function solveProduction(highs: Highs, item: string, amount: number) {
             },
             position: { x: 0, y: 0 },
           });
+          continue;
         }
+
+        if (node.type === 'input') continue; // Skip ingredients
+
+        logger.error('Unknown node type:', node);
       }
 
       if (ctx.graph.hasEdge(varName)) {
@@ -84,7 +91,7 @@ export function solveProduction(highs: Highs, item: string, amount: number) {
         const sourceNode = ctx.graph.getSourceAttributes(varName);
         const targetNode = ctx.graph.getTargetAttributes(varName); // this is the ingredient
         if (targetNode.type !== 'input') {
-          console.error('Target node is not an input node:', targetNode);
+          logger.error('Target node is not an input node:', targetNode);
           continue;
         }
         // const machineNode = ctx.graph.getNodeAttributes(targetNode.recipeMainProductVariable);
@@ -99,6 +106,7 @@ export function solveProduction(highs: Highs, item: string, amount: number) {
             resource: edge.resource,
           },
         });
+        continue;
       }
     }
   }

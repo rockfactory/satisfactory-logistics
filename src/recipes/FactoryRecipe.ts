@@ -19,7 +19,9 @@ export interface RecipeIngredient {
   amount: number;
 }
 
+import { AllFactoryItemsMap } from './FactoryItem';
 import RawFactoryRecipes from './FactoryRecipes.json';
+import { isWorldResource } from './WorldResources';
 
 export const AllFactoryRecipes: FactoryRecipe[] =
   RawFactoryRecipes as FactoryRecipe[];
@@ -31,3 +33,23 @@ export const AllFactoryRecipesMap = AllFactoryRecipes.reduce(
   },
   {} as Record<string, FactoryRecipe>,
 );
+
+export function isProducibleResource(resource: string) {
+  return !NotProducibleItems.has(resource);
+}
+
+const ProducibleItems = new Set(
+  AllFactoryRecipes.flatMap(r => r.products.map(p => p.resource)),
+);
+export const NotProducibleItems = new Set(
+  Array.from(
+    new Set(Object.keys(AllFactoryItemsMap)).difference(ProducibleItems),
+  ).filter(r => !isWorldResource(r)),
+);
+
+export function getAllRecipesForItem(item: string) {
+  const recipes = AllFactoryRecipes.filter(r =>
+    r.products.some(p => p.resource === item),
+  );
+  return recipes;
+}
