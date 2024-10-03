@@ -1,4 +1,5 @@
 import { Box, Group, LoadingOverlay, NumberInput, Stack } from '@mantine/core';
+import { ReactFlowProvider } from '@xyflow/react';
 import { Highs, HighsLinearSolutionColumn } from 'highs';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { FactoryItemInput } from '../../factories/inputs/FactoryItemInput';
@@ -67,7 +68,9 @@ export function RecipeSolverDemo(props: IRecipeSolverDemoProps) {
         </Group>
         {solution && (
           <Stack gap="md">
-            <SolverLayout nodes={solution.nodes} edges={solution.edges} />
+            <ReactFlowProvider>
+              <SolverLayout nodes={solution.nodes} edges={solution.edges} />
+            </ReactFlowProvider>
             <DebugSolverLayout
               graph={solution.graph}
               solution={

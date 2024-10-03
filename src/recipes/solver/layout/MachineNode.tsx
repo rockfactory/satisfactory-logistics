@@ -58,6 +58,12 @@ const MachineTypes = {
   },
 };
 
+export function getRecipeDisplayName(recipe: FactoryRecipe) {
+  const product = AllFactoryItemsMap[recipe.products[0].resource];
+  const isAlt = recipe.name.includes('Alternate');
+  return isAlt ? recipe.name.replace('Alternate: ', '') : product.displayName;
+}
+
 export const MachineNode = memo((props: IMachineNodeProps) => {
   const { recipe } = props.data;
   const product = AllFactoryItemsMap[recipe.products[0].resource];
@@ -66,24 +72,33 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
     <Box p="sm" style={{ borderRadius: 4 }} bg="dark.4">
       <Group gap="sm">
         <Image
-          w="48"
-          h="48"
+          w="32"
+          h="32"
           src={
             MachineTypes[recipe.producedIn as keyof typeof MachineTypes].image
           }
         />
-        <Stack gap="xs" align="center">
+        <Stack gap={2} align="center">
           <Group gap="xs">
-            {isAlt && <Badge color="yellow">ALT</Badge>}
-
-            {isAlt ? recipe.name : product.displayName}
+            {isAlt && (
+              <Badge size="xs" color="yellow">
+                ALT
+              </Badge>
+            )}
+            <Text size="sm">{getRecipeDisplayName(recipe)}</Text>
           </Group>
-          <Text size="sm">{props.data.value}/min</Text>
+          <Text size="xs">{props.data.value}/min</Text>
         </Stack>
-        <Image w="48" h="48" src={product.imagePath} />
+        <Image w="32" h="32" src={product.imagePath} />
       </Group>
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
+      {/* <Handle type="source" position={Position.Top} id="source-top" /> */}
+      <Handle type="source" position={Position.Right} id="source-right" />
+      {/* <Handle type="source" position={Position.Bottom} id="source-bottom" /> */}
+      {/* <Handle type="source" position={Position.Left} id="source-left" /> */}
+      {/* <Handle type="target" position={Position.Top} id="target-top" /> */}
+      {/* <Handle type="target" position={Position.Right} id="target-right" /> */}
+      {/* <Handle type="target" position={Position.Bottom} id="target-bottom" /> */}
+      <Handle type="target" position={Position.Left} id="target-left" />
     </Box>
   );
 });

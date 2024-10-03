@@ -25,8 +25,13 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
           <Text size="sm">{props.data.value}/min</Text>
         </Stack>
       </Group>
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
+      <Handle type="source" position={Position.Right} id="source-right" />
+      {/* <Handle type="source" position={Position.Bottom} id="source-bottom" /> */}
+      {/* <Handle type="source" position={Position.Left} id="source-left" /> */}
+      {/* <Handle type="target" position={Position.Top} id="target-top" /> */}
+      {/* <Handle type="target" position={Position.Right} id="target-right" /> */}
+      {/* <Handle type="target" position={Position.Bottom} id="target-bottom" /> */}
+      <Handle type="target" position={Position.Left} id="target-left" />
     </Box>
   );
 });

@@ -14,7 +14,7 @@ import {
 } from '../WorldResources';
 
 const logger = log.getLogger('recipes:solver');
-logger.setLevel('debug');
+logger.setLevel('info');
 
 export const encodeResource = (resource: string) =>
   voca

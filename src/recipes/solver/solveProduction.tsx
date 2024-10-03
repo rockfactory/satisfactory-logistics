@@ -105,6 +105,7 @@ export function solveProduction(highs: Highs, item: string, amount: number) {
           markerEnd: {
             type: MarkerType.ArrowClosed,
           },
+          // type: 'Floating',
           target: targetNode.recipeMainProductVariable,
           data: {
             label: `${typeof edge.source === 'string' ? 'Resource' : edge.source.name} -> ${edge.target.name}`,

@@ -2,21 +2,28 @@ import dagre from '@dagrejs/dagre';
 import {
   ConnectionLineType,
   Edge,
+  InternalNode,
   Node,
   Position,
   ReactFlow,
   useEdgesState,
+  useNodesInitialized,
   useNodesState,
+  useReactFlow,
 } from '@xyflow/react';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
+import { log } from '../../core/logger/log';
+import { FloatingEdge } from './edges/FloatingEdge';
 import { MachineNode } from './layout/MachineNode';
 import { ResourceNode } from './layout/ResourceNode';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+const logger = log.getLogger('solver:layout');
 
 const nodeWidth = 172;
 const nodeHeight = 36;
@@ -29,8 +36,12 @@ const getLayoutedElements = (
   const isHorizontal = direction === 'LR';
   dagreGraph.setGraph({ rankdir: direction });
 
-  nodes.forEach(node => {
-    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+  (nodes as (InternalNode | Node)[]).forEach(node => {
+    logger.debug(`Node ${node.id}, width: ${node.width}, height: ${node.height}`, { node }); // prettier-ignore
+    dagreGraph.setNode(node.id, {
+      width: node.measured?.width,
+      height: node.measured?.height,
+    });
   });
   console.log('Edges:', edges);
   edges.forEach(edge => {
@@ -39,7 +50,7 @@ const getLayoutedElements = (
 
   dagre.layout(dagreGraph);
 
-  const newNodes: Node[] = nodes.map(node => {
+  const newNodes: Node[] = (nodes as InternalNode[]).map(node => {
     const nodeWithPosition = dagreGraph.node(node.id);
     const newNode = {
       ...node,
@@ -48,8 +59,8 @@ const getLayoutedElements = (
       // We are shifting the dagre node position (anchor=center center) to the top left
       // so it matches the React Flow node anchor point (top left).
       position: {
-        x: nodeWithPosition.x - nodeWidth / 2,
-        y: nodeWithPosition.y - nodeHeight / 2,
+        x: nodeWithPosition.x - (node.measured?.width ?? 0) / 2,
+        y: nodeWithPosition.y - (node.measured?.height ?? 0) / 2,
       },
     };
 
@@ -69,26 +80,55 @@ const nodeTypes = {
   Resource: ResourceNode,
 };
 
+const edgeTypes = {
+  Floating: FloatingEdge,
+};
+
 export const SolverLayout = (props: SolverLayoutProps) => {
+  const { fitView, getNodes, getEdges } = useReactFlow();
+
   const [nodes, setNodes, onNodesChange] = useNodesState(props.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(props.edges);
+  const [opacity, setOpacity] = useState(0);
+
+  const nodesInitialized = useNodesInitialized();
+  const [initialLayoutFinished, setInitialLayoutFinished] = useState(false);
+
+  const onLayout = useCallback(() => {
+    const layouted = getLayoutedElements(getNodes(), getEdges());
+
+    setNodes([...layouted.nodes]);
+    setEdges([...layouted.edges]);
+
+    window.requestAnimationFrame(async () => {
+      await fitView();
+      if (!initialLayoutFinished) {
+        setInitialLayoutFinished(true);
+        setOpacity(1);
+      }
+    });
+  }, [nodes, edges, setNodes, setEdges, fitView, initialLayoutFinished]);
 
   useEffect(() => {
-    const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-      props.nodes,
-      props.edges,
-    );
-
-    setNodes([...layoutedNodes]);
-    setEdges([...layoutedEdges]);
+    setNodes([...props.nodes]);
+    setEdges([...props.edges]);
+    setInitialLayoutFinished(false);
   }, [props.nodes, props.edges]);
 
+  useEffect(() => {
+    if (nodesInitialized && !initialLayoutFinished) {
+      logger.debug('Layouting');
+      onLayout();
+    }
+  }, [nodesInitialized, onLayout, initialLayoutFinished]);
+
   return (
-    <Box w="100%" h={600}>
+    <Box w={'800px'} h={600} opacity={opacity}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         connectionLineType={ConnectionLineType.SmoothStep}
