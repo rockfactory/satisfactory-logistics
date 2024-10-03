@@ -1,4 +1,4 @@
-import { Edge, Node } from '@xyflow/react';
+import { Edge, MarkerType, Node } from '@xyflow/react';
 import highloader, { Highs } from 'highs';
 import { log } from '../../core/logger/log';
 import { getWorldResourceMax } from '../WorldResources';
@@ -97,8 +97,14 @@ export function solveProduction(highs: Highs, item: string, amount: number) {
         // const machineNode = ctx.graph.getNodeAttributes(targetNode.recipeMainProductVariable);
         edges.push({
           id: varName,
-          source: sourceNode.variable,
-          type: 'smoothstep',
+          source:
+            sourceNode.type === 'output'
+              ? sourceNode.recipeMainProductVariable
+              : sourceNode.variable,
+          // type: ''
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+          },
           target: targetNode.recipeMainProductVariable,
           data: {
             label: `${typeof edge.source === 'string' ? 'Resource' : edge.source.name} -> ${edge.target.name}`,
@@ -111,5 +117,5 @@ export function solveProduction(highs: Highs, item: string, amount: number) {
     }
   }
 
-  return { result, nodes, edges };
+  return { result, nodes, edges, graph: ctx.graph };
 }

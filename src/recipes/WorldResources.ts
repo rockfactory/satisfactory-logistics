@@ -36,7 +36,7 @@ export const WorldResources = {
     max: 10, // 10200,
   },
   Desc_Water_C: {
-    max: Number.POSITIVE_INFINITY,
+    max: 1_000_000_000,
   },
 };
 

@@ -1,8 +1,9 @@
-import { Box, Group, LoadingOverlay, NumberInput } from '@mantine/core';
-import { Highs } from 'highs';
+import { Box, Group, LoadingOverlay, NumberInput, Stack } from '@mantine/core';
+import { Highs, HighsLinearSolutionColumn } from 'highs';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { FactoryItemInput } from '../../factories/inputs/FactoryItemInput';
-import { SolverLayout } from './SampleSolverLayout';
+import { DebugSolverLayout } from './DebugSolverLayout';
+import { SolverLayout } from './SolverLayout';
 import { loadHighs, solveProduction } from './solveProduction';
 
 export interface IRecipeSolverDemoProps {}
@@ -39,7 +40,7 @@ export function RecipeSolverDemo(props: IRecipeSolverDemoProps) {
 
     const solution = solveProduction(
       highsRef.current!,
-      resource || 'Desc_SteelIngot_C',
+      resource || 'Desc_AluminumIngot_C',
       amount || 40,
     );
     console.log(`Solved -> `, solution);
@@ -65,7 +66,18 @@ export function RecipeSolverDemo(props: IRecipeSolverDemoProps) {
           />
         </Group>
         {solution && (
-          <SolverLayout nodes={solution.nodes} edges={solution.edges} />
+          <Stack gap="md">
+            <SolverLayout nodes={solution.nodes} edges={solution.edges} />
+            <DebugSolverLayout
+              graph={solution.graph}
+              solution={
+                solution.result.Columns as Record<
+                  string,
+                  HighsLinearSolutionColumn
+                >
+              }
+            />
+          </Stack>
         )}
       </Box>
     </div>

@@ -14,132 +14,12 @@ import {
 } from '../WorldResources';
 
 const logger = log.getLogger('recipes:solver');
-logger.setLevel('info');
+logger.setLevel('debug');
 
 export const encodeResource = (resource: string) =>
   voca
     .capitalize(resource.replace('Desc_', '').replace('_C', ''))
     .substring(0, 6);
-
-// export class SolverVariables {
-//   productIndex = 0;
-//   ingredientIndex = 0;
-//   rawIndex = 0;
-
-//   variables = {} as Record<
-//     string,
-//     | {
-//         resource: string;
-//         type: 'product' | 'ingredient' | 'raw';
-//         recipe: string;
-//       }
-//     | {
-//         resource: string;
-//         type: 'link';
-//         input: string;
-//         output: string;
-//       }
-//   >;
-
-//   private recipeProductsMap = new Map<string, string>();
-//   private productsMap = new Map<string, string>();
-//   public ingredientsMap = new Map<string, string[]>();
-//   public worldResources = new Set<string>();
-
-//   public processedItems = new Set<string>();
-
-//   hasProduct(product: string) {
-//     return this.productsMap.has(product);
-//   }
-
-//   getRecipeProductVar(recipe: FactoryRecipe) {
-//     if (!this.recipeProductsMap.has(recipe.id)) {
-//       const varName = `p_r${recipe.index}`;
-//       this.variables[varName] = {
-//         resource: recipe.product.resource,
-//         type: 'product',
-//         recipe: recipe.id,
-//       };
-//       this.recipeProductsMap.set(recipe.id, varName);
-//     }
-//     return this.recipeProductsMap.get(recipe.id)!;
-//   }
-
-//   getProductVar(product: string) {
-//     if (!this.productsMap.has(product)) {
-//       const varName = this.isWorld(product)
-//         ? `r${this.rawIndex++}`
-//         : `p${this.productIndex++}`; // `xp${this.productIndex++}`;
-
-//       this.variables[varName] = {
-//         resource: product,
-//         type: this.isWorld(product) ? 'raw' : 'product',
-//         recipe: '',
-//       };
-//       this.productsMap.set(product, varName);
-//     }
-//     return this.productsMap.get(product)!;
-//   }
-
-//   getRecipeIngredientVar(recipe: FactoryRecipe, ingredient: string) {
-//     const varName = `xi${this.ingredientIndex++}`;
-//     this.variables[varName] = {
-//       resource: ingredient,
-//       type: 'ingredient',
-//       recipe: recipe.id,
-//     };
-
-//     const encodedIngredient = this.getProductVar(ingredient);
-
-//     if (!this.ingredientsMap.has(encodedIngredient)) {
-//       this.ingredientsMap.set(encodedIngredient, []);
-//     }
-//     this.ingredientsMap.get(encodedIngredient)!.push(varName);
-//     return varName;
-//   }
-
-//   public ingredientLinkIndex = 0;
-//   public ingredientLinksMap = new Map<string, string>();
-//   public ingredientOutboundLinks = new Map<string, string[]>();
-//   public ingredientInboundLinks = new Map<string, string[]>();
-
-//   getRecipesIngredientLinkVar(
-//     input: FactoryRecipe,
-//     output: FactoryRecipe,
-//     ingredient: string,
-//   ) {
-//     const linkKey = [input.id, output.id].join('$');
-//     if (!this.ingredientLinksMap.has(linkKey)) {
-//       const varName = `il${this.ingredientLinkIndex++}`;
-//       this.variables[varName] = {
-//         resource: ingredient,
-//         type: 'link',
-//         input: input.id,
-//         output: output.id,
-//       };
-
-//       this.ingredientLinksMap.set(linkKey, varName);
-
-//       const inputVar = this.getRecipeProductVar(input);
-//       const outputVar = this.getRecipeIngredientVar(output, ingredient);
-
-//       if (!this.ingredientOutboundLinks.has(inputVar)) {
-//         this.ingredientOutboundLinks.set(inputVar, []);
-//       }
-//       this.ingredientOutboundLinks.get(inputVar)!.push(varName);
-
-//       if (!this.ingredientInboundLinks.has(outputVar)) {
-//         this.ingredientInboundLinks.set(outputVar, []);
-//       }
-//       this.ingredientInboundLinks.get(outputVar)!.push(varName);
-//     }
-//     return this.ingredientLinksMap.get(linkKey)!;
-//   }
-
-//   isWorld(resource: string) {
-//     return resource in WorldResources;
-//   }
-// }
 
 type SolverNode =
   | { type: 'raw'; label: string; resource: FactoryItem; variable: string }
@@ -147,6 +27,7 @@ type SolverNode =
       type: 'output';
       label: string;
       recipe: FactoryRecipe;
+      recipeMainProductVariable: string;
       resource: FactoryItem;
       variable: string;
     }
@@ -362,10 +243,12 @@ export function computeProductionConstraints(
     if (ctx.processedRecipes.has(recipe.id)) continue;
     ctx.processedRecipes.add(recipe.id);
     const mainProductItem = AllFactoryItemsMap[recipe.products[0].resource];
+    const mainProductVar = `p${mainProductItem.index}r${recipe.index}`;
+    const mainProductAmount = (recipe.products[0].amount * 60) / recipe.time;
     logger.debug(' Processing recipe:', recipe.name, { mainProductItem, recipe }); // prettier-ignore
 
     for (const ingredient of recipe.ingredients) {
-      logger.debug('  Processing ingredient:', ingredient.resource);
+      // logger.debug('  Processing ingredient:', ingredient.resource);
       const ingredientItem = AllFactoryItemsMap[ingredient.resource];
       const recipeIngredientVar = `i${ingredientItem.index}r${recipe.index}`;
       setGraphResource(ctx, ingredient.resource);
@@ -375,28 +258,42 @@ export function computeProductionConstraints(
         recipe,
         resource: ingredientItem,
         variable: recipeIngredientVar,
-        recipeMainProductVariable: `p${mainProductItem.index}r${recipe.index}`,
+        recipeMainProductVariable: mainProductVar,
       });
       ctx.graph.mergeEdge(ingredient.resource, recipeIngredientVar);
+      ctx.graph.mergeEdge(recipeIngredientVar, mainProductVar);
     }
 
     for (const product of recipe.products) {
-      logger.debug('  Processing product:', product.resource);
-      const isTarget = product.resource === resource;
+      // logger.debug('  Processing product:', product.resource);
+      const isMain = product.resource === recipe.products[0].resource;
 
       const productItem = AllFactoryItemsMap[product.resource];
       const recipeProductVar = `p${productItem.index}r${recipe.index}`;
       setGraphResource(ctx, product.resource);
-      ctx.graph.addNode(recipeProductVar, {
+      ctx.graph.mergeNode(recipeProductVar, {
         type: 'output',
         label: `Product: ${productItem.displayName} (${recipe.name})`,
         recipe,
         resource: productItem,
         variable: recipeProductVar,
+        recipeMainProductVariable: mainProductVar,
       });
       ctx.graph.mergeEdge(recipeProductVar, product.resource);
-
       const productAmount = (product.amount * 60) / recipe.time;
+
+      if (!isMain) {
+        ctx.graph.mergeEdge(mainProductVar, recipeProductVar); // Debug
+
+        const factor = mainProductAmount / productAmount;
+        ctx.constraints.push(
+          `${factor} ${recipeProductVar} - ${mainProductVar} = 0`,
+        );
+        logger.debug(
+          '  Adding constraint:',
+          `${factor} ${recipeProductVar} - ${mainProductVar} = 0`,
+        );
+      }
 
       for (const ingredient of recipe.ingredients) {
         const ingredientItem = AllFactoryItemsMap[ingredient.resource];

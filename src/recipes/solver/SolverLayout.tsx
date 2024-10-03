@@ -93,7 +93,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         onEdgesChange={onEdgesChange}
         connectionLineType={ConnectionLineType.SmoothStep}
         fitView
-      ></ReactFlow>
+      />
     </Box>
   );
 };
