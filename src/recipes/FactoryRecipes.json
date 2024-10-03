@@ -6,13 +6,15 @@
     "ingredients": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_IronPlate_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 6,
@@ -27,13 +29,15 @@
     "ingredients": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_IronRod_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 4,
@@ -48,13 +52,15 @@
     "ingredients": [
       {
         "resource": "Desc_OreIron_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 2,
@@ -69,29 +75,35 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       },
       {
         "resource": "Desc_NitrogenGas_C",
-        "amount": 3000
+        "amount": 3,
+        "originalAmount": 3000
       },
       {
         "resource": "Desc_Sulfur_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_Coal_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_RocketFuel_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       },
       {
         "resource": "Desc_CompactedCoal_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 2.4,
@@ -106,21 +118,25 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidTurboFuel_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       },
       {
         "resource": "Desc_NitricAcid_C",
-        "amount": 1000
+        "amount": 1,
+        "originalAmount": 1000
       }
     ],
     "products": [
       {
         "resource": "Desc_RocketFuel_C",
-        "amount": 10000
+        "amount": 10,
+        "originalAmount": 10000
       },
       {
         "resource": "Desc_CompactedCoal_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 6,
@@ -135,17 +151,20 @@
     "ingredients": [
       {
         "resource": "Desc_RocketFuel_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_PackagedRocketFuel_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 1,
@@ -160,17 +179,20 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedRocketFuel_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_RocketFuel_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 1,
@@ -185,21 +207,25 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedRocketFuel_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       },
       {
         "resource": "Desc_DarkMatter_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "Desc_IonizedFuel_C",
-        "amount": 10000
+        "amount": 10,
+        "originalAmount": 10000
       },
       {
         "resource": "Desc_CompactedCoal_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 3,
@@ -214,13 +240,15 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_DarkEnergy_C",
-        "amount": 10000
+        "amount": 10,
+        "originalAmount": 10000
       }
     ],
     "time": 6,
@@ -236,7 +264,8 @@
     "products": [
       {
         "resource": "Desc_QuantumEnergy_C",
-        "amount": 10000
+        "amount": 10,
+        "originalAmount": 10000
       }
     ],
     "time": 3,
@@ -251,17 +280,20 @@
     "ingredients": [
       {
         "resource": "Desc_Diamond_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_DarkEnergy_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       }
     ],
     "products": [
       {
         "resource": "Desc_DarkMatter_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 2,
@@ -276,29 +308,35 @@
     "ingredients": [
       {
         "resource": "Desc_DarkMatter_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_CrystalOscillator_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_AluminumPlate_C",
-        "amount": 9
+        "amount": 9,
+        "originalAmount": 9
       },
       {
         "resource": "Desc_QuantumEnergy_C",
-        "amount": 25000
+        "amount": 25,
+        "originalAmount": 25000
       }
     ],
     "products": [
       {
         "resource": "Desc_QuantumOscillator_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_DarkEnergy_C",
-        "amount": 25000
+        "amount": 25,
+        "originalAmount": 25000
       }
     ],
     "time": 12,
@@ -313,29 +351,35 @@
     "ingredients": [
       {
         "resource": "Desc_TimeCrystal_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_ComputerSuper_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_FicsiteMesh_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       },
       {
         "resource": "Desc_QuantumEnergy_C",
-        "amount": 25000
+        "amount": 25,
+        "originalAmount": 25000
       }
     ],
     "products": [
       {
         "resource": "Desc_TemporalProcessor_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_DarkEnergy_C",
-        "amount": 25000
+        "amount": 25,
+        "originalAmount": 25000
       }
     ],
     "time": 20,
@@ -350,29 +394,35 @@
     "ingredients": [
       {
         "resource": "Desc_SpaceElevatorPart_6_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_TemporalProcessor_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_QuantumOscillator_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_QuantumEnergy_C",
-        "amount": 25000
+        "amount": 25,
+        "originalAmount": 25000
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_12_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_DarkEnergy_C",
-        "amount": 25000
+        "amount": 25,
+        "originalAmount": 25000
       }
     ],
     "time": 15,
@@ -387,21 +437,25 @@
     "ingredients": [
       {
         "resource": "Desc_RocketFuel_C",
-        "amount": 16000
+        "amount": 16,
+        "originalAmount": 16000
       },
       {
         "resource": "Desc_CrystalShard_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_IonizedFuel_C",
-        "amount": 16000
+        "amount": 16,
+        "originalAmount": 16000
       },
       {
         "resource": "Desc_CompactedCoal_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 24,
@@ -416,17 +470,20 @@
     "ingredients": [
       {
         "resource": "Desc_IonizedFuel_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_PackagedIonizedFuel_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 3,
@@ -441,17 +498,20 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedIonizedFuel_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_IonizedFuel_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 3,
@@ -466,17 +526,20 @@
     "ingredients": [
       {
         "resource": "Desc_Coal_C",
-        "amount": 30
+        "amount": 30,
+        "originalAmount": 30
       },
       {
         "resource": "Desc_TurboFuel_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Diamond_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 3,
@@ -491,21 +554,25 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_Wire_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_SAMFluctuator_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 6,
@@ -520,13 +587,15 @@
     "ingredients": [
       {
         "resource": "Desc_FicsiteIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_FicsiteMesh_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 6,
@@ -541,17 +610,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 24
+        "amount": 24,
+        "originalAmount": 24
       }
     ],
     "products": [
       {
         "resource": "Desc_FicsiteIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 6,
@@ -566,13 +638,15 @@
     "ingredients": [
       {
         "resource": "Desc_Diamond_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_TimeCrystal_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 10,
@@ -587,13 +661,15 @@
     "ingredients": [
       {
         "resource": "Desc_Coal_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "products": [
       {
         "resource": "Desc_Diamond_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 2,
@@ -608,13 +684,15 @@
     "ingredients": [
       {
         "resource": "Desc_SAM_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 2,
@@ -629,21 +707,25 @@
     "ingredients": [
       {
         "resource": "Desc_SpaceElevatorPart_7_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_FicsiteMesh_C",
-        "amount": 80
+        "amount": 80,
+        "originalAmount": 80
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 20000
+        "amount": 20,
+        "originalAmount": 20000
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_10_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 120,
@@ -658,17 +740,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_AluminumIngot_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "Desc_FicsiteIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 2,
@@ -683,17 +768,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_GoldIngot_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "Desc_FicsiteIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 4,
@@ -708,17 +796,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_OreGold_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       }
     ],
     "products": [
       {
         "resource": "Desc_OreBauxite_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -733,17 +824,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_OreCopper_C",
-        "amount": 18
+        "amount": 18,
+        "originalAmount": 18
       }
     ],
     "products": [
       {
         "resource": "Desc_OreBauxite_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -758,17 +852,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_OreCopper_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       }
     ],
     "products": [
       {
         "resource": "Desc_OreGold_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -783,17 +880,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_RawQuartz_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "products": [
       {
         "resource": "Desc_OreGold_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -808,17 +908,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_OreIron_C",
-        "amount": 18
+        "amount": 18,
+        "originalAmount": 18
       }
     ],
     "products": [
       {
         "resource": "Desc_Coal_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -833,17 +936,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Stone_C",
-        "amount": 36
+        "amount": 36,
+        "originalAmount": 36
       }
     ],
     "products": [
       {
         "resource": "Desc_Coal_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -858,17 +964,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_RawQuartz_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "products": [
       {
         "resource": "Desc_OreCopper_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -883,17 +992,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Sulfur_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "products": [
       {
         "resource": "Desc_OreCopper_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -908,17 +1020,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Stone_C",
-        "amount": 24
+        "amount": 24,
+        "originalAmount": 24
       }
     ],
     "products": [
       {
         "resource": "Desc_OreIron_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -933,17 +1048,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Sulfur_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Stone_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -958,17 +1076,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_OreBauxite_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "products": [
       {
         "resource": "Desc_NitrogenGas_C",
-        "amount": 12000
+        "amount": 12,
+        "originalAmount": 12000
       }
     ],
     "time": 6,
@@ -983,17 +1104,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_OreGold_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "products": [
       {
         "resource": "Desc_NitrogenGas_C",
-        "amount": 12000
+        "amount": 12,
+        "originalAmount": 12000
       }
     ],
     "time": 6,
@@ -1008,17 +1132,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_OreBauxite_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "products": [
       {
         "resource": "Desc_RawQuartz_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -1033,17 +1160,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Coal_C",
-        "amount": 24
+        "amount": 24,
+        "originalAmount": 24
       }
     ],
     "products": [
       {
         "resource": "Desc_RawQuartz_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -1058,17 +1188,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Coal_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "products": [
       {
         "resource": "Desc_Sulfur_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -1083,17 +1216,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_OreIron_C",
-        "amount": 30
+        "amount": 30,
+        "originalAmount": 30
       }
     ],
     "products": [
       {
         "resource": "Desc_Sulfur_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -1108,17 +1244,20 @@
     "ingredients": [
       {
         "resource": "Desc_SAMIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_OreBauxite_C",
-        "amount": 48
+        "amount": 48,
+        "originalAmount": 48
       }
     ],
     "products": [
       {
         "resource": "Desc_OreUranium_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -1133,17 +1272,20 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       },
       {
         "resource": "Desc_CompactedCoal_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "Desc_LiquidTurboFuel_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       }
     ],
     "time": 16,
@@ -1158,17 +1300,20 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidTurboFuel_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_TurboFuel_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 6,
@@ -1183,17 +1328,20 @@
     "ingredients": [
       {
         "resource": "Desc_TurboFuel_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_LiquidTurboFuel_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 6,
@@ -1208,13 +1356,15 @@
     "ingredients": [
       {
         "resource": "Desc_Wood_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Coal_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "time": 4,
@@ -1229,13 +1379,15 @@
     "ingredients": [
       {
         "resource": "Desc_GenericBiomass_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_Coal_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       }
     ],
     "time": 8,
@@ -1250,17 +1402,20 @@
     "ingredients": [
       {
         "resource": "Desc_Coal_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_Sulfur_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_CompactedCoal_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "time": 12,
@@ -1275,17 +1430,20 @@
     "ingredients": [
       {
         "resource": "Desc_CopperSheet_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_Plastic_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "Desc_CircuitBoard_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 8,
@@ -1300,17 +1458,20 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidOil_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       }
     ],
     "products": [
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       },
       {
         "resource": "Desc_PolymerResin_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 6,
@@ -1325,13 +1486,15 @@
     "ingredients": [
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       }
     ],
     "products": [
       {
         "resource": "Desc_PetroleumCoke_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 6,
@@ -1346,17 +1509,20 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidOil_C",
-        "amount": 3000
+        "amount": 3,
+        "originalAmount": 3000
       }
     ],
     "products": [
       {
         "resource": "Desc_Plastic_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 1000
+        "amount": 1,
+        "originalAmount": 1000
       }
     ],
     "time": 6,
@@ -1371,17 +1537,20 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidOil_C",
-        "amount": 3000
+        "amount": 3,
+        "originalAmount": 3000
       }
     ],
     "products": [
       {
         "resource": "Desc_Rubber_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       }
     ],
     "time": 6,
@@ -1396,13 +1565,15 @@
     "ingredients": [
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       }
     ],
     "products": [
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       }
     ],
     "time": 6,
@@ -1417,17 +1588,20 @@
     "ingredients": [
       {
         "resource": "Desc_PolymerResin_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       }
     ],
     "products": [
       {
         "resource": "Desc_Plastic_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 6,
@@ -1442,17 +1616,20 @@
     "ingredients": [
       {
         "resource": "Desc_PolymerResin_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       }
     ],
     "products": [
       {
         "resource": "Desc_Rubber_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 6,
@@ -1467,17 +1644,20 @@
     "ingredients": [
       {
         "resource": "Desc_Coal_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       },
       {
         "resource": "Desc_QuartzCrystal_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_Diamond_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 4,
@@ -1492,13 +1672,15 @@
     "ingredients": [
       {
         "resource": "Desc_PetroleumCoke_C",
-        "amount": 24
+        "amount": 24,
+        "originalAmount": 24
       }
     ],
     "products": [
       {
         "resource": "Desc_Diamond_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 2,
@@ -1513,13 +1695,15 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidOil_C",
-        "amount": 10000
+        "amount": 10,
+        "originalAmount": 10000
       }
     ],
     "products": [
       {
         "resource": "Desc_Diamond_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 3,
@@ -1534,17 +1718,20 @@
     "ingredients": [
       {
         "resource": "Desc_Coal_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       },
       {
         "resource": "Desc_Stone_C",
-        "amount": 24
+        "amount": 24,
+        "originalAmount": 24
       }
     ],
     "products": [
       {
         "resource": "Desc_Diamond_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 3,
@@ -1559,17 +1746,20 @@
     "ingredients": [
       {
         "resource": "Desc_TimeCrystal_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_DarkEnergy_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       }
     ],
     "products": [
       {
         "resource": "Desc_DarkMatter_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 2,
@@ -1584,13 +1774,15 @@
     "ingredients": [
       {
         "resource": "Desc_DarkEnergy_C",
-        "amount": 10000
+        "amount": 10,
+        "originalAmount": 10000
       }
     ],
     "products": [
       {
         "resource": "Desc_DarkMatter_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 3,
@@ -1605,17 +1797,20 @@
     "ingredients": [
       {
         "resource": "Desc_Stone_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       }
     ],
     "products": [
       {
         "resource": "Desc_Cement_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 3,
@@ -1630,17 +1825,20 @@
     "ingredients": [
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       },
       {
         "resource": "Desc_CompactedCoal_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "Desc_LiquidTurboFuel_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       }
     ],
     "time": 8,
@@ -1655,13 +1853,15 @@
     "ingredients": [
       {
         "resource": "Desc_SteelIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_IronRod_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 5,
@@ -1676,13 +1876,15 @@
     "ingredients": [
       {
         "resource": "Desc_SteelIngot_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "Desc_SteelPlate_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 4,
@@ -1697,13 +1899,15 @@
     "ingredients": [
       {
         "resource": "Desc_SteelIngot_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 6,
@@ -1718,17 +1922,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreIron_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Coal_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_SteelIngot_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 4,
@@ -1743,17 +1950,20 @@
     "ingredients": [
       {
         "resource": "Desc_ModularFrame_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_SteelPlate_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_2_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 24,
@@ -1768,13 +1978,15 @@
     "ingredients": [
       {
         "resource": "Desc_SteelIngot_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 6,
@@ -1789,13 +2001,15 @@
     "ingredients": [
       {
         "resource": "Desc_Plastic_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 4,
@@ -1810,17 +2024,20 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Fuel_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 3,
@@ -1835,17 +2052,20 @@
     "ingredients": [
       {
         "resource": "Desc_Biofuel_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 3000
+        "amount": 3,
+        "originalAmount": 3000
       }
     ],
     "products": [
       {
         "resource": "Desc_LiquidBiofuel_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       }
     ],
     "time": 4,
@@ -1860,17 +2080,20 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidBiofuel_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_PackagedBiofuel_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 3,
@@ -1885,17 +2108,20 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidOil_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_PackagedOil_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 4,
@@ -1910,17 +2136,20 @@
     "ingredients": [
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_PackagedOilResidue_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 4,
@@ -1935,17 +2164,20 @@
     "ingredients": [
       {
         "resource": "Desc_Water_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_PackagedWater_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 2,
@@ -1960,17 +2192,20 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedBiofuel_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_LiquidBiofuel_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 2,
@@ -1985,17 +2220,20 @@
     "ingredients": [
       {
         "resource": "Desc_Fuel_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 2,
@@ -2010,17 +2248,20 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedOil_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_LiquidOil_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 2,
@@ -2035,17 +2276,20 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedOilResidue_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 6,
@@ -2060,17 +2304,20 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedWater_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Water_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 1,
@@ -2085,17 +2332,20 @@
     "ingredients": [
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 3000
+        "amount": 3,
+        "originalAmount": 3000
       }
     ],
     "products": [
       {
         "resource": "Desc_CopperSheet_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 8,
@@ -2110,17 +2360,20 @@
     "ingredients": [
       {
         "resource": "Desc_Stone_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Cement_C",
-        "amount": 9
+        "amount": 9,
+        "originalAmount": 9
       }
     ],
     "time": 6,
@@ -2135,17 +2388,20 @@
     "ingredients": [
       {
         "resource": "Desc_Plastic_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       }
     ],
     "products": [
       {
         "resource": "Desc_Rubber_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 12,
@@ -2160,17 +2416,20 @@
     "ingredients": [
       {
         "resource": "Desc_RawQuartz_C",
-        "amount": 9
+        "amount": 9,
+        "originalAmount": 9
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       }
     ],
     "products": [
       {
         "resource": "Desc_QuartzCrystal_C",
-        "amount": 7
+        "amount": 7,
+        "originalAmount": 7
       }
     ],
     "time": 8,
@@ -2185,13 +2444,15 @@
     "ingredients": [
       {
         "resource": "Desc_RawQuartz_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_QuartzCrystal_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 8,
@@ -2206,17 +2467,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreIron_C",
-        "amount": 7
+        "amount": 7,
+        "originalAmount": 7
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       }
     ],
     "products": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 13
+        "amount": 13,
+        "originalAmount": 13
       }
     ],
     "time": 12,
@@ -2231,17 +2495,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreCopper_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       }
     ],
     "products": [
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       }
     ],
     "time": 24,
@@ -2256,17 +2523,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreGold_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       }
     ],
     "products": [
       {
         "resource": "Desc_GoldIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 5,
@@ -2281,13 +2551,15 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumScrap_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminumIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 2,
@@ -2302,13 +2574,15 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumIngot_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminumCasing_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 2,
@@ -2323,17 +2597,20 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumIngot_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminumPlate_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 6,
@@ -2348,21 +2625,25 @@
     "ingredients": [
       {
         "resource": "Desc_OreBauxite_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 18000
+        "amount": 18,
+        "originalAmount": 18000
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminaSolution_C",
-        "amount": 12000
+        "amount": 12,
+        "originalAmount": 12000
       },
       {
         "resource": "Desc_Silica_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "time": 6,
@@ -2377,21 +2658,25 @@
     "ingredients": [
       {
         "resource": "Desc_AluminaSolution_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       },
       {
         "resource": "Desc_Coal_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminumScrap_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       }
     ],
     "time": 1,
@@ -2406,17 +2691,20 @@
     "ingredients": [
       {
         "resource": "Desc_AluminaSolution_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_PackagedAlumina_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 1,
@@ -2431,17 +2719,20 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumScrap_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_Silica_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminumIngot_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 4,
@@ -2456,13 +2747,15 @@
     "ingredients": [
       {
         "resource": "Desc_RawQuartz_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_Silica_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "time": 8,
@@ -2477,21 +2770,25 @@
     "ingredients": [
       {
         "resource": "Desc_QuartzCrystal_C",
-        "amount": 36
+        "amount": 36,
+        "originalAmount": 36
       },
       {
         "resource": "Desc_Cable_C",
-        "amount": 28
+        "amount": 28,
+        "originalAmount": 28
       },
       {
         "resource": "Desc_IronPlateReinforced_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_CrystalOscillator_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 120,
@@ -2506,17 +2803,20 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedAlumina_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminaSolution_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 1,
@@ -2531,17 +2831,20 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidOil_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       }
     ],
     "products": [
       {
         "resource": "Desc_PolymerResin_C",
-        "amount": 13
+        "amount": 13,
+        "originalAmount": 13
       },
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       }
     ],
     "time": 6,
@@ -2556,21 +2859,25 @@
     "ingredients": [
       {
         "resource": "Desc_IronPlateReinforced_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Rotor_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Plastic_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_1_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 24,
@@ -2585,21 +2892,25 @@
     "ingredients": [
       {
         "resource": "Desc_Stator_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_Wire_C",
-        "amount": 40
+        "amount": 40,
+        "originalAmount": 40
       },
       {
         "resource": "Desc_HighSpeedConnector_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_3_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 32,
@@ -2614,17 +2925,20 @@
     "ingredients": [
       {
         "resource": "Desc_SteelPlate_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Cement_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       }
     ],
     "products": [
       {
         "resource": "Desc_SteelPlateReinforced_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 10,
@@ -2639,17 +2953,20 @@
     "ingredients": [
       {
         "resource": "Desc_Rotor_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_Stator_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Motor_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -2664,17 +2981,20 @@
     "ingredients": [
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Wire_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       }
     ],
     "products": [
       {
         "resource": "Desc_Stator_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -2689,17 +3009,20 @@
     "ingredients": [
       {
         "resource": "Desc_Stator_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Cable_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_3_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 24,
@@ -2714,17 +3037,20 @@
     "ingredients": [
       {
         "resource": "Desc_CopperSheet_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "products": [
       {
         "resource": "Desc_CircuitBoardHighSpeed_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -2739,17 +3065,20 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidOil_C",
-        "amount": 3000
+        "amount": 3,
+        "originalAmount": 3000
       }
     ],
     "products": [
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       },
       {
         "resource": "Desc_PolymerResin_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 6,
@@ -2764,25 +3093,30 @@
     "ingredients": [
       {
         "resource": "Desc_ModularFrame_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_SteelPlateReinforced_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       },
       {
         "resource": "Desc_IronScrew_C",
-        "amount": 104
+        "amount": 104,
+        "originalAmount": 104
       }
     ],
     "products": [
       {
         "resource": "Desc_ModularFrameHeavy_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 16,
@@ -2797,21 +3131,25 @@
     "ingredients": [
       {
         "resource": "Desc_CircuitBoard_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_Cable_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       },
       {
         "resource": "Desc_Plastic_C",
-        "amount": 16
+        "amount": 16,
+        "originalAmount": 16
       }
     ],
     "products": [
       {
         "resource": "Desc_Computer_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 24,
@@ -2826,25 +3164,30 @@
     "ingredients": [
       {
         "resource": "Desc_ModularFrame_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       },
       {
         "resource": "Desc_SteelPlateReinforced_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_IronScrew_C",
-        "amount": 120
+        "amount": 120,
+        "originalAmount": 120
       }
     ],
     "products": [
       {
         "resource": "Desc_ModularFrameHeavy_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 30,
@@ -2859,21 +3202,25 @@
     "ingredients": [
       {
         "resource": "Desc_Motor_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       },
       {
         "resource": "Desc_SpaceElevatorPart_1_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_4_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 60,
@@ -2888,25 +3235,30 @@
     "ingredients": [
       {
         "resource": "Desc_SpaceElevatorPart_3_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_CircuitBoard_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_ModularFrameHeavy_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Computer_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_5_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 60,
@@ -2921,17 +3273,20 @@
     "ingredients": [
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_GoldIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Wire_C",
-        "amount": 30
+        "amount": 30,
+        "originalAmount": 30
       }
     ],
     "time": 20,
@@ -2946,21 +3301,25 @@
     "ingredients": [
       {
         "resource": "Desc_ModularFrame_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_SteelPlate_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_2_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 16,
@@ -2975,17 +3334,20 @@
     "ingredients": [
       {
         "resource": "Desc_Rubber_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_PetroleumCoke_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       }
     ],
     "products": [
       {
         "resource": "Desc_CircuitBoard_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -3000,21 +3362,25 @@
     "ingredients": [
       {
         "resource": "Desc_AluminaSolution_C",
-        "amount": 12000
+        "amount": 12,
+        "originalAmount": 12000
       },
       {
         "resource": "Desc_PetroleumCoke_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminumScrap_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 7000
+        "amount": 7,
+        "originalAmount": 7000
       }
     ],
     "time": 4,
@@ -3029,17 +3395,20 @@
     "ingredients": [
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 1000
+        "amount": 1,
+        "originalAmount": 1000
       },
       {
         "resource": "Desc_PackagedWater_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Fuel_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 2,
@@ -3054,17 +3423,20 @@
     "ingredients": [
       {
         "resource": "Desc_CopperSheet_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_IronScrew_C",
-        "amount": 52
+        "amount": 52,
+        "originalAmount": 52
       }
     ],
     "products": [
       {
         "resource": "Desc_Rotor_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 16,
@@ -3079,17 +3451,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronPlateReinforced_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_IronRod_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "products": [
       {
         "resource": "Desc_ModularFrame_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 60,
@@ -3104,17 +3479,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronRod_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_IronScrew_C",
-        "amount": 25
+        "amount": 25,
+        "originalAmount": 25
       }
     ],
     "products": [
       {
         "resource": "Desc_Rotor_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 15,
@@ -3129,13 +3507,15 @@
     "ingredients": [
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_CopperSheet_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 6,
@@ -3150,17 +3530,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronPlateReinforced_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Rotor_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_1_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 30,
@@ -3175,17 +3558,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreCopper_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_OreIron_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "time": 6,
@@ -3200,17 +3586,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreIron_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       },
       {
         "resource": "Desc_PetroleumCoke_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       }
     ],
     "products": [
       {
         "resource": "Desc_SteelIngot_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "time": 12,
@@ -3225,17 +3614,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_Plastic_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_IronPlate_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "time": 8,
@@ -3250,17 +3642,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronPlate_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_CopperSheet_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 4,
@@ -3275,17 +3670,20 @@
     "ingredients": [
       {
         "resource": "Desc_Wire_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       }
     ],
     "products": [
       {
         "resource": "Desc_Cable_C",
-        "amount": 9
+        "amount": 9,
+        "originalAmount": 9
       }
     ],
     "time": 8,
@@ -3300,17 +3698,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronPlateReinforced_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_IronScrew_C",
-        "amount": 56
+        "amount": 56,
+        "originalAmount": 56
       }
     ],
     "products": [
       {
         "resource": "Desc_ModularFrame_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 24,
@@ -3325,17 +3726,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronPlate_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_IronPlateReinforced_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 16,
@@ -3350,25 +3754,30 @@
     "ingredients": [
       {
         "resource": "Desc_Motor_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_PressureConversionCube_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_PackagedNitrogenGas_C",
-        "amount": 24
+        "amount": 24,
+        "originalAmount": 24
       },
       {
         "resource": "Desc_Stator_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       }
     ],
     "products": [
       {
         "resource": "Desc_MotorLightweight_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 32,
@@ -3383,17 +3792,20 @@
     "ingredients": [
       {
         "resource": "Desc_PlutoniumPellet_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_Cement_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "Desc_PlutoniumCell_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -3408,17 +3820,20 @@
     "ingredients": [
       {
         "resource": "Desc_ModularFrameFused_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_ModularFrameLightweight_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_PressureConversionCube_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 60,
@@ -3433,21 +3848,25 @@
     "ingredients": [
       {
         "resource": "Desc_NitrogenGas_C",
-        "amount": 12000
+        "amount": 12,
+        "originalAmount": 12000
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 3000
+        "amount": 3,
+        "originalAmount": 3000
       },
       {
         "resource": "Desc_IronPlate_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_NitricAcid_C",
-        "amount": 3000
+        "amount": 3,
+        "originalAmount": 3000
       }
     ],
     "time": 6,
@@ -3462,29 +3881,35 @@
     "ingredients": [
       {
         "resource": "Desc_NuclearWaste_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       },
       {
         "resource": "Desc_Silica_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_NitricAcid_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       },
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       }
     ],
     "products": [
       {
         "resource": "Desc_NonFissibleUranium_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       }
     ],
     "time": 24,
@@ -3499,13 +3924,15 @@
     "ingredients": [
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 30
+        "amount": 30,
+        "originalAmount": 30
       }
     ],
     "products": [
       {
         "resource": "Desc_CopperDust_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "time": 6,
@@ -3520,17 +3947,20 @@
     "ingredients": [
       {
         "resource": "Desc_NonFissibleUranium_C",
-        "amount": 100
+        "amount": 100,
+        "originalAmount": 100
       },
       {
         "resource": "Desc_NuclearWaste_C",
-        "amount": 25
+        "amount": 25,
+        "originalAmount": 25
       }
     ],
     "products": [
       {
         "resource": "Desc_PlutoniumPellet_C",
-        "amount": 30
+        "amount": 30,
+        "originalAmount": 30
       }
     ],
     "time": 60,
@@ -3545,25 +3975,30 @@
     "ingredients": [
       {
         "resource": "Desc_PlutoniumCell_C",
-        "amount": 30
+        "amount": 30,
+        "originalAmount": 30
       },
       {
         "resource": "Desc_SteelPlate_C",
-        "amount": 18
+        "amount": 18,
+        "originalAmount": 18
       },
       {
         "resource": "Desc_ElectromagneticControlRod_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_AluminumPlateReinforced_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "products": [
       {
         "resource": "Desc_PlutoniumFuelRod_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 240,
@@ -3578,17 +4013,20 @@
     "ingredients": [
       {
         "resource": "Desc_NitricAcid_C",
-        "amount": 1000
+        "amount": 1,
+        "originalAmount": 1000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_PackagedNitricAcid_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 2,
@@ -3603,17 +4041,20 @@
     "ingredients": [
       {
         "resource": "Desc_CopperDust_C",
-        "amount": 200
+        "amount": 200,
+        "originalAmount": 200
       },
       {
         "resource": "Desc_PressureConversionCube_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_9_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 120,
@@ -3628,17 +4069,20 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedNitricAcid_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_NitricAcid_C",
-        "amount": 1000
+        "amount": 1,
+        "originalAmount": 1000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 3,
@@ -3653,25 +4097,30 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       },
       {
         "resource": "Desc_Sulfur_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_PetroleumCoke_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_LiquidTurboFuel_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       }
     ],
     "time": 8,
@@ -3686,25 +4135,30 @@
     "ingredients": [
       {
         "resource": "Desc_OreUranium_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_Cement_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 8000
+        "amount": 8,
+        "originalAmount": 8000
       }
     ],
     "products": [
       {
         "resource": "Desc_UraniumCell_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       }
     ],
     "time": 12,
@@ -3719,25 +4173,30 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumPlateReinforced_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       },
       {
         "resource": "Desc_NitrogenGas_C",
-        "amount": 25000
+        "amount": 25,
+        "originalAmount": 25000
       }
     ],
     "products": [
       {
         "resource": "Desc_CoolingSystem_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 10,
@@ -3752,25 +4211,30 @@
     "ingredients": [
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 2500
+        "amount": 2.5,
+        "originalAmount": 2500
       },
       {
         "resource": "Desc_AluminaSolution_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_AluminumCasing_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Battery_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 1500
+        "amount": 1.5,
+        "originalAmount": 1500
       }
     ],
     "time": 3,
@@ -3785,25 +4249,30 @@
     "ingredients": [
       {
         "resource": "Desc_Computer_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_CircuitBoardHighSpeed_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_HighSpeedConnector_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Plastic_C",
-        "amount": 28
+        "amount": 28,
+        "originalAmount": 28
       }
     ],
     "products": [
       {
         "resource": "Desc_ComputerSuper_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 32,
@@ -3818,21 +4287,25 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumCasing_C",
-        "amount": 32
+        "amount": 32,
+        "originalAmount": 32
       },
       {
         "resource": "Desc_CrystalOscillator_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Computer_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_ModularFrameLightweight_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 48,
@@ -3847,17 +4320,20 @@
     "ingredients": [
       {
         "resource": "Desc_Sulfur_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       }
     ],
     "products": [
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       }
     ],
     "time": 6,
@@ -3872,17 +4348,20 @@
     "ingredients": [
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_PackagedSulfuricAcid_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 3,
@@ -3897,17 +4376,20 @@
     "ingredients": [
       {
         "resource": "Desc_SpaceElevatorPart_5_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_ComputerSuper_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_7_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 80,
@@ -3922,21 +4404,25 @@
     "ingredients": [
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 56
+        "amount": 56,
+        "originalAmount": 56
       },
       {
         "resource": "Desc_Cable_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_CircuitBoard_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_HighSpeedConnector_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 16,
@@ -3951,17 +4437,20 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedSulfuricAcid_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 1000
+        "amount": 1,
+        "originalAmount": 1000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 1,
@@ -3976,25 +4465,30 @@
     "ingredients": [
       {
         "resource": "Desc_Computer_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_ElectromagneticControlRod_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Battery_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_Wire_C",
-        "amount": 25
+        "amount": 25,
+        "originalAmount": 25
       }
     ],
     "products": [
       {
         "resource": "Desc_ComputerSuper_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 25,
@@ -4009,17 +4503,20 @@
     "ingredients": [
       {
         "resource": "Desc_Stator_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_CircuitBoardHighSpeed_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_ElectromagneticControlRod_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 30,
@@ -4034,21 +4531,25 @@
     "ingredients": [
       {
         "resource": "Desc_UraniumCell_C",
-        "amount": 50
+        "amount": 50,
+        "originalAmount": 50
       },
       {
         "resource": "Desc_SteelPlateReinforced_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_ElectromagneticControlRod_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_NuclearFuelRod_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 150,
@@ -4063,17 +4564,20 @@
     "ingredients": [
       {
         "resource": "Desc_SpaceElevatorPart_2_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_ElectromagneticControlRod_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_6_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 120,
@@ -4088,17 +4592,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreBauxite_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 10000
+        "amount": 10,
+        "originalAmount": 10000
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminaSolution_C",
-        "amount": 12000
+        "amount": 12,
+        "originalAmount": 12000
       }
     ],
     "time": 3,
@@ -4113,25 +4620,30 @@
     "ingredients": [
       {
         "resource": "Desc_CrystalOscillator_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_CircuitBoard_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_AluminumCasing_C",
-        "amount": 60
+        "amount": 60,
+        "originalAmount": 60
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 30
+        "amount": 30,
+        "originalAmount": 30
       }
     ],
     "products": [
       {
         "resource": "Desc_ModularFrameLightweight_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 40,
@@ -4146,17 +4658,20 @@
     "ingredients": [
       {
         "resource": "Desc_PlutoniumCell_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       },
       {
         "resource": "Desc_PressureConversionCube_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_PlutoniumFuelRod_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 120,
@@ -4171,17 +4686,20 @@
     "ingredients": [
       {
         "resource": "Desc_ModularFrameLightweight_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_CoolingSystem_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_ComputerSuper_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 20,
@@ -4196,17 +4714,20 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumPlate_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_CopperSheet_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminumPlateReinforced_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 8,
@@ -4221,21 +4742,25 @@
     "ingredients": [
       {
         "resource": "Desc_ModularFrameHeavy_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_AluminumCasing_C",
-        "amount": 50
+        "amount": 50,
+        "originalAmount": 50
       },
       {
         "resource": "Desc_NitrogenGas_C",
-        "amount": 25000
+        "amount": 25,
+        "originalAmount": 25000
       }
     ],
     "products": [
       {
         "resource": "Desc_ModularFrameFused_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 40,
@@ -4250,13 +4775,15 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_GasTank_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 1,
@@ -4271,17 +4798,20 @@
     "ingredients": [
       {
         "resource": "Desc_NitrogenGas_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_PackagedNitrogenGas_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 1,
@@ -4296,17 +4826,20 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedNitrogenGas_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_NitrogenGas_C",
-        "amount": 4000
+        "amount": 4,
+        "originalAmount": 4000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 1,
@@ -4321,29 +4854,35 @@
     "ingredients": [
       {
         "resource": "Desc_OreBauxite_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       },
       {
         "resource": "Desc_Coal_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminumScrap_C",
-        "amount": 30
+        "amount": 30,
+        "originalAmount": 30
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       }
     ],
     "time": 6,
@@ -4358,17 +4897,20 @@
     "ingredients": [
       {
         "resource": "Desc_NonFissibleUranium_C",
-        "amount": 150
+        "amount": 150,
+        "originalAmount": 150
       },
       {
         "resource": "Desc_AluminumCasing_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "products": [
       {
         "resource": "Desc_PlutoniumCell_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "time": 120,
@@ -4383,25 +4925,30 @@
     "ingredients": [
       {
         "resource": "Desc_ModularFrameHeavy_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_AluminumIngot_C",
-        "amount": 50
+        "amount": 50,
+        "originalAmount": 50
       },
       {
         "resource": "Desc_NitricAcid_C",
-        "amount": 8000
+        "amount": 8,
+        "originalAmount": 8000
       },
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 10000
+        "amount": 10,
+        "originalAmount": 10000
       }
     ],
     "products": [
       {
         "resource": "Desc_ModularFrameFused_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 20,
@@ -4416,29 +4963,35 @@
     "ingredients": [
       {
         "resource": "Desc_OreUranium_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_NuclearWaste_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_NitricAcid_C",
-        "amount": 3000
+        "amount": 3,
+        "originalAmount": 3000
       },
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       }
     ],
     "products": [
       {
         "resource": "Desc_NonFissibleUranium_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 8000
+        "amount": 8,
+        "originalAmount": 8000
       }
     ],
     "time": 12,
@@ -4453,17 +5006,20 @@
     "ingredients": [
       {
         "resource": "Desc_ElectromagneticControlRod_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Rotor_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Motor_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 16,
@@ -4478,17 +5034,20 @@
     "ingredients": [
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 10000
+        "amount": 10,
+        "originalAmount": 10000
       }
     ],
     "products": [
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 10000
+        "amount": 10,
+        "originalAmount": 10000
       }
     ],
     "time": 6,
@@ -4503,21 +5062,25 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumPlateReinforced_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_Motor_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_NitrogenGas_C",
-        "amount": 24000
+        "amount": 24,
+        "originalAmount": 24000
       }
     ],
     "products": [
       {
         "resource": "Desc_CoolingSystem_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 24,
@@ -4532,25 +5095,30 @@
     "ingredients": [
       {
         "resource": "Desc_Sulfur_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_AluminumPlate_C",
-        "amount": 7
+        "amount": 7,
+        "originalAmount": 7
       },
       {
         "resource": "Desc_Plastic_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       },
       {
         "resource": "Desc_Wire_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "products": [
       {
         "resource": "Desc_Battery_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 8,
@@ -4565,17 +5133,20 @@
     "ingredients": [
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_IronPlate_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "BP_ItemDescriptorPortableMiner_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 60,
@@ -4590,17 +5161,20 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumIngot_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       },
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminumCasing_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       }
     ],
     "time": 8,
@@ -4615,17 +5189,20 @@
     "ingredients": [
       {
         "resource": "Desc_SteelIngot_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_Cement_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "time": 6,
@@ -4640,13 +5217,15 @@
     "ingredients": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "products": [
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "time": 12,
@@ -4661,17 +5240,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_SteelIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_IronPlate_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 4,
@@ -4686,17 +5268,20 @@
     "ingredients": [
       {
         "resource": "Desc_SteelIngot_C",
-        "amount": 24
+        "amount": 24,
+        "originalAmount": 24
       },
       {
         "resource": "Desc_Cement_C",
-        "amount": 16
+        "amount": 16,
+        "originalAmount": 16
       }
     ],
     "products": [
       {
         "resource": "Desc_SteelPlate_C",
-        "amount": 9
+        "amount": 9,
+        "originalAmount": 9
       }
     ],
     "time": 12,
@@ -4711,13 +5296,15 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumIngot_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_SteelPlate_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 8,
@@ -4732,13 +5319,15 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_IronRod_C",
-        "amount": 7
+        "amount": 7,
+        "originalAmount": 7
       }
     ],
     "time": 8,
@@ -4753,17 +5342,20 @@
     "ingredients": [
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 30
+        "amount": 30,
+        "originalAmount": 30
       },
       {
         "resource": "Desc_Plastic_C",
-        "amount": 7
+        "amount": 7,
+        "originalAmount": 7
       }
     ],
     "products": [
       {
         "resource": "Desc_CircuitBoardHighSpeed_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 15,
@@ -4778,25 +5370,30 @@
     "ingredients": [
       {
         "resource": "Desc_DissolvedSilica_C",
-        "amount": 12000
+        "amount": 12,
+        "originalAmount": 12000
       },
       {
         "resource": "Desc_Stone_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 10000
+        "amount": 10,
+        "originalAmount": 10000
       }
     ],
     "products": [
       {
         "resource": "Desc_Silica_C",
-        "amount": 27
+        "amount": 27,
+        "originalAmount": 27
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 8000
+        "amount": 8,
+        "originalAmount": 8000
       }
     ],
     "time": 6,
@@ -4811,21 +5408,25 @@
     "ingredients": [
       {
         "resource": "Desc_RawQuartz_C",
-        "amount": 24
+        "amount": 24,
+        "originalAmount": 24
       },
       {
         "resource": "Desc_NitricAcid_C",
-        "amount": 2000
+        "amount": 2,
+        "originalAmount": 2000
       }
     ],
     "products": [
       {
         "resource": "Desc_QuartzCrystal_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       },
       {
         "resource": "Desc_DissolvedSilica_C",
-        "amount": 12000
+        "amount": 12,
+        "originalAmount": 12000
       }
     ],
     "time": 12,
@@ -4840,17 +5441,20 @@
     "ingredients": [
       {
         "resource": "Desc_RawQuartz_C",
-        "amount": 25
+        "amount": 25,
+        "originalAmount": 25
       },
       {
         "resource": "Desc_Coal_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "products": [
       {
         "resource": "Desc_QuartzCrystal_C",
-        "amount": 18
+        "amount": 18,
+        "originalAmount": 18
       }
     ],
     "time": 20,
@@ -4865,17 +5469,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreIron_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 1000
+        "amount": 1,
+        "originalAmount": 1000
       }
     ],
     "products": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "time": 6,
@@ -4890,17 +5497,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreIron_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_Stone_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       }
     ],
     "products": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "time": 12,
@@ -4915,17 +5525,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreCopper_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_PetroleumCoke_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       }
     ],
     "products": [
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 12,
@@ -4940,17 +5553,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreCopper_C",
-        "amount": 9
+        "amount": 9,
+        "originalAmount": 9
       },
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       }
     ],
     "products": [
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 22
+        "amount": 22,
+        "originalAmount": 22
       }
     ],
     "time": 12,
@@ -4965,17 +5581,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreGold_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_PetroleumCoke_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_GoldIngot_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 8,
@@ -4990,17 +5609,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreGold_C",
-        "amount": 9
+        "amount": 9,
+        "originalAmount": 9
       },
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 5000
+        "amount": 5,
+        "originalAmount": 5000
       }
     ],
     "products": [
       {
         "resource": "Desc_GoldIngot_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       }
     ],
     "time": 10,
@@ -5015,13 +5637,15 @@
     "ingredients": [
       {
         "resource": "Desc_GoldIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Wire_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       }
     ],
     "time": 4,
@@ -5036,13 +5660,15 @@
     "ingredients": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_Wire_C",
-        "amount": 9
+        "amount": 9,
+        "originalAmount": 9
       }
     ],
     "time": 24,
@@ -5057,25 +5683,30 @@
     "ingredients": [
       {
         "resource": "Desc_OreUranium_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_Silica_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Sulfur_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       }
     ],
     "products": [
       {
         "resource": "Desc_UraniumCell_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 12,
@@ -5090,13 +5721,15 @@
     "ingredients": [
       {
         "resource": "Desc_OreGold_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_GoldIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 4,
@@ -5111,25 +5744,30 @@
     "ingredients": [
       {
         "resource": "Desc_Motor_C",
-        "amount": 7
+        "amount": 7,
+        "originalAmount": 7
       },
       {
         "resource": "Desc_ModularFrameLightweight_C",
-        "amount": 9
+        "amount": 9,
+        "originalAmount": 9
       },
       {
         "resource": "Desc_ElectromagneticControlRod_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_Rotor_C",
-        "amount": 7
+        "amount": 7,
+        "originalAmount": 7
       }
     ],
     "products": [
       {
         "resource": "Desc_MotorLightweight_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 64,
@@ -5144,25 +5782,30 @@
     "ingredients": [
       {
         "resource": "Desc_CoolingSystem_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_ModularFrameLightweight_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_Motor_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 24
+        "amount": 24,
+        "originalAmount": 24
       }
     ],
     "products": [
       {
         "resource": "Desc_MotorLightweight_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 32,
@@ -5177,25 +5820,30 @@
     "ingredients": [
       {
         "resource": "Desc_SpaceElevatorPart_4_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_MotorLightweight_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_CoolingSystem_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_ModularFrameFused_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_8_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 120,
@@ -5210,17 +5858,20 @@
     "ingredients": [
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       }
     ],
     "products": [
       {
         "resource": "Desc_Stator_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 15,
@@ -5235,17 +5886,20 @@
     "ingredients": [
       {
         "resource": "Desc_RawQuartz_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Stone_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_Silica_C",
-        "amount": 7
+        "amount": 7,
+        "originalAmount": 7
       }
     ],
     "time": 8,
@@ -5260,13 +5914,15 @@
     "ingredients": [
       {
         "resource": "Desc_SteelPlate_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_IronScrew_C",
-        "amount": 52
+        "amount": 52,
+        "originalAmount": 52
       }
     ],
     "time": 12,
@@ -5281,13 +5937,15 @@
     "ingredients": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_IronScrew_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "time": 24,
@@ -5302,17 +5960,20 @@
     "ingredients": [
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_Wire_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       }
     ],
     "products": [
       {
         "resource": "Desc_Rotor_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -5327,17 +5988,20 @@
     "ingredients": [
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_Cement_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_SteelPlateReinforced_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 15,
@@ -5352,17 +6016,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronPlate_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_Wire_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "products": [
       {
         "resource": "Desc_IronPlateReinforced_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 32,
@@ -5377,17 +6044,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronPlate_C",
-        "amount": 18
+        "amount": 18,
+        "originalAmount": 18
       },
       {
         "resource": "Desc_IronScrew_C",
-        "amount": 50
+        "amount": 50,
+        "originalAmount": 50
       }
     ],
     "products": [
       {
         "resource": "Desc_IronPlateReinforced_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 12,
@@ -5402,21 +6072,25 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumPlateReinforced_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_HighSpeedConnector_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_QuartzCrystal_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "products": [
       {
         "resource": "Desc_ModularFrameLightweight_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 16,
@@ -5431,17 +6105,20 @@
     "ingredients": [
       {
         "resource": "Desc_GoldIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 8,
@@ -5456,17 +6133,20 @@
     "ingredients": [
       {
         "resource": "Desc_Rubber_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 6000
+        "amount": 6,
+        "originalAmount": 6000
       }
     ],
     "products": [
       {
         "resource": "Desc_Plastic_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "time": 12,
@@ -5481,25 +6161,30 @@
     "ingredients": [
       {
         "resource": "Desc_UraniumCell_C",
-        "amount": 100
+        "amount": 100,
+        "originalAmount": 100
       },
       {
         "resource": "Desc_ElectromagneticControlRod_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_CrystalOscillator_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Rotor_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "products": [
       {
         "resource": "Desc_NuclearFuelRod_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 300,
@@ -5514,21 +6199,25 @@
     "ingredients": [
       {
         "resource": "Desc_Rotor_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Stator_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_CrystalOscillator_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Motor_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       }
     ],
     "time": 48,
@@ -5543,17 +6232,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronPlateReinforced_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "products": [
       {
         "resource": "Desc_ModularFrame_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 60,
@@ -5568,17 +6260,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreIron_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_CompactedCoal_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_SteelIngot_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 24,
@@ -5593,17 +6288,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_Coal_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_SteelIngot_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 3,
@@ -5618,17 +6316,20 @@
     "ingredients": [
       {
         "resource": "Desc_OreIron_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       },
       {
         "resource": "Desc_OreCopper_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       }
     ],
     "time": 12,
@@ -5643,21 +6344,25 @@
     "ingredients": [
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 60
+        "amount": 60,
+        "originalAmount": 60
       },
       {
         "resource": "Desc_Silica_C",
-        "amount": 25
+        "amount": 25,
+        "originalAmount": 25
       },
       {
         "resource": "Desc_CircuitBoard_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_HighSpeedConnector_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 40,
@@ -5672,25 +6377,30 @@
     "ingredients": [
       {
         "resource": "Desc_ModularFrame_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       },
       {
         "resource": "Desc_SteelPlateReinforced_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 36
+        "amount": 36,
+        "originalAmount": 36
       },
       {
         "resource": "Desc_Cement_C",
-        "amount": 22
+        "amount": 22,
+        "originalAmount": 22
       }
     ],
     "products": [
       {
         "resource": "Desc_ModularFrameHeavy_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "time": 64,
@@ -5705,17 +6415,20 @@
     "ingredients": [
       {
         "resource": "Desc_AluminumCasing_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_AluminumPlateReinforced_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 6,
@@ -5730,17 +6443,20 @@
     "ingredients": [
       {
         "resource": "Desc_Sulfur_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_CompactedCoal_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Gunpowder_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       }
     ],
     "time": 8,
@@ -5755,17 +6471,20 @@
     "ingredients": [
       {
         "resource": "Desc_Stator_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_HighSpeedConnector_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_ElectromagneticControlRod_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 15,
@@ -5780,21 +6499,25 @@
     "ingredients": [
       {
         "resource": "Desc_QuartzCrystal_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 7
+        "amount": 7,
+        "originalAmount": 7
       },
       {
         "resource": "Desc_CircuitBoardHighSpeed_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_CrystalOscillator_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 32,
@@ -5809,17 +6532,20 @@
     "ingredients": [
       {
         "resource": "Desc_Silica_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Stone_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "products": [
       {
         "resource": "Desc_Cement_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "time": 12,
@@ -5834,17 +6560,20 @@
     "ingredients": [
       {
         "resource": "Desc_CircuitBoard_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_CrystalOscillator_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Computer_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 36,
@@ -5859,21 +6588,25 @@
     "ingredients": [
       {
         "resource": "Desc_CircuitBoard_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 14
+        "amount": 14,
+        "originalAmount": 14
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       }
     ],
     "products": [
       {
         "resource": "Desc_Computer_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 16,
@@ -5888,17 +6621,20 @@
     "ingredients": [
       {
         "resource": "Desc_Plastic_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       },
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 30
+        "amount": 30,
+        "originalAmount": 30
       }
     ],
     "products": [
       {
         "resource": "Desc_CircuitBoard_C",
-        "amount": 7
+        "amount": 7,
+        "originalAmount": 7
       }
     ],
     "time": 48,
@@ -5913,17 +6649,20 @@
     "ingredients": [
       {
         "resource": "Desc_CopperSheet_C",
-        "amount": 11
+        "amount": 11,
+        "originalAmount": 11
       },
       {
         "resource": "Desc_Silica_C",
-        "amount": 11
+        "amount": 11,
+        "originalAmount": 11
       }
     ],
     "products": [
       {
         "resource": "Desc_CircuitBoard_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "time": 24,
@@ -5938,17 +6677,20 @@
     "ingredients": [
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Cable_C",
-        "amount": 11
+        "amount": 11,
+        "originalAmount": 11
       }
     ],
     "time": 24,
@@ -5963,17 +6705,20 @@
     "ingredients": [
       {
         "resource": "Desc_Wire_C",
-        "amount": 9
+        "amount": 9,
+        "originalAmount": 9
       },
       {
         "resource": "Desc_Rubber_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       }
     ],
     "products": [
       {
         "resource": "Desc_Cable_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "time": 12,
@@ -5988,21 +6733,25 @@
     "ingredients": [
       {
         "resource": "Desc_PlutoniumWaste_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_SingularityCell_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_DarkEnergy_C",
-        "amount": 20000
+        "amount": 20,
+        "originalAmount": 20000
       }
     ],
     "products": [
       {
         "resource": "Desc_Ficsonium_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 6,
@@ -6017,29 +6766,35 @@
     "ingredients": [
       {
         "resource": "Desc_Ficsonium_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_ElectromagneticControlRod_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_FicsiteMesh_C",
-        "amount": 40
+        "amount": 40,
+        "originalAmount": 40
       },
       {
         "resource": "Desc_QuantumEnergy_C",
-        "amount": 20000
+        "amount": 20,
+        "originalAmount": 20000
       }
     ],
     "products": [
       {
         "resource": "Desc_FicsoniumFuelRod_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_DarkEnergy_C",
-        "amount": 20000
+        "amount": 20,
+        "originalAmount": 20000
       }
     ],
     "time": 24,
@@ -6054,25 +6809,30 @@
     "ingredients": [
       {
         "resource": "Desc_SpaceElevatorPart_9_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_DarkMatter_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       },
       {
         "resource": "Desc_IronPlate_C",
-        "amount": 100
+        "amount": 100,
+        "originalAmount": 100
       },
       {
         "resource": "Desc_Cement_C",
-        "amount": 200
+        "amount": 200,
+        "originalAmount": 200
       }
     ],
     "products": [
       {
         "resource": "Desc_SingularityCell_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "time": 60,
@@ -6087,25 +6847,30 @@
     "ingredients": [
       {
         "resource": "Desc_SpaceElevatorPart_8_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_SingularityCell_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_QuantumOscillator_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_DarkMatter_C",
-        "amount": 40
+        "amount": 40,
+        "originalAmount": 40
       }
     ],
     "products": [
       {
         "resource": "Desc_SpaceElevatorPart_11_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 60,
@@ -6120,21 +6885,25 @@
     "ingredients": [
       {
         "resource": "Desc_Filter_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       },
       {
         "resource": "Desc_AluminumCasing_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_HazmatFilter_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 16,
@@ -6149,13 +6918,15 @@
     "ingredients": [
       {
         "resource": "Desc_GoldIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "time": 5,
@@ -6170,13 +6941,15 @@
     "ingredients": [
       {
         "resource": "Desc_GenericBiomass_C",
-        "amount": 8
+        "amount": 8,
+        "originalAmount": 8
       }
     ],
     "products": [
       {
         "resource": "Desc_Biofuel_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 4,
@@ -6191,13 +6964,15 @@
     "ingredients": [
       {
         "resource": "Desc_HogParts_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_AlienProtein_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 3,
@@ -6212,13 +6987,15 @@
     "ingredients": [
       {
         "resource": "Desc_SpitterParts_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_AlienProtein_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 3,
@@ -6233,13 +7010,15 @@
     "ingredients": [
       {
         "resource": "Desc_Mycelia_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_GenericBiomass_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "time": 4,
@@ -6254,13 +7033,15 @@
     "ingredients": [
       {
         "resource": "Desc_Crystal_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_CrystalShard_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 8,
@@ -6275,17 +7056,20 @@
     "ingredients": [
       {
         "resource": "Desc_Coal_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Sulfur_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Gunpowder_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 4,
@@ -6300,29 +7084,35 @@
     "ingredients": [
       {
         "resource": "Desc_SAMFluctuator_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_CrystalShard_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_QuantumOscillator_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_QuantumEnergy_C",
-        "amount": 24000
+        "amount": 24,
+        "originalAmount": 24000
       }
     ],
     "products": [
       {
         "resource": "Desc_AlienPowerFuel_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_DarkEnergy_C",
-        "amount": 24000
+        "amount": 24,
+        "originalAmount": 24000
       }
     ],
     "time": 24,
@@ -6337,13 +7127,15 @@
     "ingredients": [
       {
         "resource": "Desc_StingerParts_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_AlienProtein_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 3,
@@ -6358,13 +7150,15 @@
     "ingredients": [
       {
         "resource": "Desc_HatcherParts_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_AlienProtein_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 3,
@@ -6379,13 +7173,15 @@
     "ingredients": [
       {
         "resource": "Desc_AlienProtein_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_AlienDNACapsule_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 6,
@@ -6400,13 +7196,15 @@
     "ingredients": [
       {
         "resource": "Desc_AlienProtein_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_GenericBiomass_C",
-        "amount": 100
+        "amount": 100,
+        "originalAmount": 100
       }
     ],
     "time": 4,
@@ -6421,13 +7219,15 @@
     "ingredients": [
       {
         "resource": "Desc_IronRod_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_SpikedRebar_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 4,
@@ -6442,17 +7242,20 @@
     "ingredients": [
       {
         "resource": "Desc_CartridgeStandard_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       },
       {
         "resource": "Desc_HighSpeedConnector_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_CartridgeSmartProjectile_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "time": 24,
@@ -6467,17 +7270,20 @@
     "ingredients": [
       {
         "resource": "Desc_SpikedRebar_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_HighSpeedWire_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_Rebar_Stunshot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 6,
@@ -6492,21 +7298,25 @@
     "ingredients": [
       {
         "resource": "Desc_Fabric_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_Coal_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       },
       {
         "resource": "Desc_IronPlate_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Filter_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 8,
@@ -6521,17 +7331,20 @@
     "ingredients": [
       {
         "resource": "Desc_PolymerResin_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 1000
+        "amount": 1,
+        "originalAmount": 1000
       }
     ],
     "products": [
       {
         "resource": "Desc_Fabric_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 2,
@@ -6546,17 +7359,20 @@
     "ingredients": [
       {
         "resource": "Desc_Mycelia_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_GenericBiomass_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_Fabric_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 4,
@@ -6571,29 +7387,35 @@
     "ingredients": [
       {
         "resource": "Desc_TimeCrystal_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_DarkMatter_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_QuartzCrystal_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       },
       {
         "resource": "Desc_QuantumEnergy_C",
-        "amount": 12000
+        "amount": 12,
+        "originalAmount": 12000
       }
     ],
     "products": [
       {
         "resource": "Desc_CrystalShard_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_DarkEnergy_C",
-        "amount": 12000
+        "amount": 12,
+        "originalAmount": 12000
       }
     ],
     "time": 12,
@@ -6608,13 +7430,15 @@
     "ingredients": [
       {
         "resource": "Desc_Crystal_mk3_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_CrystalShard_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "time": 24,
@@ -6629,13 +7453,15 @@
     "ingredients": [
       {
         "resource": "Desc_Crystal_mk2_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_CrystalShard_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 12,
@@ -6650,17 +7476,20 @@
     "ingredients": [
       {
         "resource": "Desc_SpikedRebar_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_QuartzCrystal_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_Rebar_Spreadshot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -6675,21 +7504,25 @@
     "ingredients": [
       {
         "resource": "Desc_CartridgeStandard_C",
-        "amount": 25
+        "amount": 25,
+        "originalAmount": 25
       },
       {
         "resource": "Desc_AluminumCasing_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_TurboFuel_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_CartridgeChaos_C",
-        "amount": 50
+        "amount": 50,
+        "originalAmount": 50
       }
     ],
     "time": 12,
@@ -6704,21 +7537,25 @@
     "ingredients": [
       {
         "resource": "Desc_CartridgeStandard_C",
-        "amount": 25
+        "amount": 25,
+        "originalAmount": 25
       },
       {
         "resource": "Desc_AluminumCasing_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_LiquidTurboFuel_C",
-        "amount": 3000
+        "amount": 3,
+        "originalAmount": 3000
       }
     ],
     "products": [
       {
         "resource": "Desc_CartridgeChaos_C",
-        "amount": 50
+        "amount": 50,
+        "originalAmount": 50
       }
     ],
     "time": 12,
@@ -6733,17 +7570,20 @@
     "ingredients": [
       {
         "resource": "Desc_CopperSheet_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_GunpowderMK2_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_CartridgeStandard_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       }
     ],
     "time": 12,
@@ -6758,21 +7598,25 @@
     "ingredients": [
       {
         "resource": "Desc_SpikedRebar_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_GunpowderMK2_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_SteelPipe_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Rebar_Explosive_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -6787,17 +7631,20 @@
     "ingredients": [
       {
         "resource": "Desc_Gunpowder_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 1000
+        "amount": 1,
+        "originalAmount": 1000
       }
     ],
     "products": [
       {
         "resource": "Desc_GunpowderMK2_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 6,
@@ -6812,13 +7659,15 @@
     "ingredients": [
       {
         "resource": "Desc_Snow_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_SnowballProjectile_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -6833,17 +7682,20 @@
     "ingredients": [
       {
         "resource": "Desc_XmasWreath_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       },
       {
         "resource": "Desc_CandyCane_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "products": [
       {
         "resource": "Desc_XmasStar_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 60,
@@ -6858,17 +7710,20 @@
     "ingredients": [
       {
         "resource": "Desc_XmasBranch_C",
-        "amount": 15
+        "amount": 15,
+        "originalAmount": 15
       },
       {
         "resource": "Desc_XmasBallCluster_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       }
     ],
     "products": [
       {
         "resource": "Desc_XmasWreath_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 60,
@@ -6883,17 +7738,20 @@
     "ingredients": [
       {
         "resource": "Desc_XmasBall3_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_XmasBall4_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_XmasBallCluster_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -6908,13 +7766,15 @@
     "ingredients": [
       {
         "resource": "Desc_Gift_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_XmasBall1_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -6929,13 +7789,15 @@
     "ingredients": [
       {
         "resource": "Desc_Gift_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_XmasBall2_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 12,
@@ -6950,17 +7812,20 @@
     "ingredients": [
       {
         "resource": "Desc_XmasBall1_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       },
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_XmasBall3_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -6975,17 +7840,20 @@
     "ingredients": [
       {
         "resource": "Desc_XmasBall2_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       },
       {
         "resource": "Desc_IronIngot_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_XmasBall4_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -7000,13 +7868,15 @@
     "ingredients": [
       {
         "resource": "Desc_Gift_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "products": [
       {
         "resource": "Desc_Snow_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 12,
@@ -7021,13 +7891,15 @@
     "ingredients": [
       {
         "resource": "Desc_Gift_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_XmasBranch_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 6,
@@ -7042,13 +7914,15 @@
     "ingredients": [
       {
         "resource": "Desc_Gift_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_XmasBow_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -7063,13 +7937,15 @@
     "ingredients": [
       {
         "resource": "Desc_Gift_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_CandyCane_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -7084,13 +7960,15 @@
     "ingredients": [
       {
         "resource": "Desc_Leaves_C",
-        "amount": 10
+        "amount": 10,
+        "originalAmount": 10
       }
     ],
     "products": [
       {
         "resource": "Desc_GenericBiomass_C",
-        "amount": 5
+        "amount": 5,
+        "originalAmount": 5
       }
     ],
     "time": 5,
@@ -7105,13 +7983,15 @@
     "ingredients": [
       {
         "resource": "Desc_Wood_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "products": [
       {
         "resource": "Desc_GenericBiomass_C",
-        "amount": 20
+        "amount": 20,
+        "originalAmount": 20
       }
     ],
     "time": 4,
@@ -7126,17 +8006,20 @@
     "ingredients": [
       {
         "resource": "Desc_IronPlate_C",
-        "amount": 6
+        "amount": 6,
+        "originalAmount": 6
       },
       {
         "resource": "Desc_IronScrew_C",
-        "amount": 12
+        "amount": 12,
+        "originalAmount": 12
       }
     ],
     "products": [
       {
         "resource": "Desc_IronPlateReinforced_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 12,
@@ -7151,13 +8034,15 @@
     "ingredients": [
       {
         "resource": "Desc_Stone_C",
-        "amount": 3
+        "amount": 3,
+        "originalAmount": 3
       }
     ],
     "products": [
       {
         "resource": "Desc_Cement_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 4,
@@ -7172,13 +8057,15 @@
     "ingredients": [
       {
         "resource": "Desc_IronRod_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_IronScrew_C",
-        "amount": 4
+        "amount": 4,
+        "originalAmount": 4
       }
     ],
     "time": 6,
@@ -7193,13 +8080,15 @@
     "ingredients": [
       {
         "resource": "Desc_Wire_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "products": [
       {
         "resource": "Desc_Cable_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 2,
@@ -7214,13 +8103,15 @@
     "ingredients": [
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Wire_C",
-        "amount": 2
+        "amount": 2,
+        "originalAmount": 2
       }
     ],
     "time": 4,
@@ -7235,13 +8126,15 @@
     "ingredients": [
       {
         "resource": "Desc_OreCopper_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_CopperIngot_C",
-        "amount": 1
+        "amount": 1,
+        "originalAmount": 1
       }
     ],
     "time": 2,

@@ -13,6 +13,7 @@ export interface FactoryItem {
   canBeDiscarded: boolean;
   color: string;
   imagePath: string;
+  isFicsmas: boolean;
 }
 
 export enum FactoryItemForm {

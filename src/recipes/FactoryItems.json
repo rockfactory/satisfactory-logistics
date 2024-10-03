@@ -12,7 +12,8 @@
     "radioactiveDecay": 10,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/uranium-waste_256.png"
+    "imagePath": "./images/uranium-waste_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PlutoniumWaste_C",
@@ -27,7 +28,8 @@
     "radioactiveDecay": 200,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/plutonium-waste_256.png"
+    "imagePath": "./images/plutonium-waste_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Cement_C",
@@ -42,7 +44,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/concrete_256.png"
+    "imagePath": "./images/concrete_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Silica_C",
@@ -57,7 +60,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/silica_256.png"
+    "imagePath": "./images/silica_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_IronPlate_C",
@@ -72,7 +76,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-plate_256.png"
+    "imagePath": "./images/iron-plate_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SteelPlate_C",
@@ -87,7 +92,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/steel-beam_256.png"
+    "imagePath": "./images/steel-beam_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AluminumIngot_C",
@@ -102,7 +108,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/aluminum-ingot_256.png"
+    "imagePath": "./images/aluminum-ingot_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Battery_C",
@@ -117,7 +124,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/battery_256.png"
+    "imagePath": "./images/battery_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Fuel_C",
@@ -132,7 +140,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=21,G=125,R=235,A=255)",
-    "imagePath": "./images/packaged-fuel_256.png"
+    "imagePath": "./images/packaged-fuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedIonizedFuel_C",
@@ -147,7 +156,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/packaged-ionized-fuel_256.png"
+    "imagePath": "./images/packaged-ionized-fuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedRocketFuel_C",
@@ -162,7 +172,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/packaged-rocket-fuel_256.png"
+    "imagePath": "./images/packaged-rocket-fuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_TurboFuel_C",
@@ -177,7 +188,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=46,G=41,R=212,A=255)",
-    "imagePath": "./images/packaged-turbofuel_256.png"
+    "imagePath": "./images/packaged-turbofuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_HazmatFilter_C",
@@ -192,7 +204,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iodine-infused-filter_256.png"
+    "imagePath": "./images/iodine-infused-filter_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CompactedCoal_C",
@@ -207,7 +220,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/compacted-coal_256.png"
+    "imagePath": "./images/compacted-coal_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedOilResidue_C",
@@ -222,7 +236,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=120,G=45,R=109,A=255)",
-    "imagePath": "./images/packaged-heavy-oil-residue_256.png"
+    "imagePath": "./images/packaged-heavy-oil-residue_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PetroleumCoke_C",
@@ -237,7 +252,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/petroleum-coke_256.png"
+    "imagePath": "./images/petroleum-coke_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedOil_C",
@@ -252,7 +268,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/packaged-oil_256.png"
+    "imagePath": "./images/packaged-oil_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_IronRod_C",
@@ -267,7 +284,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-rod_256.png"
+    "imagePath": "./images/iron-rod_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Wire_C",
@@ -282,7 +300,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/wire_256.png"
+    "imagePath": "./images/wire_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Cable_C",
@@ -297,7 +316,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/cable_256.png"
+    "imagePath": "./images/cable_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_IronIngot_C",
@@ -312,7 +332,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-ingot_256.png"
+    "imagePath": "./images/iron-ingot_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_IronPlateReinforced_C",
@@ -327,7 +348,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/reinforced-iron-plate_256.png"
+    "imagePath": "./images/reinforced-iron-plate_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Rotor_C",
@@ -342,7 +364,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/rotor_256.png"
+    "imagePath": "./images/rotor_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_LiquidFuel_C",
@@ -357,7 +380,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=21,G=125,R=235,A=0)",
-    "imagePath": "./images/fuel_256.png"
+    "imagePath": "./images/fuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_RocketFuel_C",
@@ -372,7 +396,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=26,G=37,R=189,A=0)",
-    "imagePath": "./images/rocket-fuel_256.png"
+    "imagePath": "./images/rocket-fuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CopperSheet_C",
@@ -387,7 +412,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/copper-sheet_256.png"
+    "imagePath": "./images/copper-sheet_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_ModularFrame_C",
@@ -402,7 +428,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/modular-frame_256.png"
+    "imagePath": "./images/modular-frame_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_IronScrew_C",
@@ -417,7 +444,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/screw_256.png"
+    "imagePath": "./images/screw_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NitricAcid_C",
@@ -432,7 +460,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=162,G=217,R=217,A=0)",
-    "imagePath": "./images/nitric-acid_256.png"
+    "imagePath": "./images/nitric-acid_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_LiquidTurboFuel_C",
@@ -447,7 +476,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=46,G=41,R=212,A=0)",
-    "imagePath": "./images/turbofuel_256.png"
+    "imagePath": "./images/turbofuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_GasTank_C",
@@ -462,7 +492,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/empty-fluid-tank_256.png"
+    "imagePath": "./images/empty-fluid-tank_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CrystalOscillator_C",
@@ -477,7 +508,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/crystal-oscillator_256.png"
+    "imagePath": "./images/crystal-oscillator_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Motor_C",
@@ -492,7 +524,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/motor_256.png"
+    "imagePath": "./images/motor_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_DarkMatter_C",
@@ -507,7 +540,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/dark-matter-crystal_256.png"
+    "imagePath": "./images/dark-matter-crystal_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_IonizedFuel_C",
@@ -522,7 +556,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=26,G=95,R=213,A=60)",
-    "imagePath": "./images/ionized-fuel_256.png"
+    "imagePath": "./images/ionized-fuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_ComputerSuper_C",
@@ -537,7 +572,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/supercomputer_256.png"
+    "imagePath": "./images/supercomputer_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CoolingSystem_C",
@@ -552,7 +588,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/cooling-system_256.png"
+    "imagePath": "./images/cooling-system_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_FicsiteMesh_C",
@@ -567,7 +604,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ficsite-trigon_256.png"
+    "imagePath": "./images/ficsite-trigon_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_MotorLightweight_C",
@@ -582,7 +620,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/turbo-motor_256.png"
+    "imagePath": "./images/turbo-motor_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_TimeCrystal_C",
@@ -597,7 +636,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/time-crystal_256.png"
+    "imagePath": "./images/time-crystal_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_DarkEnergy_C",
@@ -612,7 +652,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=249,G=175,R=253,A=150)",
-    "imagePath": "./images/dark-matter-residue_256.png"
+    "imagePath": "./images/dark-matter-residue_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SAMIngot_C",
@@ -627,7 +668,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/reanimated-sam_256.png"
+    "imagePath": "./images/reanimated-sam_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_QuantumEnergy_C",
@@ -642,7 +684,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=232,G=245,R=118,A=90)",
-    "imagePath": "./images/excited-photonic-matter_256.png"
+    "imagePath": "./images/excited-photonic-matter_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Diamond_C",
@@ -657,7 +700,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/diamonds_256.png"
+    "imagePath": "./images/diamonds_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AluminumPlate_C",
@@ -672,7 +716,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/alclad-aluminum-sheet_256.png"
+    "imagePath": "./images/alclad-aluminum-sheet_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_QuantumOscillator_C",
@@ -687,7 +732,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/superposition-oscillator_256.png"
+    "imagePath": "./images/superposition-oscillator_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_TemporalProcessor_C",
@@ -702,7 +748,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/neural-quantum-processor_256.png"
+    "imagePath": "./images/neural-quantum-processor_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_12_C",
@@ -717,7 +764,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ai-expansion-server_256.png"
+    "imagePath": "./images/ai-expansion-server_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_6_C",
@@ -732,7 +780,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/magnetic-field-generator_256.png"
+    "imagePath": "./images/magnetic-field-generator_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SAMFluctuator_C",
@@ -747,7 +796,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/sam-fluctuator_256.png"
+    "imagePath": "./images/sam-fluctuator_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SteelPipe_C",
@@ -762,7 +812,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/steel-pipe_256.png"
+    "imagePath": "./images/steel-pipe_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_ModularFrameFused_C",
@@ -777,7 +828,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/fused-modular-frame_256.png"
+    "imagePath": "./images/fused-modular-frame_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_ModularFrameLightweight_C",
@@ -792,7 +844,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/radio-control-unit_256.png"
+    "imagePath": "./images/radio-control-unit_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_FicsiteIngot_C",
@@ -807,7 +860,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ficsite-ingot_256.png"
+    "imagePath": "./images/ficsite-ingot_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_10_C",
@@ -822,7 +876,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/biochemical-sculptor_256.png"
+    "imagePath": "./images/biochemical-sculptor_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_7_C",
@@ -837,7 +892,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/assembly-director-system_256.png"
+    "imagePath": "./images/assembly-director-system_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_GoldIngot_C",
@@ -852,7 +908,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/caterium-ingot_256.png"
+    "imagePath": "./images/caterium-ingot_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_FluidCanister_C",
@@ -867,7 +924,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/empty-canister_256.png"
+    "imagePath": "./images/empty-canister_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CircuitBoard_C",
@@ -882,7 +940,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/circuit-board_256.png"
+    "imagePath": "./images/circuit-board_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Plastic_C",
@@ -897,7 +956,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/plastic_256.png"
+    "imagePath": "./images/plastic_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SteelPlateReinforced_C",
@@ -912,7 +972,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/encased-industrial-beam_256.png"
+    "imagePath": "./images/encased-industrial-beam_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Rubber_C",
@@ -927,7 +988,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/rubber_256.png"
+    "imagePath": "./images/rubber_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PolymerResin_C",
@@ -942,7 +1004,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/polymer-resin_256.png"
+    "imagePath": "./images/polymer-resin_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_HeavyOilResidue_C",
@@ -957,7 +1020,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=120,G=45,R=109,A=0)",
-    "imagePath": "./images/heavy-oil-residue_256.png"
+    "imagePath": "./images/heavy-oil-residue_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_QuartzCrystal_C",
@@ -972,7 +1036,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/quartz-crystal_256.png"
+    "imagePath": "./images/quartz-crystal_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SteelIngot_C",
@@ -987,7 +1052,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/steel-ingot_256.png"
+    "imagePath": "./images/steel-ingot_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_2_C",
@@ -1002,7 +1068,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/versatile-framework_256.png"
+    "imagePath": "./images/versatile-framework_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedWater_C",
@@ -1017,7 +1084,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=212,G=176,R=122,A=255)",
-    "imagePath": "./images/packaged-water_256.png"
+    "imagePath": "./images/packaged-water_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CopperIngot_C",
@@ -1032,7 +1100,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/copper-ingot_256.png"
+    "imagePath": "./images/copper-ingot_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AluminumScrap_C",
@@ -1047,7 +1116,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/aluminum-scrap_256.png"
+    "imagePath": "./images/aluminum-scrap_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AluminumCasing_C",
@@ -1062,7 +1132,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/aluminum-casing_256.png"
+    "imagePath": "./images/aluminum-casing_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AluminaSolution_C",
@@ -1077,7 +1148,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=193,G=193,R=193,A=0)",
-    "imagePath": "./images/alumina-solution_256.png"
+    "imagePath": "./images/alumina-solution_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Computer_C",
@@ -1092,7 +1164,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/computer_256.png"
+    "imagePath": "./images/computer_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_ModularFrameHeavy_C",
@@ -1107,7 +1180,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/heavy-modular-frame_256.png"
+    "imagePath": "./images/heavy-modular-frame_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_1_C",
@@ -1122,7 +1196,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/smart-plating_256.png"
+    "imagePath": "./images/smart-plating_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_HighSpeedConnector_C",
@@ -1137,7 +1212,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/high-speed-connector_256.png"
+    "imagePath": "./images/high-speed-connector_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_3_C",
@@ -1152,7 +1228,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/automated-wiring_256.png"
+    "imagePath": "./images/automated-wiring_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Stator_C",
@@ -1167,7 +1244,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/stator_256.png"
+    "imagePath": "./images/stator_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CircuitBoardHighSpeed_C",
@@ -1182,7 +1260,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ai-limiter_256.png"
+    "imagePath": "./images/ai-limiter_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_HighSpeedWire_C",
@@ -1197,7 +1276,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/quickwire_256.png"
+    "imagePath": "./images/quickwire_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_4_C",
@@ -1212,7 +1292,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/modular-engine_256.png"
+    "imagePath": "./images/modular-engine_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_5_C",
@@ -1227,7 +1308,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/adaptive-control-unit_256.png"
+    "imagePath": "./images/adaptive-control-unit_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PressureConversionCube_C",
@@ -1242,7 +1324,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/pressure-conversion-cube_256.png"
+    "imagePath": "./images/pressure-conversion-cube_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PlutoniumCell_C",
@@ -1257,7 +1340,8 @@
     "radioactiveDecay": 120,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/encased-plutonium-cell_256.png"
+    "imagePath": "./images/encased-plutonium-cell_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PlutoniumPellet_C",
@@ -1272,7 +1356,8 @@
     "radioactiveDecay": 20,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/plutonium-pellet_256.png"
+    "imagePath": "./images/plutonium-pellet_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NonFissibleUranium_C",
@@ -1287,7 +1372,8 @@
     "radioactiveDecay": 0.75,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/non-fissile-uranium_256.png"
+    "imagePath": "./images/non-fissile-uranium_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SulfuricAcid_C",
@@ -1302,7 +1388,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=0,G=255,R=255,A=0)",
-    "imagePath": "./images/sulfuric-acid_256.png"
+    "imagePath": "./images/sulfuric-acid_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CopperDust_C",
@@ -1317,7 +1404,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/copper-powder_256.png"
+    "imagePath": "./images/copper-powder_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AluminumPlateReinforced_C",
@@ -1332,7 +1420,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/heat-sink_256.png"
+    "imagePath": "./images/heat-sink_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_ElectromagneticControlRod_C",
@@ -1347,7 +1436,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/electromagnetic-control-rod_256.png"
+    "imagePath": "./images/electromagnetic-control-rod_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_9_C",
@@ -1362,7 +1452,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/nuclear-pasta_256.png"
+    "imagePath": "./images/nuclear-pasta_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_UraniumCell_C",
@@ -1377,7 +1468,8 @@
     "radioactiveDecay": 0.5,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/encased-uranium-cell_256.png"
+    "imagePath": "./images/encased-uranium-cell_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_DissolvedSilica_C",
@@ -1392,7 +1484,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=238,G=190,R=226,A=0)",
-    "imagePath": "./images/dissolved-silica_256.png"
+    "imagePath": "./images/dissolved-silica_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_8_C",
@@ -1407,7 +1500,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/thermal-propulsion-rocket_256.png"
+    "imagePath": "./images/thermal-propulsion-rocket_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Gunpowder_C",
@@ -1422,7 +1516,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/black-powder_256.png"
+    "imagePath": "./images/black-powder_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Ficsonium_C",
@@ -1437,7 +1532,8 @@
     "radioactiveDecay": 250,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ficsonium_256.png"
+    "imagePath": "./images/ficsonium_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SingularityCell_C",
@@ -1452,7 +1548,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/singularity-cell_256.png"
+    "imagePath": "./images/singularity-cell_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_11_C",
@@ -1467,7 +1564,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ballistic-warp-drive_256.png"
+    "imagePath": "./images/ballistic-warp-drive_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Filter_C",
@@ -1482,7 +1580,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/gas-filter_256.png"
+    "imagePath": "./images/gas-filter_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AlienProtein_C",
@@ -1497,7 +1596,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/alien-protein_256.png"
+    "imagePath": "./images/alien-protein_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Crystal_C",
@@ -1512,7 +1612,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/blue-power-slug_256.png"
+    "imagePath": "./images/blue-power-slug_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AlienDNACapsule_C",
@@ -1527,7 +1628,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/alien-dna-capsule_256.png"
+    "imagePath": "./images/alien-dna-capsule_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_WAT2_C",
@@ -1542,7 +1644,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/mercer-sphere_256.png"
+    "imagePath": "./images/mercer-sphere_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Crystal_mk3_C",
@@ -1557,7 +1660,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/purple-power-slug_256.png"
+    "imagePath": "./images/purple-power-slug_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Crystal_mk2_C",
@@ -1572,7 +1676,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/yellow-power-slug_256.png"
+    "imagePath": "./images/yellow-power-slug_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_GunpowderMK2_C",
@@ -1587,7 +1692,200 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/smokeless-powder_256.png"
+    "imagePath": "./images/smokeless-powder_256.png",
+    "isFicsmas": false
+  },
+  {
+    "id": "Desc_XmasStar_C",
+    "index": 106,
+    "name": "FICSMAS Wonder Star",
+    "displayName": "FICSMAS Wonder Star",
+    "description": "This special FICSMAS Star signifies FICSIT's productivity all across the universe. It also signifies the fact that you have nearly completed the Holiday Event, so it's time to get back to work.",
+    "form": "Solid",
+    "sinkPoints": 6540,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBallCluster_C",
+    "index": 107,
+    "name": "FICSMAS Ornament Bundle",
+    "displayName": "FICSMAS Ornament Bundle",
+    "description": "All the FICSMAS Ornaments smashed together to make even more FICSMAS Decorations!",
+    "form": "Solid",
+    "sinkPoints": 100,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasWreath_C",
+    "index": 108,
+    "name": "FICSMAS Decoration",
+    "displayName": "FICSMAS Decoration",
+    "description": "A decoration used to make decorations. Its use cases are questionable.",
+    "form": "Solid",
+    "sinkPoints": 630,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_CandyCane_C",
+    "index": 109,
+    "name": "Candy Cane",
+    "displayName": "Candy Cane",
+    "description": "A delicious Candy Cane to be enjoyed during the FICSMAS Holidays. \r\n*Disclaimer: Not for consumption...",
+    "form": "Solid",
+    "sinkPoints": 6,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_Snow_C",
+    "index": 110,
+    "name": "Actual Snow",
+    "displayName": "Actual Snow",
+    "description": "It's snow. Not the nice, thick, crunchy kind, though... more the disgustingly wet, slushy kind... Guess we can make stuff from it.",
+    "form": "Solid",
+    "sinkPoints": 5,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBow_C",
+    "index": 111,
+    "name": "FICSMAS Bow",
+    "displayName": "FICSMAS Bow",
+    "description": "A fancy Bow. Maybe someone could wear this? You certainly can't! What you can do is make parts and decorations from it. Probably.",
+    "form": "Solid",
+    "sinkPoints": 4,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBall3_C",
+    "index": 112,
+    "name": "Copper FICSMAS Ornament",
+    "displayName": "Copper FICSMAS Ornament",
+    "description": "Still used for making FICSMAS Decorations.",
+    "form": "Solid",
+    "sinkPoints": 32,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBall4_C",
+    "index": 113,
+    "name": "Iron FICSMAS Ornament",
+    "displayName": "Iron FICSMAS Ornament",
+    "description": "A super special- Nope! Still just used for making FICSMAS Decorations.",
+    "form": "Solid",
+    "sinkPoints": 18,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBranch_C",
+    "index": 114,
+    "name": "FICSMAS Tree Branch",
+    "displayName": "FICSMAS Tree Branch",
+    "description": "A special Tree Branch used to produce parts and buildings during the FICSMAS Event.",
+    "form": "Solid",
+    "sinkPoints": 2,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBall1_C",
+    "index": 115,
+    "name": "Red FICSMAS Ornament",
+    "displayName": "Red FICSMAS Ornament",
+    "description": "Used for making FICSMAS Decorations.",
+    "form": "Solid",
+    "sinkPoints": 2,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBall2_C",
+    "index": 116,
+    "name": "Blue FICSMAS Ornament",
+    "displayName": "Blue FICSMAS Ornament",
+    "description": "Again, used for making FICSMAS Decorations.",
+    "form": "Solid",
+    "sinkPoints": 1,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_Gift_C",
+    "index": 117,
+    "name": "FICSMAS Gift",
+    "displayName": "FICSMAS Gift",
+    "description": "Special FICSMAS buildings and parts can be obtained and produced from this FICSIT Holiday present.\r\n\r\n*Watch the sky for deliveries from orbit!",
+    "form": "Solid",
+    "sinkPoints": 1,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
   },
   {
     "id": "Desc_NuclearFuelRod_C",
@@ -1602,7 +1900,8 @@
     "radioactiveDecay": 50,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/uranium-fuel-rod_256.png"
+    "imagePath": "./images/uranium-fuel-rod_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PlutoniumFuelRod_C",
@@ -1617,7 +1916,8 @@
     "radioactiveDecay": 250,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/plutonium-fuel-rod_256.png"
+    "imagePath": "./images/plutonium-fuel-rod_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_FicsoniumFuelRod_C",
@@ -1632,7 +1932,8 @@
     "radioactiveDecay": 1000,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ficsonium-fuel-rod_256.png"
+    "imagePath": "./images/ficsonium-fuel-rod_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Rebar_Explosive_C",
@@ -1647,7 +1948,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/explosive-rebar_256.png"
+    "imagePath": "./images/explosive-rebar_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Rebar_Stunshot_C",
@@ -1662,7 +1964,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/stun-rebar_256.png"
+    "imagePath": "./images/stun-rebar_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CartridgeSmartProjectile_C",
@@ -1677,7 +1980,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/homing-rifle-ammo_256.png"
+    "imagePath": "./images/homing-rifle-ammo_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NobeliskCluster_C",
@@ -1692,7 +1996,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/cluster-nobelisk_256.png"
+    "imagePath": "./images/cluster-nobelisk_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NobeliskExplosive_C",
@@ -1707,7 +2012,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/nobelisk_256.png"
+    "imagePath": "./images/nobelisk_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NobeliskGas_C",
@@ -1722,7 +2028,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/gas-nobelisk_256.png"
+    "imagePath": "./images/gas-nobelisk_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NobeliskNuke_C",
@@ -1737,7 +2044,8 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/nuke-nobelisk_256.png"
+    "imagePath": "./images/nuke-nobelisk_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NobeliskShockwave_C",
@@ -1752,7 +2060,72 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/pulse-nobelisk_256.png"
+    "imagePath": "./images/pulse-nobelisk_256.png",
+    "isFicsmas": false
+  },
+  {
+    "id": "Desc_Fireworks_Projectile_01_C",
+    "index": 129,
+    "name": "Sweet Fireworks",
+    "displayName": "Sweet Fireworks",
+    "description": "Merry FICSMAS and a Happy New Year!",
+    "form": "Solid",
+    "sinkPoints": 60,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_Fireworks_Projectile_02_C",
+    "index": 130,
+    "name": "Fancy Fireworks",
+    "displayName": "Fancy Fireworks",
+    "description": "Fireworks are produced from random ingredients. Primarily used for having a good time.",
+    "form": "Solid",
+    "sinkPoints": 40,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_Fireworks_Projectile_03_C",
+    "index": 131,
+    "name": "Sparkly Fireworks",
+    "displayName": "Sparkly Fireworks",
+    "description": "Goes Pfffeeeeew... BOOM! *Sparkle*",
+    "form": "Solid",
+    "sinkPoints": 32,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_SnowballProjectile_C",
+    "index": 132,
+    "name": "Snowball",
+    "displayName": "Snowball",
+    "description": "Compressed dihydrogen monoxide crystals.",
+    "form": "Solid",
+    "sinkPoints": 30,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/not-available_256.png",
+    "isFicsmas": true
   },
   {
     "id": "Desc_SpikedRebar_C",
@@ -1767,11 +2140,28 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-rebar_256.png"
+    "imagePath": "./images/iron-rebar_256.png",
+    "isFicsmas": false
+  },
+  {
+    "id": "BP_ItemDescriptorPortableMiner_C",
+    "index": 134,
+    "name": "Portable Miner",
+    "displayName": "Portable Miner",
+    "description": "Automatically extracts a resource when placed on a resource node.\r\nNote: Has limited storage space.",
+    "form": "Solid",
+    "sinkPoints": 56,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "./images/portable-miner_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Rebar_Spreadshot_C",
-    "index": 134,
+    "index": 135,
     "name": "Shatter Rebar",
     "displayName": "Shatter Rebar",
     "description": "Fractures when shot, launching deadly debris with wide spread but limited range.",
@@ -1782,11 +2172,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/shatter-rebar_256.png"
+    "imagePath": "./images/shatter-rebar_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CartridgeChaos_C",
-    "index": 135,
+    "index": 136,
     "name": "Turbo Rifle Ammo",
     "displayName": "Turbo Rifle Ammo",
     "description": "Lightweight, compact, and volatile. These rounds provide extreme capacity and rate of fire at the cost of accuracy.",
@@ -1797,11 +2188,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/turbo-rifle-ammo_256.png"
+    "imagePath": "./images/turbo-rifle-ammo_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CartridgeStandard_C",
-    "index": 136,
+    "index": 137,
     "name": "Rifle Ammo",
     "displayName": "Rifle Ammo",
     "description": "Standard issue Rifle ammunition, useful for establishing dominance.",
@@ -1812,11 +2204,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/rifle-ammo_256.png"
+    "imagePath": "./images/rifle-ammo_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_OreIron_C",
-    "index": 137,
+    "index": 138,
     "name": "Iron Ore",
     "displayName": "Iron Ore",
     "description": "Used for crafting.\r\nThe most essential basic resource.",
@@ -1827,11 +2220,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-ore_256.png"
+    "imagePath": "./images/iron-ore_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Coal_C",
-    "index": 138,
+    "index": 139,
     "name": "Coal",
     "displayName": "Coal",
     "description": "Mainly used as fuel for vehicles & Coal-Powered Generators, or in Steel production.",
@@ -1842,11 +2236,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/coal_256.png"
+    "imagePath": "./images/coal_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Water_C",
-    "index": 139,
+    "index": 140,
     "name": "Water",
     "displayName": "Water",
     "description": "It's water.",
@@ -1857,11 +2252,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=212,G=176,R=122,A=0)",
-    "imagePath": "./images/water_256.png"
+    "imagePath": "./images/water_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NitrogenGas_C",
-    "index": 140,
+    "index": 141,
     "name": "Nitrogen Gas",
     "displayName": "Nitrogen Gas",
     "description": "Has a variety of uses, including metallurgy, cooling, and Nitric Acid production. On MASSAGE-2 (AB)b, it can be extracted from underground gas wells.",
@@ -1872,11 +2268,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=89,G=89,R=89,A=0)",
-    "imagePath": "./images/nitrogen-gas_256.png"
+    "imagePath": "./images/nitrogen-gas_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Sulfur_C",
-    "index": 141,
+    "index": 142,
     "name": "Sulfur",
     "displayName": "Sulfur",
     "description": "Primarily used to produce Black Powder.",
@@ -1887,11 +2284,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/sulfur_256.png"
+    "imagePath": "./images/sulfur_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SAM_C",
-    "index": 142,
+    "index": 143,
     "name": "SAM",
     "displayName": "SAM",
     "description": "Strange Alien Matter, commonly referred to as SAM, doesn't seem to follow the known laws of physics. It whispers of new possibilities.",
@@ -1902,11 +2300,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/sam_256.png"
+    "imagePath": "./images/sam_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_OreBauxite_C",
-    "index": 143,
+    "index": 144,
     "name": "Bauxite",
     "displayName": "Bauxite",
     "description": "Used to produce Alumina, which can be further refined into the Aluminum Scrap required to produce Aluminum Ingots.",
@@ -1917,11 +2316,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/bauxite_256.png"
+    "imagePath": "./images/bauxite_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_OreGold_C",
-    "index": 144,
+    "index": 145,
     "name": "Caterium Ore",
     "displayName": "Caterium Ore",
     "description": "Smelted into Caterium Ingots, which are primarily used for advanced electronics.",
@@ -1932,11 +2332,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/caterium-ore_256.png"
+    "imagePath": "./images/caterium-ore_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_OreCopper_C",
-    "index": 145,
+    "index": 146,
     "name": "Copper Ore",
     "displayName": "Copper Ore",
     "description": "Used for crafting.\r\nA basic resource primarily used for electricity.",
@@ -1947,11 +2348,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/copper-ore_256.png"
+    "imagePath": "./images/copper-ore_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_RawQuartz_C",
-    "index": 146,
+    "index": 147,
     "name": "Raw Quartz",
     "displayName": "Raw Quartz",
     "description": "Can be processed into Quartz Crystals and Silica, which both offer a variety of applications.",
@@ -1962,11 +2364,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/raw-quartz_256.png"
+    "imagePath": "./images/raw-quartz_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Stone_C",
-    "index": 147,
+    "index": 148,
     "name": "Limestone",
     "displayName": "Limestone",
     "description": "Used for crafting.\r\nA basic resource primarily used for stable Foundations.",
@@ -1977,11 +2380,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/limestone_256.png"
+    "imagePath": "./images/limestone_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_OreUranium_C",
-    "index": 148,
+    "index": 149,
     "name": "Uranium",
     "displayName": "Uranium",
     "description": "A radioactive element. \r\nUsed to produce Encased Uranium Cells for Uranium Fuel Rods.\r\n\r\nCaution: Moderately Radioactive.",
@@ -1992,11 +2396,12 @@
     "radioactiveDecay": 15,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/uranium_256.png"
+    "imagePath": "./images/uranium_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_LiquidOil_C",
-    "index": 149,
+    "index": 150,
     "name": "Crude Oil",
     "displayName": "Crude Oil",
     "description": "Refined into all kinds of Oil-based resources, like Fuel and Plastic.",
@@ -2007,11 +2412,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=25,G=0,R=25,A=0)",
-    "imagePath": "./images/crude-oil_256.png"
+    "imagePath": "./images/crude-oil_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Biofuel_C",
-    "index": 150,
+    "index": 151,
     "name": "Solid Biofuel",
     "displayName": "Solid Biofuel",
     "description": "The most energy-efficient form of solid Biomass. Can be used as fuel for the Chainsaw.",
@@ -2022,11 +2428,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/solid-biofuel_256.png"
+    "imagePath": "./images/solid-biofuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedBiofuel_C",
-    "index": 151,
+    "index": 152,
     "name": "Packaged Liquid Biofuel",
     "displayName": "Packaged Liquid Biofuel",
     "description": "Liquid Biofuel, packaged for alternative transport. Can be used as fuel for vehicles and the Jetpack.",
@@ -2037,11 +2444,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-liquid-biofuel_256.png"
+    "imagePath": "./images/packaged-liquid-biofuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_GenericBiomass_C",
-    "index": 152,
+    "index": 153,
     "name": "Biomass",
     "displayName": "Biomass",
     "description": "Primarily used as fuel.\r\nBiomass Burners and vehicles can use it for power.\r\nBiomass is much more energy-efficient than raw biological matter.",
@@ -2052,11 +2460,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/biomass_256.png"
+    "imagePath": "./images/biomass_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Leaves_C",
-    "index": 153,
+    "index": 154,
     "name": "Leaves",
     "displayName": "Leaves",
     "description": "Primarily used as fuel.\r\nBiomass Burners and vehicles can use Leaves for power.",
@@ -2067,11 +2476,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/leaves_256.png"
+    "imagePath": "./images/leaves_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Mycelia_C",
-    "index": 154,
+    "index": 155,
     "name": "Mycelia",
     "displayName": "Mycelia",
     "description": "Used for crafting.\r\nBiomass Burners and vehicles can also use Mycelia for power.",
@@ -2082,11 +2492,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/mycelia_256.png"
+    "imagePath": "./images/mycelia_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Wood_C",
-    "index": 155,
+    "index": 156,
     "name": "Wood",
     "displayName": "Wood",
     "description": "Primarily used as fuel.\r\nBiomass Burners and vehicles can use Wood for power.",
@@ -2097,11 +2508,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/wood_256.png"
+    "imagePath": "./images/wood_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_LiquidBiofuel_C",
-    "index": 156,
+    "index": 157,
     "name": "Liquid Biofuel",
     "displayName": "Liquid Biofuel",
     "description": "Liquid Biofuel can be used as-is to generate power, or packaged to be used as fuel for vehicles.",
@@ -2112,11 +2524,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=44,G=83,R=59,A=0)",
-    "imagePath": "./images/liquid-biofuel_256.png"
+    "imagePath": "./images/liquid-biofuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedAlumina_C",
-    "index": 157,
+    "index": 158,
     "name": "Packaged Alumina Solution",
     "displayName": "Packaged Alumina Solution",
     "description": "Alumina Solution, packaged for alternative transport.",
@@ -2127,11 +2540,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-alumina-solution_256.png"
+    "imagePath": "./images/packaged-alumina-solution_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedNitrogenGas_C",
-    "index": 158,
+    "index": 159,
     "name": "Packaged Nitrogen Gas",
     "displayName": "Packaged Nitrogen Gas",
     "description": "Nitrogen Gas, packaged for alternative transport.",
@@ -2142,11 +2556,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-nitrogen-gas_256.png"
+    "imagePath": "./images/packaged-nitrogen-gas_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedNitricAcid_C",
-    "index": 159,
+    "index": 160,
     "name": "Packaged Nitric Acid",
     "displayName": "Packaged Nitric Acid",
     "description": "Nitric Acid, packaged for alternative transport.",
@@ -2157,11 +2572,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-nitric-acid_256.png"
+    "imagePath": "./images/packaged-nitric-acid_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedSulfuricAcid_C",
-    "index": 160,
+    "index": 161,
     "name": "Packaged Sulfuric Acid",
     "displayName": "Packaged Sulfuric Acid",
     "description": "Sulfuric Acid, packaged for alternative transport.",
@@ -2172,11 +2588,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-sulfuric-acid_256.png"
+    "imagePath": "./images/packaged-sulfuric-acid_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Fabric_C",
-    "index": 161,
+    "index": 162,
     "name": "Fabric",
     "displayName": "Fabric",
     "description": "Used to craft equipment.\r\nFlexible but durable fabric.",
@@ -2187,11 +2604,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/fabric_256.png"
+    "imagePath": "./images/fabric_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_HogParts_C",
-    "index": 162,
+    "index": 163,
     "name": "Hog Remains",
     "displayName": "Hog Remains",
     "description": "The carapace of an alien Hog creature.\r\nUsed for MAM research.",
@@ -2202,11 +2620,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/hog-remains_256.png"
+    "imagePath": "./images/hog-remains_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpitterParts_C",
-    "index": 163,
+    "index": 164,
     "name": "Spitter Remains",
     "displayName": "Spitter Remains",
     "description": "The remains of a plasma-spitting alien creature.\r\nUsed for MAM research.",
@@ -2217,11 +2636,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/spitter-remains_256.png"
+    "imagePath": "./images/spitter-remains_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_StingerParts_C",
-    "index": 164,
+    "index": 165,
     "name": "Stinger Remains",
     "displayName": "Stinger Remains",
     "description": "The remains of whatever that creepy thing was.\r\nUsed for MAM research.",
@@ -2232,11 +2652,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/stinger-remains_256.png"
+    "imagePath": "./images/stinger-remains_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_HatcherParts_C",
-    "index": 165,
+    "index": 166,
     "name": "Hatcher Remains",
     "displayName": "Hatcher Remains",
     "description": "The shell-like remains of an alien... thing.\r\nUsed for MAM research.",
@@ -2247,11 +2668,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/hatcher-remains_256.png"
+    "imagePath": "./images/hatcher-remains_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CrystalShard_C",
-    "index": 166,
+    "index": 167,
     "name": "Power Shard",
     "displayName": "Power Shard",
     "description": "Power Slug mucus compressed into a solid crystal-like shard. \r\nIt radiates a strange power.",
@@ -2262,11 +2684,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/power-shard_256.png"
+    "imagePath": "./images/power-shard_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_WAT1_C",
-    "index": 167,
+    "index": 168,
     "name": "Somersloop",
     "displayName": "Somersloop",
     "description": "An odd alien object with a mind-bending, yet somehow familiar shape. It emits an unsettling energy.",
@@ -2277,11 +2700,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/somersloop_256.png"
+    "imagePath": "./images/somersloop_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AlienPowerFuel_C",
-    "index": 168,
+    "index": 169,
     "name": "Alien Power Matrix",
     "displayName": "Alien Power Matrix",
     "description": "This intricate condensed-matter matrix is used to enhance the output of the Alien Power Augmenter. \r\n\r\nInitially developed in efforts to create a human-made Somersloop, the Alien Power Matrix cannot sustain the extra-dimensional energy connection on its own. However, it can effectively stabilize the energy stream of the Somersloop.",
@@ -2292,6 +2716,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/alien-power-matrix_256.png"
+    "imagePath": "./images/alien-power-matrix_256.png",
+    "isFicsmas": false
   }
 ]

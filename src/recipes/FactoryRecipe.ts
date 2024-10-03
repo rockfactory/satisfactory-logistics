@@ -17,6 +17,7 @@ export interface FactoryRecipe {
 export interface RecipeIngredient {
   resource: string;
   amount: number;
+  originalAmount?: number; // For liquids, it's in cubic centimeters (x1000)
 }
 
 import { AllFactoryItemsMap } from './FactoryItem';
