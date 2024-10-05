@@ -1,6 +1,7 @@
 import {
   Badge,
   Box,
+  Button,
   Divider,
   Grid,
   Group,
@@ -19,6 +20,7 @@ import {
 } from '@tabler/icons-react';
 import { NodeProps } from '@xyflow/react';
 import React, { memo } from 'react';
+import { useDispatch } from 'react-redux';
 import { RepeatingNumber } from '../../../core/intl/NumberFormatter';
 import { AllFactoryBuildingsMap } from '../../FactoryBuilding';
 import { AllFactoryItemsMap } from '../../FactoryItem';
@@ -27,6 +29,7 @@ import {
   getRecipeProductPerBuilding,
   RecipeIngredient,
 } from '../../FactoryRecipe';
+import { solverActions } from '../store/SolverSlice';
 import { InvisibleHandles } from './InvisibleHandles';
 
 export interface IMachineNodeData {
@@ -58,9 +61,11 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
 
   const [isHovering, { close, open }] = useDisclosure(false);
 
+  const dispatch = useDispatch();
+
   return (
     <Popover
-      opened={isHovering && !props.dragging}
+      opened={(isHovering || props.selected) && !props.dragging}
       transitionProps={{
         enterDelay: 250,
       }}
@@ -68,7 +73,12 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
       <Popover.Target>
         <Box
           p="sm"
-          style={{ borderRadius: 4 }}
+          style={{
+            borderRadius: 4,
+            border: props.selected
+              ? '1px solid var(--mantine-color-gray-3)'
+              : '1px solid transparent',
+          }}
           bg="dark.4"
           onMouseEnter={open}
           onMouseLeave={close}
@@ -97,62 +107,83 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
       <Popover.Dropdown>
         <Title order={5}>{getRecipeDisplayName(recipe)}</Title>
         <Divider mt="sm" mb="sm" />
-        <Stack gap="sm">
-          <Text size="sm">
-            <Group gap="sm" justify="space-between">
-              <div>
-                <IconClockBolt size={16} /> {recipe.time}s
-              </div>
-              <div>
-                <IconBuildingFactory2 size={16} />{' '}
-                <RepeatingNumber value={buildingsAmount} /> {building.name}
-              </div>
-              <div>
-                <IconBolt size={16} />{' '}
-                <RepeatingNumber
-                  value={building.powerConsumption * buildingsAmount}
-                />{' '}
-                MW
-              </div>
-            </Group>
-          </Text>
-          <Table withColumnBorders>
-            <Table.Tr>
-              <Table.Td colSpan={5}>
-                <Text size="sm" fw="bold">
-                  Ingredients
-                </Text>
-              </Table.Td>
-            </Table.Tr>
-            {recipe.ingredients.map((ingredient, i) => (
-              <RecipeIngredientRow
-                index={i}
-                type="Ingredients"
-                recipe={recipe}
-                ingredient={ingredient}
-                key={ingredient.resource}
-                buildingsAmount={buildingsAmount}
-              />
-            ))}
-            <Table.Tr>
-              <Table.Td colSpan={5}>
-                <Text size="sm" fw="bold">
-                  Products
-                </Text>
-              </Table.Td>
-            </Table.Tr>
-            {recipe.products.map((product, i) => (
-              <RecipeIngredientRow
-                index={i}
-                type="Products"
-                recipe={recipe}
-                ingredient={product}
-                key={product.resource}
-                buildingsAmount={buildingsAmount}
-              />
-            ))}
-          </Table>
-        </Stack>
+        <Group align="flex-start">
+          <Stack gap="sm">
+            <Text size="sm">
+              <Group gap="sm" justify="space-between">
+                <div>
+                  <IconClockBolt size={16} /> {recipe.time}s
+                </div>
+                <div>
+                  <IconBuildingFactory2 size={16} />{' '}
+                  <RepeatingNumber value={buildingsAmount} /> {building.name}
+                </div>
+                <div>
+                  <IconBolt size={16} />{' '}
+                  <RepeatingNumber
+                    value={building.powerConsumption * buildingsAmount}
+                  />{' '}
+                  MW
+                </div>
+              </Group>
+            </Text>
+            <Table withColumnBorders>
+              <Table.Tr>
+                <Table.Td colSpan={5}>
+                  <Text size="sm" fw="bold">
+                    Ingredients
+                  </Text>
+                </Table.Td>
+              </Table.Tr>
+              {recipe.ingredients.map((ingredient, i) => (
+                <RecipeIngredientRow
+                  index={i}
+                  type="Ingredients"
+                  recipe={recipe}
+                  ingredient={ingredient}
+                  key={ingredient.resource}
+                  buildingsAmount={buildingsAmount}
+                />
+              ))}
+              <Table.Tr>
+                <Table.Td colSpan={5}>
+                  <Text size="sm" fw="bold">
+                    Products
+                  </Text>
+                </Table.Td>
+              </Table.Tr>
+              {recipe.products.map((product, i) => (
+                <RecipeIngredientRow
+                  index={i}
+                  type="Products"
+                  recipe={recipe}
+                  ingredient={product}
+                  key={product.resource}
+                  buildingsAmount={buildingsAmount}
+                />
+              ))}
+            </Table>
+          </Stack>
+          {props.selected && (
+            <Stack gap="sm" align="flex-start">
+              <Button
+                color="red"
+                variant="outline"
+                onClick={() =>
+                  dispatch(
+                    solverActions.toggleRecipe({
+                      use: false,
+                      recipe: recipe.id,
+                    }),
+                  )
+                }
+              >
+                Ignore this recipe
+              </Button>
+              <div />
+            </Stack>
+          )}
+        </Group>
       </Popover.Dropdown>
     </Popover>
   );

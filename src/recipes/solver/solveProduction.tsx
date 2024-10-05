@@ -47,7 +47,7 @@ export function useHighs() {
 }
 
 export function solveProduction(highs: Highs, request: SolverRequest) {
-  const ctx = new SolverContext();
+  const ctx = new SolverContext(request);
   for (const item of request.outputs) {
     if (!item.amount || !item.item) continue;
     computeProductionConstraints(ctx, item.item, item.amount);

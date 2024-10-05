@@ -12,6 +12,7 @@ import {
   isWorldResource,
   WorldResourcesList,
 } from '../WorldResources';
+import { SolverRequest } from './store/SolverSlice';
 
 const logger = log.getLogger('recipes:solver');
 logger.setLevel('info');
@@ -64,11 +65,21 @@ type SolverEdge = {
 
 export class SolverContext {
   // variables: SolverVariables;
+  request: SolverRequest;
   processedRecipes = new Set<string>();
+  allowedRecipes = new Set<string>();
   graph = new Graph<SolverNode, SolverEdge>();
   constraints: string[] = [];
   bounds: string[] = [];
   objective?: string;
+
+  constructor(request: SolverRequest) {
+    this.request = request;
+
+    if (this.request.allowedRecipes) {
+      this.allowedRecipes = new Set(this.request.allowedRecipes);
+    }
+  }
 
   private aliasIndex = 0;
   private aliases: Record<string, string> = {};
@@ -112,6 +123,11 @@ export class SolverContext {
         return variable;
       },
     );
+  }
+
+  isRecipeAllowed(recipe: string) {
+    if (this.allowedRecipes.size === 0) return true;
+    return this.allowedRecipes.has(recipe);
   }
 
   formulateProblem() {
@@ -279,6 +295,7 @@ export function computeProductionConstraints(
   }
 
   for (const recipe of recipes) {
+    if (!ctx.isRecipeAllowed(recipe.id)) continue;
     if (ctx.processedRecipes.has(recipe.id)) continue;
     ctx.processedRecipes.add(recipe.id);
     const mainProductItem = AllFactoryItemsMap[recipe.products[0].resource];
