@@ -3,7 +3,7 @@ import { repeat } from 'lodash';
 export const NumberFormatter = new Intl.NumberFormat('en-US', {
   style: 'decimal',
   minimumFractionDigits: 0,
-  maximumFractionDigits: 2,
+  maximumFractionDigits: 3,
 });
 
 export const RepeatingNumber = ({
@@ -13,7 +13,7 @@ export const RepeatingNumber = ({
 }) => {
   const formatted = NumberFormatter.formatToParts(value);
   const repetend = getRepetend(value);
-  if (repetend?.pattern && repetend.index < 2) {
+  if (repetend?.pattern && repetend.index < 3) {
     return (
       <>
         {formatted.map(({ type, value }) => {

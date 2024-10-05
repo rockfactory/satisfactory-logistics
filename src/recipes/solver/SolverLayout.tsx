@@ -22,6 +22,7 @@ import { useControls } from 'leva';
 import { log } from '../../core/logger/log';
 import { FloatingEdge } from './edges/FloatingEdge';
 import { IngredientEdge } from './edges/IngredientEdge';
+import { ByproductNode } from './layout/ByproductNode';
 import { MachineNode } from './layout/MachineNode';
 import { ResourceNode } from './layout/ResourceNode';
 
@@ -86,6 +87,7 @@ interface SolverLayoutProps {
 const nodeTypes = {
   Machine: MachineNode,
   Resource: ResourceNode,
+  Byproduct: ByproductNode,
 };
 
 const edgeTypes = {

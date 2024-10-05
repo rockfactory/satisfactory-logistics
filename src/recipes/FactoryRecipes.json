@@ -151,7 +151,7 @@
     "ingredients": [
       {
         "resource": "Desc_RocketFuel_C",
-        "amount": 2,
+        "amount": 2.0001,
         "originalAmount": 2000
       },
       {
@@ -470,7 +470,7 @@
     "ingredients": [
       {
         "resource": "Desc_IonizedFuel_C",
-        "amount": 4,
+        "amount": 4.0001,
         "originalAmount": 4000
       },
       {
@@ -1300,7 +1300,7 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidTurboFuel_C",
-        "amount": 2,
+        "amount": 2.0001,
         "originalAmount": 2000
       },
       {
@@ -2024,7 +2024,7 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 2,
+        "amount": 2.0001,
         "originalAmount": 2000
       },
       {
@@ -2080,7 +2080,7 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidBiofuel_C",
-        "amount": 2,
+        "amount": 2.0001,
         "originalAmount": 2000
       },
       {
@@ -2108,7 +2108,7 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidOil_C",
-        "amount": 2,
+        "amount": 2.0001,
         "originalAmount": 2000
       },
       {
@@ -2136,7 +2136,7 @@
     "ingredients": [
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 2,
+        "amount": 2.0001,
         "originalAmount": 2000
       },
       {
@@ -2164,7 +2164,7 @@
     "ingredients": [
       {
         "resource": "Desc_Water_C",
-        "amount": 2,
+        "amount": 2.0001,
         "originalAmount": 2000
       },
       {
@@ -2691,7 +2691,7 @@
     "ingredients": [
       {
         "resource": "Desc_AluminaSolution_C",
-        "amount": 2,
+        "amount": 2.0001,
         "originalAmount": 2000
       },
       {
@@ -4013,7 +4013,7 @@
     "ingredients": [
       {
         "resource": "Desc_NitricAcid_C",
-        "amount": 1,
+        "amount": 1.0001,
         "originalAmount": 1000
       },
       {
@@ -4348,7 +4348,7 @@
     "ingredients": [
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 2,
+        "amount": 2.0001,
         "originalAmount": 2000
       },
       {
@@ -4798,7 +4798,7 @@
     "ingredients": [
       {
         "resource": "Desc_NitrogenGas_C",
-        "amount": 4,
+        "amount": 4.0001,
         "originalAmount": 4000
       },
       {

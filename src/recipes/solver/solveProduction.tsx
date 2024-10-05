@@ -8,6 +8,7 @@ import {
   consolidateProductionConstraints,
   SolverContext,
 } from './computeProductionConstraints';
+import { IIngredientEdgeData } from './edges/IngredientEdge';
 import { IMachineNodeData } from './layout/MachineNode';
 import { IResourceNodeData } from './layout/ResourceNode';
 
@@ -81,6 +82,20 @@ export function solveProduction(highs: Highs, item: string, amount: number) {
           continue;
         }
 
+        if (node.type === 'byproduct') {
+          nodes.push({
+            id: varName,
+            type: 'Byproduct',
+            data: {
+              label: `${node.resource.name}`,
+              value: Number(value.Primal),
+              resource: node.resource,
+            },
+            position: { x: 0, y: 0 },
+          });
+          continue;
+        }
+
         if (node.type === 'input') continue; // Skip ingredients
 
         logger.error('Unknown node type:', node);
@@ -90,10 +105,34 @@ export function solveProduction(highs: Highs, item: string, amount: number) {
         const edge = ctx.graph.getEdgeAttributes(varName);
         const sourceNode = ctx.graph.getSourceAttributes(varName);
         const targetNode = ctx.graph.getTargetAttributes(varName); // this is the ingredient
+
+        // 1. Byproducts
+        if (sourceNode.type === 'output' && targetNode.type === 'byproduct') {
+          edges.push({
+            id: varName,
+            source: sourceNode.recipeMainProductVariable,
+            type: 'Ingredient',
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              width: 20,
+              height: 20,
+            },
+            target: targetNode.variable,
+            data: {
+              label: `${sourceNode.recipe.name} -> ${targetNode.resource.name} (Byproduct)`,
+              value: Number(value.Primal),
+              resource: targetNode.resource,
+            } as IIngredientEdgeData,
+          });
+          continue;
+        }
+
+        // 2. Ingredient -> Recipes links
         if (targetNode.type !== 'input') {
           logger.error('Target node is not an input node:', targetNode);
           continue;
         }
+
         // const machineNode = ctx.graph.getNodeAttributes(targetNode.recipeMainProductVariable);
         edges.push({
           id: varName,

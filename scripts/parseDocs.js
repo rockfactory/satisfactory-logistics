@@ -144,8 +144,13 @@ function parseRecipe(recipe, index, allItemsMap, buildings) {
     id: recipe.ClassName,
     name: recipe.mDisplayName,
     description: recipe.mDescription,
-    ingredients: parseIngredients(recipe.mIngredients, allItemsMap),
-    products: parseIngredients(recipe.mProduct, allItemsMap),
+    ingredients: parseIngredients(
+      recipe.mIngredients,
+      allItemsMap,
+      building,
+      'in',
+    ),
+    products: parseIngredients(recipe.mProduct, allItemsMap, building, 'out'),
     time: parseFloat(recipe.mManufactoringDuration),
     producedIn: building.id,
     powerConsumption: parseFloat(recipe.mVariablePowerConsumptionConstant),
@@ -153,20 +158,33 @@ function parseRecipe(recipe, index, allItemsMap, buildings) {
   };
 }
 
-function parseIngredients(ingredients, allItemsMap) {
+function parseIngredients(ingredients, allItemsMap, building, dir) {
   const matches = [...ingredients.matchAll(IngredientRegex)];
   return matches.map(([_, resource, amount]) => {
     if (!allItemsMap[resource]) {
       console.log(`Missing ingredient: "${resource}"`);
     }
     const parsedAmount = parseFloat(amount);
+
+    // Liquids are written in cm³, we need to convert them to m³
+    let normalizedAmount =
+      allItemsMap[resource].form === 'Solid'
+        ? parsedAmount
+        : parsedAmount / 1_000;
+
+    // Fix for LP: we make sure that Pakcagers are a little bit _LESS_ efficient than raw resources
+    if (
+      building.id === 'Build_Packager_C' &&
+      allItemsMap[resource].form !== 'Solid'
+    ) {
+      normalizedAmount =
+        dir === 'in' ? normalizedAmount + 0.0001 : normalizedAmount;
+    }
+
     return {
       resource,
       // Liquids are written in cm³, we need to convert them to m³
-      amount:
-        allItemsMap[resource].form === 'Solid'
-          ? parsedAmount
-          : parsedAmount / 1_000,
+      amount: normalizedAmount,
       originalAmount: parsedAmount,
     };
   });

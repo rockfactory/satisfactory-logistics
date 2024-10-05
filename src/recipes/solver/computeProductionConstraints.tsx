@@ -30,6 +30,13 @@ type SolverNode =
       recipeMainProductVariable: string;
       resource: FactoryItem;
       variable: string;
+      byproductVariable: string;
+    }
+  | {
+      type: 'byproduct';
+      label: string;
+      resource: FactoryItem;
+      variable: string;
     }
   | {
       type: 'input';
@@ -147,7 +154,7 @@ export function consolidateProductionConstraints(ctx: SolverContext) {
     }
     if (consumers.length > 0) {
       ctx.constraints.push(
-        `p${node.resource.index} - ${consumers.join(' - ')} >= 0`,
+        `p${node.resource.index} - ${consumers.join(' - ')} - b${node.resource.index} = 0`,
       );
     }
 
@@ -180,19 +187,41 @@ export function consolidateProductionConstraints(ctx: SolverContext) {
       }
     }
 
+    // From producer P to ingredients I1, I2, I3
     for (const producerVar of producers) {
       const producer = ctx.graph.getNodeAttributes(producerVar);
       if (consumers.length === 0) continue;
+
+      const byproductVar =
+        producer.type === 'output' ? producer.byproductVariable : null;
+
       ctx.constraints.push(
-        `${producerVar} - ${consumers.map(consumerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} = 0`,
+        `${producerVar} - ${consumers.map(consumerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} ${byproductVar ? `- ${byproductVar}` : ''} = 0`,
       );
     }
 
+    // From producers P1, P2, P3 to consumer C
     for (const consumerVar of consumers) {
       if (producers.length === 0) continue;
       const consumer = ctx.graph.getNodeAttributes(consumerVar);
       ctx.constraints.push(
-        `${consumerVar} - ${producers.map(producerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} <= 0`,
+        `${consumerVar} - ${producers.map(producerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} = 0`,
+      );
+    }
+  }
+
+  // Byproducts
+  const byproductNodes = ctx.graph.filterNodes(
+    (node, attributes) => attributes.type === 'byproduct',
+  );
+  for (const nodeName of byproductNodes) {
+    const node = ctx.graph.getNodeAttributes(nodeName);
+    // Es. `b${productItem.index}r${recipe.index}`
+    const byproductEdges = ctx.graph.inboundEdges(nodeName);
+
+    if (byproductEdges.length > 0) {
+      ctx.constraints.push(
+        `${node.variable} - ${byproductEdges.join(' - ')} = 0`,
       );
     }
   }
@@ -210,6 +239,16 @@ function setGraphResource(ctx: SolverContext, resource: string) {
     label: resource,
     resource: AllFactoryItemsMap[resource],
     variable: resource,
+  });
+}
+
+function setGraphByproduct(ctx: SolverContext, resource: string) {
+  const item = AllFactoryItemsMap[resource];
+  ctx.graph.mergeNode(`b${item.index}`, {
+    type: 'byproduct',
+    label: `Byproduct: ${item.displayName}`,
+    resource: item,
+    variable: `b${item.index}`,
   });
 }
 
@@ -236,7 +275,7 @@ export function computeProductionConstraints(
   }
 
   if (amount) {
-    ctx.constraints.push(`p${resourceItem.index} = ${amount}`);
+    ctx.constraints.push(`b${resourceItem.index} = ${amount}`);
   }
 
   for (const recipe of recipes) {
@@ -270,6 +309,7 @@ export function computeProductionConstraints(
 
       const productItem = AllFactoryItemsMap[product.resource];
       const recipeProductVar = `p${productItem.index}r${recipe.index}`;
+      const recipeByproductVar = `b${productItem.index}r${recipe.index}`;
       setGraphResource(ctx, product.resource);
       ctx.graph.mergeNode(recipeProductVar, {
         type: 'output',
@@ -278,9 +318,18 @@ export function computeProductionConstraints(
         resource: productItem,
         variable: recipeProductVar,
         recipeMainProductVariable: mainProductVar,
+        byproductVariable: recipeByproductVar,
       });
       ctx.graph.mergeEdge(recipeProductVar, product.resource);
       const productAmount = (product.amount * 60) / recipe.time;
+
+      // Byproduct
+      setGraphByproduct(ctx, product.resource);
+      ctx.graph.mergeEdgeWithKey(
+        recipeByproductVar,
+        recipeProductVar,
+        `b${productItem.index}`,
+      );
 
       if (!isMain) {
         ctx.graph.mergeEdge(mainProductVar, recipeProductVar); // Debug
@@ -289,10 +338,10 @@ export function computeProductionConstraints(
         ctx.constraints.push(
           `${factor} ${recipeProductVar} - ${mainProductVar} = 0`,
         );
-        logger.debug(
-          '  Adding constraint:',
-          `${factor} ${recipeProductVar} - ${mainProductVar} = 0`,
-        );
+        // logger.debug(
+        //   '  Adding constraint:',
+        //   `${factor} ${recipeProductVar} - ${mainProductVar} = 0`,
+        // );
       }
 
       for (const ingredient of recipe.ingredients) {

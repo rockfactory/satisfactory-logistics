@@ -114,7 +114,8 @@ export const getSpecialPath = ({
       : -SPECIAL_PATH_OFFSET
     : 0;
   const offsetY = isHorizontal
-    ? sourceY < targetY || (sourceY == targetY && sourceX < targetX)
+    ? sourceY < targetY ||
+      (Math.abs(sourceY - targetY) < 0.0001 && sourceX < targetX)
       ? SPECIAL_PATH_OFFSET
       : -SPECIAL_PATH_OFFSET
     : 0;

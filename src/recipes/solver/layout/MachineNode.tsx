@@ -26,7 +26,11 @@ import {
 } from '../../../factories/components/peek/icons/OutputInputIcons';
 import { AllFactoryBuildingsMap } from '../../FactoryBuilding';
 import { AllFactoryItemsMap } from '../../FactoryItem';
-import { FactoryRecipe, RecipeIngredient } from '../../FactoryRecipe';
+import {
+  FactoryRecipe,
+  getRecipeProductPerBuilding,
+  RecipeIngredient,
+} from '../../FactoryRecipe';
 import { InvisibleHandles } from './InvisibleHandles';
 
 export interface IMachineNodeData {
@@ -48,13 +52,13 @@ export function getRecipeDisplayName(recipe: FactoryRecipe) {
 }
 
 export const MachineNode = memo((props: IMachineNodeProps) => {
-  const { recipe } = props.data;
+  const { recipe, value } = props.data;
   const product = AllFactoryItemsMap[recipe.products[0].resource];
   const building = AllFactoryBuildingsMap[recipe.producedIn];
   const isAlt = recipe.name.includes('Alternate');
 
-  const buildingsAmount =
-    props.data.value / recipe.products[0].amount / recipe.time;
+  const perBuilding = getRecipeProductPerBuilding(recipe, product.id);
+  const buildingsAmount = value / perBuilding;
 
   const [isHovering, { close, open }] = useDisclosure(false);
 
@@ -85,7 +89,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                 <Text size="sm">{getRecipeDisplayName(recipe)}</Text>
               </Group>
               <Text size="xs">
-                <RepeatingNumber value={buildingsAmount} /> {building.name}
+                x<RepeatingNumber value={buildingsAmount} /> {building.name}
               </Text>
             </Stack>
             <Image w="32" h="32" src={product.imagePath} />
