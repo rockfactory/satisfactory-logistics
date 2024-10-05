@@ -12,6 +12,7 @@ import {
 import { IIngredientEdgeData } from './edges/IngredientEdge';
 import { IMachineNodeData } from './layout/MachineNode';
 import { IResourceNodeData } from './layout/ResourceNode';
+import { SolverRequest } from './store/SolverSlice';
 
 const logger = log.getLogger('solver:production');
 logger.setLevel('debug');
@@ -45,18 +46,12 @@ export function useHighs() {
   return { highsRef, loading };
 }
 
-export interface ISolveRequest {
-  outputs: [
-    {
-      item?: string | undefined | null;
-      amount?: number | undefined | null;
-    },
-  ];
-}
-
-export function solveProduction(highs: Highs, item: string, amount: number) {
+export function solveProduction(highs: Highs, request: SolverRequest) {
   const ctx = new SolverContext();
-  computeProductionConstraints(ctx, item, amount);
+  for (const item of request.outputs) {
+    if (!item.amount || !item.item) continue;
+    computeProductionConstraints(ctx, item.item, item.amount);
+  }
   consolidateProductionConstraints(ctx);
   avoidUnproducibleResources(ctx);
 

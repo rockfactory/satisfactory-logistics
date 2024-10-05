@@ -39,11 +39,14 @@ export function RecipeSolverDemo(props: IRecipeSolverDemoProps) {
 
     if (!highsRef.current) return null;
 
-    const solution = solveProduction(
-      highsRef.current!,
-      resource || 'Desc_AluminumIngot_C',
-      amount || 40,
-    );
+    const solution = solveProduction(highsRef.current!, {
+      outputs: [
+        {
+          item: resource ?? 'Desc_AluminumIngot_C',
+          amount: amount ?? 150,
+        },
+      ],
+    });
     console.log(`Solved -> `, solution);
     return solution;
   }, [resource, amount, loading]);
