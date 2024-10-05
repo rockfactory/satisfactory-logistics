@@ -13,7 +13,7 @@ import { useState } from 'react';
 export interface IKofiSupportButtonProps {}
 
 export function KofiSupportButton(props: IKofiSupportButtonProps) {
-  const [open, { toggle, close }] = useDisclosure();
+  const [open, { toggle, close }] = useDisclosure(false);
   const [loading, setLoading] = useState(true);
 
   return (
@@ -22,14 +22,13 @@ export function KofiSupportButton(props: IKofiSupportButtonProps) {
         opened={open}
         onClose={close}
         bg="#f9f9f9"
-        keepMounted
+        // keepMounted
         styles={{
           body: {
             backgroundColor: '#f9f9f9',
             paddingTop: '8px',
           },
         }}
-        p={'xs'}
         title="Support Us"
       >
         <Box pos="relative" mih="712">

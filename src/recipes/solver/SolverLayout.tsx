@@ -18,7 +18,6 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { Box, Button } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
-import { useControls } from 'leva';
 import { log } from '../../core/logger/log';
 import { FloatingEdge } from './edges/FloatingEdge';
 import { IngredientEdge } from './edges/IngredientEdge';
@@ -26,21 +25,62 @@ import { ByproductNode } from './layout/ByproductNode';
 import { MachineNode } from './layout/MachineNode';
 import { ResourceNode } from './layout/ResourceNode';
 
-const dagreGraph = new dagre.graphlib.Graph();
-dagreGraph.setDefaultEdgeLabel(() => ({}));
+// const dagreGraph = new dagre.graphlib.Graph();
+// dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const logger = log.getLogger('solver:layout');
 
 const snapValueToGrid = (value: number) => Math.round(value / 10) * 10;
 const snapSizeToGrid = (value: number) => Math.round(value / 20) * 20;
 
+const GraphLayoutOptions = {
+  rankdir: 'LR',
+  align: undefined,
+  nodesep: 50,
+  edgesep: 10,
+  ranksep: 130,
+  ranker: 'network-simplex',
+};
+// const graphControls = useControls({
+//   rankdir: {
+//     value: 'LR',
+//     options: ['LR', 'TB'],
+//   },
+//   align: {
+//     value: undefined,
+//     options: [undefined, 'DL', 'UL', 'DR', 'UR'],
+//   },
+//   nodesep: {
+//     value: 50,
+//     min: 10,
+//     max: 200,
+//   },
+//   edgesep: {
+//     value: 10,
+//     min: 2,
+//     max: 100,
+//   },
+//   ranksep: {
+//     value: 130,
+//     min: 10,
+//     max: 200,
+//   },
+//   ranker: {
+//     value: 'network-simplex',
+//     options: ['network-simplex', 'tight-tree', 'longest-path'],
+//   },
+// });
+
 const getLayoutedElements = (
   nodes: Node[],
   edges: Edge[],
-  graphOptions: dagre.configUnion,
+  // graphOptions: dagre.configUnion,
 ) => {
-  const isHorizontal = graphOptions.rankdir === 'LR';
-  dagreGraph.setGraph(graphOptions);
+  const dagreGraph = new dagre.graphlib.Graph();
+  dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+  const isHorizontal = GraphLayoutOptions.rankdir === 'LR';
+  dagreGraph.setGraph(GraphLayoutOptions);
 
   logger.debug(`getLayouted: nodes[0] width: ${nodes[0].measured?.width ?? '<null>'}, height: ${nodes[0].measured?.height ?? '<null>'}`); // prettier-ignore
   (nodes as (InternalNode | Node)[]).forEach(node => {
@@ -53,7 +93,7 @@ const getLayoutedElements = (
     dagreGraph.setEdge(edge.source, edge.target);
   });
 
-  dagre.layout(dagreGraph, graphOptions);
+  dagre.layout(dagreGraph, GraphLayoutOptions);
 
   const newNodes: Node[] = (nodes as InternalNode[]).map(node => {
     const nodeWithPosition = dagreGraph.node(node.id);
@@ -98,36 +138,6 @@ const edgeTypes = {
 export const SolverLayout = (props: SolverLayoutProps) => {
   const { fitView, getNodes, getEdges } = useReactFlow();
 
-  const graphControls = useControls({
-    rankdir: {
-      value: 'LR',
-      options: ['LR', 'TB'],
-    },
-    align: {
-      value: undefined,
-      options: [undefined, 'DL', 'UL', 'DR', 'UR'],
-    },
-    nodesep: {
-      value: 50,
-      min: 10,
-      max: 200,
-    },
-    edgesep: {
-      value: 10,
-      min: 2,
-      max: 100,
-    },
-    ranksep: {
-      value: 130,
-      min: 10,
-      max: 200,
-    },
-    ranker: {
-      value: 'network-simplex',
-      options: ['network-simplex', 'tight-tree', 'longest-path'],
-    },
-  });
-
   const [nodes, setNodes, onNodesChange] = useNodesState(props.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(props.edges);
   const [opacity, setOpacity] = useState(0);
@@ -138,7 +148,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
 
   const onLayout = useCallback(() => {
     logger.debug('Layouting...');
-    const layouted = getLayoutedElements(getNodes(), getEdges(), graphControls);
+    const layouted = getLayoutedElements(getNodes(), getEdges());
 
     setNodes([...layouted.nodes]);
     setEdges([...layouted.edges]);
@@ -158,19 +168,10 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     //     setOpacity(1);
     //   }
     // });
-  }, [
-    nodes,
-    edges,
-    graphControls,
-    setNodes,
-    setEdges,
-    fitView,
-    initialLayoutFinished,
-  ]);
+  }, [nodes, edges, setNodes, setEdges, fitView, initialLayoutFinished]);
 
   useEffect(() => {
     logger.debug('Initializing nodes...');
-    console.log(JSON.stringify(graphControls));
     setOpacity(0);
 
     setNodes([...props.nodes]);
@@ -180,7 +181,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
       setInitialLayoutFinished(false);
       setInitialFitViewFinished(false);
     }, 0);
-  }, [JSON.stringify(graphControls), props.edges, props.nodes]);
+  }, [props.edges, props.nodes]);
 
   useEffect(() => {
     // logger.debug(
@@ -200,7 +201,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   }, [nodesInitialized, onLayout, initialLayoutFinished]);
 
   return (
-    <Box w={'800px'} h={600} opacity={opacity}>
+    <Box w={'100%'} h={600} opacity={opacity}>
       <ReactFlow
         nodes={nodes}
         edges={edges}

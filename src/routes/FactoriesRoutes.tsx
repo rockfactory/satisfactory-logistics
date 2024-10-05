@@ -1,29 +1,34 @@
 import { Tabs } from '@mantine/core';
-import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ChartsTab } from '../factories/charts/ChartsTab';
 import { FactoriesTab } from '../factories/FactoriesTab';
 import { Footer } from '../layout/Footer';
 import { Header } from '../layout/Header';
+import { SolverPage } from '../recipes/solver/page/SolverPage';
 
 export interface IFactoryRoutesProps {}
 
 export function FactoryRoutes(props: IFactoryRoutesProps) {
-  const [currentTab, setCurrentTab] = useState('Factories' as string | null);
+  const navigate = useNavigate();
+  const { factoriesTab } = useParams();
 
   return (
     <>
       <Header
-        tabs={['Factories', 'Charts']}
-        activeTab={currentTab}
-        onChangeTab={setCurrentTab}
+        tabs={['factories', 'charts', 'calculator']}
+        activeTab={factoriesTab}
+        onChangeTab={value => navigate(`/factories/${value}`)}
       />
 
-      <Tabs value={currentTab} keepMounted={false}>
-        <Tabs.Panel value="Factories">
+      <Tabs value={factoriesTab} keepMounted={false}>
+        <Tabs.Panel value="factories">
           <FactoriesTab />
         </Tabs.Panel>
-        <Tabs.Panel value="Charts">
+        <Tabs.Panel value="charts">
           <ChartsTab />
+        </Tabs.Panel>
+        <Tabs.Panel value="calculator">
+          <SolverPage />
         </Tabs.Panel>
       </Tabs>
       <Footer />

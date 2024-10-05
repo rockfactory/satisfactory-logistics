@@ -1,5 +1,6 @@
 import { Edge, MarkerType, Node } from '@xyflow/react';
 import highloader, { Highs } from 'highs';
+import { useEffect, useRef, useState } from 'react';
 import { log } from '../../core/logger/log';
 import { getWorldResourceMax } from '../WorldResources';
 import {
@@ -17,9 +18,40 @@ logger.setLevel('debug');
 
 export async function loadHighs() {
   const highs = await highloader({
-    locateFile: file => `highs/${file}`,
+    locateFile: file => `/highs/${file}`,
   });
   return highs;
+}
+
+export function useHighs() {
+  const [loading, setLoading] = useState(true);
+  const highsRef = useRef<Highs | null>(null);
+
+  useEffect(() => {
+    async function load() {
+      console.log('Loading highs');
+      const highs = await loadHighs();
+      highsRef.current = highs;
+      console.log('Highs loaded');
+      setLoading(false);
+    }
+
+    load().catch(error => {
+      console.error(error);
+      setLoading(false);
+    });
+  }, []);
+
+  return { highsRef, loading };
+}
+
+export interface ISolveRequest {
+  outputs: [
+    {
+      item?: string | undefined | null;
+      amount?: number | undefined | null;
+    },
+  ];
 }
 
 export function solveProduction(highs: Highs, item: string, amount: number) {

@@ -12,7 +12,7 @@
     "radioactiveDecay": 10,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/uranium-waste_256.png",
+    "imagePath": "/images/uranium-waste_256.png",
     "isFicsmas": false
   },
   {
@@ -28,7 +28,7 @@
     "radioactiveDecay": 200,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/plutonium-waste_256.png",
+    "imagePath": "/images/plutonium-waste_256.png",
     "isFicsmas": false
   },
   {
@@ -44,7 +44,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/concrete_256.png",
+    "imagePath": "/images/concrete_256.png",
     "isFicsmas": false
   },
   {
@@ -60,7 +60,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/silica_256.png",
+    "imagePath": "/images/silica_256.png",
     "isFicsmas": false
   },
   {
@@ -76,7 +76,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-plate_256.png",
+    "imagePath": "/images/iron-plate_256.png",
     "isFicsmas": false
   },
   {
@@ -92,7 +92,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/steel-beam_256.png",
+    "imagePath": "/images/steel-beam_256.png",
     "isFicsmas": false
   },
   {
@@ -108,7 +108,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/aluminum-ingot_256.png",
+    "imagePath": "/images/aluminum-ingot_256.png",
     "isFicsmas": false
   },
   {
@@ -124,7 +124,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/battery_256.png",
+    "imagePath": "/images/battery_256.png",
     "isFicsmas": false
   },
   {
@@ -140,7 +140,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=21,G=125,R=235,A=255)",
-    "imagePath": "./images/packaged-fuel_256.png",
+    "imagePath": "/images/packaged-fuel_256.png",
     "isFicsmas": false
   },
   {
@@ -156,7 +156,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/packaged-ionized-fuel_256.png",
+    "imagePath": "/images/packaged-ionized-fuel_256.png",
     "isFicsmas": false
   },
   {
@@ -172,7 +172,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/packaged-rocket-fuel_256.png",
+    "imagePath": "/images/packaged-rocket-fuel_256.png",
     "isFicsmas": false
   },
   {
@@ -188,7 +188,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=46,G=41,R=212,A=255)",
-    "imagePath": "./images/packaged-turbofuel_256.png",
+    "imagePath": "/images/packaged-turbofuel_256.png",
     "isFicsmas": false
   },
   {
@@ -204,7 +204,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iodine-infused-filter_256.png",
+    "imagePath": "/images/iodine-infused-filter_256.png",
     "isFicsmas": false
   },
   {
@@ -220,7 +220,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/compacted-coal_256.png",
+    "imagePath": "/images/compacted-coal_256.png",
     "isFicsmas": false
   },
   {
@@ -236,7 +236,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=120,G=45,R=109,A=255)",
-    "imagePath": "./images/packaged-heavy-oil-residue_256.png",
+    "imagePath": "/images/packaged-heavy-oil-residue_256.png",
     "isFicsmas": false
   },
   {
@@ -252,7 +252,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/petroleum-coke_256.png",
+    "imagePath": "/images/petroleum-coke_256.png",
     "isFicsmas": false
   },
   {
@@ -268,7 +268,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/packaged-oil_256.png",
+    "imagePath": "/images/packaged-oil_256.png",
     "isFicsmas": false
   },
   {
@@ -284,7 +284,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-rod_256.png",
+    "imagePath": "/images/iron-rod_256.png",
     "isFicsmas": false
   },
   {
@@ -300,7 +300,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/wire_256.png",
+    "imagePath": "/images/wire_256.png",
     "isFicsmas": false
   },
   {
@@ -316,7 +316,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/cable_256.png",
+    "imagePath": "/images/cable_256.png",
     "isFicsmas": false
   },
   {
@@ -332,7 +332,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-ingot_256.png",
+    "imagePath": "/images/iron-ingot_256.png",
     "isFicsmas": false
   },
   {
@@ -348,7 +348,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/reinforced-iron-plate_256.png",
+    "imagePath": "/images/reinforced-iron-plate_256.png",
     "isFicsmas": false
   },
   {
@@ -364,7 +364,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/rotor_256.png",
+    "imagePath": "/images/rotor_256.png",
     "isFicsmas": false
   },
   {
@@ -380,7 +380,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=21,G=125,R=235,A=0)",
-    "imagePath": "./images/fuel_256.png",
+    "imagePath": "/images/fuel_256.png",
     "isFicsmas": false
   },
   {
@@ -396,7 +396,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=26,G=37,R=189,A=0)",
-    "imagePath": "./images/rocket-fuel_256.png",
+    "imagePath": "/images/rocket-fuel_256.png",
     "isFicsmas": false
   },
   {
@@ -412,7 +412,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/copper-sheet_256.png",
+    "imagePath": "/images/copper-sheet_256.png",
     "isFicsmas": false
   },
   {
@@ -428,7 +428,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/modular-frame_256.png",
+    "imagePath": "/images/modular-frame_256.png",
     "isFicsmas": false
   },
   {
@@ -444,7 +444,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/screw_256.png",
+    "imagePath": "/images/screw_256.png",
     "isFicsmas": false
   },
   {
@@ -460,7 +460,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=162,G=217,R=217,A=0)",
-    "imagePath": "./images/nitric-acid_256.png",
+    "imagePath": "/images/nitric-acid_256.png",
     "isFicsmas": false
   },
   {
@@ -476,7 +476,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=46,G=41,R=212,A=0)",
-    "imagePath": "./images/turbofuel_256.png",
+    "imagePath": "/images/turbofuel_256.png",
     "isFicsmas": false
   },
   {
@@ -492,7 +492,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/empty-fluid-tank_256.png",
+    "imagePath": "/images/empty-fluid-tank_256.png",
     "isFicsmas": false
   },
   {
@@ -508,7 +508,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/crystal-oscillator_256.png",
+    "imagePath": "/images/crystal-oscillator_256.png",
     "isFicsmas": false
   },
   {
@@ -524,7 +524,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/motor_256.png",
+    "imagePath": "/images/motor_256.png",
     "isFicsmas": false
   },
   {
@@ -540,7 +540,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/dark-matter-crystal_256.png",
+    "imagePath": "/images/dark-matter-crystal_256.png",
     "isFicsmas": false
   },
   {
@@ -556,7 +556,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=26,G=95,R=213,A=60)",
-    "imagePath": "./images/ionized-fuel_256.png",
+    "imagePath": "/images/ionized-fuel_256.png",
     "isFicsmas": false
   },
   {
@@ -572,7 +572,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/supercomputer_256.png",
+    "imagePath": "/images/supercomputer_256.png",
     "isFicsmas": false
   },
   {
@@ -588,7 +588,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/cooling-system_256.png",
+    "imagePath": "/images/cooling-system_256.png",
     "isFicsmas": false
   },
   {
@@ -604,7 +604,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ficsite-trigon_256.png",
+    "imagePath": "/images/ficsite-trigon_256.png",
     "isFicsmas": false
   },
   {
@@ -620,7 +620,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/turbo-motor_256.png",
+    "imagePath": "/images/turbo-motor_256.png",
     "isFicsmas": false
   },
   {
@@ -636,7 +636,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/time-crystal_256.png",
+    "imagePath": "/images/time-crystal_256.png",
     "isFicsmas": false
   },
   {
@@ -652,7 +652,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=249,G=175,R=253,A=150)",
-    "imagePath": "./images/dark-matter-residue_256.png",
+    "imagePath": "/images/dark-matter-residue_256.png",
     "isFicsmas": false
   },
   {
@@ -668,7 +668,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/reanimated-sam_256.png",
+    "imagePath": "/images/reanimated-sam_256.png",
     "isFicsmas": false
   },
   {
@@ -684,7 +684,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=232,G=245,R=118,A=90)",
-    "imagePath": "./images/excited-photonic-matter_256.png",
+    "imagePath": "/images/excited-photonic-matter_256.png",
     "isFicsmas": false
   },
   {
@@ -700,7 +700,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/diamonds_256.png",
+    "imagePath": "/images/diamonds_256.png",
     "isFicsmas": false
   },
   {
@@ -716,7 +716,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/alclad-aluminum-sheet_256.png",
+    "imagePath": "/images/alclad-aluminum-sheet_256.png",
     "isFicsmas": false
   },
   {
@@ -732,7 +732,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/superposition-oscillator_256.png",
+    "imagePath": "/images/superposition-oscillator_256.png",
     "isFicsmas": false
   },
   {
@@ -748,7 +748,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/neural-quantum-processor_256.png",
+    "imagePath": "/images/neural-quantum-processor_256.png",
     "isFicsmas": false
   },
   {
@@ -764,7 +764,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ai-expansion-server_256.png",
+    "imagePath": "/images/ai-expansion-server_256.png",
     "isFicsmas": false
   },
   {
@@ -780,7 +780,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/magnetic-field-generator_256.png",
+    "imagePath": "/images/magnetic-field-generator_256.png",
     "isFicsmas": false
   },
   {
@@ -796,7 +796,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/sam-fluctuator_256.png",
+    "imagePath": "/images/sam-fluctuator_256.png",
     "isFicsmas": false
   },
   {
@@ -812,7 +812,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/steel-pipe_256.png",
+    "imagePath": "/images/steel-pipe_256.png",
     "isFicsmas": false
   },
   {
@@ -828,7 +828,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/fused-modular-frame_256.png",
+    "imagePath": "/images/fused-modular-frame_256.png",
     "isFicsmas": false
   },
   {
@@ -844,7 +844,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/radio-control-unit_256.png",
+    "imagePath": "/images/radio-control-unit_256.png",
     "isFicsmas": false
   },
   {
@@ -860,7 +860,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ficsite-ingot_256.png",
+    "imagePath": "/images/ficsite-ingot_256.png",
     "isFicsmas": false
   },
   {
@@ -876,7 +876,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/biochemical-sculptor_256.png",
+    "imagePath": "/images/biochemical-sculptor_256.png",
     "isFicsmas": false
   },
   {
@@ -892,7 +892,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/assembly-director-system_256.png",
+    "imagePath": "/images/assembly-director-system_256.png",
     "isFicsmas": false
   },
   {
@@ -908,7 +908,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/caterium-ingot_256.png",
+    "imagePath": "/images/caterium-ingot_256.png",
     "isFicsmas": false
   },
   {
@@ -924,7 +924,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/empty-canister_256.png",
+    "imagePath": "/images/empty-canister_256.png",
     "isFicsmas": false
   },
   {
@@ -940,7 +940,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/circuit-board_256.png",
+    "imagePath": "/images/circuit-board_256.png",
     "isFicsmas": false
   },
   {
@@ -956,7 +956,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/plastic_256.png",
+    "imagePath": "/images/plastic_256.png",
     "isFicsmas": false
   },
   {
@@ -972,7 +972,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/encased-industrial-beam_256.png",
+    "imagePath": "/images/encased-industrial-beam_256.png",
     "isFicsmas": false
   },
   {
@@ -988,7 +988,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/rubber_256.png",
+    "imagePath": "/images/rubber_256.png",
     "isFicsmas": false
   },
   {
@@ -1004,7 +1004,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/polymer-resin_256.png",
+    "imagePath": "/images/polymer-resin_256.png",
     "isFicsmas": false
   },
   {
@@ -1020,7 +1020,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=120,G=45,R=109,A=0)",
-    "imagePath": "./images/heavy-oil-residue_256.png",
+    "imagePath": "/images/heavy-oil-residue_256.png",
     "isFicsmas": false
   },
   {
@@ -1036,7 +1036,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/quartz-crystal_256.png",
+    "imagePath": "/images/quartz-crystal_256.png",
     "isFicsmas": false
   },
   {
@@ -1052,7 +1052,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/steel-ingot_256.png",
+    "imagePath": "/images/steel-ingot_256.png",
     "isFicsmas": false
   },
   {
@@ -1068,7 +1068,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/versatile-framework_256.png",
+    "imagePath": "/images/versatile-framework_256.png",
     "isFicsmas": false
   },
   {
@@ -1084,7 +1084,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=212,G=176,R=122,A=255)",
-    "imagePath": "./images/packaged-water_256.png",
+    "imagePath": "/images/packaged-water_256.png",
     "isFicsmas": false
   },
   {
@@ -1100,7 +1100,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/copper-ingot_256.png",
+    "imagePath": "/images/copper-ingot_256.png",
     "isFicsmas": false
   },
   {
@@ -1116,7 +1116,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/aluminum-scrap_256.png",
+    "imagePath": "/images/aluminum-scrap_256.png",
     "isFicsmas": false
   },
   {
@@ -1132,7 +1132,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/aluminum-casing_256.png",
+    "imagePath": "/images/aluminum-casing_256.png",
     "isFicsmas": false
   },
   {
@@ -1148,7 +1148,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=193,G=193,R=193,A=0)",
-    "imagePath": "./images/alumina-solution_256.png",
+    "imagePath": "/images/alumina-solution_256.png",
     "isFicsmas": false
   },
   {
@@ -1164,7 +1164,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/computer_256.png",
+    "imagePath": "/images/computer_256.png",
     "isFicsmas": false
   },
   {
@@ -1180,7 +1180,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/heavy-modular-frame_256.png",
+    "imagePath": "/images/heavy-modular-frame_256.png",
     "isFicsmas": false
   },
   {
@@ -1196,7 +1196,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/smart-plating_256.png",
+    "imagePath": "/images/smart-plating_256.png",
     "isFicsmas": false
   },
   {
@@ -1212,7 +1212,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/high-speed-connector_256.png",
+    "imagePath": "/images/high-speed-connector_256.png",
     "isFicsmas": false
   },
   {
@@ -1228,7 +1228,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/automated-wiring_256.png",
+    "imagePath": "/images/automated-wiring_256.png",
     "isFicsmas": false
   },
   {
@@ -1244,7 +1244,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/stator_256.png",
+    "imagePath": "/images/stator_256.png",
     "isFicsmas": false
   },
   {
@@ -1260,7 +1260,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ai-limiter_256.png",
+    "imagePath": "/images/ai-limiter_256.png",
     "isFicsmas": false
   },
   {
@@ -1276,7 +1276,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/quickwire_256.png",
+    "imagePath": "/images/quickwire_256.png",
     "isFicsmas": false
   },
   {
@@ -1292,7 +1292,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/modular-engine_256.png",
+    "imagePath": "/images/modular-engine_256.png",
     "isFicsmas": false
   },
   {
@@ -1308,7 +1308,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/adaptive-control-unit_256.png",
+    "imagePath": "/images/adaptive-control-unit_256.png",
     "isFicsmas": false
   },
   {
@@ -1324,7 +1324,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/pressure-conversion-cube_256.png",
+    "imagePath": "/images/pressure-conversion-cube_256.png",
     "isFicsmas": false
   },
   {
@@ -1340,7 +1340,7 @@
     "radioactiveDecay": 120,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/encased-plutonium-cell_256.png",
+    "imagePath": "/images/encased-plutonium-cell_256.png",
     "isFicsmas": false
   },
   {
@@ -1356,7 +1356,7 @@
     "radioactiveDecay": 20,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/plutonium-pellet_256.png",
+    "imagePath": "/images/plutonium-pellet_256.png",
     "isFicsmas": false
   },
   {
@@ -1372,7 +1372,7 @@
     "radioactiveDecay": 0.75,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/non-fissile-uranium_256.png",
+    "imagePath": "/images/non-fissile-uranium_256.png",
     "isFicsmas": false
   },
   {
@@ -1388,7 +1388,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=0,G=255,R=255,A=0)",
-    "imagePath": "./images/sulfuric-acid_256.png",
+    "imagePath": "/images/sulfuric-acid_256.png",
     "isFicsmas": false
   },
   {
@@ -1404,7 +1404,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/copper-powder_256.png",
+    "imagePath": "/images/copper-powder_256.png",
     "isFicsmas": false
   },
   {
@@ -1420,7 +1420,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/heat-sink_256.png",
+    "imagePath": "/images/heat-sink_256.png",
     "isFicsmas": false
   },
   {
@@ -1436,7 +1436,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/electromagnetic-control-rod_256.png",
+    "imagePath": "/images/electromagnetic-control-rod_256.png",
     "isFicsmas": false
   },
   {
@@ -1452,7 +1452,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/nuclear-pasta_256.png",
+    "imagePath": "/images/nuclear-pasta_256.png",
     "isFicsmas": false
   },
   {
@@ -1468,7 +1468,7 @@
     "radioactiveDecay": 0.5,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/encased-uranium-cell_256.png",
+    "imagePath": "/images/encased-uranium-cell_256.png",
     "isFicsmas": false
   },
   {
@@ -1484,7 +1484,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=238,G=190,R=226,A=0)",
-    "imagePath": "./images/dissolved-silica_256.png",
+    "imagePath": "/images/dissolved-silica_256.png",
     "isFicsmas": false
   },
   {
@@ -1500,7 +1500,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/thermal-propulsion-rocket_256.png",
+    "imagePath": "/images/thermal-propulsion-rocket_256.png",
     "isFicsmas": false
   },
   {
@@ -1516,7 +1516,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/black-powder_256.png",
+    "imagePath": "/images/black-powder_256.png",
     "isFicsmas": false
   },
   {
@@ -1532,7 +1532,7 @@
     "radioactiveDecay": 250,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ficsonium_256.png",
+    "imagePath": "/images/ficsonium_256.png",
     "isFicsmas": false
   },
   {
@@ -1548,7 +1548,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/singularity-cell_256.png",
+    "imagePath": "/images/singularity-cell_256.png",
     "isFicsmas": false
   },
   {
@@ -1564,7 +1564,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ballistic-warp-drive_256.png",
+    "imagePath": "/images/ballistic-warp-drive_256.png",
     "isFicsmas": false
   },
   {
@@ -1580,7 +1580,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/gas-filter_256.png",
+    "imagePath": "/images/gas-filter_256.png",
     "isFicsmas": false
   },
   {
@@ -1596,7 +1596,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/alien-protein_256.png",
+    "imagePath": "/images/alien-protein_256.png",
     "isFicsmas": false
   },
   {
@@ -1612,7 +1612,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/blue-power-slug_256.png",
+    "imagePath": "/images/blue-power-slug_256.png",
     "isFicsmas": false
   },
   {
@@ -1628,7 +1628,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/alien-dna-capsule_256.png",
+    "imagePath": "/images/alien-dna-capsule_256.png",
     "isFicsmas": false
   },
   {
@@ -1644,7 +1644,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/mercer-sphere_256.png",
+    "imagePath": "/images/mercer-sphere_256.png",
     "isFicsmas": false
   },
   {
@@ -1660,7 +1660,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/purple-power-slug_256.png",
+    "imagePath": "/images/purple-power-slug_256.png",
     "isFicsmas": false
   },
   {
@@ -1676,7 +1676,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/yellow-power-slug_256.png",
+    "imagePath": "/images/yellow-power-slug_256.png",
     "isFicsmas": false
   },
   {
@@ -1692,7 +1692,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/smokeless-powder_256.png",
+    "imagePath": "/images/smokeless-powder_256.png",
     "isFicsmas": false
   },
   {
@@ -1708,7 +1708,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -1724,7 +1724,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -1740,7 +1740,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -1756,7 +1756,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -1772,7 +1772,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -1788,7 +1788,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -1804,7 +1804,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -1820,7 +1820,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -1836,7 +1836,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -1852,7 +1852,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -1868,7 +1868,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -1884,7 +1884,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -1900,7 +1900,7 @@
     "radioactiveDecay": 50,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/uranium-fuel-rod_256.png",
+    "imagePath": "/images/uranium-fuel-rod_256.png",
     "isFicsmas": false
   },
   {
@@ -1916,7 +1916,7 @@
     "radioactiveDecay": 250,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/plutonium-fuel-rod_256.png",
+    "imagePath": "/images/plutonium-fuel-rod_256.png",
     "isFicsmas": false
   },
   {
@@ -1932,7 +1932,7 @@
     "radioactiveDecay": 1000,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ficsonium-fuel-rod_256.png",
+    "imagePath": "/images/ficsonium-fuel-rod_256.png",
     "isFicsmas": false
   },
   {
@@ -1948,7 +1948,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/explosive-rebar_256.png",
+    "imagePath": "/images/explosive-rebar_256.png",
     "isFicsmas": false
   },
   {
@@ -1964,7 +1964,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/stun-rebar_256.png",
+    "imagePath": "/images/stun-rebar_256.png",
     "isFicsmas": false
   },
   {
@@ -1980,7 +1980,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/homing-rifle-ammo_256.png",
+    "imagePath": "/images/homing-rifle-ammo_256.png",
     "isFicsmas": false
   },
   {
@@ -1996,7 +1996,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/cluster-nobelisk_256.png",
+    "imagePath": "/images/cluster-nobelisk_256.png",
     "isFicsmas": false
   },
   {
@@ -2012,7 +2012,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/nobelisk_256.png",
+    "imagePath": "/images/nobelisk_256.png",
     "isFicsmas": false
   },
   {
@@ -2028,7 +2028,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/gas-nobelisk_256.png",
+    "imagePath": "/images/gas-nobelisk_256.png",
     "isFicsmas": false
   },
   {
@@ -2044,7 +2044,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/nuke-nobelisk_256.png",
+    "imagePath": "/images/nuke-nobelisk_256.png",
     "isFicsmas": false
   },
   {
@@ -2060,7 +2060,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/pulse-nobelisk_256.png",
+    "imagePath": "/images/pulse-nobelisk_256.png",
     "isFicsmas": false
   },
   {
@@ -2076,7 +2076,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -2092,7 +2092,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -2108,7 +2108,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -2124,7 +2124,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/not-available_256.png",
+    "imagePath": "/images/not-available_256.png",
     "isFicsmas": true
   },
   {
@@ -2140,7 +2140,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-rebar_256.png",
+    "imagePath": "/images/iron-rebar_256.png",
     "isFicsmas": false
   },
   {
@@ -2156,7 +2156,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/portable-miner_256.png",
+    "imagePath": "/images/portable-miner_256.png",
     "isFicsmas": false
   },
   {
@@ -2172,7 +2172,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/shatter-rebar_256.png",
+    "imagePath": "/images/shatter-rebar_256.png",
     "isFicsmas": false
   },
   {
@@ -2188,7 +2188,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/turbo-rifle-ammo_256.png",
+    "imagePath": "/images/turbo-rifle-ammo_256.png",
     "isFicsmas": false
   },
   {
@@ -2204,7 +2204,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/rifle-ammo_256.png",
+    "imagePath": "/images/rifle-ammo_256.png",
     "isFicsmas": false
   },
   {
@@ -2220,7 +2220,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-ore_256.png",
+    "imagePath": "/images/iron-ore_256.png",
     "isFicsmas": false
   },
   {
@@ -2236,7 +2236,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/coal_256.png",
+    "imagePath": "/images/coal_256.png",
     "isFicsmas": false
   },
   {
@@ -2252,7 +2252,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=212,G=176,R=122,A=0)",
-    "imagePath": "./images/water_256.png",
+    "imagePath": "/images/water_256.png",
     "isFicsmas": false
   },
   {
@@ -2268,7 +2268,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=89,G=89,R=89,A=0)",
-    "imagePath": "./images/nitrogen-gas_256.png",
+    "imagePath": "/images/nitrogen-gas_256.png",
     "isFicsmas": false
   },
   {
@@ -2284,7 +2284,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/sulfur_256.png",
+    "imagePath": "/images/sulfur_256.png",
     "isFicsmas": false
   },
   {
@@ -2300,7 +2300,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/sam_256.png",
+    "imagePath": "/images/sam_256.png",
     "isFicsmas": false
   },
   {
@@ -2316,7 +2316,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/bauxite_256.png",
+    "imagePath": "/images/bauxite_256.png",
     "isFicsmas": false
   },
   {
@@ -2332,7 +2332,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/caterium-ore_256.png",
+    "imagePath": "/images/caterium-ore_256.png",
     "isFicsmas": false
   },
   {
@@ -2348,7 +2348,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/copper-ore_256.png",
+    "imagePath": "/images/copper-ore_256.png",
     "isFicsmas": false
   },
   {
@@ -2364,7 +2364,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/raw-quartz_256.png",
+    "imagePath": "/images/raw-quartz_256.png",
     "isFicsmas": false
   },
   {
@@ -2380,7 +2380,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/limestone_256.png",
+    "imagePath": "/images/limestone_256.png",
     "isFicsmas": false
   },
   {
@@ -2396,7 +2396,7 @@
     "radioactiveDecay": 15,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/uranium_256.png",
+    "imagePath": "/images/uranium_256.png",
     "isFicsmas": false
   },
   {
@@ -2412,7 +2412,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=25,G=0,R=25,A=0)",
-    "imagePath": "./images/crude-oil_256.png",
+    "imagePath": "/images/crude-oil_256.png",
     "isFicsmas": false
   },
   {
@@ -2428,7 +2428,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/solid-biofuel_256.png",
+    "imagePath": "/images/solid-biofuel_256.png",
     "isFicsmas": false
   },
   {
@@ -2444,7 +2444,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-liquid-biofuel_256.png",
+    "imagePath": "/images/packaged-liquid-biofuel_256.png",
     "isFicsmas": false
   },
   {
@@ -2460,7 +2460,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/biomass_256.png",
+    "imagePath": "/images/biomass_256.png",
     "isFicsmas": false
   },
   {
@@ -2476,7 +2476,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/leaves_256.png",
+    "imagePath": "/images/leaves_256.png",
     "isFicsmas": false
   },
   {
@@ -2492,7 +2492,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/mycelia_256.png",
+    "imagePath": "/images/mycelia_256.png",
     "isFicsmas": false
   },
   {
@@ -2508,7 +2508,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/wood_256.png",
+    "imagePath": "/images/wood_256.png",
     "isFicsmas": false
   },
   {
@@ -2524,7 +2524,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=44,G=83,R=59,A=0)",
-    "imagePath": "./images/liquid-biofuel_256.png",
+    "imagePath": "/images/liquid-biofuel_256.png",
     "isFicsmas": false
   },
   {
@@ -2540,7 +2540,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-alumina-solution_256.png",
+    "imagePath": "/images/packaged-alumina-solution_256.png",
     "isFicsmas": false
   },
   {
@@ -2556,7 +2556,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-nitrogen-gas_256.png",
+    "imagePath": "/images/packaged-nitrogen-gas_256.png",
     "isFicsmas": false
   },
   {
@@ -2572,7 +2572,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-nitric-acid_256.png",
+    "imagePath": "/images/packaged-nitric-acid_256.png",
     "isFicsmas": false
   },
   {
@@ -2588,7 +2588,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-sulfuric-acid_256.png",
+    "imagePath": "/images/packaged-sulfuric-acid_256.png",
     "isFicsmas": false
   },
   {
@@ -2604,7 +2604,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/fabric_256.png",
+    "imagePath": "/images/fabric_256.png",
     "isFicsmas": false
   },
   {
@@ -2620,7 +2620,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/hog-remains_256.png",
+    "imagePath": "/images/hog-remains_256.png",
     "isFicsmas": false
   },
   {
@@ -2636,7 +2636,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/spitter-remains_256.png",
+    "imagePath": "/images/spitter-remains_256.png",
     "isFicsmas": false
   },
   {
@@ -2652,7 +2652,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/stinger-remains_256.png",
+    "imagePath": "/images/stinger-remains_256.png",
     "isFicsmas": false
   },
   {
@@ -2668,7 +2668,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/hatcher-remains_256.png",
+    "imagePath": "/images/hatcher-remains_256.png",
     "isFicsmas": false
   },
   {
@@ -2684,7 +2684,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/power-shard_256.png",
+    "imagePath": "/images/power-shard_256.png",
     "isFicsmas": false
   },
   {
@@ -2700,7 +2700,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/somersloop_256.png",
+    "imagePath": "/images/somersloop_256.png",
     "isFicsmas": false
   },
   {
@@ -2716,7 +2716,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/alien-power-matrix_256.png",
+    "imagePath": "/images/alien-power-matrix_256.png",
     "isFicsmas": false
   }
 ]

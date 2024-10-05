@@ -104,7 +104,7 @@ function parseFactoryItem(json, index) {
     canBeDiscarded: json.mCanBeDiscarded === 'True',
     color: json.mFluidColor, // Assuming color is from mFluidColor
     // es. from `Desc_NuclearWaste_C` to `nuclear-waste.png`
-    imagePath: './images/' + convertImageName(json.ClassName),
+    imagePath: '/images/' + convertImageName(json.ClassName),
     isFicsmas: json.mSmallIcon.includes('Christmas'),
   };
 }
@@ -268,7 +268,7 @@ function parseBulding(building, index) {
     ),
     clearanceData: building.mClearanceData,
     clearance: parseClearanceData(building.mClearanceData),
-    imagePath: './images/' + _.kebabCase(building.mDisplayName) + '_256.png',
+    imagePath: '/images/' + _.kebabCase(building.mDisplayName) + '_256.png',
   };
 }
 
