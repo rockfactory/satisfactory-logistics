@@ -178,7 +178,7 @@ function parseIngredients(ingredients, allItemsMap, building, dir) {
       allItemsMap[resource].form !== 'Solid'
     ) {
       normalizedAmount =
-        dir === 'in' ? normalizedAmount + 0.0001 : normalizedAmount;
+        dir === 'in' ? normalizedAmount + 0.001 : normalizedAmount - 0.001;
     }
 
     return {
