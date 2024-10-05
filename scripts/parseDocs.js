@@ -172,6 +172,9 @@ function parseIngredients(ingredients, allItemsMap, building, dir) {
         ? parsedAmount
         : parsedAmount / 1_000;
 
+    // Pre-LP fixes
+    const displayAmount = normalizedAmount;
+
     // Fix for LP: we make sure that Pakcagers are a little bit _LESS_ efficient than raw resources
     if (
       building.id === 'Build_Packager_C' &&
@@ -185,6 +188,7 @@ function parseIngredients(ingredients, allItemsMap, building, dir) {
       resource,
       // Liquids are written in cm³, we need to convert them to m³
       amount: normalizedAmount,
+      displayAmount,
       originalAmount: parsedAmount,
     };
   });

@@ -20,10 +20,6 @@ import {
 import { NodeProps } from '@xyflow/react';
 import React, { memo } from 'react';
 import { RepeatingNumber } from '../../../core/intl/NumberFormatter';
-import {
-  FactoryInputIcon,
-  FactoryOutputIcon,
-} from '../../../factories/components/peek/icons/OutputInputIcons';
 import { AllFactoryBuildingsMap } from '../../FactoryBuilding';
 import { AllFactoryItemsMap } from '../../FactoryItem';
 import {
@@ -135,6 +131,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                 recipe={recipe}
                 ingredient={ingredient}
                 key={ingredient.resource}
+                buildingsAmount={buildingsAmount}
               />
             ))}
             <Table.Tr>
@@ -151,6 +148,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                 recipe={recipe}
                 ingredient={product}
                 key={product.resource}
+                buildingsAmount={buildingsAmount}
               />
             ))}
           </Table>
@@ -165,17 +163,19 @@ const RecipeIngredientRow = ({
   type,
   recipe,
   ingredient,
+  buildingsAmount,
 }: {
   index: number;
   type: 'Ingredients' | 'Products';
   recipe: FactoryRecipe;
   ingredient: RecipeIngredient;
+  buildingsAmount: number;
 }) => {
   const item = AllFactoryItemsMap[ingredient.resource];
-  const amountPerMinute = (ingredient.amount * 60) / recipe.time;
+  const amountPerMinute = (ingredient.displayAmount * 60) / recipe.time;
   return (
     <Table.Tr>
-      {index === 0 && (
+      {/* {index === 0 && (
         <Table.Td
           rowSpan={
             type === 'Ingredients'
@@ -189,7 +189,7 @@ const RecipeIngredientRow = ({
             <FactoryOutputIcon size={16} />
           )}
         </Table.Td>
-      )}
+      )} */}
       <Table.Td>
         <Image w="24" h="24" src={item.imagePath} />
       </Table.Td>
@@ -197,13 +197,19 @@ const RecipeIngredientRow = ({
         <Text size="sm">{item.displayName}</Text>
       </Table.Td>
       <Table.Td>
-        <Text size="sm">
-          <RepeatingNumber value={ingredient.amount} />
+        <Text size="sm" fs="italic">
+          <RepeatingNumber value={ingredient.displayAmount} />
         </Text>
       </Table.Td>
       <Table.Td>
-        <Text size="sm">
+        <Text size="sm" fs="italic">
           <RepeatingNumber value={amountPerMinute} />
+          /min
+        </Text>
+      </Table.Td>
+      <Table.Td>
+        <Text size="sm" fw="bold">
+          <RepeatingNumber value={amountPerMinute * buildingsAmount} />
           /min
         </Text>
       </Table.Td>
