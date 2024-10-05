@@ -23,3 +23,11 @@
     margin-top: var(--mantine-spacing-md);
   }
 }
+
+.discordButton {
+  background-color: #5865f2;
+
+  &:hover {
+    background-color: #4e5bd5;
+  }
+}

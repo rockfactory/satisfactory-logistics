@@ -1,18 +1,19 @@
-import { Anchor, Container, Divider, Group, Text } from '@mantine/core';
+import { Anchor, Button, Container, Divider, Group, Text } from '@mantine/core';
 import { IconBrandDiscord } from '@tabler/icons-react';
+import { KofiSupportButton } from '../third-party/KofiSupportButton';
 import classes from './Footer.module.css';
 
 const links = [
-  {
-    link: 'https://discord.gg/Crd8r87dwY',
-    label: 'Discord',
-    labelNode: (
-      <Group gap="xs">
-        <IconBrandDiscord size={16} />
-        Discord
-      </Group>
-    ),
-  },
+  // {
+  //   link: 'https://discord.gg/Crd8r87dwY',
+  //   label: 'Discord',
+  //   labelNode: (
+  //     <Group gap="xs">
+  //       <IconBrandDiscord size={16} />
+  //       Discord
+  //     </Group>
+  //   ),
+  // },
   { link: 'mailto:info@satisfactory-logistics.xyz', label: 'Contact' },
   { link: '/privacy-policy', label: 'Privacy Policy' },
 ];
@@ -27,7 +28,7 @@ export function Footer() {
       rel="noopener noreferrer"
       size="sm"
     >
-      {link.labelNode ?? link.label}
+      {link.label}
     </Anchor>
   ));
 
@@ -35,10 +36,23 @@ export function Footer() {
     <div className={classes.footer}>
       <Container className={classes.inner} size="lg">
         {/* <MantineLogo size={28} /> */}
-        <Text size="sm" c="dimmed">
-          v{APP_VERSION} © {new Date().getFullYear()} Satisfactory Logistics
-        </Text>
-        <Group className={classes.links}>{items}</Group>
+        <Group>
+          <Text size="sm" c="dimmed">
+            v{APP_VERSION} © {new Date().getFullYear()} Satisfactory Logistics
+          </Text>
+          <Group className={classes.links}>{items}</Group>
+        </Group>
+        <Group>
+          <KofiSupportButton />
+          <Button
+            className={classes.discordButton}
+            leftSection={<IconBrandDiscord size={20} />}
+            component="a"
+            href="https://discord.gg/Crd8r87dwY"
+          >
+            Join Discord
+          </Button>
+        </Group>
       </Container>
       <Divider
         styles={{

@@ -40,7 +40,9 @@ export function Header(props: HeaderProps) {
             </Text> */}
           </Group>
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-          <UserMenu />
+          <Group>
+            <UserMenu />
+          </Group>
         </Group>
       </Container>
       {props.tabs && (
