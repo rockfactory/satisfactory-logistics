@@ -101,9 +101,11 @@ export function solveProduction(highs: Highs, item: string, amount: number) {
             sourceNode.type === 'output'
               ? sourceNode.recipeMainProductVariable
               : sourceNode.variable,
-          // type: ''
+          type: 'Ingredient',
           markerEnd: {
             type: MarkerType.ArrowClosed,
+            width: 20,
+            height: 20,
           },
           // type: 'Floating',
           target: targetNode.recipeMainProductVariable,

@@ -1,5 +1,8 @@
-# Mantine Vite template
+# Satisfactory Logistics
 
-Get started with the template by clicking `Use this template` button on the top of the page.
+## Image Generation
 
-[Documentation](https://mantine.dev/guides/vite/)
+- Load the game inside FModel
+- Export the `FactoryGame/Content/FactoryGame/` folder
+- Copy the exported `FactoryGame` folder to `data/assets/`
+- Run the `npm run parse-docs`

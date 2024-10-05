@@ -1,7 +1,9 @@
 import { Box, Group, Image, Stack, Text } from '@mantine/core';
-import { Handle, NodeProps, Position } from '@xyflow/react';
+import { NodeProps } from '@xyflow/react';
 import { memo } from 'react';
+import { RepeatingNumber } from '../../../core/intl/NumberFormatter';
 import { FactoryItem } from '../../FactoryItem';
+import { InvisibleHandles } from './InvisibleHandles';
 
 export interface IResourceNodeData {
   resource: FactoryItem;
@@ -15,23 +17,25 @@ export type IResourceNodeProps = NodeProps & {
 };
 
 export const ResourceNode = memo((props: IResourceNodeProps) => {
-  const { resource } = props.data;
+  const { resource, value } = props.data;
   return (
     <Box p="sm" style={{ borderRadius: 4 }} bg="blue.8">
-      <Group gap="sm">
-        <Image w="48" h="48" src={resource.imagePath} />
-        <Stack gap="xs" align="center">
-          <Group gap="xs">{resource.displayName}</Group>
-          <Text size="sm">{props.data.value}/min</Text>
+      <Group gap="xs">
+        <Image w="32" h="32" src={resource.imagePath} />
+        <Stack gap={2} align="center">
+          <Group gap="xs">
+            <Text size="sm">{resource.displayName}</Text>
+          </Group>
+          <Text size="xs">
+            <RepeatingNumber value={value} />
+            /min
+          </Text>
         </Stack>
       </Group>
-      <Handle type="source" position={Position.Right} id="source-right" />
-      {/* <Handle type="source" position={Position.Bottom} id="source-bottom" /> */}
-      {/* <Handle type="source" position={Position.Left} id="source-left" /> */}
-      {/* <Handle type="target" position={Position.Top} id="target-top" /> */}
-      {/* <Handle type="target" position={Position.Right} id="target-right" /> */}
-      {/* <Handle type="target" position={Position.Bottom} id="target-bottom" /> */}
-      <Handle type="target" position={Position.Left} id="target-left" />
+
+      <InvisibleHandles />
+      {/* <Handle type="source" position={Position.Right} id="source-right" />
+      <Handle type="target" position={Position.Left} id="target-left" /> */}
     </Box>
   );
 });

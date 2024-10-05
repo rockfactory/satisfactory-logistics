@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import fs from 'node:fs';
 
 const ImageRegex = /(?:UI|QuantumEnergy)\/(?:IconDesc_)?(.*)_256\./;
@@ -41,6 +42,21 @@ function parseDocs() {
     return acc;
   }, {});
 
+  // Buildings
+  const rawBuildings = docsJson.flatMap(nativeClass => {
+    if (nativeClass.NativeClass?.includes('FGBuildableManufacturer'))
+      return nativeClass.Classes;
+    return [];
+  });
+  const buildings = rawBuildings
+    .map((building, index) => parseBulding(building, index))
+    .filter(Boolean);
+  fs.writeFileSync(
+    './src/recipes/FactoryBuildings.json',
+    JSON.stringify(buildings, null, 2),
+  );
+
+  // Recipes
   const rawRecipes = docsJson.flatMap(nativeClass => {
     if (nativeClass.NativeClass?.includes('FGRecipe')) {
       return nativeClass.Classes;
@@ -49,7 +65,7 @@ function parseDocs() {
   });
 
   const recipes = rawRecipes
-    .map((recipe, index) => parseRecipe(recipe, index, allItemsMap))
+    .map((recipe, index) => parseRecipe(recipe, index, allItemsMap, buildings))
     .filter(Boolean);
 
   fs.writeFileSync(
@@ -106,7 +122,7 @@ function parseFactoryItemForm(form) {
   }
 }
 
-function parseRecipe(recipe, index, allItemsMap) {
+function parseRecipe(recipe, index, allItemsMap, buildings) {
   const producedIn = parseBestProducedIn(recipe.mProducedIn);
   if (
     producedIn === 'BuildGun' ||
@@ -117,6 +133,12 @@ function parseRecipe(recipe, index, allItemsMap) {
     return null;
   }
 
+  const building = buildings.find(b => b.name === producedIn);
+  if (!building) {
+    console.log(`Missing building: "${producedIn}"`);
+    throw new Error(`Missing building: "${producedIn}"`);
+  }
+
   return {
     index,
     id: recipe.ClassName,
@@ -125,7 +147,7 @@ function parseRecipe(recipe, index, allItemsMap) {
     ingredients: parseIngredients(recipe.mIngredients, allItemsMap),
     products: parseIngredients(recipe.mProduct, allItemsMap),
     time: parseFloat(recipe.mManufactoringDuration),
-    producedIn: parseBestProducedIn(recipe.mProducedIn),
+    producedIn: building.id,
     powerConsumption: parseFloat(recipe.mVariablePowerConsumptionConstant),
     powerConsumptionFactor: parseFloat(recipe.mVariablePowerConsumptionFactor),
   };
@@ -191,16 +213,16 @@ function parseProducedIn(producedIn) {
     return 'Smelter';
   }
   if (producedIn.includes('HadronCollider')) {
-    return 'ParticleAccelerator';
+    return 'Particle Accelerator';
   }
   if (producedIn.includes('QuantumEncoder')) {
-    return 'QuantumEncoder';
+    return 'Quantum Encoder';
   }
   if (producedIn.includes('Packager')) {
     return 'Packager';
   }
   if (producedIn.includes('WaterExtractor')) {
-    return 'WaterExtractor';
+    return 'Water Extractor';
   }
   if (producedIn.includes('Extractor')) {
     return 'Extractor';
@@ -209,4 +231,25 @@ function parseProducedIn(producedIn) {
     return 'Blender';
   }
   return 'NA';
+}
+
+function parseBulding(building, index) {
+  return {
+    id: building.ClassName,
+    name: building.mDisplayName,
+    index,
+    description: building.mDescription,
+    powerConsumption: parseFloat(building.mPowerConsumption),
+    powerConsumptionExponent: parseFloat(building.mPowerConsumptionExponent),
+    somersloopPowerConsumptionExponent: parseFloat(
+      building.mProductionBoostPowerConsumptionExponent,
+    ),
+    clearanceData: building.mClearanceData,
+    clearance: parseClearanceData(building.mClearanceData),
+    imagePath: './images/' + _.kebabCase(building.mDisplayName) + '_256.png',
+  };
+}
+
+function parseClearanceData(data) {
+  return {}; // TODO
 }

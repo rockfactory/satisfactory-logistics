@@ -41,20 +41,20 @@ function getHandleCoordsByPosition(
   // this is a tiny detail to make the markerEnd of an edge visible.
   // The handle position that gets calculated has the origin top-left, so depending which side we are using, we add a little offset
   // when the handlePosition is Position.Right for example, we need to add an offset as big as the handle itself in order to get the correct position
-  switch (handlePosition) {
-    case Position.Left:
-      offsetX = 0;
-      break;
-    case Position.Right:
-      offsetX = handle!.width;
-      break;
-    case Position.Top:
-      offsetY = 0;
-      break;
-    case Position.Bottom:
-      offsetY = handle!.height;
-      break;
-  }
+  // switch (handlePosition) {
+  //   case Position.Left:
+  //     offsetX = 0;
+  //     break;
+  //   case Position.Right:
+  //     offsetX = handle!.width;
+  //     break;
+  //   case Position.Top:
+  //     offsetY = 0;
+  //     break;
+  //   case Position.Bottom:
+  //     offsetY = handle!.height;
+  //     break;
+  // }
 
   const x = node.internals.positionAbsolute.x + handle!.x + offsetX;
   const y = node.internals.positionAbsolute.y + handle!.y + offsetY;
@@ -83,3 +83,75 @@ export function getEdgeParams(source: InternalNode, target: InternalNode) {
     targetPos,
   };
 }
+
+export type GetSpecialPathParams = {
+  sourceX: number;
+  sourceY: number;
+  sourcePosition: Position;
+  targetX: number;
+  targetY: number;
+  targetPosition: Position;
+};
+
+const SPECIAL_PATH_OFFSET = 35;
+
+export const getSpecialPath = ({
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+}: GetSpecialPathParams) => {
+  const centerX = (sourceX + targetX) / 2;
+  const centerY = (sourceY + targetY) / 2;
+
+  const isHorizontal =
+    sourcePosition === Position.Left || sourcePosition === Position.Right;
+  const offsetX = !isHorizontal
+    ? sourceX < targetX
+      ? SPECIAL_PATH_OFFSET
+      : -SPECIAL_PATH_OFFSET
+    : 0;
+  const offsetY = isHorizontal
+    ? sourceY < targetY || (sourceY == targetY && sourceX < targetX)
+      ? SPECIAL_PATH_OFFSET
+      : -SPECIAL_PATH_OFFSET
+    : 0;
+
+  const [disalignX, disalignY] = disalignSpecialHandlePos(
+    targetPosition,
+    offsetX,
+    offsetY,
+  );
+
+  const path = `M ${sourceX} ${sourceY} Q ${centerX + offsetX} ${
+    centerY + offsetY
+  } ${targetX + disalignX} ${targetY + disalignY}`;
+
+  const labelX = centerX + offsetX;
+  const labelY = centerY + offsetY / 2;
+
+  return [path, labelX, labelY] as const;
+};
+
+const DISALIGN_WEIGHT = 5;
+
+const disalignSpecialHandlePos = (
+  pos: Position,
+  offsetX: number,
+  offsetY: number,
+) => {
+  const xSign = offsetX > 0 ? 1 : -1;
+  const ySign = offsetY > 0 ? 1 : -1;
+  switch (pos) {
+    case Position.Left:
+      return [0, ySign * DISALIGN_WEIGHT];
+    case Position.Right:
+      return [0, ySign * DISALIGN_WEIGHT];
+    case Position.Top:
+      return [xSign * DISALIGN_WEIGHT, 0];
+    case Position.Bottom:
+      return [xSign * DISALIGN_WEIGHT, 0];
+  }
+};

@@ -34,6 +34,7 @@
     "dot-prop": "^9.0.0",
     "graphology": "^0.25.4",
     "highs": "^1.0.1",
+    "leva": "^0.9.35",
     "lodash": "^4.17.21",
     "loglevel": "^1.9.2",
     "loglevel-plugin-prefix": "^0.8.4",
