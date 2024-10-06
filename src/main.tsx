@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/react';
 import { supabaseIntegration } from '@supabase/sentry-js-integration';
+import '@xyflow/react/dist/style.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
@@ -26,6 +27,7 @@ Sentry.init({
   replaysSessionSampleRate: import.meta.env.DEV ? 1.0 : 0.1,
   replaysOnErrorSampleRate: 1.0,
   debug: import.meta.env.DEV,
+  enabled: !import.meta.env.DEV,
 });
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

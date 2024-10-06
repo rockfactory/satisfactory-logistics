@@ -1,10 +1,10 @@
 import {
-  Box,
   Button,
   Container,
   Divider,
   Group,
   Loader,
+  Space,
   Stack,
   Text,
 } from '@mantine/core';
@@ -15,14 +15,14 @@ import {
   IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSession } from '../auth/AuthSlice';
 import { loadFromRemote } from '../auth/sync/loadFromRemote';
 import { SyncButton } from '../auth/sync/SyncButton';
 import { RootState } from '../core/store';
 import { FactoryRow } from './FactoryRow';
-import { FactoriesFiltersSection } from './filters/FactoriesFiltersSection';
+import { FactoriesFiltersMenu } from './filters/FactoriesFiltersMenu';
 import { ImportFactoriesModal } from './import/ImportFactoriesModal';
 import { FactoriesSettings } from './settings/FactoriesSettings';
 import { factoryActions, useFactories } from './store/FactoriesSlice';
@@ -40,17 +40,6 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
   );
 
   const [loadingFactories, setLoadingFactories] = useState(false);
-  const [headerTop, setHeaderTop] = useState(0);
-
-  useEffect(() => {
-    const header = document.querySelector('header');
-    if (!header) return;
-    const resizeObserver = new ResizeObserver(() => {
-      setHeaderTop(header.offsetHeight);
-    });
-    resizeObserver.observe(header);
-    return () => resizeObserver.disconnect();
-  }, []);
 
   const hasFactories = useSelector(
     (state: RootState) => state.factories.present.factories.length > 0,
@@ -58,25 +47,10 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
 
   return (
     <div>
-      {hasFactories && (
-        <Box
-          bg="dark.7"
-          w="100%"
-          style={{
-            position: 'sticky',
-            top: headerTop,
-            zIndex: 10,
-            boxShadow: '0 4px 4px rgba(0, 0, 0, 0.1)',
-          }}
-        >
-          <Container size="lg" pt="md" pb="md">
-            <FactoriesFiltersSection />
-          </Container>
-        </Box>
-      )}
+      <FactoriesFiltersMenu />
 
       <Container size="lg" mt="lg">
-        {factories.length === 0 && (
+        {!hasFactories && (
           <Stack gap="xs" align="center" mih={200} mt={60} mb={90}>
             <IconBuildingFactory size={64} stroke={1.2} />
             <Text fz="h2">Let's build some factories!</Text>
@@ -169,6 +143,7 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
           </Group>
         </Group>
       </Container>
+      <Space h={100} />
     </div>
   );
 }

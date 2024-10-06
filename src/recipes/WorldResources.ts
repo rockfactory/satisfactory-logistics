@@ -33,7 +33,10 @@ export const WorldResources = {
     max: 2100,
   },
   Desc_SAM_C: {
-    max: 10200,
+    max: 10, // 10200,
+  },
+  Desc_Water_C: {
+    max: 1_000_000_000,
   },
 };
 
@@ -47,6 +50,11 @@ export const getWorldResourceMax = (resource: string | null | undefined) => {
 };
 
 export const WorldResourcesList = Object.keys(WorldResources);
+
+export function isWorldResource(resource: string) {
+  return resource in WorldResources;
+}
+
 /**
  * Bauxite	12300	9780	2520	25.77%
 Caterium	15000	11040	3960	35.87%

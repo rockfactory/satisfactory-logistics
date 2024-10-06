@@ -2,11 +2,17 @@ import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from 'react-router-dom';
 import { AuthSessionManager } from './auth/AuthSessionManager';
 import { LoginPage } from './auth/LoginPage';
 import { PrivacyPolicy } from './auth/privacy/PrivacyPolicy';
 import { SyncManager } from './auth/sync/SyncManager';
+import { RecipeSolverDemo } from './recipes/solver/RecipeSolverDemo';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
 import { theme } from './theme';
 
@@ -16,12 +22,20 @@ const router = createBrowserRouter([
     element: <PrivacyPolicy />,
   },
   {
-    path: '/',
+    path: '/factories/*',
     element: <FactoryRoutes />,
   },
   {
     path: '/login',
     element: <LoginPage />,
+  },
+  {
+    path: '/solver',
+    element: <RecipeSolverDemo />,
+  },
+  {
+    path: '*',
+    element: <Navigate to="/factories" />,
   },
 ]);
 

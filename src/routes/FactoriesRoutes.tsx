@@ -1,31 +1,54 @@
-import { Tabs } from '@mantine/core';
-import { useState } from 'react';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { ChartsTab } from '../factories/charts/ChartsTab';
 import { FactoriesTab } from '../factories/FactoriesTab';
 import { Footer } from '../layout/Footer';
 import { Header } from '../layout/Header';
+import { SolverPage } from '../recipes/solver/page/SolverPage';
 
 export interface IFactoryRoutesProps {}
 
 export function FactoryRoutes(props: IFactoryRoutesProps) {
-  const [currentTab, setCurrentTab] = useState('Factories' as string | null);
+  const navigate = useNavigate();
+  const activeTab = useLocation().pathname.split('/')[2];
 
   return (
     <>
       <Header
-        tabs={['Factories', 'Charts']}
-        activeTab={currentTab}
-        onChangeTab={setCurrentTab}
+        tabs={['factories', 'charts', 'calculator']}
+        activeTab={
+          activeTab === 'charts'
+            ? 'charts'
+            : activeTab === 'calculator'
+              ? 'calculator'
+              : 'factories'
+        }
+        onChangeTab={value => {
+          console.log('Navigating to', value);
+          navigate(`/factories/${value === 'factories' ? '' : value}`);
+        }}
       />
 
-      <Tabs value={currentTab} keepMounted={false}>
-        <Tabs.Panel value="Factories">
-          <FactoriesTab />
+      <Routes>
+        <Route index element={<FactoriesTab />} />
+        <Route path=":id/calculator" element={<SolverPage />} />
+        <Route path="charts" element={<ChartsTab />} />
+        <Route path="calculator/:id?" element={<SolverPage />} />
+      </Routes>
+
+      {/* <Tabs value={factoriesTab} keepMounted={false}>
+        <Tabs.Panel value="factories">
+          <Routes>
+            <Route path=":id/calculator" element={<SolverPage />} />
+            <Route index element={<FactoriesTab />} />
+          </Routes>
         </Tabs.Panel>
-        <Tabs.Panel value="Charts">
+        <Tabs.Panel value="charts">
           <ChartsTab />
         </Tabs.Panel>
-      </Tabs>
+        <Tabs.Panel value="calculator">
+          <SolverPage />
+        </Tabs.Panel>
+      </Tabs> */}
       <Footer />
     </>
   );

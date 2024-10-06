@@ -9,11 +9,12 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
+import { IconCalculator, IconTrash } from '@tabler/icons-react';
 import moize from 'moize';
 import * as React from 'react';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import {
   FactoryInputIcon,
   FactoryOutputIcon,
@@ -47,7 +48,6 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
     [dispatch],
   );
   const isVisible = useIsFactoryVisible(factory.id, true);
-  console.log('isVisible', isVisible);
   if (!isVisible) return null;
 
   return (
@@ -87,6 +87,17 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
               leftSection={<FactoryOutputIcon stroke={2} size={16} />}
             >
               Add Output
+            </Button>
+
+            <Button
+              color="cyan"
+              variant="filled"
+              size="sm"
+              component={Link}
+              to={`/factories/${factory.id}/calculator`}
+              leftSection={<IconCalculator stroke={2} size={16} />}
+            >
+              Calculator
             </Button>
 
             <ActionIcon

@@ -13,6 +13,7 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import undoable from 'redux-undo';
 import { authSliceReducer } from '../auth/AuthSlice';
 import { factorySliceReducer } from '../factories/store/FactoriesSlice';
+import { solverSliceReducer } from '../recipes/solver/store/SolverSlice';
 
 const persistConfig = {
   key: 'root',
@@ -23,6 +24,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authSliceReducer,
   factories: undoable(factorySliceReducer),
+  solver: undoable(solverSliceReducer),
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

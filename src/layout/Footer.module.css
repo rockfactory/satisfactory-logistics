@@ -1,5 +1,5 @@
 .footer {
-  margin-top: rem(120px);
+  /* margin-top: rem(120px); */
   border-top: rem(1px) solid
     light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
 }
@@ -21,5 +21,13 @@
 .links {
   @media (max-width: $mantine-breakpoint-xs) {
     margin-top: var(--mantine-spacing-md);
+  }
+}
+
+.discordButton {
+  background-color: #5865f2;
+
+  &:hover {
+    background-color: #4e5bd5;
   }
 }

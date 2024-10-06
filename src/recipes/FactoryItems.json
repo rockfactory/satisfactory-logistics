@@ -1,6 +1,7 @@
 [
   {
     "id": "Desc_NuclearWaste_C",
+    "index": 0,
     "name": "Uranium Waste",
     "displayName": "Uranium Waste",
     "description": "The by-product of consuming Uranium Fuel Rods in a Nuclear Power Plant.\r\nNon-Fissile Uranium can be extracted. Handle with caution.\r\n\r\nCaution: HIGHLY Radioactive.",
@@ -11,10 +12,12 @@
     "radioactiveDecay": 10,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/uranium-waste_256.png"
+    "imagePath": "/images/uranium-waste_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PlutoniumWaste_C",
+    "index": 1,
     "name": "Plutonium Waste",
     "displayName": "Plutonium Waste",
     "description": "The by-product of consuming Plutonium Fuel Rods in a Nuclear Power Plant.\r\nMust be stored in a safe location. Handle with caution.\r\n\r\nCaution: EXTREMELY Radioactive.",
@@ -25,10 +28,12 @@
     "radioactiveDecay": 200,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/plutonium-waste_256.png"
+    "imagePath": "/images/plutonium-waste_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Cement_C",
+    "index": 2,
     "name": "Concrete",
     "displayName": "Concrete",
     "description": "Used for building.\r\nGood for stable Foundations.",
@@ -39,10 +44,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/concrete_256.png"
+    "imagePath": "/images/concrete_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Silica_C",
+    "index": 3,
     "name": "Silica",
     "displayName": "Silica",
     "description": "Derived from Raw Quartz. Commonly used to create glass structures, in advanced refinement processes, and for alternative production of electronics.",
@@ -53,10 +60,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/silica_256.png"
+    "imagePath": "/images/silica_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_IronPlate_C",
+    "index": 4,
     "name": "Iron Plate",
     "displayName": "Iron Plate",
     "description": "Used for crafting.\r\nOne of the most basic parts.",
@@ -67,10 +76,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-plate_256.png"
+    "imagePath": "/images/iron-plate_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SteelPlate_C",
+    "index": 5,
     "name": "Steel Beam",
     "displayName": "Steel Beam",
     "description": "Primarily used when constructing slightly more advanced buildings.",
@@ -81,10 +92,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/steel-beam_256.png"
+    "imagePath": "/images/steel-beam_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AluminumIngot_C",
+    "index": 6,
     "name": "Aluminum Ingot",
     "displayName": "Aluminum Ingot",
     "description": "Smelted from Aluminum Scrap, which is refined from Alumina Solution.\r\nUsed to produce specialized aluminum-based parts.",
@@ -95,10 +108,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/aluminum-ingot_256.png"
+    "imagePath": "/images/aluminum-ingot_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Battery_C",
+    "index": 7,
     "name": "Battery",
     "displayName": "Battery",
     "description": "Primarily used as fuel for Drones and vehicles.",
@@ -109,10 +124,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/battery_256.png"
+    "imagePath": "/images/battery_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Fuel_C",
+    "index": 8,
     "name": "Packaged Fuel",
     "displayName": "Packaged Fuel",
     "description": "Fuel, packaged for alternative transport. Can be used as fuel for vehicles and the Jetpack.",
@@ -123,10 +140,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=21,G=125,R=235,A=255)",
-    "imagePath": "./images/packaged-fuel_256.png"
+    "imagePath": "/images/packaged-fuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedIonizedFuel_C",
+    "index": 9,
     "name": "Packaged Ionized Fuel",
     "displayName": "Packaged Ionized Fuel",
     "description": "Ionized Fuel, packaged for alternative transport. Can be used as fuel for vehicles and the Jetpack.",
@@ -137,10 +156,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/packaged-ionized-fuel_256.png"
+    "imagePath": "/images/packaged-ionized-fuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedRocketFuel_C",
+    "index": 10,
     "name": "Packaged Rocket Fuel",
     "displayName": "Packaged Rocket Fuel",
     "description": "Rocket Fuel, packaged for alternative transport. Can be used as fuel for vehicles and the Jetpack.",
@@ -151,10 +172,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/packaged-rocket-fuel_256.png"
+    "imagePath": "/images/packaged-rocket-fuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_TurboFuel_C",
+    "index": 11,
     "name": "Packaged Turbofuel",
     "displayName": "Packaged Turbofuel",
     "description": "Turbofuel, packaged for alternative transport. Can be used as fuel for vehicles and the Jetpack.",
@@ -165,10 +188,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=46,G=41,R=212,A=255)",
-    "imagePath": "./images/packaged-turbofuel_256.png"
+    "imagePath": "/images/packaged-turbofuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_HazmatFilter_C",
+    "index": 12,
     "name": "Iodine-Infused Filter",
     "displayName": "Iodine-Infused Filter",
     "description": "Absorbs radioactive particles when used with the Hazmat Suit.",
@@ -179,10 +204,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iodine-infused-filter_256.png"
+    "imagePath": "/images/iodine-infused-filter_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CompactedCoal_C",
+    "index": 13,
     "name": "Compacted Coal",
     "displayName": "Compacted Coal",
     "description": "A much more efficient alternative to Coal. Used as fuel for vehicles and Coal-Powered Generators.",
@@ -193,10 +220,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/compacted-coal_256.png"
+    "imagePath": "/images/compacted-coal_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedOilResidue_C",
+    "index": 14,
     "name": "Packaged Heavy Oil Residue",
     "displayName": "Packaged Heavy Oil Residue",
     "description": "Heavy Oil Residue, packaged for alternative transport. Can be used as fuel for vehicles.",
@@ -207,10 +236,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=120,G=45,R=109,A=255)",
-    "imagePath": "./images/packaged-heavy-oil-residue_256.png"
+    "imagePath": "/images/packaged-heavy-oil-residue_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PetroleumCoke_C",
+    "index": 15,
     "name": "Petroleum Coke",
     "displayName": "Petroleum Coke",
     "description": "Used for crafting.\r\nA carbon-rich material distilled from Heavy Oil Residue. \r\nUsed as a less efficient Coal replacement.",
@@ -221,10 +252,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/petroleum-coke_256.png"
+    "imagePath": "/images/petroleum-coke_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedOil_C",
+    "index": 16,
     "name": "Packaged Oil",
     "displayName": "Packaged Oil",
     "description": "Crude Oil, packaged for alternative transport. Can be used as fuel for vehicles.",
@@ -235,10 +268,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/packaged-oil_256.png"
+    "imagePath": "/images/packaged-oil_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_IronRod_C",
+    "index": 17,
     "name": "Iron Rod",
     "displayName": "Iron Rod",
     "description": "Used for crafting.\r\nOne of the most basic parts.",
@@ -249,10 +284,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-rod_256.png"
+    "imagePath": "/images/iron-rod_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Wire_C",
+    "index": 18,
     "name": "Wire",
     "displayName": "Wire",
     "description": "Used for crafting.\r\nOne of the most basic parts.",
@@ -263,10 +300,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/wire_256.png"
+    "imagePath": "/images/wire_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Cable_C",
+    "index": 19,
     "name": "Cable",
     "displayName": "Cable",
     "description": "Used for crafting.\r\nPrimarily used to build Power Lines.",
@@ -277,10 +316,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/cable_256.png"
+    "imagePath": "/images/cable_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_IronIngot_C",
+    "index": 20,
     "name": "Iron Ingot",
     "displayName": "Iron Ingot",
     "description": "Used for crafting the most basic parts.",
@@ -291,10 +332,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-ingot_256.png"
+    "imagePath": "/images/iron-ingot_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_IronPlateReinforced_C",
+    "index": 21,
     "name": "Reinforced Iron Plate",
     "displayName": "Reinforced Iron Plate",
     "description": "Used for crafting.\r\nA sturdier and more durable Iron Plate.",
@@ -305,10 +348,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/reinforced-iron-plate_256.png"
+    "imagePath": "/images/reinforced-iron-plate_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Rotor_C",
+    "index": 22,
     "name": "Rotor",
     "displayName": "Rotor",
     "description": "Used for crafting.\r\nThe moving parts of a motor.",
@@ -319,10 +364,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/rotor_256.png"
+    "imagePath": "/images/rotor_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_LiquidFuel_C",
+    "index": 23,
     "name": "Fuel",
     "displayName": "Fuel",
     "description": "Can be used as-is to generate power, or packaged to be used as fuel for vehicles or the Jetpack.",
@@ -333,10 +380,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=21,G=125,R=235,A=0)",
-    "imagePath": "./images/fuel_256.png"
+    "imagePath": "/images/fuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_RocketFuel_C",
+    "index": 24,
     "name": "Rocket Fuel",
     "displayName": "Rocket Fuel",
     "description": "A high-impulse compressed gas fuel.\r\nCan be used as-is to power Fuel-Powered Generators, or packaged to be used as fuel for vehicles or the Jetpack.",
@@ -347,10 +396,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=26,G=37,R=189,A=0)",
-    "imagePath": "./images/rocket-fuel_256.png"
+    "imagePath": "/images/rocket-fuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CopperSheet_C",
+    "index": 25,
     "name": "Copper Sheet",
     "displayName": "Copper Sheet",
     "description": "Used for crafting.\r\nPrimarily used for Pipelines due to its high corrosion resistance.",
@@ -361,10 +412,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/copper-sheet_256.png"
+    "imagePath": "/images/copper-sheet_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_ModularFrame_C",
+    "index": 26,
     "name": "Modular Frame",
     "displayName": "Modular Frame",
     "description": "Used for crafting.\r\nA multipurpose building block.",
@@ -375,10 +428,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/modular-frame_256.png"
+    "imagePath": "/images/modular-frame_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_IronScrew_C",
+    "index": 27,
     "name": "Screw",
     "displayName": "Screw",
     "description": "Used for crafting.\r\nOne of the most basic parts.",
@@ -389,10 +444,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/screw_256.png"
+    "imagePath": "/images/screw_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NitricAcid_C",
+    "index": 28,
     "name": "Nitric Acid",
     "displayName": "Nitric Acid",
     "description": "Produced when Nitrogen Gas reacts with Water. Its high corrosiveness and oxidizing properties make it an excellent choice for refinement and fuel production processes.",
@@ -403,10 +460,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=162,G=217,R=217,A=0)",
-    "imagePath": "./images/nitric-acid_256.png"
+    "imagePath": "/images/nitric-acid_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_LiquidTurboFuel_C",
+    "index": 29,
     "name": "Turbofuel",
     "displayName": "Turbofuel",
     "description": "A more efficient alternative to Fuel. Can be used as-is to generate power, or packaged to be used as fuel for vehicles.",
@@ -417,10 +476,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=46,G=41,R=212,A=0)",
-    "imagePath": "./images/turbofuel_256.png"
+    "imagePath": "/images/turbofuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_GasTank_C",
+    "index": 30,
     "name": "Empty Fluid Tank",
     "displayName": "Empty Fluid Tank",
     "description": "Used to package gases and volatile liquids for transportation.",
@@ -431,10 +492,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/empty-fluid-tank_256.png"
+    "imagePath": "/images/empty-fluid-tank_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CrystalOscillator_C",
+    "index": 31,
     "name": "Crystal Oscillator",
     "displayName": "Crystal Oscillator",
     "description": "An electronic oscillator circuit that uses the mechanical resonance of a vibrating crystal to create an electrical signal with a precise frequency.",
@@ -445,10 +508,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/crystal-oscillator_256.png"
+    "imagePath": "/images/crystal-oscillator_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Motor_C",
+    "index": 32,
     "name": "Motor",
     "displayName": "Motor",
     "description": "Creates a mechanical force that is used to move things from machines to vehicles.",
@@ -459,10 +524,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/motor_256.png"
+    "imagePath": "/images/motor_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_DarkMatter_C",
+    "index": 33,
     "name": "Dark Matter Crystal",
     "displayName": "Dark Matter Crystal",
     "description": "Concentrated Dark Matter Residue that is isolated within a crystalline vessel. This form of containment allows for utilising Dark Matter reliably in other production processes.\r\n\r\nPower Usage: 500-1500 MW (1000 MW average).",
@@ -473,10 +540,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/dark-matter-crystal_256.png"
+    "imagePath": "/images/dark-matter-crystal_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_IonizedFuel_C",
+    "index": 34,
     "name": "Ionized Fuel",
     "displayName": "Ionized Fuel",
     "description": "Fuel that has been ionized, allowing it to deliver incredible output.\r\nCan be used as-is to power Fuel-Powered Generators, or packaged to be used as fuel for vehicles or the Jetpack.",
@@ -487,10 +556,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=26,G=95,R=213,A=60)",
-    "imagePath": "./images/ionized-fuel_256.png"
+    "imagePath": "/images/ionized-fuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_ComputerSuper_C",
+    "index": 35,
     "name": "Supercomputer",
     "displayName": "Supercomputer",
     "description": "The next-gen version of a Computer.",
@@ -501,10 +572,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/supercomputer_256.png"
+    "imagePath": "/images/supercomputer_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CoolingSystem_C",
+    "index": 36,
     "name": "Cooling System",
     "displayName": "Cooling System",
     "description": "Keeps advanced parts and buildings from exceeding efficient temperature levels.",
@@ -515,10 +588,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/cooling-system_256.png"
+    "imagePath": "/images/cooling-system_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_FicsiteMesh_C",
+    "index": 37,
     "name": "Ficsite Trigon",
     "displayName": "Ficsite Trigon",
     "description": "The Ficsite Trigon, made from Ficsite Ingots, is perfectly shaped for all construction challenges. It's performance is so exceptional, it basically solved structural engineering.",
@@ -529,10 +604,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ficsite-trigon_256.png"
+    "imagePath": "/images/ficsite-trigon_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_MotorLightweight_C",
+    "index": 38,
     "name": "Turbo Motor",
     "displayName": "Turbo Motor",
     "description": "A more complex and powerful version of the regular Motor.",
@@ -543,10 +620,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/turbo-motor_256.png"
+    "imagePath": "/images/turbo-motor_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_TimeCrystal_C",
+    "index": 39,
     "name": "Time Crystal",
     "displayName": "Time Crystal",
     "description": "Time Crystals are Diamonds that have been reconfigured on a sub-atomic level in the Converter to retain a time-periodic self-organizing structure. This allows them to be used in the development of quantum processing and storage technologies.",
@@ -557,10 +636,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/time-crystal_256.png"
+    "imagePath": "/images/time-crystal_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_DarkEnergy_C",
+    "index": 40,
     "name": "Dark Matter Residue",
     "displayName": "Dark Matter Residue",
     "description": "Produced as a by-product of Quantum Encoding processes and alternatively generated in the Converter.\r\n\r\nVarious fields of science are still debating the nature and properties of Dark Matter. Meanwhile, FICSIT has found several applications for it in space-time manipulation.",
@@ -571,10 +652,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=249,G=175,R=253,A=150)",
-    "imagePath": "./images/dark-matter-residue_256.png"
+    "imagePath": "/images/dark-matter-residue_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SAMIngot_C",
+    "index": 41,
     "name": "Reanimated SAM",
     "displayName": "Reanimated SAM",
     "description": "The active and contained form of the Strange Alien Matter.\r\n\r\nProper electromagnetic containment is required, as it appears to be able to manipulate the atomic bonds of any matter it comes into contact with.",
@@ -585,10 +668,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/reanimated-sam_256.png"
+    "imagePath": "/images/reanimated-sam_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_QuantumEnergy_C",
+    "index": 42,
     "name": "Excited Photonic Matter",
     "displayName": "Excited Photonic Matter",
     "description": "Excited Photonic Matter is essential for all production processes in the Quantum Encoder.\r\n\r\nFormed in the Converter by inducing intense photon interactions through exposure to SAM in a high-energy environment.",
@@ -599,10 +684,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=232,G=245,R=118,A=90)",
-    "imagePath": "./images/excited-photonic-matter_256.png"
+    "imagePath": "/images/excited-photonic-matter_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Diamond_C",
+    "index": 43,
     "name": "Diamonds",
     "displayName": "Diamonds",
     "description": "Synthetic Diamonds produced by exposing Coal to extreme heat and pressure.\r\n\r\nUsed in the production of Time Crystals and Dark Matter Crystals.\r\n\r\nPower Usage: 250-750 MW (500 MW average).",
@@ -613,10 +700,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/diamonds_256.png"
+    "imagePath": "/images/diamonds_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AluminumPlate_C",
+    "index": 44,
     "name": "Alclad Aluminum Sheet",
     "displayName": "Alclad Aluminum Sheet",
     "description": "Used to make products that require high heat conduction or a high specific strength. Thin, lightweight, and highly durable.",
@@ -627,10 +716,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/alclad-aluminum-sheet_256.png"
+    "imagePath": "/images/alclad-aluminum-sheet_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_QuantumOscillator_C",
+    "index": 45,
     "name": "Superposition Oscillator",
     "displayName": "Superposition Oscillator",
     "description": "An oscillator circuit that uses the mechanical resonance of a vibrating crystal to create a string vibration with a precise frequency. Often used in teleportation technology and dimensional manipulation.",
@@ -641,10 +732,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/superposition-oscillator_256.png"
+    "imagePath": "/images/superposition-oscillator_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_TemporalProcessor_C",
+    "index": 46,
     "name": "Neural-Quantum Processor",
     "displayName": "Neural-Quantum Processor",
     "description": "The Neural-Quantum Processor utilizes a combination of neural network architecture and quantum computing techniques to achieve unprecedented performance. This technology has enabled some of FICSIT's biggest advancements in artificial intelligence and relativistic engineering.",
@@ -655,10 +748,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/neural-quantum-processor_256.png"
+    "imagePath": "/images/neural-quantum-processor_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_12_C",
+    "index": 47,
     "name": "AI Expansion Server",
     "displayName": "AI Expansion Server",
     "description": "Project Part #12. Ship via the Space Elevator to complete phases of Project Assembly.\r\nPower Usage: 1500-2500 MW (2000 MW average).\r\n\r\nGrowth is the metric by which we measure success.",
@@ -669,10 +764,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ai-expansion-server_256.png"
+    "imagePath": "/images/ai-expansion-server_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_6_C",
+    "index": 48,
     "name": "Magnetic Field Generator",
     "displayName": "Magnetic Field Generator",
     "description": "Project Part #7. Ship via the Space Elevator to complete phases of Project Assembly.\r\n\r\nThese modular generators use superconducting magnets and vast amounts of electricity to produce a powerful and easily expandable magnetic field.",
@@ -683,10 +780,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/magnetic-field-generator_256.png"
+    "imagePath": "/images/magnetic-field-generator_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SAMFluctuator_C",
+    "index": 49,
     "name": "SAM Fluctuator",
     "displayName": "SAM Fluctuator",
     "description": "The SAM Fluctuator is able to regulate and direct the behaviour of Reanimated SAM through the application of electric charges with varying frequencies.\r\nThis control facilitates technologies such as matter-to-energy conversion and spatiotemporal matter manipulation.",
@@ -697,10 +796,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/sam-fluctuator_256.png"
+    "imagePath": "/images/sam-fluctuator_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SteelPipe_C",
+    "index": 50,
     "name": "Steel Pipe",
     "displayName": "Steel Pipe",
     "description": "Primarily used when constructing slightly more advanced buildings.",
@@ -711,10 +812,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/steel-pipe_256.png"
+    "imagePath": "/images/steel-pipe_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_ModularFrameFused_C",
+    "index": 51,
     "name": "Fused Modular Frame",
     "displayName": "Fused Modular Frame",
     "description": "A corrosion-resistant, nitride-hardened, highly-robust-yet-lightweight modular frame.",
@@ -725,10 +828,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/fused-modular-frame_256.png"
+    "imagePath": "/images/fused-modular-frame_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_ModularFrameLightweight_C",
+    "index": 52,
     "name": "Radio Control Unit",
     "displayName": "Radio Control Unit",
     "description": "Enhances and directs radio signals.",
@@ -739,10 +844,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/radio-control-unit_256.png"
+    "imagePath": "/images/radio-control-unit_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_FicsiteIngot_C",
+    "index": 53,
     "name": "Ficsite Ingot",
     "displayName": "Ficsite Ingot",
     "description": "Produced by reconstructing other metals on a molecular level using Strange Alien Matter.\r\n\r\nSynthesized by FICSIT to be the perfect construction material, and used in the most high-end processes.",
@@ -753,10 +860,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ficsite-ingot_256.png"
+    "imagePath": "/images/ficsite-ingot_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_10_C",
+    "index": 54,
     "name": "Biochemical Sculptor",
     "displayName": "Biochemical Sculptor",
     "description": "Project Part #10. Ship via the Space Elevator to complete phases of Project Assembly.\r\n\r\nYears ahead of the competition, this top-of-the-line 3D printer is used for the production of synthetic biological resources.",
@@ -767,10 +876,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/biochemical-sculptor_256.png"
+    "imagePath": "/images/biochemical-sculptor_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_7_C",
+    "index": 55,
     "name": "Assembly Director System",
     "displayName": "Assembly Director System",
     "description": "Project Part #6. Ship via the Space Elevator to complete phases of Project Assembly.\r\n\r\nThis extremely fast and precise computing system is specifically designed to direct the Project Assembly: Assembly Phase.",
@@ -781,10 +892,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/assembly-director-system_256.png"
+    "imagePath": "/images/assembly-director-system_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_GoldIngot_C",
+    "index": 56,
     "name": "Caterium Ingot",
     "displayName": "Caterium Ingot",
     "description": "Smelted from Caterium Ore. Primarily used for advanced electronics.",
@@ -795,10 +908,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/caterium-ingot_256.png"
+    "imagePath": "/images/caterium-ingot_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_FluidCanister_C",
+    "index": 57,
     "name": "Empty Canister",
     "displayName": "Empty Canister",
     "description": "Used to package fluids for transportation.",
@@ -809,10 +924,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/empty-canister_256.png"
+    "imagePath": "/images/empty-canister_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CircuitBoard_C",
+    "index": 58,
     "name": "Circuit Board",
     "displayName": "Circuit Board",
     "description": "Advanced electronics that have a plethora of different uses.",
@@ -823,10 +940,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/circuit-board_256.png"
+    "imagePath": "/images/circuit-board_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Plastic_C",
+    "index": 59,
     "name": "Plastic",
     "displayName": "Plastic",
     "description": "Versatile and easy to manufacture, this material has a wide range of uses.",
@@ -837,10 +956,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/plastic_256.png"
+    "imagePath": "/images/plastic_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SteelPlateReinforced_C",
+    "index": 60,
     "name": "Encased Industrial Beam",
     "displayName": "Encased Industrial Beam",
     "description": "Simultaneously utilizes the compressive strength of concrete and the tensile strength of steel.\r\nMostly used as a stable base for constructing buildings.",
@@ -851,10 +972,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/encased-industrial-beam_256.png"
+    "imagePath": "/images/encased-industrial-beam_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Rubber_C",
+    "index": 61,
     "name": "Rubber",
     "displayName": "Rubber",
     "description": "A very flexible material that has a lot of friction.",
@@ -865,10 +988,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/rubber_256.png"
+    "imagePath": "/images/rubber_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PolymerResin_C",
+    "index": 62,
     "name": "Polymer Resin",
     "displayName": "Polymer Resin",
     "description": "A by-product of Crude Oil refinement into Fuel. Commonly used to manufacture Plastic and Rubber.",
@@ -879,10 +1004,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/polymer-resin_256.png"
+    "imagePath": "/images/polymer-resin_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_HeavyOilResidue_C",
+    "index": 63,
     "name": "Heavy Oil Residue",
     "displayName": "Heavy Oil Residue",
     "description": "A by-product of Plastic and Rubber production. Can be further refined into Fuel and Petroleum Coke.",
@@ -893,10 +1020,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=120,G=45,R=109,A=0)",
-    "imagePath": "./images/heavy-oil-residue_256.png"
+    "imagePath": "/images/heavy-oil-residue_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_QuartzCrystal_C",
+    "index": 64,
     "name": "Quartz Crystal",
     "displayName": "Quartz Crystal",
     "description": "Derived from Raw Quartz. Used in the production of advanced radar technology and high-quality display screens.",
@@ -907,10 +1036,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/quartz-crystal_256.png"
+    "imagePath": "/images/quartz-crystal_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SteelIngot_C",
+    "index": 65,
     "name": "Steel Ingot",
     "displayName": "Steel Ingot",
     "description": "Smelted from a combination of Iron Ore and Coal. Can be made into several parts used in building construction.",
@@ -921,10 +1052,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/steel-ingot_256.png"
+    "imagePath": "/images/steel-ingot_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_2_C",
+    "index": 66,
     "name": "Versatile Framework",
     "displayName": "Versatile Framework",
     "description": "Project Part #2. Ship via the Space Elevator to complete phases of Project Assembly.",
@@ -935,10 +1068,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/versatile-framework_256.png"
+    "imagePath": "/images/versatile-framework_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedWater_C",
+    "index": 67,
     "name": "Packaged Water",
     "displayName": "Packaged Water",
     "description": "Water, packaged for alternative transport.",
@@ -949,10 +1084,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=212,G=176,R=122,A=255)",
-    "imagePath": "./images/packaged-water_256.png"
+    "imagePath": "/images/packaged-water_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CopperIngot_C",
+    "index": 68,
     "name": "Copper Ingot",
     "displayName": "Copper Ingot",
     "description": "Used for crafting the most basic parts.",
@@ -963,10 +1100,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/copper-ingot_256.png"
+    "imagePath": "/images/copper-ingot_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AluminumScrap_C",
+    "index": 69,
     "name": "Aluminum Scrap",
     "displayName": "Aluminum Scrap",
     "description": "Refined from Alumina. Can be smelted into Aluminum Ingots for industrial usage.",
@@ -977,10 +1116,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/aluminum-scrap_256.png"
+    "imagePath": "/images/aluminum-scrap_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AluminumCasing_C",
+    "index": 70,
     "name": "Aluminum Casing",
     "displayName": "Aluminum Casing",
     "description": "A versatile container cast from Aluminum Ingots.",
@@ -991,10 +1132,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/aluminum-casing_256.png"
+    "imagePath": "/images/aluminum-casing_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AluminaSolution_C",
+    "index": 71,
     "name": "Alumina Solution",
     "displayName": "Alumina Solution",
     "description": "Dissolved Alumina, extracted from Bauxite. Can be further refined into Aluminum Scrap for Aluminum Ingot production.",
@@ -1005,10 +1148,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=193,G=193,R=193,A=0)",
-    "imagePath": "./images/alumina-solution_256.png"
+    "imagePath": "/images/alumina-solution_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Computer_C",
+    "index": 72,
     "name": "Computer",
     "displayName": "Computer",
     "description": "A complex logic machine that is used to control advanced behavior in other machines.",
@@ -1019,10 +1164,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/computer_256.png"
+    "imagePath": "/images/computer_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_ModularFrameHeavy_C",
+    "index": 73,
     "name": "Heavy Modular Frame",
     "displayName": "Heavy Modular Frame",
     "description": "A more robust multipurpose frame.",
@@ -1033,10 +1180,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/heavy-modular-frame_256.png"
+    "imagePath": "/images/heavy-modular-frame_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_1_C",
+    "index": 74,
     "name": "Smart Plating",
     "displayName": "Smart Plating",
     "description": "Project Part #1. Ship via the Space Elevator to complete phases of Project Assembly.",
@@ -1047,10 +1196,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/smart-plating_256.png"
+    "imagePath": "/images/smart-plating_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_HighSpeedConnector_C",
+    "index": 75,
     "name": "High-Speed Connector",
     "displayName": "High-Speed Connector",
     "description": "Connects multiple cables and wires in a very efficient way. Uses a standard pattern, so it has many varied applications.",
@@ -1061,10 +1212,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/high-speed-connector_256.png"
+    "imagePath": "/images/high-speed-connector_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_3_C",
+    "index": 76,
     "name": "Automated Wiring",
     "displayName": "Automated Wiring",
     "description": "Project Part #3. Ship via the Space Elevator to complete phases of Project Assembly.",
@@ -1075,10 +1228,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/automated-wiring_256.png"
+    "imagePath": "/images/automated-wiring_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Stator_C",
+    "index": 77,
     "name": "Stator",
     "displayName": "Stator",
     "description": "Used for crafting.\r\nThe static parts of a motor.",
@@ -1089,10 +1244,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/stator_256.png"
+    "imagePath": "/images/stator_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CircuitBoardHighSpeed_C",
+    "index": 78,
     "name": "AI Limiter",
     "displayName": "AI Limiter",
     "description": "Controls AIs and keeps them from evolving in malicious ways. Super advanced electronics.",
@@ -1103,10 +1260,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ai-limiter_256.png"
+    "imagePath": "/images/ai-limiter_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_HighSpeedWire_C",
+    "index": 79,
     "name": "Quickwire",
     "displayName": "Quickwire",
     "description": "Caterium's high conductivity and resistance to corrosion make it ideal for small, advanced electronics.",
@@ -1117,10 +1276,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/quickwire_256.png"
+    "imagePath": "/images/quickwire_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_4_C",
+    "index": 80,
     "name": "Modular Engine",
     "displayName": "Modular Engine",
     "description": "Project Part #4. Ship via the Space Elevator to complete phases of Project Assembly.",
@@ -1131,10 +1292,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/modular-engine_256.png"
+    "imagePath": "/images/modular-engine_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_5_C",
+    "index": 81,
     "name": "Adaptive Control Unit",
     "displayName": "Adaptive Control Unit",
     "description": "Project Part #5. Ship via the Space Elevator to complete phases of Project Assembly.",
@@ -1145,10 +1308,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/adaptive-control-unit_256.png"
+    "imagePath": "/images/adaptive-control-unit_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PressureConversionCube_C",
+    "index": 82,
     "name": "Pressure Conversion Cube",
     "displayName": "Pressure Conversion Cube",
     "description": "Converts outgoing force into internal pressure. Required to contain unstable, high-energy matter.",
@@ -1159,10 +1324,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/pressure-conversion-cube_256.png"
+    "imagePath": "/images/pressure-conversion-cube_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PlutoniumCell_C",
+    "index": 83,
     "name": "Encased Plutonium Cell",
     "displayName": "Encased Plutonium Cell",
     "description": "Plutonium Pellets encased in concrete.\r\nUsed to produce Plutonium Fuel Rods for Nuclear Power production.\r\n\r\nCaution: Moderately Radioactive.",
@@ -1173,10 +1340,12 @@
     "radioactiveDecay": 120,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/encased-plutonium-cell_256.png"
+    "imagePath": "/images/encased-plutonium-cell_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PlutoniumPellet_C",
+    "index": 84,
     "name": "Plutonium Pellet",
     "displayName": "Plutonium Pellet",
     "description": "Produced in the Particle Accelerator through conversion of Non-fissile Uranium.\r\nUsed to produce Encased Plutonium Cells for Plutonium Fuel Rods.\r\n\r\nPower Usage: 250-750 MW (500 MW average).\r\nCaution: Moderately Radioactive.",
@@ -1187,10 +1356,12 @@
     "radioactiveDecay": 20,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/plutonium-pellet_256.png"
+    "imagePath": "/images/plutonium-pellet_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NonFissibleUranium_C",
+    "index": 85,
     "name": "Non-Fissile Uranium",
     "displayName": "Non-Fissile Uranium",
     "description": "The Uranium-238 isotope is non-fissile, meaning it cannot be used for nuclear fission. It can, however, be converted into fissile Plutonium in the Particle Accelerator.\r\n\r\nCaution: Mildly Radioactive.",
@@ -1201,10 +1372,12 @@
     "radioactiveDecay": 0.75,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/non-fissile-uranium_256.png"
+    "imagePath": "/images/non-fissile-uranium_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SulfuricAcid_C",
+    "index": 86,
     "name": "Sulfuric Acid",
     "displayName": "Sulfuric Acid",
     "description": "Produced by combining Sulfur and Water in a complex reaction. Primarily used in refinement processes and Battery production.",
@@ -1215,10 +1388,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=0,G=255,R=255,A=0)",
-    "imagePath": "./images/sulfuric-acid_256.png"
+    "imagePath": "/images/sulfuric-acid_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CopperDust_C",
+    "index": 87,
     "name": "Copper Powder",
     "displayName": "Copper Powder",
     "description": "Ground-up Copper Ingots.\r\nThe high natural density of Copper, combined with the granularity of the powder, makes this part perfect for producing Nuclear Pasta in the Particle Accelerator.",
@@ -1229,10 +1404,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/copper-powder_256.png"
+    "imagePath": "/images/copper-powder_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AluminumPlateReinforced_C",
+    "index": 88,
     "name": "Heat Sink",
     "displayName": "Heat Sink",
     "description": "Used to dissipate heat faster.",
@@ -1243,10 +1420,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/heat-sink_256.png"
+    "imagePath": "/images/heat-sink_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_ElectromagneticControlRod_C",
+    "index": 89,
     "name": "Electromagnetic Control Rod",
     "displayName": "Electromagnetic Control Rod",
     "description": "Regulates power output via electromagnetism.",
@@ -1257,10 +1436,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/electromagnetic-control-rod_256.png"
+    "imagePath": "/images/electromagnetic-control-rod_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_9_C",
+    "index": 90,
     "name": "Nuclear Pasta",
     "displayName": "Nuclear Pasta",
     "description": "Project Part #9. Ship via the Space Elevator to complete phases of Project Assembly.\r\nPower Usage: 500-1500 MW (1000 MW average).\r\n\r\nNuclear Pasta is extremely dense degenerate matter, formed when extreme pressure forces protons and electrons together into neutrons. It is theorized to exist naturally within the crust of neutron stars.",
@@ -1271,10 +1452,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/nuclear-pasta_256.png"
+    "imagePath": "/images/nuclear-pasta_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_UraniumCell_C",
+    "index": 91,
     "name": "Encased Uranium Cell",
     "displayName": "Encased Uranium Cell",
     "description": "Used to produce Uranium Fuel Rods for Nuclear Power production. Made from Uranium Ore.\r\n\r\nCaution: Mildly Radioactive.",
@@ -1285,10 +1468,12 @@
     "radioactiveDecay": 0.5,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/encased-uranium-cell_256.png"
+    "imagePath": "/images/encased-uranium-cell_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_DissolvedSilica_C",
+    "index": 92,
     "name": "Dissolved Silica",
     "displayName": "Dissolved Silica",
     "description": "Silica dissolved in Water, produced as part of the alternative refinement of Raw Quartz.\r\nThe Silica can be extracted from the Water to complete the refinement process.",
@@ -1299,10 +1484,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=238,G=190,R=226,A=0)",
-    "imagePath": "./images/dissolved-silica_256.png"
+    "imagePath": "/images/dissolved-silica_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_8_C",
+    "index": 93,
     "name": "Thermal Propulsion Rocket",
     "displayName": "Thermal Propulsion Rocket",
     "description": "Project Part #8. Ship via the Space Elevator to complete phases of Project Assembly.\r\n\r\nUses extreme heat to produce the high-pressure plasma required to get Project Assembly into motion.",
@@ -1313,10 +1500,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/thermal-propulsion-rocket_256.png"
+    "imagePath": "/images/thermal-propulsion-rocket_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Gunpowder_C",
+    "index": 94,
     "name": "Black Powder",
     "displayName": "Black Powder",
     "description": "An explosive powder that is commonly used to produce simple explosives.",
@@ -1327,10 +1516,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/black-powder_256.png"
+    "imagePath": "/images/black-powder_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Ficsonium_C",
+    "index": 95,
     "name": "Ficsonium",
     "displayName": "Ficsonium",
     "description": "Usage and production of this material is strictly prohibited. On Earth, that is. There are no rules in space, only efficiency. \r\n\r\nPower Usage: 500-1500 MW (1000 MW average).",
@@ -1341,10 +1532,12 @@
     "radioactiveDecay": 250,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ficsonium_256.png"
+    "imagePath": "/images/ficsonium_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SingularityCell_C",
+    "index": 96,
     "name": "Singularity Cell",
     "displayName": "Singularity Cell",
     "description": "Used to break down space and time. Required to power Portals.",
@@ -1355,10 +1548,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/singularity-cell_256.png"
+    "imagePath": "/images/singularity-cell_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpaceElevatorPart_11_C",
+    "index": 97,
     "name": "Ballistic Warp Drive",
     "displayName": "Ballistic Warp Drive",
     "description": "Project Part #11. Ship via the Space Elevator to complete phases of Project Assembly.\r\nPower Usage: 1000-2000 MW (1500 MW average).\r\n\r\nA large amount of force is required for the Warp Drives to activate, so sticking them to rockets was the logical next step. Additionally, results improved immensely when the observers were further removed from the Warp Drives upon activation.",
@@ -1369,10 +1564,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ballistic-warp-drive_256.png"
+    "imagePath": "/images/ballistic-warp-drive_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Filter_C",
+    "index": 98,
     "name": "Gas Filter",
     "displayName": "Gas Filter",
     "description": "Filters out toxins and pollutants from the air when used with a Gas Mask.",
@@ -1383,10 +1580,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/gas-filter_256.png"
+    "imagePath": "/images/gas-filter_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AlienProtein_C",
+    "index": 99,
     "name": "Alien Protein",
     "displayName": "Alien Protein",
     "description": "Ground-up Alien Remains in a neat little package.\r\nUsed for medical purposes and to research alien organisms.",
@@ -1397,10 +1596,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/alien-protein_256.png"
+    "imagePath": "/images/alien-protein_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Crystal_C",
+    "index": 100,
     "name": "Blue Power Slug",
     "displayName": "Blue Power Slug",
     "description": "A strange slug radiating an unknown weak power.",
@@ -1411,10 +1612,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/blue-power-slug_256.png"
+    "imagePath": "/images/blue-power-slug_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AlienDNACapsule_C",
+    "index": 101,
     "name": "Alien DNA Capsule",
     "displayName": "Alien DNA Capsule",
     "description": "Translates organic chemicals into readable alien genetic information.\r\nUsed for researching alien organisms.\r\n\r\nGo the extra kilometer! Knowledge is power, and power is just efficiency with fewer steps. Depositing Alien DNA Capsules in the AWESOME Sink provides FICSIT with knowledge, and pioneers with Coupons.",
@@ -1425,10 +1628,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/alien-dna-capsule_256.png"
+    "imagePath": "/images/alien-dna-capsule_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_WAT2_C",
+    "index": 102,
     "name": "Mercer Sphere",
     "displayName": "Mercer Sphere",
     "description": "A weird alien phenomenon. While the sphere appears liquid, it behaves like a solid and does not have any detectable mass. It seems to somehow interact with and have awareness of its environment.",
@@ -1439,10 +1644,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/mercer-sphere_256.png"
+    "imagePath": "/images/mercer-sphere_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Crystal_mk3_C",
+    "index": 103,
     "name": "Purple Power Slug",
     "displayName": "Purple Power Slug",
     "description": "A strange slug radiating a powerful unknown power.",
@@ -1453,10 +1660,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/purple-power-slug_256.png"
+    "imagePath": "/images/purple-power-slug_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Crystal_mk2_C",
+    "index": 104,
     "name": "Yellow Power Slug",
     "displayName": "Yellow Power Slug",
     "description": "A strange slug radiating an unknown power.",
@@ -1467,10 +1676,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": false,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/yellow-power-slug_256.png"
+    "imagePath": "/images/yellow-power-slug_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_GunpowderMK2_C",
+    "index": 105,
     "name": "Smokeless Powder",
     "displayName": "Smokeless Powder",
     "description": "An explosive powder that is commonly used to produce modern firearms.",
@@ -1481,10 +1692,204 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/smokeless-powder_256.png"
+    "imagePath": "/images/smokeless-powder_256.png",
+    "isFicsmas": false
+  },
+  {
+    "id": "Desc_XmasStar_C",
+    "index": 106,
+    "name": "FICSMAS Wonder Star",
+    "displayName": "FICSMAS Wonder Star",
+    "description": "This special FICSMAS Star signifies FICSIT's productivity all across the universe. It also signifies the fact that you have nearly completed the Holiday Event, so it's time to get back to work.",
+    "form": "Solid",
+    "sinkPoints": 6540,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBallCluster_C",
+    "index": 107,
+    "name": "FICSMAS Ornament Bundle",
+    "displayName": "FICSMAS Ornament Bundle",
+    "description": "All the FICSMAS Ornaments smashed together to make even more FICSMAS Decorations!",
+    "form": "Solid",
+    "sinkPoints": 100,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasWreath_C",
+    "index": 108,
+    "name": "FICSMAS Decoration",
+    "displayName": "FICSMAS Decoration",
+    "description": "A decoration used to make decorations. Its use cases are questionable.",
+    "form": "Solid",
+    "sinkPoints": 630,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_CandyCane_C",
+    "index": 109,
+    "name": "Candy Cane",
+    "displayName": "Candy Cane",
+    "description": "A delicious Candy Cane to be enjoyed during the FICSMAS Holidays. \r\n*Disclaimer: Not for consumption...",
+    "form": "Solid",
+    "sinkPoints": 6,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_Snow_C",
+    "index": 110,
+    "name": "Actual Snow",
+    "displayName": "Actual Snow",
+    "description": "It's snow. Not the nice, thick, crunchy kind, though... more the disgustingly wet, slushy kind... Guess we can make stuff from it.",
+    "form": "Solid",
+    "sinkPoints": 5,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBow_C",
+    "index": 111,
+    "name": "FICSMAS Bow",
+    "displayName": "FICSMAS Bow",
+    "description": "A fancy Bow. Maybe someone could wear this? You certainly can't! What you can do is make parts and decorations from it. Probably.",
+    "form": "Solid",
+    "sinkPoints": 4,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBall3_C",
+    "index": 112,
+    "name": "Copper FICSMAS Ornament",
+    "displayName": "Copper FICSMAS Ornament",
+    "description": "Still used for making FICSMAS Decorations.",
+    "form": "Solid",
+    "sinkPoints": 32,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBall4_C",
+    "index": 113,
+    "name": "Iron FICSMAS Ornament",
+    "displayName": "Iron FICSMAS Ornament",
+    "description": "A super special- Nope! Still just used for making FICSMAS Decorations.",
+    "form": "Solid",
+    "sinkPoints": 18,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBranch_C",
+    "index": 114,
+    "name": "FICSMAS Tree Branch",
+    "displayName": "FICSMAS Tree Branch",
+    "description": "A special Tree Branch used to produce parts and buildings during the FICSMAS Event.",
+    "form": "Solid",
+    "sinkPoints": 2,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBall1_C",
+    "index": 115,
+    "name": "Red FICSMAS Ornament",
+    "displayName": "Red FICSMAS Ornament",
+    "description": "Used for making FICSMAS Decorations.",
+    "form": "Solid",
+    "sinkPoints": 2,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_XmasBall2_C",
+    "index": 116,
+    "name": "Blue FICSMAS Ornament",
+    "displayName": "Blue FICSMAS Ornament",
+    "description": "Again, used for making FICSMAS Decorations.",
+    "form": "Solid",
+    "sinkPoints": 1,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_Gift_C",
+    "index": 117,
+    "name": "FICSMAS Gift",
+    "displayName": "FICSMAS Gift",
+    "description": "Special FICSMAS buildings and parts can be obtained and produced from this FICSIT Holiday present.\r\n\r\n*Watch the sky for deliveries from orbit!",
+    "form": "Solid",
+    "sinkPoints": 1,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
   },
   {
     "id": "Desc_NuclearFuelRod_C",
+    "index": 118,
     "name": "Uranium Fuel Rod",
     "displayName": "Uranium Fuel Rod",
     "description": "Used as fuel for Nuclear Power Plants.\r\n\r\nCaution: Produces radioactive Uranium Waste when consumed.\r\nCaution: Moderately Radioactive.",
@@ -1495,10 +1900,12 @@
     "radioactiveDecay": 50,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/uranium-fuel-rod_256.png"
+    "imagePath": "/images/uranium-fuel-rod_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PlutoniumFuelRod_C",
+    "index": 119,
     "name": "Plutonium Fuel Rod",
     "displayName": "Plutonium Fuel Rod",
     "description": "Used as fuel for Nuclear Power Plants.\r\n\r\nCaution: Produces radioactive Plutonium Waste when consumed.\r\nCaution: HIGHLY Radioactive.",
@@ -1509,10 +1916,12 @@
     "radioactiveDecay": 250,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/plutonium-fuel-rod_256.png"
+    "imagePath": "/images/plutonium-fuel-rod_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_FicsoniumFuelRod_C",
+    "index": 120,
     "name": "Ficsonium Fuel Rod",
     "displayName": "Ficsonium Fuel Rod",
     "description": "Used as fuel for Nuclear Power Plants.\r\nThe power source that put FICSIT on the map. Literally. The crater is still there.\r\n\r\nCaution: Moderately Radioactive.",
@@ -1523,10 +1932,12 @@
     "radioactiveDecay": 1000,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/ficsonium-fuel-rod_256.png"
+    "imagePath": "/images/ficsonium-fuel-rod_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Rebar_Explosive_C",
+    "index": 121,
     "name": "Explosive Rebar",
     "displayName": "Explosive Rebar",
     "description": "Explodes on impact, dealing heavy damage.",
@@ -1537,10 +1948,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/explosive-rebar_256.png"
+    "imagePath": "/images/explosive-rebar_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Rebar_Stunshot_C",
+    "index": 122,
     "name": "Stun Rebar",
     "displayName": "Stun Rebar",
     "description": "Electrocutes the target on impact, stunning it for a short time.\r\n\r\nStun Duration: 5 seconds",
@@ -1551,10 +1964,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/stun-rebar_256.png"
+    "imagePath": "/images/stun-rebar_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CartridgeSmartProjectile_C",
+    "index": 123,
     "name": "Homing Rifle Ammo",
     "displayName": "Homing Rifle Ammo",
     "description": "The bullet guidance system built into this ammunition allows it to accurately hit any target within the reticle area.\r\nEspecially useful when dealing with agile threats, or for pioneers who can't be bothered to aim properly.",
@@ -1565,10 +1980,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/homing-rifle-ammo_256.png"
+    "imagePath": "/images/homing-rifle-ammo_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NobeliskCluster_C",
+    "index": 124,
     "name": "Cluster Nobelisk",
     "displayName": "Cluster Nobelisk",
     "description": "Detonates into multiple smaller explosions. Practical for clearing out large areas of vegetation and other inconveniences.",
@@ -1579,10 +1996,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/cluster-nobelisk_256.png"
+    "imagePath": "/images/cluster-nobelisk_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NobeliskExplosive_C",
+    "index": 125,
     "name": "Nobelisk",
     "displayName": "Nobelisk",
     "description": "A simple explosive, useful for clearing boulders, vegetation, and other obstacles.",
@@ -1593,10 +2012,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/nobelisk_256.png"
+    "imagePath": "/images/nobelisk_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NobeliskGas_C",
+    "index": 126,
     "name": "Gas Nobelisk",
     "displayName": "Gas Nobelisk",
     "description": "Creates a deadly gas cloud instead of a regular explosion.",
@@ -1607,10 +2028,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/gas-nobelisk_256.png"
+    "imagePath": "/images/gas-nobelisk_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NobeliskNuke_C",
+    "index": 127,
     "name": "Nuke Nobelisk",
     "displayName": "Nuke Nobelisk",
     "description": "Uses a nuclear fission reaction to generate a massive explosion.\r\nWARNING: Ensure all FICSIT property is clear of the blast zone before detonation.\r\n",
@@ -1621,10 +2044,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/nuke-nobelisk_256.png"
+    "imagePath": "/images/nuke-nobelisk_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NobeliskShockwave_C",
+    "index": 128,
     "name": "Pulse Nobelisk",
     "displayName": "Pulse Nobelisk",
     "description": "Generates a powerful shockwave instead of a regular explosion.",
@@ -1635,10 +2060,76 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/pulse-nobelisk_256.png"
+    "imagePath": "/images/pulse-nobelisk_256.png",
+    "isFicsmas": false
+  },
+  {
+    "id": "Desc_Fireworks_Projectile_01_C",
+    "index": 129,
+    "name": "Sweet Fireworks",
+    "displayName": "Sweet Fireworks",
+    "description": "Merry FICSMAS and a Happy New Year!",
+    "form": "Solid",
+    "sinkPoints": 60,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_Fireworks_Projectile_02_C",
+    "index": 130,
+    "name": "Fancy Fireworks",
+    "displayName": "Fancy Fireworks",
+    "description": "Fireworks are produced from random ingredients. Primarily used for having a good time.",
+    "form": "Solid",
+    "sinkPoints": 40,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_Fireworks_Projectile_03_C",
+    "index": 131,
+    "name": "Sparkly Fireworks",
+    "displayName": "Sparkly Fireworks",
+    "description": "Goes Pfffeeeeew... BOOM! *Sparkle*",
+    "form": "Solid",
+    "sinkPoints": 32,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
+  },
+  {
+    "id": "Desc_SnowballProjectile_C",
+    "index": 132,
+    "name": "Snowball",
+    "displayName": "Snowball",
+    "description": "Compressed dihydrogen monoxide crystals.",
+    "form": "Solid",
+    "sinkPoints": 30,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/not-available_256.png",
+    "isFicsmas": true
   },
   {
     "id": "Desc_SpikedRebar_C",
+    "index": 133,
     "name": "Iron Rebar",
     "displayName": "Iron Rebar",
     "description": "Can be shot using the Rebar Gun for self-defense purposes.",
@@ -1649,10 +2140,28 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-rebar_256.png"
+    "imagePath": "/images/iron-rebar_256.png",
+    "isFicsmas": false
+  },
+  {
+    "id": "BP_ItemDescriptorPortableMiner_C",
+    "index": 134,
+    "name": "Portable Miner",
+    "displayName": "Portable Miner",
+    "description": "Automatically extracts a resource when placed on a resource node.\r\nNote: Has limited storage space.",
+    "form": "Solid",
+    "sinkPoints": 56,
+    "sinkable": true,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": true,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/portable-miner_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Rebar_Spreadshot_C",
+    "index": 135,
     "name": "Shatter Rebar",
     "displayName": "Shatter Rebar",
     "description": "Fractures when shot, launching deadly debris with wide spread but limited range.",
@@ -1663,10 +2172,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/shatter-rebar_256.png"
+    "imagePath": "/images/shatter-rebar_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CartridgeChaos_C",
+    "index": 136,
     "name": "Turbo Rifle Ammo",
     "displayName": "Turbo Rifle Ammo",
     "description": "Lightweight, compact, and volatile. These rounds provide extreme capacity and rate of fire at the cost of accuracy.",
@@ -1677,10 +2188,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/turbo-rifle-ammo_256.png"
+    "imagePath": "/images/turbo-rifle-ammo_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_CartridgeStandard_C",
+    "index": 137,
     "name": "Rifle Ammo",
     "displayName": "Rifle Ammo",
     "description": "Standard issue Rifle ammunition, useful for establishing dominance.",
@@ -1691,10 +2204,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/rifle-ammo_256.png"
+    "imagePath": "/images/rifle-ammo_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_OreIron_C",
+    "index": 138,
     "name": "Iron Ore",
     "displayName": "Iron Ore",
     "description": "Used for crafting.\r\nThe most essential basic resource.",
@@ -1705,10 +2220,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/iron-ore_256.png"
+    "imagePath": "/images/iron-ore_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Coal_C",
+    "index": 139,
     "name": "Coal",
     "displayName": "Coal",
     "description": "Mainly used as fuel for vehicles & Coal-Powered Generators, or in Steel production.",
@@ -1719,10 +2236,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/coal_256.png"
+    "imagePath": "/images/coal_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Water_C",
+    "index": 140,
     "name": "Water",
     "displayName": "Water",
     "description": "It's water.",
@@ -1733,10 +2252,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=212,G=176,R=122,A=0)",
-    "imagePath": "./images/water_256.png"
+    "imagePath": "/images/water_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_NitrogenGas_C",
+    "index": 141,
     "name": "Nitrogen Gas",
     "displayName": "Nitrogen Gas",
     "description": "Has a variety of uses, including metallurgy, cooling, and Nitric Acid production. On MASSAGE-2 (AB)b, it can be extracted from underground gas wells.",
@@ -1747,10 +2268,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=89,G=89,R=89,A=0)",
-    "imagePath": "./images/nitrogen-gas_256.png"
+    "imagePath": "/images/nitrogen-gas_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Sulfur_C",
+    "index": 142,
     "name": "Sulfur",
     "displayName": "Sulfur",
     "description": "Primarily used to produce Black Powder.",
@@ -1761,10 +2284,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/sulfur_256.png"
+    "imagePath": "/images/sulfur_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SAM_C",
+    "index": 143,
     "name": "SAM",
     "displayName": "SAM",
     "description": "Strange Alien Matter, commonly referred to as SAM, doesn't seem to follow the known laws of physics. It whispers of new possibilities.",
@@ -1775,10 +2300,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/sam_256.png"
+    "imagePath": "/images/sam_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_OreBauxite_C",
+    "index": 144,
     "name": "Bauxite",
     "displayName": "Bauxite",
     "description": "Used to produce Alumina, which can be further refined into the Aluminum Scrap required to produce Aluminum Ingots.",
@@ -1789,10 +2316,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/bauxite_256.png"
+    "imagePath": "/images/bauxite_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_OreGold_C",
+    "index": 145,
     "name": "Caterium Ore",
     "displayName": "Caterium Ore",
     "description": "Smelted into Caterium Ingots, which are primarily used for advanced electronics.",
@@ -1803,10 +2332,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/caterium-ore_256.png"
+    "imagePath": "/images/caterium-ore_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_OreCopper_C",
+    "index": 146,
     "name": "Copper Ore",
     "displayName": "Copper Ore",
     "description": "Used for crafting.\r\nA basic resource primarily used for electricity.",
@@ -1817,10 +2348,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/copper-ore_256.png"
+    "imagePath": "/images/copper-ore_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_RawQuartz_C",
+    "index": 147,
     "name": "Raw Quartz",
     "displayName": "Raw Quartz",
     "description": "Can be processed into Quartz Crystals and Silica, which both offer a variety of applications.",
@@ -1831,10 +2364,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/raw-quartz_256.png"
+    "imagePath": "/images/raw-quartz_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Stone_C",
+    "index": 148,
     "name": "Limestone",
     "displayName": "Limestone",
     "description": "Used for crafting.\r\nA basic resource primarily used for stable Foundations.",
@@ -1845,10 +2380,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/limestone_256.png"
+    "imagePath": "/images/limestone_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_OreUranium_C",
+    "index": 149,
     "name": "Uranium",
     "displayName": "Uranium",
     "description": "A radioactive element. \r\nUsed to produce Encased Uranium Cells for Uranium Fuel Rods.\r\n\r\nCaution: Moderately Radioactive.",
@@ -1859,10 +2396,12 @@
     "radioactiveDecay": 15,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/uranium_256.png"
+    "imagePath": "/images/uranium_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_LiquidOil_C",
+    "index": 150,
     "name": "Crude Oil",
     "displayName": "Crude Oil",
     "description": "Refined into all kinds of Oil-based resources, like Fuel and Plastic.",
@@ -1873,10 +2412,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=25,G=0,R=25,A=0)",
-    "imagePath": "./images/crude-oil_256.png"
+    "imagePath": "/images/crude-oil_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Biofuel_C",
+    "index": 151,
     "name": "Solid Biofuel",
     "displayName": "Solid Biofuel",
     "description": "The most energy-efficient form of solid Biomass. Can be used as fuel for the Chainsaw.",
@@ -1887,10 +2428,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/solid-biofuel_256.png"
+    "imagePath": "/images/solid-biofuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedBiofuel_C",
+    "index": 152,
     "name": "Packaged Liquid Biofuel",
     "displayName": "Packaged Liquid Biofuel",
     "description": "Liquid Biofuel, packaged for alternative transport. Can be used as fuel for vehicles and the Jetpack.",
@@ -1901,10 +2444,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-liquid-biofuel_256.png"
+    "imagePath": "/images/packaged-liquid-biofuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_GenericBiomass_C",
+    "index": 153,
     "name": "Biomass",
     "displayName": "Biomass",
     "description": "Primarily used as fuel.\r\nBiomass Burners and vehicles can use it for power.\r\nBiomass is much more energy-efficient than raw biological matter.",
@@ -1915,10 +2460,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/biomass_256.png"
+    "imagePath": "/images/biomass_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Leaves_C",
+    "index": 154,
     "name": "Leaves",
     "displayName": "Leaves",
     "description": "Primarily used as fuel.\r\nBiomass Burners and vehicles can use Leaves for power.",
@@ -1929,10 +2476,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/leaves_256.png"
+    "imagePath": "/images/leaves_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Mycelia_C",
+    "index": 155,
     "name": "Mycelia",
     "displayName": "Mycelia",
     "description": "Used for crafting.\r\nBiomass Burners and vehicles can also use Mycelia for power.",
@@ -1943,10 +2492,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/mycelia_256.png"
+    "imagePath": "/images/mycelia_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Wood_C",
+    "index": 156,
     "name": "Wood",
     "displayName": "Wood",
     "description": "Primarily used as fuel.\r\nBiomass Burners and vehicles can use Wood for power.",
@@ -1957,10 +2508,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/wood_256.png"
+    "imagePath": "/images/wood_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_LiquidBiofuel_C",
+    "index": 157,
     "name": "Liquid Biofuel",
     "displayName": "Liquid Biofuel",
     "description": "Liquid Biofuel can be used as-is to generate power, or packaged to be used as fuel for vehicles.",
@@ -1971,10 +2524,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=44,G=83,R=59,A=0)",
-    "imagePath": "./images/liquid-biofuel_256.png"
+    "imagePath": "/images/liquid-biofuel_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedAlumina_C",
+    "index": 158,
     "name": "Packaged Alumina Solution",
     "displayName": "Packaged Alumina Solution",
     "description": "Alumina Solution, packaged for alternative transport.",
@@ -1985,10 +2540,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-alumina-solution_256.png"
+    "imagePath": "/images/packaged-alumina-solution_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedNitrogenGas_C",
+    "index": 159,
     "name": "Packaged Nitrogen Gas",
     "displayName": "Packaged Nitrogen Gas",
     "description": "Nitrogen Gas, packaged for alternative transport.",
@@ -1999,10 +2556,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-nitrogen-gas_256.png"
+    "imagePath": "/images/packaged-nitrogen-gas_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedNitricAcid_C",
+    "index": 160,
     "name": "Packaged Nitric Acid",
     "displayName": "Packaged Nitric Acid",
     "description": "Nitric Acid, packaged for alternative transport.",
@@ -2013,10 +2572,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-nitric-acid_256.png"
+    "imagePath": "/images/packaged-nitric-acid_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_PackagedSulfuricAcid_C",
+    "index": 161,
     "name": "Packaged Sulfuric Acid",
     "displayName": "Packaged Sulfuric Acid",
     "description": "Sulfuric Acid, packaged for alternative transport.",
@@ -2027,10 +2588,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=42,G=83,R=58,A=255)",
-    "imagePath": "./images/packaged-sulfuric-acid_256.png"
+    "imagePath": "/images/packaged-sulfuric-acid_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_Fabric_C",
+    "index": 162,
     "name": "Fabric",
     "displayName": "Fabric",
     "description": "Used to craft equipment.\r\nFlexible but durable fabric.",
@@ -2041,10 +2604,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/fabric_256.png"
+    "imagePath": "/images/fabric_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_HogParts_C",
+    "index": 163,
     "name": "Hog Remains",
     "displayName": "Hog Remains",
     "description": "The carapace of an alien Hog creature.\r\nUsed for MAM research.",
@@ -2055,10 +2620,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/hog-remains_256.png"
+    "imagePath": "/images/hog-remains_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_SpitterParts_C",
+    "index": 164,
     "name": "Spitter Remains",
     "displayName": "Spitter Remains",
     "description": "The remains of a plasma-spitting alien creature.\r\nUsed for MAM research.",
@@ -2069,10 +2636,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/spitter-remains_256.png"
+    "imagePath": "/images/spitter-remains_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_StingerParts_C",
+    "index": 165,
     "name": "Stinger Remains",
     "displayName": "Stinger Remains",
     "description": "The remains of whatever that creepy thing was.\r\nUsed for MAM research.",
@@ -2083,10 +2652,12 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/stinger-remains_256.png"
+    "imagePath": "/images/stinger-remains_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_HatcherParts_C",
+    "index": 166,
     "name": "Hatcher Remains",
     "displayName": "Hatcher Remains",
     "description": "The shell-like remains of an alien... thing.\r\nUsed for MAM research.",
@@ -2097,10 +2668,44 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/hatcher-remains_256.png"
+    "imagePath": "/images/hatcher-remains_256.png",
+    "isFicsmas": false
+  },
+  {
+    "id": "Desc_CrystalShard_C",
+    "index": 167,
+    "name": "Power Shard",
+    "displayName": "Power Shard",
+    "description": "Power Slug mucus compressed into a solid crystal-like shard. \r\nIt radiates a strange power.",
+    "form": "Solid",
+    "sinkPoints": 0,
+    "sinkable": false,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": false,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/power-shard_256.png",
+    "isFicsmas": false
+  },
+  {
+    "id": "Desc_WAT1_C",
+    "index": 168,
+    "name": "Somersloop",
+    "displayName": "Somersloop",
+    "description": "An odd alien object with a mind-bending, yet somehow familiar shape. It emits an unsettling energy.",
+    "form": "Solid",
+    "sinkPoints": 0,
+    "sinkable": false,
+    "powerConsumption": 0,
+    "radioactiveDecay": 0,
+    "canBeDiscarded": false,
+    "color": "(B=255,G=255,R=255,A=0)",
+    "imagePath": "/images/somersloop_256.png",
+    "isFicsmas": false
   },
   {
     "id": "Desc_AlienPowerFuel_C",
+    "index": 169,
     "name": "Alien Power Matrix",
     "displayName": "Alien Power Matrix",
     "description": "This intricate condensed-matter matrix is used to enhance the output of the Alien Power Augmenter. \r\n\r\nInitially developed in efforts to create a human-made Somersloop, the Alien Power Matrix cannot sustain the extra-dimensional energy connection on its own. However, it can effectively stabilize the energy stream of the Somersloop.",
@@ -2111,6 +2716,7 @@
     "radioactiveDecay": 0,
     "canBeDiscarded": true,
     "color": "(B=255,G=255,R=255,A=0)",
-    "imagePath": "./images/alien-power-matrix_256.png"
+    "imagePath": "/images/alien-power-matrix_256.png",
+    "isFicsmas": false
   }
 ]

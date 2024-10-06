@@ -7,6 +7,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { capitalize } from 'lodash';
 import { UserMenu } from '../auth/UserMenu';
 import classes from './Header.module.css';
 
@@ -40,13 +41,15 @@ export function Header(props: HeaderProps) {
             </Text> */}
           </Group>
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-          <UserMenu />
+          <Group>
+            <UserMenu />
+          </Group>
         </Group>
       </Container>
       {props.tabs && (
         <Container size="lg">
           <Tabs
-            defaultValue="Factories"
+            defaultValue="factories"
             value={props.activeTab}
             variant="outline"
             visibleFrom="sm"
@@ -60,7 +63,7 @@ export function Header(props: HeaderProps) {
             <Tabs.List>
               {props.tabs?.map(tab => (
                 <Tabs.Tab value={tab} key={tab}>
-                  {tab}
+                  {capitalize(tab)}
                 </Tabs.Tab>
               ))}
             </Tabs.List>

@@ -3,6 +3,7 @@ import { Session } from '@supabase/supabase-js';
 import { store } from '../../core/store';
 import { supabaseClient } from '../../core/supabase';
 import { factoryActions } from '../../factories/store/FactoriesSlice';
+import { solverActions } from '../../recipes/solver/store/SolverSlice';
 import { authActions } from '../AuthSlice';
 import { ISerializedState } from './useSyncLocalAndRemoteStore';
 
@@ -57,5 +58,8 @@ export async function loadFromRemote(
   if (isRemoteNewerThanLocal) {
     console.log('Loading from remote:', remoteState);
     store.dispatch(factoryActions.loadFromRemote(remoteState.factories));
+    if (remoteState.solver) {
+      store.dispatch(solverActions.loadFromRemote(remoteState.solver));
+    }
   }
 }

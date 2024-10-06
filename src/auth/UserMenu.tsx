@@ -45,8 +45,7 @@ export function UserMenu(props: IUserMenuProps) {
         <Button
           rightSection={<IconLogin2 size={20} />}
           variant="subtle"
-          size="md"
-          mt="xs"
+          size="sm"
           onClick={loginOpenedHandler.open}
         >
           Login

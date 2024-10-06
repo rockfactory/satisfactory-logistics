@@ -1,5 +1,6 @@
 export interface FactoryItem {
   id: string;
+  index: number;
   name: string;
   displayName: string;
   description: string;
@@ -12,14 +13,15 @@ export interface FactoryItem {
   canBeDiscarded: boolean;
   color: string;
   imagePath: string;
+  isFicsmas: boolean;
 }
 
 export enum FactoryItemForm {
-  Solid = "Solid",
-  Liquid = "Liquid",
-  Gas = "Gas",
+  Solid = 'Solid',
+  Liquid = 'Liquid',
+  Gas = 'Gas',
 }
-import RawFactoryItems from "./FactoryItems.json";
+import RawFactoryItems from './FactoryItems.json';
 
 export const AllFactoryItems: FactoryItem[] = RawFactoryItems as FactoryItem[];
 
@@ -28,5 +30,5 @@ export const AllFactoryItemsMap = AllFactoryItems.reduce(
     acc[item.id] = item;
     return acc;
   },
-  {} as Record<string, FactoryItem>
+  {} as Record<string, FactoryItem>,
 );
