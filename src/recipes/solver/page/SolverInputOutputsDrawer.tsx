@@ -1,8 +1,13 @@
 import { Button, Drawer, Group, NumberInput, Stack, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconArrowsCross } from '@tabler/icons-react';
+import { useDispatch } from 'react-redux';
+import {
+  FactoryInputIcon,
+  FactoryOutputIcon,
+} from '../../../factories/components/peek/icons/OutputInputIcons';
 import { FactoryItemInput } from '../../../factories/inputs/FactoryItemInput';
-import { usePathSolverInstance } from '../store/SolverSlice';
+import { solverActions, usePathSolverInstance } from '../store/SolverSlice';
 
 export interface ISolverInputOutputsDrawerProps {
   onChangeSolver: (
@@ -16,6 +21,7 @@ export function SolverInputOutputsDrawer(
   props: ISolverInputOutputsDrawerProps,
 ) {
   const { onChangeSolver } = props;
+  const dispatch = useDispatch();
   const [opened, { open, close }] = useDisclosure();
   const instance = usePathSolverInstance();
 
@@ -43,7 +49,7 @@ export function SolverInputOutputsDrawer(
         <Stack gap="md">
           <Stack gap="sm">
             <Text size="lg">Inputs</Text>
-            {instance?.request?.inputs.map((input, i) => (
+            {instance?.request?.inputs?.map((input, i) => (
               <Group gap="xs">
                 <FactoryItemInput
                   value={input.item ?? undefined}
@@ -60,6 +66,16 @@ export function SolverInputOutputsDrawer(
                 />
               </Group>
             ))}
+            <Button
+              w="100%"
+              size="sm"
+              leftSection={<FactoryInputIcon />}
+              onClick={() => {
+                dispatch(solverActions.addInput({ id: instance!.id }));
+              }}
+            >
+              Add Input
+            </Button>
           </Stack>
           <Stack gap="sm">
             <Text size="lg">Outputs</Text>
@@ -80,6 +96,16 @@ export function SolverInputOutputsDrawer(
                 />
               </Group>
             ))}
+            <Button
+              w="100%"
+              size="sm"
+              rightSection={<FactoryOutputIcon />}
+              onClick={() => {
+                dispatch(solverActions.addOutput({ id: instance!.id }));
+              }}
+            >
+              Add Output
+            </Button>
           </Stack>
         </Stack>
       </Drawer>

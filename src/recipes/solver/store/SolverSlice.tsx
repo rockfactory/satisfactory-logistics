@@ -8,7 +8,7 @@ import { GameFactory } from '../../../factories/store/FactoriesSlice';
 import { AllFactoryRecipes } from '../../FactoryRecipe';
 
 export interface SolverRequest {
-  inputs: Array<{
+  inputs?: Array<{
     item?: string | undefined | null;
     amount?: number | undefined | null;
   }>;
@@ -82,6 +82,16 @@ export const SolverSlice = createSlice({
       if (state.current === action.payload.id) {
         state.current = null;
       }
+    },
+    addInput: (state, action: PayloadAction<{ id: string }>) => {
+      if (!state.instances[action.payload.id]?.request.inputs) {
+        state.instances[action.payload.id]!.request.inputs = [];
+      }
+      state.instances[action.payload.id]?.request?.inputs?.push({});
+    },
+
+    addOutput: (state, action: PayloadAction<{ id: string }>) => {
+      state.instances[action.payload.id]?.request.outputs.push({});
     },
     updateAtPath: (
       state,

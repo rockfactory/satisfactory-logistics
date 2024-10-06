@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   Badge,
   Box,
   Button,
@@ -17,8 +18,9 @@ import {
   IconBolt,
   IconBuildingFactory2,
   IconClockBolt,
+  IconTrash,
 } from '@tabler/icons-react';
-import { NodeProps } from '@xyflow/react';
+import { NodeProps, NodeToolbar } from '@xyflow/react';
 import React, { memo } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -69,9 +71,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
   return (
     <Popover
       opened={(isHovering || props.selected) && !props.dragging}
-      transitionProps={{
-        enterDelay: 250,
-      }}
+      transitionProps={{}}
     >
       <Popover.Target>
         <Box
@@ -86,6 +86,26 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
           onMouseEnter={open}
           onMouseLeave={close}
         >
+          <NodeToolbar>
+            <ActionIcon
+              variant="outline"
+              color="red"
+              size="sm"
+              mt={3}
+              onClick={() =>
+                dispatch(
+                  solverActions.toggleRecipe({
+                    id: solverId,
+                    use: false,
+                    recipe: recipe.id,
+                  }),
+                )
+              }
+            >
+              <IconTrash size={16} stroke={1.5} />
+            </ActionIcon>
+          </NodeToolbar>
+
           <Group gap="sm">
             <Image w="32" h="32" src={building.imagePath} />
             <Stack gap={2} align="center">

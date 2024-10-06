@@ -49,7 +49,7 @@ export function useHighs() {
 
 export function solveProduction(highs: Highs, request: SolverRequest) {
   const ctx = new SolverContext(request);
-  for (const item of request.inputs) {
+  for (const item of request.inputs ?? []) {
     if (!item.amount || !item.item) continue;
     addInputResourceConstraints(ctx, item.item, item.amount);
   }

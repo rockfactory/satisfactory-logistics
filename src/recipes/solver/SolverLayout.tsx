@@ -3,8 +3,10 @@ import {
   Background,
   BackgroundVariant,
   ConnectionLineType,
+  Controls,
   Edge,
   InternalNode,
+  MiniMap,
   Node,
   Panel,
   Position,
@@ -16,7 +18,7 @@ import {
 } from '@xyflow/react';
 import { useCallback, useEffect, useState } from 'react';
 
-import { Box, Button } from '@mantine/core';
+import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
 import { log } from '../../core/logger/log';
 import { FloatingEdge } from './edges/FloatingEdge';
@@ -203,6 +205,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   return (
     <Box w={'100%'} h={600} opacity={opacity}>
       <ReactFlow
+        minZoom={0.2}
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
@@ -212,45 +215,55 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         connectionLineType={ConnectionLineType.SmoothStep}
         fitView
         snapToGrid
+        colorMode="dark"
         snapGrid={[10, 10]}
-      />
-      <svg>
-        <defs>
-          <linearGradient id="edge-gradient">
-            {/* <stop offset="0%" stopColor="#ae53ba" />
-            <stop offset="100%" stopColor="#2a8af6" /> */}
-            <stop offset="0%" stopColor="var(--mantine-color-gray-7)" />
-            <stop offset="100%" stopColor="var(--mantine-color-gray-4)" />
-          </linearGradient>
-          <linearGradient id="edge-gradient-reverse">
-            {/* <stop offset="0%" stopColor="#ae53ba" />
-            <stop offset="100%" stopColor="#2a8af6" /> */}
-            <stop offset="0%" stopColor="var(--mantine-color-gray-4)" />
-            <stop offset="100%" stopColor="var(--mantine-color-gray-7)" />
-          </linearGradient>
+      >
+        <Controls showFitView />
+        <MiniMap nodeStrokeWidth={3} />
 
-          <marker
-            id="edge-circle"
-            viewBox="-5 -5 10 10"
-            refX="0"
-            refY="0"
-            markerUnits="strokeWidth"
-            markerWidth="10"
-            markerHeight="10"
-            orient="auto"
-          >
-            <circle stroke="#2a8af6" strokeOpacity="0.75" r="2" cx="0" cy="0" />
-          </marker>
-        </defs>
-      </svg>
-      <Background
-        color="var(--mantine-color-dark-4)"
-        variant={BackgroundVariant.Dots}
-        gap={[10, 10]}
-      />
-      <Panel>
-        <Button onClick={onLayout}>Layout</Button>
-      </Panel>
+        <svg>
+          <defs>
+            <linearGradient id="edge-gradient">
+              {/* <stop offset="0%" stopColor="#ae53ba" />
+            <stop offset="100%" stopColor="#2a8af6" /> */}
+              <stop offset="0%" stopColor="var(--mantine-color-gray-7)" />
+              <stop offset="100%" stopColor="var(--mantine-color-gray-4)" />
+            </linearGradient>
+            <linearGradient id="edge-gradient-reverse">
+              {/* <stop offset="0%" stopColor="#ae53ba" />
+            <stop offset="100%" stopColor="#2a8af6" /> */}
+              <stop offset="0%" stopColor="var(--mantine-color-gray-4)" />
+              <stop offset="100%" stopColor="var(--mantine-color-gray-7)" />
+            </linearGradient>
+
+            <marker
+              id="edge-circle"
+              viewBox="-5 -5 10 10"
+              refX="0"
+              refY="0"
+              markerUnits="strokeWidth"
+              markerWidth="10"
+              markerHeight="10"
+              orient="auto"
+            >
+              <circle
+                stroke="#2a8af6"
+                strokeOpacity="0.75"
+                r="2"
+                cx="0"
+                cy="0"
+              />
+            </marker>
+          </defs>
+        </svg>
+        <Background
+          bgColor="var(--mantine-color-dark-7)"
+          color="var(--mantine-color-dark-4)"
+          variant={BackgroundVariant.Dots}
+          gap={[10, 10]}
+        />
+        <Panel>{/* <Button onClick={onLayout}>Layout</Button> */}</Panel>
+      </ReactFlow>
     </Box>
   );
 };

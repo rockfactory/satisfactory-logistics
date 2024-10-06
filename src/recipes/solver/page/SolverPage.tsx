@@ -1,20 +1,12 @@
-import {
-  Box,
-  Button,
-  Group,
-  LoadingOverlay,
-  NumberInput,
-  Stack,
-} from '@mantine/core';
+import { Box, Button, Group, LoadingOverlay, Stack } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconArrowLeft, IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconArrowLeft, IconTrash } from '@tabler/icons-react';
 import { ReactFlowProvider } from '@xyflow/react';
 import moize from 'moize';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RootState } from '../../../core/store';
-import { FactoryItemInput } from '../../../factories/inputs/FactoryItemInput';
 import { AfterHeaderSticky } from '../../../layout/AfterHeaderSticky';
 import { solveProduction, useHighs } from '../solveProduction';
 import { SolverLayout } from '../SolverLayout';
@@ -87,68 +79,36 @@ export function SolverPage(props: ISolverPageProps) {
 
       <AfterHeaderSticky>
         <Group gap="sm">
+          {factory && (
+            <Button
+              component={Link}
+              to="/factories"
+              variant="outline"
+              color="gray"
+              leftSection={<IconArrowLeft size={16} />}
+            >
+              All Factories
+            </Button>
+          )}
           <SolverRecipesDrawer />
           <SolverInputOutputsDrawer onChangeSolver={onChangeSolver} />
-          <Stack gap="sm">
-            {factory && (
-              <Button
-                component={Link}
-                to="/factories"
-                variant="outline"
-                color="gray"
-                leftSection={<IconArrowLeft size={16} />}
-              >
-                All Factories
-              </Button>
-            )}
-            {instance?.request.outputs.map((output, index) => (
-              <Group key={index} gap="sm">
-                <FactoryItemInput
-                  value={output.item}
-                  onChange={onChangeSolver(`request.outputs.${index}.item`)}
-                  label="Resource"
-                  size="sm"
-                />
-                <NumberInput
-                  value={output.amount ?? undefined}
-                  onChange={onChangeSolver(`request.outputs.${index}.amount`)}
-                  label="Amount"
-                  min={0}
-                />
-                <Button
-                  onClick={() => {
-                    dispatch(
-                      solverActions.updateAtPath({
-                        id: instance!.id,
-                        path: `request.outputs.${instance.request?.outputs.length ?? 0}`,
-                        value: { item: null, amount: null },
-                      }),
-                    );
-                  }}
-                >
-                  <IconPlus size={16} />
-                </Button>
-              </Group>
-            ))}
-          </Stack>
-          <Group gap="sm">
-            <Button
-              color="red"
-              variant="subtle"
-              onClick={() => {
-                dispatch(solverActions.remove({ id: instance!.id }));
-                if (factory) {
-                  navigate(`/factories`);
-                  notifications.show({
-                    title: 'Solver removed',
-                    message: `Solver for ${factory.name ?? 'factory'} removed`,
-                  });
-                }
-              }}
-            >
-              <IconTrash size={16} />
-            </Button>
-          </Group>
+
+          <Button
+            color="red"
+            variant="light"
+            onClick={() => {
+              dispatch(solverActions.remove({ id: instance!.id }));
+              if (factory) {
+                navigate(`/factories`);
+                notifications.show({
+                  title: 'Solver removed',
+                  message: `Solver for ${factory.name ?? 'factory'} removed`,
+                });
+              }
+            }}
+          >
+            <IconTrash size={16} />
+          </Button>
         </Group>
       </AfterHeaderSticky>
       {solution && (
