@@ -25,6 +25,12 @@ export const encodeResource = (resource: string) =>
 type SolverNode =
   | { type: 'raw'; label: string; resource: FactoryItem; variable: string }
   | {
+      type: 'raw_input';
+      label: string;
+      resource: FactoryItem;
+      variable: string;
+    }
+  | {
       type: 'output';
       label: string;
       recipe: FactoryRecipe;
@@ -177,7 +183,11 @@ export function consolidateProductionConstraints(ctx: SolverContext) {
 
     for (const inboundVar of producers) {
       const inbound = ctx.graph.getNodeAttributes(inboundVar);
-      if (inbound.type !== 'output' && inbound.type !== 'raw') {
+      if (
+        inbound.type !== 'output' &&
+        inbound.type !== 'raw' &&
+        inbound.type !== 'raw_input'
+      ) {
         logger.error('Invalid inbound node type', inbound, node);
         throw new Error('Invalid inbound node type');
       }
@@ -207,13 +217,12 @@ export function consolidateProductionConstraints(ctx: SolverContext) {
     // From producer P to ingredients I1, I2, I3
     for (const producerVar of producers) {
       const producer = ctx.graph.getNodeAttributes(producerVar);
-      if (consumers.length === 0) continue;
 
       const byproductVar =
         producer.type === 'output' ? producer.byproductVariable : null;
 
       ctx.constraints.push(
-        `${producerVar} - ${consumers.map(consumerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} ${byproductVar ? `- ${byproductVar}` : ''} = 0`,
+        `${producerVar} ${consumers.length === 0 ? '' : ' - ' + consumers.map(consumerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} ${byproductVar ? `- ${byproductVar}` : ''} = 0`,
       );
     }
 
@@ -267,6 +276,24 @@ function setGraphByproduct(ctx: SolverContext, resource: string) {
     resource: item,
     variable: `b${item.index}`,
   });
+}
+
+export function addInputResourceConstraints(
+  ctx: SolverContext,
+  resource: string,
+  amount?: number,
+) {
+  setGraphResource(ctx, resource);
+  const resourceItem = AllFactoryItemsMap[resource];
+  const rawVar = `r${resourceItem.index}`;
+  ctx.graph.mergeNode(rawVar, {
+    type: 'raw_input',
+    label: resource,
+    resource: resourceItem,
+    variable: rawVar,
+  });
+  ctx.graph.mergeEdge(rawVar, resource);
+  ctx.constraints.push(`${rawVar} = ${amount ?? 0}`);
 }
 
 export function computeProductionConstraints(

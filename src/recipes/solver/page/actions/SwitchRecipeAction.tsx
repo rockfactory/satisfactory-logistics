@@ -1,12 +1,15 @@
 import { MultiSelect } from '@mantine/core';
 import { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../../core/store';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import {
   AllFactoryRecipes,
   AllFactoryRecipesMap,
 } from '../../../FactoryRecipe';
-import { solverActions } from '../../store/SolverSlice';
+import {
+  solverActions,
+  usePathSolverAllowedRecipes,
+} from '../../store/SolverSlice';
 
 export interface ISwitchRecipeActionProps {
   recipeId: string;
@@ -24,10 +27,8 @@ export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
   }, [recipeId]);
 
   const dispatch = useDispatch();
-  const allAllowedRecipes = useSelector((state: RootState) => {
-    return state.solver.present.instances[state.solver.present.current!].request
-      ?.allowedRecipes;
-  });
+  const solverId = useParams<{ id: string }>().id;
+  const allAllowedRecipes = usePathSolverAllowedRecipes();
   const handleSelectRecipe = (recipeId: string) => {
     console.log('Switching to recipe', recipeId);
   };
@@ -45,6 +46,7 @@ export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
       onChange={selected => {
         dispatch(
           solverActions.updateAtPath({
+            id: solverId,
             path: 'request.allowedRecipes',
             value: allAllowedRecipes
               ?.filter(id => !recipes.map(recipe => recipe.id).includes(id))

@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     element: <PrivacyPolicy />,
   },
   {
-    path: '/factories/:factoriesTab',
+    path: '/factories/*',
     element: <FactoryRoutes />,
   },
   {
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <Navigate to="/factories/factories" />,
+    element: <Navigate to="/factories" />,
   },
 ]);
 

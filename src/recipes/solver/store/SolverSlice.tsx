@@ -1,11 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { set } from 'lodash';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { RootState } from '../../../core/store';
+import { GameFactory } from '../../../factories/store/FactoriesSlice';
 import { AllFactoryRecipes } from '../../FactoryRecipe';
 
 export interface SolverRequest {
+  inputs: Array<{
+    item?: string | undefined | null;
+    amount?: number | undefined | null;
+  }>;
   outputs: Array<{
     item?: string | undefined | null;
     amount?: number | undefined | null;
@@ -15,6 +21,7 @@ export interface SolverRequest {
 
 interface SolverInstance {
   id: string;
+  isFactory?: boolean;
   request: SolverRequest;
   solution?: any; // TODO type this
 }
@@ -36,9 +43,39 @@ export const SolverSlice = createSlice({
         state.current = v4();
         state.instances[state.current] = {
           id: state.current,
-          request: { outputs: [{}] },
+          request: { inputs: [], outputs: [{}] },
         };
       }
+    },
+    prepareForFactory: (
+      state,
+      action: PayloadAction<{ factory: GameFactory }>,
+    ) => {
+      const { factory } = action.payload;
+      if (state.instances[factory.id]) return;
+
+      const outputs =
+        factory.outputs && factory.outputs.length > 0
+          ? factory.outputs.map(o => ({
+              item: o.resource,
+              amount: o.amount,
+            }))
+          : [{}];
+
+      const inputs =
+        factory.inputs?.map(i => ({
+          item: i.resource,
+          amount: i.amount,
+        })) ?? [];
+
+      state.instances[factory.id] = {
+        id: factory.id,
+        isFactory: true,
+        request: {
+          inputs,
+          outputs,
+        },
+      };
     },
     remove: (state, action: PayloadAction<{ id: string }>) => {
       delete state.instances[action.payload.id];
@@ -93,3 +130,17 @@ export const useCurrentSolverInstance = () =>
       ? state.solver.present.instances[state.solver.present.current]
       : null,
   );
+
+export const usePathSolverInstance = () => {
+  const id = useParams<{ id: string }>().id;
+  return useSelector((state: RootState) =>
+    id ? state.solver.present.instances[id] : null,
+  );
+};
+
+export const usePathSolverAllowedRecipes = () => {
+  const id = useParams<{ id: string }>().id;
+  return useSelector((state: RootState) =>
+    id ? state.solver.present.instances[id]?.request.allowedRecipes : null,
+  );
+};

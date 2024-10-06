@@ -2,16 +2,19 @@ import { Box, Group, LoadingOverlay, NumberInput, Stack } from '@mantine/core';
 import { ReactFlowProvider } from '@xyflow/react';
 import { Highs, HighsLinearSolutionColumn } from 'highs';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { log } from '../../core/logger/log';
 import { FactoryItemInput } from '../../factories/inputs/FactoryItemInput';
 import { DebugSolverLayout } from './DebugSolverLayout';
 import { SolverLayout } from './SolverLayout';
 import { loadHighs, solveProduction } from './solveProduction';
 
+const logger = log.getLogger('recipes:solver:demo');
+
 export interface IRecipeSolverDemoProps {}
 
 export function RecipeSolverDemo(props: IRecipeSolverDemoProps) {
-  const [resource, setResource] = useState<string | null>('');
-  const [amount, setAmount] = useState(0);
+  const [resource, setResource] = useState<string | null>(null);
+  const [amount, setAmount] = useState(null as number | null);
 
   const [loading, setLoading] = useState(true);
 
@@ -33,21 +36,23 @@ export function RecipeSolverDemo(props: IRecipeSolverDemoProps) {
   }, []);
 
   const solution = useMemo(() => {
-    // if (!resource || amount === 0) {
-    //   return null;
-    // }
-
     if (!highsRef.current) return null;
 
     const solution = solveProduction(highsRef.current!, {
+      inputs: [],
       outputs: [
         {
-          item: resource ?? 'Desc_AluminumIngot_C',
-          amount: amount ?? 150,
+          item: resource ?? 'Desc_AluminumIngot_C', // 'Desc_AluminumIngot_C',
+          amount: amount ?? 150, // 150,
         },
       ],
     });
-    console.log(`Solved -> `, solution);
+    try {
+      logger.log(`Solved -> `, solution);
+      // logger.log();
+    } catch (e) {
+      console.warn(e);
+    }
     return solution;
   }, [resource, amount, loading]);
 
@@ -63,7 +68,7 @@ export function RecipeSolverDemo(props: IRecipeSolverDemoProps) {
             size="sm"
           />
           <NumberInput
-            value={amount}
+            value={amount ?? 0}
             onChange={v => setAmount(Number(v))}
             label="Amount"
             min={0}

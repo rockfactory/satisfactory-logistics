@@ -21,6 +21,7 @@ import {
 import { NodeProps } from '@xyflow/react';
 import React, { memo } from 'react';
 import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { RepeatingNumber } from '../../../core/intl/NumberFormatter';
 import { AllFactoryBuildingsMap } from '../../FactoryBuilding';
 import { AllFactoryItemsMap } from '../../FactoryItem';
@@ -63,6 +64,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
   const [isHovering, { close, open }] = useDisclosure(false);
 
   const dispatch = useDispatch();
+  const solverId = useParams<{ id: string }>().id;
 
   return (
     <Popover
@@ -129,40 +131,42 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
               </Group>
             </Text>
             <Table withColumnBorders>
-              <Table.Tr>
-                <Table.Td colSpan={5}>
-                  <Text size="sm" fw="bold">
-                    Ingredients
-                  </Text>
-                </Table.Td>
-              </Table.Tr>
-              {recipe.ingredients.map((ingredient, i) => (
-                <RecipeIngredientRow
-                  index={i}
-                  type="Ingredients"
-                  recipe={recipe}
-                  ingredient={ingredient}
-                  key={ingredient.resource}
-                  buildingsAmount={buildingsAmount}
-                />
-              ))}
-              <Table.Tr>
-                <Table.Td colSpan={5}>
-                  <Text size="sm" fw="bold">
-                    Products
-                  </Text>
-                </Table.Td>
-              </Table.Tr>
-              {recipe.products.map((product, i) => (
-                <RecipeIngredientRow
-                  index={i}
-                  type="Products"
-                  recipe={recipe}
-                  ingredient={product}
-                  key={product.resource}
-                  buildingsAmount={buildingsAmount}
-                />
-              ))}
+              <Table.Tbody>
+                <Table.Tr>
+                  <Table.Td colSpan={5}>
+                    <Text size="sm" fw="bold">
+                      Ingredients
+                    </Text>
+                  </Table.Td>
+                </Table.Tr>
+                {recipe.ingredients.map((ingredient, i) => (
+                  <RecipeIngredientRow
+                    index={i}
+                    type="Ingredients"
+                    recipe={recipe}
+                    ingredient={ingredient}
+                    key={ingredient.resource}
+                    buildingsAmount={buildingsAmount}
+                  />
+                ))}
+                <Table.Tr>
+                  <Table.Td colSpan={5}>
+                    <Text size="sm" fw="bold">
+                      Products
+                    </Text>
+                  </Table.Td>
+                </Table.Tr>
+                {recipe.products.map((product, i) => (
+                  <RecipeIngredientRow
+                    index={i}
+                    type="Products"
+                    recipe={recipe}
+                    ingredient={product}
+                    key={product.resource}
+                    buildingsAmount={buildingsAmount}
+                  />
+                ))}
+              </Table.Tbody>
             </Table>
           </Stack>
           {props.selected && (
@@ -173,6 +177,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                 onClick={() =>
                   dispatch(
                     solverActions.toggleRecipe({
+                      id: solverId,
                       use: false,
                       recipe: recipe.id,
                     }),

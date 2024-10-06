@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { log } from '../../core/logger/log';
 import { getWorldResourceMax } from '../WorldResources';
 import {
+  addInputResourceConstraints,
   avoidUnproducibleResources,
   computeProductionConstraints,
   consolidateProductionConstraints,
@@ -48,6 +49,10 @@ export function useHighs() {
 
 export function solveProduction(highs: Highs, request: SolverRequest) {
   const ctx = new SolverContext(request);
+  for (const item of request.inputs) {
+    if (!item.amount || !item.item) continue;
+    addInputResourceConstraints(ctx, item.item, item.amount);
+  }
   for (const item of request.outputs) {
     if (!item.amount || !item.item) continue;
     computeProductionConstraints(ctx, item.item, item.amount);
@@ -62,7 +67,7 @@ export function solveProduction(highs: Highs, request: SolverRequest) {
   const problem = ctx.formulateProblem();
   const result = highs.solve(problem, {});
 
-  // console.log('Pretty:', ctx.pretty(problem));
+  logger.log('Problem:', problem);
 
   const nodes: Node<IResourceNodeData | IMachineNodeData>[] = [];
   const edges: Edge[] = [];
@@ -95,7 +100,7 @@ export function solveProduction(highs: Highs, request: SolverRequest) {
           continue;
         }
 
-        if (node.type === 'raw') {
+        if (node.type === 'raw' || node.type === 'raw_input') {
           nodes.push({
             id: varName,
             type: 'Resource',

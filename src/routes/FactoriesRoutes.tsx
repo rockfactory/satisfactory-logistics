@@ -1,5 +1,4 @@
-import { Tabs } from '@mantine/core';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { ChartsTab } from '../factories/charts/ChartsTab';
 import { FactoriesTab } from '../factories/FactoriesTab';
 import { Footer } from '../layout/Footer';
@@ -10,19 +9,38 @@ export interface IFactoryRoutesProps {}
 
 export function FactoryRoutes(props: IFactoryRoutesProps) {
   const navigate = useNavigate();
-  const { factoriesTab } = useParams();
+  const activeTab = useLocation().pathname.split('/')[2];
 
   return (
     <>
       <Header
         tabs={['factories', 'charts', 'calculator']}
-        activeTab={factoriesTab}
-        onChangeTab={value => navigate(`/factories/${value}`)}
+        activeTab={
+          activeTab === 'charts'
+            ? 'charts'
+            : activeTab === 'calculator'
+              ? 'calculator'
+              : 'factories'
+        }
+        onChangeTab={value => {
+          console.log('Navigating to', value);
+          navigate(`/factories/${value === 'factories' ? '' : value}`);
+        }}
       />
 
-      <Tabs value={factoriesTab} keepMounted={false}>
+      <Routes>
+        <Route index element={<FactoriesTab />} />
+        <Route path=":id/calculator" element={<SolverPage />} />
+        <Route path="charts" element={<ChartsTab />} />
+        <Route path="calculator/:id?" element={<SolverPage />} />
+      </Routes>
+
+      {/* <Tabs value={factoriesTab} keepMounted={false}>
         <Tabs.Panel value="factories">
-          <FactoriesTab />
+          <Routes>
+            <Route path=":id/calculator" element={<SolverPage />} />
+            <Route index element={<FactoriesTab />} />
+          </Routes>
         </Tabs.Panel>
         <Tabs.Panel value="charts">
           <ChartsTab />
@@ -30,7 +48,7 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
         <Tabs.Panel value="calculator">
           <SolverPage />
         </Tabs.Panel>
-      </Tabs>
+      </Tabs> */}
       <Footer />
     </>
   );

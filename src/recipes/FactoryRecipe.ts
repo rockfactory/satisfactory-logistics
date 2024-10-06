@@ -60,7 +60,7 @@ export function getRecipeProductPerBuilding(
   recipe: FactoryRecipe,
   productId: string,
 ) {
-  console.log('recipe:', recipe, productId);
+  // console.log('recipe:', recipe, productId);
   const product = recipe.products.find(p => p.resource === productId)!;
   return (product.amount * 60) / recipe.time;
 }
