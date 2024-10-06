@@ -90,6 +90,8 @@ export function SolverInputOutputsDrawer(
               w="100%"
               size="sm"
               leftSection={<FactoryInputIcon />}
+              color="blue"
+              variant="light"
               onClick={() => {
                 dispatch(solverActions.addInput({ id: instance!.id }));
               }}
@@ -134,7 +136,9 @@ export function SolverInputOutputsDrawer(
             <Button
               w="100%"
               size="sm"
-              rightSection={<FactoryOutputIcon />}
+              color="blue"
+              variant="filled"
+              leftSection={<FactoryOutputIcon />}
               onClick={() => {
                 dispatch(solverActions.addOutput({ id: instance!.id }));
               }}

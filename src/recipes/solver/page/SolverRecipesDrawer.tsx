@@ -45,7 +45,7 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
     <>
       <Button
         size="sm"
-        variant="filled"
+        variant="light"
         leftSection={<IconTestPipe size={16} />}
         onClick={open}
       >

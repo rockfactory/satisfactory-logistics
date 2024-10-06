@@ -176,10 +176,7 @@ function parseIngredients(ingredients, allItemsMap, building, dir) {
     const displayAmount = normalizedAmount;
 
     // Fix for LP: we make sure that Pakcagers are a little bit _LESS_ efficient than raw resources
-    if (
-      building.id === 'Build_Packager_C' &&
-      allItemsMap[resource].form !== 'Solid'
-    ) {
+    if (building.id === 'Build_Packager_C') {
       normalizedAmount =
         dir === 'in' ? normalizedAmount + 0.001 : normalizedAmount - 0.001;
     }

@@ -44,11 +44,19 @@ export const SolverSlice = createSlice({
   } as SolverState,
   reducers: {
     createIfNoCurrent: (state, action: PayloadAction<{}>) => {
-      if (!state.current) {
+      if (!state.current || !state.instances[state.current]) {
         state.current = v4();
         state.instances[state.current] = {
           id: state.current,
-          request: { inputs: [], outputs: [{}] },
+          request: {
+            inputs: [],
+            outputs: [
+              {
+                item: 'Desc_Cement_C',
+                amount: 60,
+              },
+            ],
+          },
         };
       }
     },
@@ -148,6 +156,13 @@ export const SolverSlice = createSlice({
         instance.request.allowedRecipes = AllFactoryRecipes.map(r => r.id);
       }
       instance.request.allowedRecipes.push(...recipe);
+    },
+    loadFromRemote: (
+      state,
+      action: PayloadAction<Partial<SolverState> | null>,
+    ) => {
+      state.current = action.payload?.current ?? null;
+      state.instances = action.payload?.instances ?? {};
     },
   },
 });

@@ -11,10 +11,11 @@ import { loadFromRemote } from './loadFromRemote';
 export interface ISerializedState {
   // We serialize only the _current_ state, not the whole state with undo history
   factories: RootState['factories']['present'];
+  solver?: RootState['solver']['present'];
 }
 
 export async function saveLocalState() {
-  const { auth, factories } = store.getState();
+  const { auth, factories, solver } = store.getState();
   if (!auth.session) {
     console.log('No session, skipping save, previous at ' + auth.sync.syncedAt);
   }
@@ -38,6 +39,7 @@ export async function saveLocalState() {
       // We save only the _current_ state, not the whole state with undo history
       data: {
         factories: factories.present,
+        solver: solver.present,
       } as ISerializedState as unknown as Json,
       updated_at: new Date().toISOString(),
     })

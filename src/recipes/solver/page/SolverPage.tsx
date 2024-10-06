@@ -1,13 +1,19 @@
 import {
   Box,
   Button,
+  Container,
   Group,
   LoadingOverlay,
   Stack,
+  Text,
   Title,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
-import { IconArrowLeft, IconTrash } from '@tabler/icons-react';
+import {
+  IconArrowLeft,
+  IconTrash,
+  IconZoomExclamation,
+} from '@tabler/icons-react';
 import { ReactFlowProvider } from '@xyflow/react';
 import moize from 'moize';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -41,7 +47,11 @@ export function SolverPage(props: ISolverPageProps) {
     if (factory) {
       dispatch(solverActions.prepareForFactory({ factory }));
     }
-  }, [instance, factory]);
+    if (params.id && !instance) {
+      navigate(`/factories/calculator`);
+    }
+  }, [instance, factory, params.id]);
+  console.log('SolverPage', instance);
 
   const navigate = useNavigate();
   const current = useSelector(
@@ -78,6 +88,11 @@ export function SolverPage(props: ISolverPageProps) {
     return;
   }
 
+  const hasSolution =
+    solution &&
+    solution.result.Status === 'Optimal' &&
+    solution?.nodes.length > 0;
+  console.log('hasSolution', hasSolution, solution);
   return (
     <Box w="100%" pos="relative">
       <LoadingOverlay visible={loading} />
@@ -103,8 +118,8 @@ export function SolverPage(props: ISolverPageProps) {
             )}
           </Group>
           <Group gap="sm">
-            <SolverRecipesDrawer />
             <SolverInputOutputsDrawer onChangeSolver={onChangeSolver} />
+            <SolverRecipesDrawer />
 
             <Button
               color="red"
@@ -117,20 +132,39 @@ export function SolverPage(props: ISolverPageProps) {
                     title: 'Solver removed',
                     message: `Solver for ${factory.name ?? 'factory'} removed`,
                   });
+                } else {
+                  navigate(`/factories/calculator`);
+                  notifications.show({
+                    title: 'Solver removed',
+                    message: `Solver removed`,
+                  });
                 }
               }}
+              leftSection={<IconTrash size={16} />}
             >
-              <IconTrash size={16} />
+              Reset
             </Button>
           </Group>
         </Group>
       </AfterHeaderSticky>
-      {solution && (
+      {solution && hasSolution && (
         <Stack gap="md">
           <ReactFlowProvider>
             <SolverLayout nodes={solution.nodes} edges={solution.edges} />
           </ReactFlowProvider>
         </Stack>
+      )}
+      {!hasSolution && (
+        <Container size="lg" mt="lg">
+          <Stack gap="xs" align="center" mih={200} mt={60} mb={90}>
+            <IconZoomExclamation size={64} stroke={1.2} />
+            <Text fz="h2">No results found</Text>
+            <Text size="sm" c="dark.2">
+              No solution found for the given parameters. Try adjusting the
+              inputs, outputs and available recipes.
+            </Text>
+          </Stack>
+        </Container>
       )}
     </Box>
   );
