@@ -168,11 +168,12 @@ export function consolidateProductionConstraints(ctx: SolverContext) {
         `${producers.join(' + ')} - p${node.resource.index} = 0`,
       );
     }
-    if (consumers.length > 0) {
-      ctx.constraints.push(
-        `p${node.resource.index} - ${consumers.join(' - ')} - b${node.resource.index} = 0`,
-      );
-    }
+
+    // Even if there are no consumers, we still need to add the constraint
+    // to handle output (byproduct) resources
+    ctx.constraints.push(
+      `p${node.resource.index} ${consumers.length > 0 ? ' - ' + consumers.join(' - ') : ''} - b${node.resource.index} = 0`,
+    );
 
     for (const inboundVar of producers) {
       const inbound = ctx.graph.getNodeAttributes(inboundVar);
