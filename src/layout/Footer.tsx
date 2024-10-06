@@ -1,5 +1,6 @@
 import { Anchor, Button, Container, Divider, Group, Text } from '@mantine/core';
 import { IconBrandDiscord } from '@tabler/icons-react';
+import { FeedbackButton } from '../third-party/FeedbackButton';
 import { KofiSupportButton } from '../third-party/KofiSupportButton';
 import classes from './Footer.module.css';
 
@@ -44,6 +45,7 @@ export function Footer() {
         </Group>
         <Group>
           <KofiSupportButton />
+          <FeedbackButton />
           <Button
             className={classes.discordButton}
             leftSection={<IconBrandDiscord size={20} />}
