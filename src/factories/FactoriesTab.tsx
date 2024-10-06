@@ -4,6 +4,7 @@ import {
   Divider,
   Group,
   Loader,
+  Space,
   Stack,
   Text,
 } from '@mantine/core';
@@ -142,6 +143,7 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
           </Group>
         </Group>
       </Container>
+      <Space h={100} />
     </div>
   );
 }

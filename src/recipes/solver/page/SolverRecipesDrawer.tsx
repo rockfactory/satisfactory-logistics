@@ -10,6 +10,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSearch, IconTestPipe } from '@tabler/icons-react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AllFactoryItemsMap } from '../../FactoryItem';
 import { AllFactoryRecipes, FactoryRecipe } from '../../FactoryRecipe';
@@ -38,6 +39,7 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
   const [opened, { toggle, open, close }] = useDisclosure();
   const dispatch = useDispatch();
   const allowedRecipes = usePathSolverAllowedRecipes();
+  const [search, setSearch] = useState('');
 
   return (
     <>
@@ -58,6 +60,8 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
             <Text size="xl">Recipes</Text>
             <TextInput
               placeholder="Search..."
+              value={search}
+              onChange={e => setSearch(e.currentTarget.value)}
               rightSection={<IconSearch size={16} />}
               size="sm"
             />
@@ -65,8 +69,18 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
         }
       >
         <Stack gap="sm">
-          {Object.entries(AllRecipesGroupedByProduct).map(
-            ([product, recipes]) => (
+          {Object.entries(AllRecipesGroupedByProduct)
+            .filter(([product, recipes]) =>
+              search
+                ? AllFactoryItemsMap[product].name
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) ||
+                  recipes.some(recipe =>
+                    recipe.name.toLowerCase().includes(search.toLowerCase()),
+                  )
+                : true,
+            )
+            .map(([product, recipes]) => (
               <>
                 <Group gap="xs">
                   <Text key={product} size="md">
@@ -97,8 +111,7 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
                   />
                 ))}
               </>
-            ),
-          )}
+            ))}
         </Stack>
       </Drawer>
     </>

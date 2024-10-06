@@ -8,7 +8,6 @@ import {
   InternalNode,
   MiniMap,
   Node,
-  Panel,
   Position,
   ReactFlow,
   useEdgesState,
@@ -16,7 +15,7 @@ import {
   useNodesState,
   useReactFlow,
 } from '@xyflow/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
@@ -202,9 +201,33 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     }
   }, [nodesInitialized, onLayout, initialLayoutFinished]);
 
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Context menu
+  // const onNodeContextMenu = useCallback(
+  //   (event: React.MouseEvent, node: Node) => {
+  //     // Prevent native context menu from showing
+  //     event.preventDefault();
+
+  //     // Calculate position of the context menu. We want to make sure it
+  //     // doesn't get positioned off-screen.
+  //     const pane = ref.current!.getBoundingClientRect();
+  //     setMenu({
+  //       id: node.id,
+  //       top: event.clientY < pane.height - 200 && event.clientY,
+  //       left: event.clientX < pane.width - 200 && event.clientX,
+  //       right: event.clientX >= pane.width - 200 && pane.width - event.clientX,
+  //       bottom:
+  //         event.clientY >= pane.height - 200 && pane.height - event.clientY,
+  //     });
+  //   },
+  //   [setMenu],
+  // );
+
   return (
-    <Box w={'100%'} h={600} opacity={opacity}>
+    <Box w={'100%'} h={'80vh'} opacity={opacity}>
       <ReactFlow
+        ref={ref}
         minZoom={0.2}
         nodes={nodes}
         edges={edges}
@@ -213,6 +236,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         connectionLineType={ConnectionLineType.SmoothStep}
+        // onNodeContextMenu={onNodeContextMenu}
         fitView
         snapToGrid
         colorMode="dark"
@@ -262,7 +286,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
           variant={BackgroundVariant.Dots}
           gap={[10, 10]}
         />
-        <Panel>{/* <Button onClick={onLayout}>Layout</Button> */}</Panel>
+        {/* <Panel>{/* <Button onClick={onLayout}>Layout</Button> </Panel> */}
       </ReactFlow>
     </Box>
   );

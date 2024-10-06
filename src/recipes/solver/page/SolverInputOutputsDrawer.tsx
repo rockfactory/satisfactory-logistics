@@ -1,6 +1,14 @@
-import { Button, Drawer, Group, NumberInput, Stack, Text } from '@mantine/core';
+import {
+  ActionIcon,
+  Button,
+  Drawer,
+  Group,
+  NumberInput,
+  Stack,
+  Text,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconArrowsCross } from '@tabler/icons-react';
+import { IconArrowsCross, IconTrash } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
 import {
   FactoryInputIcon,
@@ -64,6 +72,18 @@ export function SolverInputOutputsDrawer(
                   size="sm"
                   min={0}
                 />
+                <ActionIcon
+                  size="sm"
+                  variant="outline"
+                  color="red"
+                  onClick={() => {
+                    dispatch(
+                      solverActions.removeInput({ id: instance!.id, index: i }),
+                    );
+                  }}
+                >
+                  <IconTrash size={16} stroke={1.5} />
+                </ActionIcon>
               </Group>
             ))}
             <Button
@@ -94,6 +114,21 @@ export function SolverInputOutputsDrawer(
                   size="sm"
                   min={0}
                 />
+                <ActionIcon
+                  size="sm"
+                  variant="outline"
+                  color="red"
+                  onClick={() => {
+                    dispatch(
+                      solverActions.removeOutput({
+                        id: instance!.id,
+                        index: i,
+                      }),
+                    );
+                  }}
+                >
+                  <IconTrash size={16} stroke={1.5} />
+                </ActionIcon>
               </Group>
             ))}
             <Button

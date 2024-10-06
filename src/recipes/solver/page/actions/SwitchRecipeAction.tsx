@@ -29,9 +29,6 @@ export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
   const dispatch = useDispatch();
   const solverId = useParams<{ id: string }>().id;
   const allAllowedRecipes = usePathSolverAllowedRecipes();
-  const handleSelectRecipe = (recipeId: string) => {
-    console.log('Switching to recipe', recipeId);
-  };
 
   return (
     <MultiSelect
@@ -42,7 +39,9 @@ export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
       searchable
       value={recipes
         .map(recipe => recipe.id)
-        .filter(id => allAllowedRecipes?.includes(id))}
+        .filter(
+          id => allAllowedRecipes?.includes(id) || allAllowedRecipes === null,
+        )}
       onChange={selected => {
         dispatch(
           solverActions.updateAtPath({

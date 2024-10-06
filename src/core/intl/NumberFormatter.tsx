@@ -26,7 +26,7 @@ export const RepeatingNumber = ({
                 {repeat(
                   repetend.pattern.toString(),
                   value.length - repetend.index,
-                )}
+                ).substring(0, value.length - repetend.index)}
               </span>
             </>
           );

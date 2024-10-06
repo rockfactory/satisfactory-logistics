@@ -7,11 +7,12 @@ import {
   TextInput,
   Tooltip,
 } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
+import { IconCalculator, IconTrash } from '@tabler/icons-react';
 import moize from 'moize';
 import * as React from 'react';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import {
   FactoryInputIcon,
   FactoryOutputIcon,
@@ -110,6 +111,17 @@ export function FactoryRow(props: IFactoryRowProps) {
               }
             >
               <FactoryOutputIcon stroke={2} size={16} />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip label="Calculator" position="top">
+            <ActionIcon
+              component={Link}
+              to={`/factories/${factory.id}/calculator`}
+              variant="filled"
+              color="cyan"
+              size="lg"
+            >
+              <IconCalculator stroke={2} size={16} />
             </ActionIcon>
           </Tooltip>
 

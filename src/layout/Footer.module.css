@@ -1,5 +1,5 @@
 .footer {
-  margin-top: rem(120px);
+  /* margin-top: rem(120px); */
   border-top: rem(1px) solid
     light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
 }

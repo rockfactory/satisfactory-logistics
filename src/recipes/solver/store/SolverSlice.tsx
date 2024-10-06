@@ -19,10 +19,15 @@ export interface SolverRequest {
   allowedRecipes?: string[] | null;
 }
 
+export interface SolverNodeState {
+  done?: boolean;
+}
+
 interface SolverInstance {
   id: string;
   isFactory?: boolean;
   request: SolverRequest;
+  nodes?: Record<string, SolverNodeState>;
   solution?: any; // TODO type this
 }
 
@@ -89,9 +94,26 @@ export const SolverSlice = createSlice({
       }
       state.instances[action.payload.id]?.request?.inputs?.push({});
     },
-
+    removeInput: (
+      state,
+      action: PayloadAction<{ id: string; index: number }>,
+    ) => {
+      state.instances[action.payload.id]?.request.inputs?.splice(
+        action.payload.index,
+        1,
+      );
+    },
     addOutput: (state, action: PayloadAction<{ id: string }>) => {
       state.instances[action.payload.id]?.request.outputs.push({});
+    },
+    removeOutput: (
+      state,
+      action: PayloadAction<{ id: string; index: number }>,
+    ) => {
+      state.instances[action.payload.id]?.request.outputs.splice(
+        action.payload.index,
+        1,
+      );
     },
     updateAtPath: (
       state,
@@ -151,6 +173,9 @@ export const usePathSolverInstance = () => {
 export const usePathSolverAllowedRecipes = () => {
   const id = useParams<{ id: string }>().id;
   return useSelector((state: RootState) =>
-    id ? state.solver.present.instances[id]?.request.allowedRecipes : null,
+    id
+      ? (state.solver.present.instances[id]?.request.allowedRecipes ??
+        AllFactoryRecipes.map(r => r.id))
+      : null,
   );
 };

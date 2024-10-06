@@ -1,0 +1,14 @@
+/* 👇 Make sure the styles are applied in the correct order */
+@layer mantine, mantine-contextmenu;
+
+.main {
+  padding: var(--mantine-spacing-sm);
+}
+
+.root {
+  padding: var(--mantine-spacing-sm);
+}
+
+.item {
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+}

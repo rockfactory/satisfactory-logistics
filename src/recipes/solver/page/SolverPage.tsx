@@ -1,4 +1,11 @@
-import { Box, Button, Group, LoadingOverlay, Stack } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Group,
+  LoadingOverlay,
+  Stack,
+  Title,
+} from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconArrowLeft, IconTrash } from '@tabler/icons-react';
 import { ReactFlowProvider } from '@xyflow/react';
@@ -78,37 +85,44 @@ export function SolverPage(props: ISolverPageProps) {
       z */}
 
       <AfterHeaderSticky>
-        <Group gap="sm">
-          {factory && (
-            <Button
-              component={Link}
-              to="/factories"
-              variant="outline"
-              color="gray"
-              leftSection={<IconArrowLeft size={16} />}
-            >
-              All Factories
-            </Button>
-          )}
-          <SolverRecipesDrawer />
-          <SolverInputOutputsDrawer onChangeSolver={onChangeSolver} />
+        <Group gap="sm" justify="space-between">
+          <Group gap="sm">
+            {factory && (
+              <>
+                <Button
+                  component={Link}
+                  to="/factories"
+                  variant="outline"
+                  color="gray"
+                  leftSection={<IconArrowLeft size={16} />}
+                >
+                  All Factories
+                </Button>
+                <Title order={4}>{factory.name ?? 'Factory'}</Title>
+              </>
+            )}
+          </Group>
+          <Group gap="sm">
+            <SolverRecipesDrawer />
+            <SolverInputOutputsDrawer onChangeSolver={onChangeSolver} />
 
-          <Button
-            color="red"
-            variant="light"
-            onClick={() => {
-              dispatch(solverActions.remove({ id: instance!.id }));
-              if (factory) {
-                navigate(`/factories`);
-                notifications.show({
-                  title: 'Solver removed',
-                  message: `Solver for ${factory.name ?? 'factory'} removed`,
-                });
-              }
-            }}
-          >
-            <IconTrash size={16} />
-          </Button>
+            <Button
+              color="red"
+              variant="light"
+              onClick={() => {
+                dispatch(solverActions.remove({ id: instance!.id }));
+                if (factory) {
+                  navigate(`/factories`);
+                  notifications.show({
+                    title: 'Solver removed',
+                    message: `Solver for ${factory.name ?? 'factory'} removed`,
+                  });
+                }
+              }}
+            >
+              <IconTrash size={16} />
+            </Button>
+          </Group>
         </Group>
       </AfterHeaderSticky>
       {solution && (
