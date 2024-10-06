@@ -69,6 +69,17 @@ export const SolverSlice = createSlice({
         instance.request.allowedRecipes.splice(index, 1);
       }
     },
+    enableRecipe: (
+      state,
+      action: PayloadAction<{ id?: string; recipe: string | string[] }>,
+    ) => {
+      const { id, recipe } = action.payload;
+      const instance = state.instances[id ?? state.current!];
+      if (!instance.request.allowedRecipes) {
+        instance.request.allowedRecipes = AllFactoryRecipes.map(r => r.id);
+      }
+      instance.request.allowedRecipes.push(...recipe);
+    },
   },
 });
 

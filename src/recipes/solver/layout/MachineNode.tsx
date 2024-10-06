@@ -29,6 +29,7 @@ import {
   getRecipeProductPerBuilding,
   RecipeIngredient,
 } from '../../FactoryRecipe';
+import { SwitchRecipeAction } from '../page/actions/SwitchRecipeAction';
 import { solverActions } from '../store/SolverSlice';
 import { InvisibleHandles } from './InvisibleHandles';
 
@@ -180,7 +181,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
               >
                 Ignore this recipe
               </Button>
-              <div />
+              <SwitchRecipeAction recipeId={recipe.id} />
             </Stack>
           )}
         </Group>
