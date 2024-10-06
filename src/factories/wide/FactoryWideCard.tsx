@@ -48,7 +48,6 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
     [dispatch],
   );
   const isVisible = useIsFactoryVisible(factory.id, true);
-  console.log('isVisible', isVisible);
   if (!isVisible) return null;
 
   return (
@@ -91,7 +90,7 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
             </Button>
 
             <Button
-              color="blue"
+              color="cyan"
               variant="filled"
               size="sm"
               component={Link}

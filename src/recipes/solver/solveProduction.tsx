@@ -67,7 +67,7 @@ export function solveProduction(highs: Highs, request: SolverRequest) {
   const problem = ctx.formulateProblem();
   const result = highs.solve(problem, {});
 
-  logger.log('Problem:', problem);
+  // logger.log('Problem:', problem);
 
   const nodes: Node<IResourceNodeData | IMachineNodeData>[] = [];
   const edges: Edge[] = [];
