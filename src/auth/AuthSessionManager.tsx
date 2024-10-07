@@ -13,11 +13,11 @@ export function AuthSessionManager(props: IAuthSessionManagerProps) {
     supabaseClient.auth
       .getSession()
       .then(({ data: { session } }) => {
-        console.log('Session changed:', session);
+        console.log('Loading Session:', session);
         dispatch(authActions.setSession(session));
       })
       .catch(err => {
-        console.log('No session', err);
+        console.warn('No session', err);
       });
 
     const {
@@ -26,7 +26,7 @@ export function AuthSessionManager(props: IAuthSessionManagerProps) {
       // Load factories from remote
       console.log('Loading from remote', _event);
       // await loadFromRemote(session);
-      console.log('Loaded from remote');
+      console.log('Session Loaded from remote', session);
 
       dispatch(authActions.setSession(session));
     });

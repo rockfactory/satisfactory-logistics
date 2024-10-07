@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import App from './App.tsx';
+import { AuthSessionManager } from './auth/AuthSessionManager.tsx';
 import { persistor, store } from './core/store';
 import { supabaseClient } from './core/supabase.ts';
 
@@ -34,6 +35,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
+        <AuthSessionManager />
         <App />
       </PersistGate>
     </Provider>
