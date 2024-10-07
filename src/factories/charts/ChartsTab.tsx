@@ -59,7 +59,7 @@ export function ChartsTab(_props: IChartsTabProps) {
     data.links.length === 0
   ) {
     return (
-      <Container size="lg" mt="xl">
+      <Container size="lg" mt={80} mb={100}>
         <Box ta="center">
           <IconAlertCircle size={60} stroke={1.2} />
           <Text size="xl">No factories to display</Text>
@@ -73,7 +73,7 @@ export function ChartsTab(_props: IChartsTabProps) {
 
   return (
     <div>
-      <Container size="lg" mt="lg">
+      <Container size="lg" mt="lg" mb={100}>
         <ErrorBoundary
           fallback={
             <Alert

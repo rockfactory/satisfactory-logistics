@@ -15,7 +15,7 @@ import {
   useNodesState,
   useReactFlow,
 } from '@xyflow/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
@@ -30,6 +30,7 @@ import { ResourceNode } from './layout/ResourceNode';
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const logger = log.getLogger('solver:layout');
+logger.setLevel('info');
 
 const snapValueToGrid = (value: number) => Math.round(value / 10) * 10;
 const snapSizeToGrid = (value: number) => Math.round(value / 20) * 20;
@@ -42,6 +43,7 @@ const GraphLayoutOptions = {
   ranksep: 130,
   ranker: 'network-simplex',
 };
+
 // const graphControls = useControls({
 //   rankdir: {
 //     value: 'LR',
@@ -147,59 +149,47 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   const [initialLayoutFinished, setInitialLayoutFinished] = useState(false);
   const [initialFitViewFinished, setInitialFitViewFinished] = useState(false);
 
-  const onLayout = useCallback(() => {
-    logger.debug('Layouting...');
-    const layouted = getLayoutedElements(getNodes(), getEdges());
-
-    setNodes([...layouted.nodes]);
-    setEdges([...layouted.edges]);
-    setInitialLayoutFinished(true);
-
-    // window.requestAnimationFrame(async () => {
-    //   await fitView();
-    //   setOpacity(1);
-    // });
-
-    // window.requestAnimationFrame(async () => {
-    //   logger.debug('Fitting view..');
-    //   await
-    //   if (!initialLayoutFinished) {
-    //     logger.debug('Initial layout finished');
-    //     setInitialLayoutFinished(true);
-    //     setOpacity(1);
-    //   }
-    // });
-  }, [nodes, edges, setNodes, setEdges, fitView, initialLayoutFinished]);
-
+  // When nodes change, we need to re-layout them.
   useEffect(() => {
     logger.debug('Initializing nodes...');
     setOpacity(0);
 
     setNodes([...props.nodes]);
     setEdges([...props.edges]);
+    setInitialLayoutFinished(false);
+    setInitialFitViewFinished(false);
 
-    setTimeout(() => {
-      setInitialLayoutFinished(false);
-      setInitialFitViewFinished(false);
-    }, 0);
+    setTimeout(() => {}, 1);
   }, [props.edges, props.nodes]);
 
   useEffect(() => {
-    // logger.debug(
-    //   `Check for re-layout: nodesInitialized=${nodesInitialized}, initialLayoutFinished=${initialLayoutFinished}`,
-    // );
-    if (nodesInitialized && !initialLayoutFinished) {
-      logger.debug('-> Layouting (initial layout in progress)');
-      onLayout();
+    // We can't trust `nodesInitialized` to be true, because it's updated later in the loop.
+    // We need to check if the nodes have real measurements.
+    const hasRealMeasurements =
+      nodes[0]?.measured?.width && nodes[0]?.measured?.height;
+    logger.debug(`Check for re-layout: nodesInitialized=${nodesInitialized}, initialLayoutFinished=${initialLayoutFinished} hasRealMeasurements=${hasRealMeasurements}`); // prettier-ignore
+
+    // 1. Nodes are initialized, so we can layout them.
+    if (nodesInitialized && hasRealMeasurements && !initialLayoutFinished) {
+      logger.info(`-> Layouting (initial layout in progress)`); // prettier-ignore
+      logger.debug('Layouting...');
+      const layouted = getLayoutedElements(getNodes(), getEdges());
+
+      setNodes([...layouted.nodes]);
+      setEdges([...layouted.edges]);
+      setInitialLayoutFinished(true);
     }
+
+    // 2. Nodes are initialized and layouted, so we can fit the view.
     if (nodesInitialized && initialLayoutFinished && !initialFitViewFinished) {
+      logger.debug('-> Fitting view...');
       setInitialFitViewFinished(true);
       fitView().then(() => {
         setOpacity(1);
-        logger.debug('-> Fitting view');
+        logger.debug('-> Fitting view completed');
       });
     }
-  }, [nodesInitialized, onLayout, initialLayoutFinished]);
+  }, [nodesInitialized, initialLayoutFinished, initialFitViewFinished]);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -240,6 +230,9 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         fitView
         snapToGrid
         colorMode="dark"
+        proOptions={{
+          hideAttribution: true,
+        }}
         snapGrid={[10, 10]}
       >
         <Controls showFitView />
@@ -248,14 +241,10 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         <svg>
           <defs>
             <linearGradient id="edge-gradient">
-              {/* <stop offset="0%" stopColor="#ae53ba" />
-            <stop offset="100%" stopColor="#2a8af6" /> */}
               <stop offset="0%" stopColor="var(--mantine-color-gray-7)" />
               <stop offset="100%" stopColor="var(--mantine-color-gray-4)" />
             </linearGradient>
             <linearGradient id="edge-gradient-reverse">
-              {/* <stop offset="0%" stopColor="#ae53ba" />
-            <stop offset="100%" stopColor="#2a8af6" /> */}
               <stop offset="0%" stopColor="var(--mantine-color-gray-4)" />
               <stop offset="100%" stopColor="var(--mantine-color-gray-7)" />
             </linearGradient>
