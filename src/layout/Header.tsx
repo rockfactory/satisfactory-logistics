@@ -26,19 +26,13 @@ export function Header(props: HeaderProps) {
     <header className={classes.header}>
       <Container className={classes.mainSection} size="lg">
         <Group justify="space-between">
-          <Group>
+          <Group align="flex-start">
             <Image
-              height={32}
+              h={32}
+              w="auto"
               src="/images/logo/satisfactory-logistics-logo.png"
               alt="Satisfactory Logistics Planner"
             />
-            {/* <IconBuildingFactory2
-              stroke={2}
-              style={{ width: rem(32), height: rem(32) }}
-            />
-            <Text size="lg" fw={700}>
-              Satisfactory Logistics <i>Planner</i>
-            </Text> */}
           </Group>
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
           <Group>

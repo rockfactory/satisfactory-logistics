@@ -36,7 +36,6 @@ export function KofiSupportButton(props: IKofiSupportButtonProps) {
           <iframe
             id="kofiframe"
             src="https://ko-fi.com/satisfactorylogistics/?hidefeed=true&widget=true&embed=true&preview=true"
-            // style="border:none;width:100%;padding:4px;background:#f9f9f9;"
             height="712"
             style={{
               border: 'none',
@@ -56,8 +55,9 @@ export function KofiSupportButton(props: IKofiSupportButtonProps) {
           <Image
             alt="Ko-fi"
             src="/images/logo/logo-kofi@2x.png"
-            width={20}
-            height={20}
+            w={24}
+            h={24}
+            fit="contain"
           />
         }
       >
