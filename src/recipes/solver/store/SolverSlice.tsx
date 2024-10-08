@@ -27,6 +27,7 @@ export interface SolverNodeState {
 export interface SolverInstance {
   id: string;
   sharedId?: string;
+  remoteSharedId?: string; // ID when loading from remote
   isOwner?: boolean;
   isFactory?: boolean;
   request: SolverRequest;
@@ -182,6 +183,7 @@ export const SolverSlice = createSlice({
         state.instances[id].sharedId = undefined; // We need to unlink the shared instance
         state.instances[id].isOwner = false;
         state.instances[id].isFactory = false;
+        state.instances[id].remoteSharedId = instance.sharedId;
       }
     },
   },

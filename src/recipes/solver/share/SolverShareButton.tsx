@@ -111,7 +111,7 @@ export function SolverShareButton(props: ISolverShareButtonProps) {
   }, [instance, session]);
 
   const sharedUrl = sharedId
-    ? `${window.location.origin}/factories/calculator/shared/${short().fromUUID(sharedId)}`
+    ? `${window.location.origin}/factories/calculator/shared/${sharedSolverUUIDTranslator.fromUUID(sharedId)}`
     : '';
 
   return (

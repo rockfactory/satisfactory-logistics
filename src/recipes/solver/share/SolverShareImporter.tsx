@@ -45,7 +45,12 @@ export function SolverShareImporterPage(props: ISolverShareImporterPageProps) {
 
         const localId = isOwner ? instance.id : v4();
 
-        const existing = store.getState().solver.present.instances[id];
+        const existing = isOwner
+          ? store.getState().solver.present.instances[id]
+          : Object.entries(store.getState().solver.present.instances).find(
+              ([iid, inst]) => inst.remoteSharedId === sharedId,
+            )?.[1];
+
         if (existing) {
           console.log('Already loaded shared solver');
           // TODO Update? Only if newer?
