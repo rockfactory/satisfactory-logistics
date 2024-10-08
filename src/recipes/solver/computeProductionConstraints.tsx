@@ -79,6 +79,13 @@ export type SolverEnergyNode = {
   value?: number;
 };
 
+export type SolverAreaNode = {
+  type: 'area';
+  variable: string;
+  // Only after solving
+  value?: number;
+};
+
 export type SolverNode =
   | SolverRawNode
   | SolverRawInputNode
@@ -86,7 +93,8 @@ export type SolverNode =
   | SolverByproductNode
   | SolverInputNode
   | SolverResourceNode
-  | SolverEnergyNode;
+  | SolverEnergyNode
+  | SolverAreaNode;
 
 export type SolverEdge = {
   type: 'link';
@@ -131,6 +139,12 @@ export class SolverContext {
       .map(node => this.graph.getNodeAttributes(node) as SolverEnergyNode);
   }
 
+  getAreaVars() {
+    return this.graph
+      .filterNodes((node, attributes) => attributes.type === 'area')
+      .map(node => this.graph.getNodeAttributes(node) as SolverAreaNode);
+  }
+
   encodeVar(name: string) {
     if (!this.aliases[name]) {
       this.aliases[name] = `a${this.aliasIndex++}`;
@@ -153,7 +167,7 @@ export class SolverContext {
 
         if (this.graph.hasNode(variable)) {
           const node = this.graph.getNodeAttributes(variable);
-          return '[' + node.label + ']';
+          return '[' + ('label' in node ? node.label : node.variable) + ']';
         }
         if (this.graph.hasEdge(variable)) {
           const edge = this.graph.getEdgeAttributes(variable);
@@ -365,6 +379,9 @@ export function computeProductionConstraints(
     const mainProductAmount = (recipe.products[0].amount * 60) / recipe.time;
     logger.debug(' Processing recipe:', recipe.name, { mainProductItem, recipe }); // prettier-ignore
 
+    const building = AllFactoryBuildingsMap[recipe.producedIn];
+
+    // 1. Energy consumption. Used for minimization
     const recipeEnergyVar = `e${recipe.index}`;
     ctx.graph.mergeNode(recipeEnergyVar, {
       type: 'energy',
@@ -374,12 +391,29 @@ export function computeProductionConstraints(
     });
     // TODO No edge for now. We don't need it for minimization
     const energyConsumptionFactor =
-      AllFactoryBuildingsMap[recipe.producedIn].averagePowerConsumption /
-      mainProductAmount;
+      building.averagePowerConsumption / mainProductAmount;
+
     ctx.constraints.push(
       `${recipeEnergyVar} - ${energyConsumptionFactor} ${mainProductVar} = 0`,
     );
 
+    // 2. Building Area
+    const recipeAreaVar = `area${recipe.index}`;
+    ctx.graph.mergeNode(recipeAreaVar, {
+      type: 'area',
+      variable: recipeAreaVar,
+    });
+    const areaFactor =
+      // Space occupied by the building
+      (building.clearance.width * building.clearance.length) /
+      // How many products produced in a minute by the building
+      mainProductAmount;
+
+    ctx.constraints.push(
+      `${recipeAreaVar} - ${areaFactor} ${mainProductVar} = 0`,
+    );
+
+    // 3. Ingredients
     for (const ingredient of recipe.ingredients) {
       // logger.debug('  Processing ingredient:', ingredient.resource);
       const ingredientItem = AllFactoryItemsMap[ingredient.resource];

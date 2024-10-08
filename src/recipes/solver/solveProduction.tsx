@@ -56,6 +56,13 @@ function applyObjective(ctx: SolverContext, request: SolverRequest) {
         .join(' + ')}\n`;
       break;
 
+    case 'minimize_area':
+      /** MINIMIZE */
+      ctx.objective = `${Array.from(ctx.getAreaVars())
+        .map(v => v.variable)
+        .join(' + ')}\n`;
+      break;
+
     case 'minimize_resources':
     default:
       /** MINIMIZE */
@@ -146,7 +153,7 @@ export function solveProduction(highs: Highs, request: SolverRequest) {
           continue;
         }
 
-        if (node.type === 'energy') {
+        if (node.type === 'energy' || node.type === 'area') {
           node.value = Number(value.Primal);
           continue;
         }

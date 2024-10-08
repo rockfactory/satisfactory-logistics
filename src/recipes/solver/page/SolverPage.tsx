@@ -137,6 +137,8 @@ export function SolverPage(props: ISolverPageProps) {
               data={[
                 { value: 'minimize_resources', label: 'Minimize Resources' },
                 { value: 'minimize_power', label: 'Minimize Power' },
+                { value: 'minimize_area', label: 'Minimize Area' },
+                // TODO Centralize defs
               ]}
               placeholder="Objective"
               value={instance?.request?.objective ?? 'minimize_resources'}

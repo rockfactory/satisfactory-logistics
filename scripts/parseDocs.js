@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import fs from 'node:fs';
+import { parseClearanceData } from './parsers/parseClearanceData.js';
 
 const ImageRegex = /(?:UI|QuantumEnergy)\/(?:IconDesc_)?(.*)_256\./;
 const IngredientRegex =
@@ -253,6 +254,8 @@ function parseProducedIn(producedIn) {
 }
 
 function parseBulding(building, index) {
+  console.log(`Importing -> `, building.ClassName);
+
   const minimumPowerConsumption = building.mEstimatedMininumPowerConsumption
     ? parseFloat(building.mEstimatedMininumPowerConsumption)
     : null;
@@ -282,8 +285,4 @@ function parseBulding(building, index) {
     clearance: parseClearanceData(building.mClearanceData),
     imagePath: '/images/' + _.kebabCase(building.mDisplayName) + '_256.png',
   };
-}
-
-function parseClearanceData(data) {
-  return {}; // TODO
 }

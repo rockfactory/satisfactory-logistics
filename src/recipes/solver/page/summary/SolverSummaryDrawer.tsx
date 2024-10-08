@@ -9,13 +9,20 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconInfoHexagon, IconPower } from '@tabler/icons-react';
+import {
+  IconInfoHexagon,
+  IconPower,
+  IconRulerMeasure,
+} from '@tabler/icons-react';
 import { Node } from '@xyflow/react';
 import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { RepeatingNumber } from '../../../../core/intl/NumberFormatter';
 import { AllFactoryItemsMap } from '../../../FactoryItem';
-import { SolverEnergyNode } from '../../computeProductionConstraints';
+import {
+  SolverAreaNode,
+  SolverEnergyNode,
+} from '../../computeProductionConstraints';
 import { IMachineNodeData } from '../../layout/MachineNode';
 import { IResourceNodeData } from '../../layout/ResourceNode';
 import { usePathSolverInstance } from '../../store/SolverSlice';
@@ -36,6 +43,7 @@ export function SolverSummaryDrawer(props: ISolverSummaryDrawerProps) {
       (node): node is Node<IMachineNodeData> => node.type === 'Machine',
     );
 
+    // Power
     const power = machineNodes.reduce((acc, node) => {
       const energyNode = solution.graph.getNodeAttributes(
         `e${node.data.recipe.index}`,
@@ -43,6 +51,16 @@ export function SolverSummaryDrawer(props: ISolverSummaryDrawerProps) {
       return acc + (energyNode.value ?? 0);
     }, 0);
 
+    // Area
+    const area = machineNodes.reduce((acc, node) => {
+      const areaNode = solution.graph.getNodeAttributes(
+        // TODO Find a better way to encode node names
+        `area${node.data.recipe.index}`,
+      ) as SolverAreaNode;
+      return acc + (areaNode.value ?? 0);
+    }, 0);
+
+    // All resources
     const resources = solution.nodes
       .filter(
         (node): node is Node<IResourceNodeData> => node.type === 'Resource',
@@ -60,6 +78,7 @@ export function SolverSummaryDrawer(props: ISolverSummaryDrawerProps) {
 
     return {
       power,
+      area,
       resources,
     };
   }, [solution]);
@@ -94,6 +113,15 @@ export function SolverSummaryDrawer(props: ISolverSummaryDrawerProps) {
             <Group gap={4}>
               <Text size="lg" fw={600}>
                 <RepeatingNumber value={stats.power} /> MW
+              </Text>
+            </Group>
+            <Group gap={4}>
+              <IconRulerMeasure size={32} stroke={1.5} />
+              <Text size="lg">Area</Text>
+            </Group>
+            <Group gap={4}>
+              <Text size="lg" fw={600}>
+                <RepeatingNumber value={stats.area} /> m<sup>2</sup>
               </Text>
             </Group>
           </Group>
