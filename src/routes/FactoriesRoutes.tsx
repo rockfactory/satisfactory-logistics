@@ -4,6 +4,7 @@ import { FactoriesTab } from '../factories/FactoriesTab';
 import { Footer } from '../layout/Footer';
 import { Header } from '../layout/Header';
 import { SolverPage } from '../recipes/solver/page/SolverPage';
+import { SolverShareImporterPage } from '../recipes/solver/share/SolverShareImporter';
 
 export interface IFactoryRoutesProps {}
 
@@ -33,6 +34,10 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
         <Route path=":id/calculator" element={<SolverPage />} />
         <Route path="charts" element={<ChartsTab />} />
         <Route path="calculator/:id?" element={<SolverPage />} />
+        <Route
+          path="calculator/shared/:sharedId"
+          element={<SolverShareImporterPage />}
+        />
       </Routes>
 
       {/* <Tabs value={factoriesTab} keepMounted={false}>

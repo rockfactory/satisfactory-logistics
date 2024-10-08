@@ -27,6 +27,7 @@ import { AfterHeaderSticky } from '../../../layout/AfterHeaderSticky';
 import { SolverEdge, SolverNode } from '../computeProductionConstraints';
 import { IMachineNodeData } from '../layout/MachineNode';
 import { IResourceNodeData } from '../layout/ResourceNode';
+import { SolverShareButton } from '../share/SolverShareButton';
 import { solveProduction, useHighs } from '../solveProduction';
 import { SolverLayout } from '../SolverLayout';
 import { solverActions, usePathSolverInstance } from '../store/SolverSlice';
@@ -177,7 +178,10 @@ export function SolverPage(props: ISolverPageProps) {
           <ReactFlowProvider>
             <SolverLayout nodes={solution.nodes} edges={solution.edges}>
               <Panel>
-                <SolverSummaryDrawer solution={solution} />
+                <Group gap="xs">
+                  <SolverSummaryDrawer solution={solution} />
+                  <SolverShareButton />
+                </Group>
               </Panel>
             </SolverLayout>
           </ReactFlowProvider>

@@ -24,8 +24,10 @@ export interface SolverNodeState {
   done?: boolean;
 }
 
-interface SolverInstance {
+export interface SolverInstance {
   id: string;
+  sharedId?: string;
+  isOwner?: boolean;
   isFactory?: boolean;
   request: SolverRequest;
   nodes?: Record<string, SolverNodeState>;
@@ -164,6 +166,23 @@ export const SolverSlice = createSlice({
     ) => {
       state.current = action.payload?.current ?? null;
       state.instances = action.payload?.instances ?? {};
+    },
+    loadShared: (
+      state,
+      action: PayloadAction<{
+        id: string;
+        isOwner: boolean;
+        instance: SolverInstance;
+      }>,
+    ) => {
+      state.current = action.payload.id;
+      const { isOwner, instance, id } = action.payload;
+      state.instances[id] = instance;
+      if (!isOwner) {
+        state.instances[id].sharedId = undefined; // We need to unlink the shared instance
+        state.instances[id].isOwner = false;
+        state.instances[id].isFactory = false;
+      }
     },
   },
 });

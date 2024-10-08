@@ -1,13 +1,10 @@
 import {
   Avatar,
   Button,
-  Divider,
   Group,
   Loader,
   Menu,
-  Modal,
   rem,
-  Stack,
   Text,
   UnstyledButton,
 } from '@mantine/core';
@@ -25,9 +22,8 @@ import { useDispatch } from 'react-redux';
 import { store } from '../core/store';
 import { supabaseClient } from '../core/supabase';
 import { authActions, useSession } from './AuthSlice';
+import { LoginModal } from './LoginModal';
 import classes from './UserMenu.module.css';
-import { DiscordLoginButton } from './providers/DiscordLoginButton';
-import { GoogleLoginButton } from './providers/GoogleLoginButton';
 import { loadFromRemote } from './sync/loadFromRemote';
 
 export interface IUserMenuProps {}
@@ -50,23 +46,7 @@ export function UserMenu(props: IUserMenuProps) {
         >
           Login
         </Button>
-        <Modal
-          size="sm"
-          opened={loginOpened}
-          onClose={loginOpenedHandler.close}
-          title="Authentication"
-          // centered
-        >
-          <Stack gap="xs">
-            <DiscordLoginButton />
-            <GoogleLoginButton />
-          </Stack>
-          <Divider mt="xl" mb="md" />
-          <Text ta="center" size="sm" c="dark.2">
-            After login you can save your factories on the server, so you can
-            access them from any device.
-          </Text>
-        </Modal>
+        <LoginModal opened={loginOpened} close={loginOpenedHandler.close} />
       </>
     );
   }
