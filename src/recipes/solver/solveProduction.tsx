@@ -47,6 +47,26 @@ export function useHighs() {
   return { highsRef, loading };
 }
 
+function applyObjective(ctx: SolverContext, request: SolverRequest) {
+  switch (request.objective) {
+    case 'minimize_power':
+      /** MINIMIZE */
+      ctx.objective = `${Array.from(ctx.getEnergyVars())
+        .map(v => v.variable)
+        .join(' + ')}\n`;
+      break;
+
+    case 'minimize_resources':
+    default:
+      /** MINIMIZE */
+      ctx.objective = `${Array.from(ctx.getWorldVars())
+        .map(
+          v => `${1 / getWorldResourceMax(v.resource.id)} r${v.resource.index}`,
+        )
+        .join(' + ')}\n`;
+  }
+}
+
 export function solveProduction(highs: Highs, request: SolverRequest) {
   const ctx = new SolverContext(request);
   for (const item of request.inputs ?? []) {
@@ -60,9 +80,7 @@ export function solveProduction(highs: Highs, request: SolverRequest) {
   consolidateProductionConstraints(ctx);
   avoidUnproducibleResources(ctx);
 
-  ctx.objective = /* MINIMIZE */ `${Array.from(ctx.getWorldVars())
-    .map(v => `${1 / getWorldResourceMax(v.resource.id)} r${v.resource.index}`)
-    .join(' + ')}\n`;
+  applyObjective(ctx, request);
 
   const problem = ctx.formulateProblem();
   const result = highs.solve(problem, {});
@@ -125,6 +143,11 @@ export function solveProduction(highs: Highs, request: SolverRequest) {
             },
             position: { x: 0, y: 0 },
           });
+          continue;
+        }
+
+        if (node.type === 'energy') {
+          node.value = Number(value.Primal);
           continue;
         }
 

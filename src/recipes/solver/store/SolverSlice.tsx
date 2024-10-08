@@ -17,6 +17,7 @@ export interface SolverRequest {
     amount?: number | undefined | null;
   }>;
   allowedRecipes?: string[] | null;
+  objective?: 'minimize_power' | 'minimize_resources';
 }
 
 export interface SolverNodeState {

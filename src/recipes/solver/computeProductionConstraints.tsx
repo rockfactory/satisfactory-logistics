@@ -1,6 +1,7 @@
 import Graph from 'graphology';
 import voca from 'voca';
 import { log } from '../../core/logger/log';
+import { AllFactoryBuildingsMap } from '../FactoryBuilding';
 import { AllFactoryItemsMap, FactoryItem } from '../FactoryItem';
 import {
   FactoryRecipe,
@@ -22,45 +23,72 @@ export const encodeResource = (resource: string) =>
     .capitalize(resource.replace('Desc_', '').replace('_C', ''))
     .substring(0, 6);
 
-type SolverNode =
-  | { type: 'raw'; label: string; resource: FactoryItem; variable: string }
-  | {
-      type: 'raw_input';
-      label: string;
-      resource: FactoryItem;
-      variable: string;
-    }
-  | {
-      type: 'output';
-      label: string;
-      recipe: FactoryRecipe;
-      recipeMainProductVariable: string;
-      resource: FactoryItem;
-      variable: string;
-      byproductVariable: string;
-    }
-  | {
-      type: 'byproduct';
-      label: string;
-      resource: FactoryItem;
-      variable: string;
-    }
-  | {
-      type: 'input';
-      label: string;
-      recipe: FactoryRecipe;
-      recipeMainProductVariable: string;
-      resource: FactoryItem;
-      variable: string;
-    }
-  | {
-      type: 'resource';
-      label: string;
-      resource: FactoryItem;
-      variable: string;
-    };
+export type SolverResourceNode = {
+  type: 'resource';
+  label: string;
+  resource: FactoryItem;
+  variable: string;
+};
 
-type SolverEdge = {
+export type SolverRawNode = {
+  type: 'raw';
+  label: string;
+  resource: FactoryItem;
+  variable: string;
+};
+
+export type SolverRawInputNode = {
+  type: 'raw_input';
+  label: string;
+  resource: FactoryItem;
+  variable: string;
+};
+
+export type SolverOutputNode = {
+  type: 'output';
+  label: string;
+  recipe: FactoryRecipe;
+  recipeMainProductVariable: string;
+  resource: FactoryItem;
+  variable: string;
+  byproductVariable: string;
+};
+
+export type SolverByproductNode = {
+  type: 'byproduct';
+  label: string;
+  resource: FactoryItem;
+  variable: string;
+};
+
+export type SolverInputNode = {
+  type: 'input';
+  label: string;
+  recipe: FactoryRecipe;
+  recipeMainProductVariable: string;
+  resource: FactoryItem;
+  variable: string;
+};
+
+export type SolverEnergyNode = {
+  type: 'energy';
+  label: string;
+  recipe: FactoryRecipe;
+  variable: string;
+  // Only after solving
+  value?: number;
+};
+
+export type SolverNode =
+  | SolverRawNode
+  | SolverRawInputNode
+  | SolverOutputNode
+  | SolverByproductNode
+  | SolverInputNode
+  | SolverResourceNode
+  | SolverEnergyNode;
+
+export type SolverEdge = {
   type: 'link';
   resource: FactoryItem;
   source: FactoryRecipe | 'world';
@@ -94,7 +122,13 @@ export class SolverContext {
   getWorldVars() {
     return this.graph
       .filterNodes((node, attributes) => attributes.type === 'raw')
-      .map(node => this.graph.getNodeAttributes(node));
+      .map(node => this.graph.getNodeAttributes(node) as SolverRawNode);
+  }
+
+  getEnergyVars() {
+    return this.graph
+      .filterNodes((node, attributes) => attributes.type === 'energy')
+      .map(node => this.graph.getNodeAttributes(node) as SolverEnergyNode);
   }
 
   encodeVar(name: string) {
@@ -165,7 +199,7 @@ export function consolidateProductionConstraints(ctx: SolverContext) {
   );
   // Resource nodes mixing recipe outputs to all ingredients
   for (const nodeName of resourceNodes) {
-    const node = ctx.graph.getNodeAttributes(nodeName);
+    const node = ctx.graph.getNodeAttributes(nodeName) as SolverResourceNode;
     const producers = ctx.graph.inboundNeighbors(nodeName);
     const consumers = ctx.graph.outboundNeighbors(nodeName);
 
@@ -330,6 +364,21 @@ export function computeProductionConstraints(
     const mainProductVar = `p${mainProductItem.index}r${recipe.index}`;
     const mainProductAmount = (recipe.products[0].amount * 60) / recipe.time;
     logger.debug(' Processing recipe:', recipe.name, { mainProductItem, recipe }); // prettier-ignore
+
+    const recipeEnergyVar = `e${recipe.index}`;
+    ctx.graph.mergeNode(recipeEnergyVar, {
+      type: 'energy',
+      label: `Energy: ${recipe.name}`,
+      recipe,
+      variable: recipeEnergyVar,
+    });
+    // TODO No edge for now. We don't need it for minimization
+    const energyConsumptionFactor =
+      AllFactoryBuildingsMap[recipe.producedIn].averagePowerConsumption /
+      mainProductAmount;
+    ctx.constraints.push(
+      `${recipeEnergyVar} - ${energyConsumptionFactor} ${mainProductVar} = 0`,
+    );
 
     for (const ingredient of recipe.ingredients) {
       // logger.debug('  Processing ingredient:', ingredient.resource);

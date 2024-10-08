@@ -4,6 +4,7 @@ import {
   Container,
   Group,
   LoadingOverlay,
+  Select,
   Stack,
   Text,
   Title,
@@ -14,20 +15,33 @@ import {
   IconTrash,
   IconZoomExclamation,
 } from '@tabler/icons-react';
-import { ReactFlowProvider } from '@xyflow/react';
+import { Edge, Node, Panel, ReactFlowProvider } from '@xyflow/react';
+import Graph from 'graphology';
+import { HighsSolution } from 'highs';
 import moize from 'moize';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RootState } from '../../../core/store';
 import { AfterHeaderSticky } from '../../../layout/AfterHeaderSticky';
+import { SolverEdge, SolverNode } from '../computeProductionConstraints';
+import { IMachineNodeData } from '../layout/MachineNode';
+import { IResourceNodeData } from '../layout/ResourceNode';
 import { solveProduction, useHighs } from '../solveProduction';
 import { SolverLayout } from '../SolverLayout';
 import { solverActions, usePathSolverInstance } from '../store/SolverSlice';
 import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';
+import { SolverSummaryDrawer } from './summary/SolverSummaryDrawer';
 
 export interface ISolverPageProps {}
+
+export interface ISolverSolution {
+  result: HighsSolution;
+  nodes: Array<Node<IMachineNodeData | IResourceNodeData>>;
+  edges: Edge[];
+  graph: Graph<SolverNode, SolverEdge, any>;
+}
 
 export function SolverPage(props: ISolverPageProps) {
   const params = useParams<{ id: string }>();
@@ -119,6 +133,15 @@ export function SolverPage(props: ISolverPageProps) {
           </Group>
           <Group gap="sm">
             <SolverInputOutputsDrawer onChangeSolver={onChangeSolver} />
+            <Select
+              data={[
+                { value: 'minimize_resources', label: 'Minimize Resources' },
+                { value: 'minimize_power', label: 'Minimize Power' },
+              ]}
+              placeholder="Objective"
+              value={instance?.request?.objective ?? 'minimize_resources'}
+              onChange={onChangeSolver('request.objective')}
+            />
             <SolverRecipesDrawer />
 
             <Button
@@ -150,7 +173,11 @@ export function SolverPage(props: ISolverPageProps) {
       {solution && hasSolution && (
         <Stack gap="md">
           <ReactFlowProvider>
-            <SolverLayout nodes={solution.nodes} edges={solution.edges} />
+            <SolverLayout nodes={solution.nodes} edges={solution.edges}>
+              <Panel>
+                <SolverSummaryDrawer solution={solution} />
+              </Panel>
+            </SolverLayout>
           </ReactFlowProvider>
         </Stack>
       )}

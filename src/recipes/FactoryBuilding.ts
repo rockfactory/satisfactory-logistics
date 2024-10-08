@@ -4,8 +4,12 @@ export interface FactoryBuilding {
   index: number;
   description: string;
   powerConsumption: number;
+  minimumPowerConsumption: number | null;
+  maximumPowerConsumption: number | null;
+  averagePowerConsumption: number;
   powerConsumptionExponent: number;
   somersloopPowerConsumptionExponent: number;
+  somersloopSlots: number;
   clearanceData: string; // TODO parse this
   imagePath: string;
 }
