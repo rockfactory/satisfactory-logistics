@@ -26,17 +26,17 @@ export async function loadFromRemote(
 
   console.log('Fetched factories:', data, error);
 
-  if (!data) {
-    console.log('No factories found');
-    return;
-  }
-
   if (error) {
     console.error('Error fetching factories:', error);
     notifications.show({
       title: 'Error fetching user',
-      message: `Cannot sync factories. Using local storage. ` + error?.message,
+      message: `Cannot sync factories. Using local storage.`,
     });
+    return;
+  }
+
+  if (!data) {
+    console.log('No factories found');
     return;
   }
 
