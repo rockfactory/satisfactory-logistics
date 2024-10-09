@@ -14,6 +14,7 @@ export type Database = {
           created_at: string
           data: Json | null
           id: number
+          name: string | null
           updated_at: string
           user_id: string | null
         }
@@ -21,6 +22,7 @@ export type Database = {
           created_at?: string
           data?: Json | null
           id?: number
+          name?: string | null
           updated_at?: string
           user_id?: string | null
         }
@@ -28,6 +30,7 @@ export type Database = {
           created_at?: string
           data?: Json | null
           id?: number
+          name?: string | null
           updated_at?: string
           user_id?: string | null
         }
@@ -36,6 +39,112 @@ export type Database = {
             foreignKeyName: "factories_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      factories_users: {
+        Row: {
+          created_at: string
+          factory_id: number | null
+          id: number
+          role: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          factory_id?: number | null
+          id?: number
+          role?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          factory_id?: number | null
+          id?: number
+          role?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "factories_users_factory_id_fkey"
+            columns: ["factory_id"]
+            isOneToOne: false
+            referencedRelation: "factories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "factories_users_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_factories: {
+        Row: {
+          created_at: string
+          data: Json | null
+          id: number
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          id?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          id?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_factories_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_solvers: {
+        Row: {
+          created_at: string
+          data: Json | null
+          id: string
+          local_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          local_id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json | null
+          id?: string
+          local_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_solvers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
           },

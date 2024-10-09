@@ -1,7 +1,7 @@
 {
   "name": "satisfactory-logistics",
   "private": true,
-  "version": "0.2.2",
+  "version": "0.2.3",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -47,6 +47,7 @@
     "react-router-dom": "^6.26.2",
     "redux-persist": "^6.0.0",
     "redux-undo": "^1.1.0",
+    "short-uuid": "^5.2.0",
     "uuid": "^10.0.0",
     "voca": "^1.4.1"
   },

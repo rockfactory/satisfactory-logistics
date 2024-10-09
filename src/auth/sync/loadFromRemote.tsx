@@ -26,7 +26,12 @@ export async function loadFromRemote(
 
   console.log('Fetched factories:', data, error);
 
-  if (error || !data) {
+  if (!data) {
+    console.log('No factories found');
+    return;
+  }
+
+  if (error) {
     console.error('Error fetching factories:', error);
     notifications.show({
       title: 'Error fetching user',

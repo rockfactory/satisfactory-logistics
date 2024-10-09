@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import fs from 'node:fs';
+import { parseClearanceData } from './parsers/parseClearanceData.js';
 
 const ImageRegex = /(?:UI|QuantumEnergy)\/(?:IconDesc_)?(.*)_256\./;
 const IngredientRegex =
@@ -253,22 +254,35 @@ function parseProducedIn(producedIn) {
 }
 
 function parseBulding(building, index) {
+  console.log(`Importing -> `, building.ClassName);
+
+  const minimumPowerConsumption = building.mEstimatedMininumPowerConsumption
+    ? parseFloat(building.mEstimatedMininumPowerConsumption)
+    : null;
+  const maximumPowerConsumption = building.mEstimatedMaximumPowerConsumption
+    ? parseFloat(building.mEstimatedMaximumPowerConsumption)
+    : null;
+  const powerConsumption = parseFloat(building.mPowerConsumption);
+
   return {
     id: building.ClassName,
     name: building.mDisplayName,
     index,
     description: building.mDescription,
-    powerConsumption: parseFloat(building.mPowerConsumption),
+    minimumPowerConsumption: minimumPowerConsumption,
+    maximumPowerConsumption: maximumPowerConsumption,
+    averagePowerConsumption:
+      minimumPowerConsumption && maximumPowerConsumption
+        ? (minimumPowerConsumption + maximumPowerConsumption) / 2
+        : powerConsumption,
+    powerConsumption,
     powerConsumptionExponent: parseFloat(building.mPowerConsumptionExponent),
     somersloopPowerConsumptionExponent: parseFloat(
       building.mProductionBoostPowerConsumptionExponent,
     ),
+    somersloopSlots: parseFloat(building.mProductionShardSlotSize),
     clearanceData: building.mClearanceData,
     clearance: parseClearanceData(building.mClearanceData),
     imagePath: '/images/' + _.kebabCase(building.mDisplayName) + '_256.png',
   };
-}
-
-function parseClearanceData(data) {
-  return {}; // TODO
 }

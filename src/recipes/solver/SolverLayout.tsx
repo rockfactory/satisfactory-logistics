@@ -125,6 +125,7 @@ const getLayoutedElements = (
 interface SolverLayoutProps {
   nodes: Node[];
   edges: Edge[];
+  children?: React.ReactNode;
 }
 
 const nodeTypes = {
@@ -275,6 +276,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
           variant={BackgroundVariant.Dots}
           gap={[10, 10]}
         />
+        {props.children}
         {/* <Panel>{/* <Button onClick={onLayout}>Layout</Button> </Panel> */}
       </ReactFlow>
     </Box>
