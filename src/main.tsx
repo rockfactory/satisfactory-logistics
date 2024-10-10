@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import App from './App.tsx';
 import { AuthSessionManager } from './auth/AuthSessionManager.tsx';
-import { persistor, store } from './core/store';
+import { persistor, store } from './core/store.tsx';
 import { supabaseClient } from './core/supabase.ts';
 
 Sentry.init({
