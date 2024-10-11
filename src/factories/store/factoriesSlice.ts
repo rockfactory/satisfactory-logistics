@@ -1,10 +1,14 @@
-import { createSliceWithImmer } from 'zustand-slices/immer';
+import { createSlice } from '../../core/zustand';
 import { Factory } from '../Factory';
 
-export const factoriesSlice = createSliceWithImmer({
+export const factoriesSlice = createSlice({
   name: 'factories',
   value: {
     factories: {} as Record<string, Factory>,
   },
-  actions: {},
+  actions: {
+    addFactory: (factory: Factory) => state => {
+      state.factories[factory.id] = factory;
+    },
+  },
 });

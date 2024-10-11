@@ -51,7 +51,7 @@
     "uuid": "^10.0.0",
     "valtio": "^2.0.0",
     "voca": "^1.4.1",
-    "zustand": "^4.5.5"
+    "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
     "@types/chroma-js": "^2.4.4",
