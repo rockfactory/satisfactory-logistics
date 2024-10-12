@@ -1,4 +1,3 @@
-import { v4 } from 'uuid';
 import { useShallow } from 'zustand/shallow';
 import { useStore } from '../core/zustand';
 import { createSlice } from '../core/zustand-helpers/slices';
@@ -19,13 +18,13 @@ export const gamesSlice = createSlice({
     selectGame: (gameId: string) => state => {
       state.selected = gameId;
     },
-    createGame: () => state => {
-      const gameId = v4();
+    createGame: (gameId: string, game?: Partial<Game>) => state => {
       state.selected = gameId;
       state.games[gameId] = {
         id: gameId,
         name: 'New Game',
         createdAt: new Date(),
+        ...game,
         factoriesIds: [],
         settings: {
           noHighlight100PercentUsage: false,

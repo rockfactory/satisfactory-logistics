@@ -119,7 +119,6 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
                   factoryId={factory.id}
                   output={output}
                   index={i}
-                  onChangeHandler={onChangeHandler}
                 />
               ))}
             </Stack>

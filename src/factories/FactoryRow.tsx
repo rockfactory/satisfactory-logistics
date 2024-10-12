@@ -78,7 +78,6 @@ export function FactoryRow(props: IFactoryRowProps) {
                   index={index}
                   output={output}
                   factoryId={factory.id}
-                  onChangeHandler={onChangeHandler}
                 />
               ),
             )}

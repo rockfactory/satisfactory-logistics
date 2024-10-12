@@ -23,7 +23,7 @@ import { useStore } from '../core/zustand';
 import { LoginModal } from './LoginModal';
 import classes from './UserMenu.module.css';
 import { useSession } from './authSelectors';
-import { loadFromRemote } from './sync/loadFromRemote';
+import { loadFromOldRemote } from './sync/loadFromRemote';
 
 export interface IUserMenuProps {}
 
@@ -102,11 +102,11 @@ export function UserMenu(props: IUserMenuProps) {
           }
           onClick={async () => {
             setLoadingFactories(true);
-            await loadFromRemote(useStore.getState().auth.session, true);
+            await loadFromOldRemote(useStore.getState().auth.session, true);
             setLoadingFactories(false);
           }}
         >
-          Load saved factories
+          Load previously saved factories
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>

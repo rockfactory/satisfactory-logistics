@@ -53,6 +53,7 @@ export const gameFactoriesActions = createActions({
     delete state.factories.factories[factoryId];
   },
   // TODO Handle pre-v0.3.0 factories? Add "version" field?
+  // TODO Solvers? centralize them?
   loadGame: (serialized: SerializedGame) => state => {
     state.games.selected = serialized.game.id;
     state.games.games[serialized.game.id] = serialized.game;
@@ -70,7 +71,9 @@ export type SerializedGame = {
   factories: Factory[];
 };
 
-export function serializeGame(gameId: string | null | undefined) {
+export function serializeGame(
+  gameId: string | null | undefined,
+): SerializedGame {
   const state = useStore.getState();
   const game = state.games.games[gameId ?? state.games.selected ?? ''];
   if (!game) {

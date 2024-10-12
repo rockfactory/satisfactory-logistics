@@ -15,7 +15,7 @@ import {
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useSession } from '../auth/authSelectors';
-import { loadFromRemote } from '../auth/sync/loadFromRemote';
+// import { loadFromRemote } from '../auth/sync/loadFromRemote';
 import { SyncButton } from '../auth/sync/SyncButton';
 import { useStore } from '../core/zustand';
 import { useGameFactoriesIds } from '../games/gamesSlice';
@@ -84,7 +84,8 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
                   }
                   onClick={async () => {
                     setLoadingFactories(true);
-                    await loadFromRemote(session, true);
+                    // TODO Reimplement
+                    // await loadFromRemote(session, true);
                     setLoadingFactories(false);
                   }}
                 >
