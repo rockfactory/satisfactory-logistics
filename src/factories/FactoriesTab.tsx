@@ -105,7 +105,7 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
               <FactoryRow key={factoryId} id={factoryId} index={index} />
             ))}
         </Stack>
-        <Divider mb="lg" />
+        {!hasFactories && <Divider mb="lg" />}
         {/* <FactoryItemInput /> */}
         <Group mt="lg" justify="space-between">
           <Group>
