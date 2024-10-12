@@ -3,8 +3,8 @@ import { DefaultLink, DefaultNode, ResponsiveSankey } from '@nivo/sankey';
 import { ErrorBoundary } from '@sentry/react';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useMemo } from 'react';
+import { useGameFactories } from '../../games/store/gameFactoriesSelectors';
 import { AllFactoryItemsMap } from '../../recipes/FactoryItem';
-import { useFactories } from '../store/FactoriesSlice';
 
 export interface IChartsTabProps {}
 
@@ -21,7 +21,7 @@ type Link = DefaultLink & {
 };
 
 export function ChartsTab(_props: IChartsTabProps) {
-  const factories = useFactories();
+  const factories = useGameFactories();
 
   const data: {
     nodes: Node[];

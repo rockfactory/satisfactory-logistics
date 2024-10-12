@@ -91,7 +91,7 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
           <FactoryItemOption item={item} size={size} />
         </Combobox.Option>
       )),
-    [search, allowedItems],
+    [search, allowedItems, size],
   );
 
   return (
@@ -186,12 +186,4 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
       </Combobox>
     </>
   );
-  // return (
-  //   <Select
-  //     data={AllFactoryItemsIds}
-  //     filter={optionsFilter}
-  //     searchable
-  //     renderOption={renderAutocompleteOption}
-  //   />
-  // );
 }

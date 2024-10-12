@@ -18,12 +18,11 @@ import {
 } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { store } from '../core/store';
 import { supabaseClient } from '../core/supabase';
-import { authActions, useSession } from './AuthSlice';
+import { useStore } from '../core/zustand';
 import { LoginModal } from './LoginModal';
 import classes from './UserMenu.module.css';
+import { useSession } from './authSelectors';
 import { loadFromRemote } from './sync/loadFromRemote';
 
 export interface IUserMenuProps {}
@@ -31,9 +30,10 @@ export interface IUserMenuProps {}
 export function UserMenu(props: IUserMenuProps) {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const session = useSession();
-  const dispatch = useDispatch();
   const [loginOpened, loginOpenedHandler] = useDisclosure(false);
   const [loadingFactories, setLoadingFactories] = useState(false);
+
+  const setSession = useStore(state => state.setSession);
 
   if (!session) {
     return (
@@ -84,7 +84,7 @@ export function UserMenu(props: IUserMenuProps) {
           onClick={async () => {
             const result = await supabaseClient.auth.signOut();
             if (result.error && result.error.code === 'session_not_found') {
-              dispatch(authActions.setSession(null));
+              setSession(null);
               return;
             }
             notifications.show({
@@ -102,7 +102,7 @@ export function UserMenu(props: IUserMenuProps) {
           }
           onClick={async () => {
             setLoadingFactories(true);
-            await loadFromRemote(store.getState().auth.session, true);
+            await loadFromRemote(useStore.getState().auth.session, true);
             setLoadingFactories(false);
           }}
         >

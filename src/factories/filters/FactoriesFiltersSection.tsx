@@ -11,19 +11,14 @@ import {
   IconSearch,
   IconTextGrammar,
 } from '@tabler/icons-react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../core/store';
+import { useStore } from '../../core/zustand';
 import { FactoryItemInput } from '../inputs/FactoryItemInput';
-import { factoryActions } from '../store/FactoriesSlice';
-import { FactoryUndoButtons } from '../store/FactoryUndoButtons';
 
 export interface IFactoriesFiltersSectionProps {}
 
 export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
-  const dispatch = useDispatch();
-  const filters = useSelector(
-    (state: RootState) => state.factories.present.filters,
-  );
+  const factoryView = useStore(state => state.factoryView);
+  const updateFactoryView = useStore(state => state.updateFactoryView);
 
   return (
     <Group justify="space-between">
@@ -31,28 +26,22 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
         <TextInput
           placeholder="Filter by name"
           rightSection={<IconSearch size={16} />}
-          value={filters?.name ?? ''}
+          value={factoryView.filterName ?? ''}
           onChange={e =>
-            dispatch(
-              factoryActions.setFilter({
-                name: 'name',
-                value: e.currentTarget.value,
-              }),
-            )
+            updateFactoryView(state => {
+              state.filterName = e.currentTarget.value;
+            })
           }
         />
         <FactoryItemInput
           size="sm"
           placeholder="Filter by resource..."
-          value={filters?.resource ?? ''}
+          value={factoryView?.filterResource ?? ''}
           clearable
           onChange={resource =>
-            dispatch(
-              factoryActions.setFilter({
-                name: 'resource',
-                value: resource,
-              }),
-            )
+            updateFactoryView(state => {
+              state.filterResource = resource;
+            })
           }
         />
         <Menu shadow="md" width={120}>
@@ -70,7 +59,9 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
             <Menu.Item
               leftSection={<IconTextGrammar width={16} height={16} />}
               onClick={_e => {
-                dispatch(factoryActions.sort({ by: 'name' }));
+                updateFactoryView(state => {
+                  state.sortBy = 'name';
+                });
               }}
             >
               By Name
@@ -89,21 +80,18 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
               value: 'wide',
             },
           ]}
-          value={filters?.viewMode ?? 'wide'}
+          value={factoryView?.viewMode ?? 'wide'}
           onChange={value =>
-            dispatch(
-              factoryActions.setFilter({
-                name: 'viewMode',
-                value,
-              }),
-            )
+            updateFactoryView(state => {
+              state.viewMode = value as 'compact' | 'wide';
+            })
           }
         />
       </Group>
       <Group>
-        <FactoryUndoButtons />
+        {/* <FactoryUndoButtons /> */}
         <Button
-          onClick={() => dispatch(factoryActions.add({}))}
+          onClick={e => useStore.getState().addGameFactory()}
           leftSection={<IconPlus size={16} />}
         >
           Add Factory

@@ -13,8 +13,8 @@ import {
 import { LoginPage } from './auth/LoginPage';
 import { PrivacyPolicy } from './auth/privacy/PrivacyPolicy';
 import { SyncManager } from './auth/sync/SyncManager';
-import { RecipeSolverDemo } from './recipes/solver/RecipeSolverDemo';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
+import { RecipeSolverDemo } from './solver/RecipeSolverDemo';
 import { theme } from './theme';
 
 const router = createBrowserRouter([
@@ -49,7 +49,7 @@ function Redirect({ to }: { to: string }) {
       search: location.search,
       hash: location.hash,
     });
-  }, [location]);
+  }, [location, navigate, to]);
 
   return null;
 }

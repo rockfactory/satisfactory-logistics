@@ -1,7 +1,7 @@
-import { Session } from 'inspector/promises';
-import { createSliceWithImmer } from 'zustand-slices/immer';
+import { Session } from '@supabase/supabase-js';
+import { createSlice } from '../core/zustand-helpers/slices';
 
-export const authSlice = createSliceWithImmer({
+export const authSlice = createSlice({
   name: 'auth',
   value: {
     session: null as Session | null,

@@ -2,9 +2,12 @@ export interface Factory {
   id: string;
   name?: string | null;
   description?: string | null;
-  inputs?: FactoryInput[];
-  outputs?: FactoryOutput[];
+  inputs: FactoryInput[];
+  outputs: FactoryOutput[];
   powerConsumption?: number | null;
+  // TODO currently planned but it should be equal to the factory ID. Not present in migrations
+  // TODO if we remove the solver, this doesn't get updated
+  solverId?: string;
 }
 
 export interface FactoryInput {
@@ -20,13 +23,9 @@ export interface FactoryOutput {
   somersloops?: number | null;
 }
 
-interface FactoriesFilters {
-  name: string | null;
-  resource: string | null;
-  viewMode?: 'compact' | 'wide';
-}
-
 interface FactoriesSettings {
   noHighlight100PercentUsage?: boolean;
   highlight100PercentColor?: string;
 }
+
+export const WORLD_SOURCE_ID = 'WORLD';

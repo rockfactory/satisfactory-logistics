@@ -1,30 +1,36 @@
 import { ActionIcon, Group, Image, NumberInput, Tooltip } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
-import { useDispatch } from 'react-redux';
+import { useStore } from '../core/zustand';
 import { FactoryOutputIcon } from './components/peek/icons/OutputInputIcons';
 import { OutputDependenciesPeekModal } from './components/peek/OutputDependenciesPeekModal';
-import { FactoryChangeHandler } from './FactoryRow';
-import { FactoryUsage } from './FactoryUsage';
+import { FactoryUsage } from './components/usage/FactoryUsage';
+import { FactoryOutput } from './Factory';
 import { FactoryItemInput } from './inputs/FactoryItemInput';
-import {
-  factoryActions,
-  GameFactory,
-  GameFactoryOutput,
-} from './store/FactoriesSlice';
+import { useFactoryOnChangeHandler } from './store/factoriesSelectors';
 import { useIsFactoryVisible } from './useIsFactoryVisible';
 
 export interface IFactoryOutputRowProps {
-  factory: GameFactory;
-  output: GameFactoryOutput;
+  factoryId: string;
+  output: FactoryOutput;
   index: number;
-  onChangeFactory: FactoryChangeHandler;
 }
 
 export function FactoryOutputRow(props: IFactoryOutputRowProps) {
-  const { factory, output, index, onChangeFactory } = props;
-  const dispatch = useDispatch();
+  const { factoryId, output, index } = props;
 
-  const isVisible = useIsFactoryVisible(factory.id, false, output.resource);
+  // TODO A bit messy, but we need to get the outputs from the factory if it exists only.
+  const outputs = useStore(
+    state =>
+      state.solvers.instances[factoryId]?.request.outputs ??
+      state.factories.factories[factoryId]?.outputs,
+  );
+
+  // We use a dedicated onChangeHandler for this component since outputs
+  // are synced with solvers
+  const onChangeHandler = useFactoryOnChangeHandler(factoryId);
+
+  // TODO IN Solver view, this should be false
+  const isVisible = useIsFactoryVisible(factoryId, false, output.resource);
   if (!isVisible) return null;
 
   return (
@@ -34,7 +40,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
         variant="default"
         width={320}
         value={output.resource}
-        onChange={onChangeFactory(factory.id, `outputs[${index}].resource`)}
+        onChange={onChangeHandler(`outputs.${index}.resource`)}
       />
 
       <NumberInput
@@ -52,13 +58,9 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
           },
         }}
         onChange={value => {
-          dispatch(
-            factoryActions.updateOutputAmount({
-              id: factory.id,
-              index: index,
-              value: Number(value),
-            }),
-          );
+          useStore.getState().updateFactoryOutput(factoryId, index, {
+            amount: Number(value),
+          });
         }}
       />
       <Tooltip
@@ -81,13 +83,9 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
             },
           }}
           onChange={value => {
-            dispatch(
-              factoryActions.updateSomersloops({
-                id: factory.id,
-                outputIndex: index,
-                value: Number(value),
-              }),
-            );
+            useStore.getState().updateFactoryOutput(factoryId, index, {
+              somersloops: Number(value),
+            });
           }}
           rightSection={
             <Image
@@ -102,22 +100,17 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       <ActionIcon
         variant="outline"
         color="red"
-        disabled={factory.outputs?.length === 1}
+        disabled={outputs?.length === 1}
         size="md"
         onClick={() =>
-          dispatch(
-            factoryActions.update({
-              id: factory.id,
-              outputs: factory.outputs?.filter((_, i) => i !== index),
-            }),
-          )
+          useStore.getState().removeFactoryOutput(factoryId, index)
         }
       >
         <IconTrash size={16} stroke={1.5} />
       </ActionIcon>
-      <OutputDependenciesPeekModal factoryId={factory.id} output={output} />
+      <OutputDependenciesPeekModal factoryId={factoryId} output={output} />
 
-      <FactoryUsage factoryId={factory.id} output={output.resource} />
+      <FactoryUsage factoryId={factoryId} output={output.resource} />
     </Group>
   );
 }

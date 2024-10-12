@@ -1,3 +1,4 @@
+import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   ActionIcon,
   Card,
@@ -8,22 +9,22 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconCalculator, IconTrash } from '@tabler/icons-react';
-import moize from 'moize';
 import * as React from 'react';
 import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useFormOnChange } from '../core/form/useFormOnChange';
+import { useStore } from '../core/zustand';
 import {
   FactoryInputIcon,
   FactoryOutputIcon,
 } from './components/peek/icons/OutputInputIcons';
+import { Factory } from './Factory';
 import { FactoryInputRow } from './FactoryInputRow';
 import { FactoryOutputRow } from './FactoryOutputRow';
-import { factoryActions, GameFactory } from './store/FactoriesSlice';
 import { useIsFactoryVisible } from './useIsFactoryVisible';
 
 export interface IFactoryRowProps {
-  factory: GameFactory;
+  id: string;
   index: number;
 }
 
@@ -35,29 +36,24 @@ export type FactoryChangeHandler = (
 ) => void;
 
 export function FactoryRow(props: IFactoryRowProps) {
-  const { factory, index } = props;
-  const dispatch = useDispatch();
-  const onChangeFactory = useCallback(
-    moize(
-      (id: string, path: string) =>
-        (
-          value: string | null | number | React.ChangeEvent<HTMLInputElement>,
-        ) => {
-          if (typeof value === 'object' && value?.currentTarget) {
-            value = value.currentTarget.value;
-          }
-          dispatch(factoryActions.updateAtPath({ id, path, value }));
-        },
-      { maxSize: 100 },
-    ),
-    [dispatch],
+  const { id, index } = props;
+  // const dispatch = useDispatch();
+  const factory = useStore(state => state.factories.factories[id]);
+  const updater = useCallback(
+    (path: Path<Factory>, value: string | null | number) => {
+      useStore
+        .getState()
+        .updateFactory(id, state => setByPath(state, path, value));
+    },
+    [id],
   );
+  const onChangeHandler = useFormOnChange<Factory>(updater);
 
-  const isVisible = useIsFactoryVisible(factory.id, true);
+  const isVisible = useIsFactoryVisible(id, true);
   if (!isVisible) return null;
 
   return (
-    <Card key={factory.id} withBorder>
+    <Card key={id} withBorder>
       {/* <Text size="sm" fw="bold">
             {factory.name}
           </Text> */}
@@ -70,7 +66,7 @@ export function FactoryRow(props: IFactoryRowProps) {
             fw={'bold'}
             w={180}
             defaultValue={factory.name ?? ''}
-            onChange={onChangeFactory(factory.id, 'name')}
+            onChange={onChangeHandler('name')}
           />
           {/* </Grid.Col>
             <Grid.Col span={9}> */}
@@ -81,8 +77,8 @@ export function FactoryRow(props: IFactoryRowProps) {
                   key={index}
                   index={index}
                   output={output}
-                  factory={factory}
-                  onChangeFactory={onChangeFactory}
+                  factoryId={factory.id}
+                  onChangeHandler={onChangeHandler}
                 />
               ),
             )}
@@ -94,9 +90,7 @@ export function FactoryRow(props: IFactoryRowProps) {
               variant="light"
               color="blue"
               size="lg"
-              onClick={() =>
-                dispatch(factoryActions.addInput({ id: factory.id }))
-              }
+              onClick={() => useStore.getState().addFactoryInput(id)}
             >
               <FactoryInputIcon stroke={2} size={16} />
             </ActionIcon>
@@ -106,9 +100,7 @@ export function FactoryRow(props: IFactoryRowProps) {
               variant="filled"
               color="blue"
               size="lg"
-              onClick={() =>
-                dispatch(factoryActions.addOutput({ id: factory.id }))
-              }
+              onClick={() => useStore.getState().addFactoryOutput(id)}
             >
               <FactoryOutputIcon stroke={2} size={16} />
             </ActionIcon>
@@ -129,7 +121,7 @@ export function FactoryRow(props: IFactoryRowProps) {
             variant="filled"
             color="red"
             size="lg"
-            onClick={() => dispatch(factoryActions.remove({ id: factory.id }))}
+            onClick={() => useStore.getState().removeGameFactory(id)}
           >
             <IconTrash stroke={2} size={16} />
           </ActionIcon>
@@ -146,7 +138,7 @@ export function FactoryRow(props: IFactoryRowProps) {
                 index={index}
                 input={input}
                 factoryId={factory.id}
-                onChangeFactory={onChangeFactory}
+                onChangeHandler={onChangeHandler}
               />
             ))}
           </Stack>

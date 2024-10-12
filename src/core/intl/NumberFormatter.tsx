@@ -42,6 +42,6 @@ export const RepeatingNumber = ({
  * https://stackoverflow.com/a/26363728/2470523
  */
 function getRepetend(num: number) {
-  var m = (num + '').match(/\.(\d*?)(\d+?)\2+$/);
+  const m = (num + '').match(/\.(\d*?)(\d+?)\2+$/);
   return m && { pattern: +m[2], index: m[1].length };
 }

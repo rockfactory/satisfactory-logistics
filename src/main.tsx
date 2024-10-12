@@ -3,11 +3,8 @@ import { supabaseIntegration } from '@supabase/sentry-js-integration';
 import '@xyflow/react/dist/style.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
 import App from './App.tsx';
 import { AuthSessionManager } from './auth/AuthSessionManager.tsx';
-import { persistor, store } from './core/store.tsx';
 import { supabaseClient } from './core/supabase.ts';
 
 Sentry.init({
@@ -33,11 +30,7 @@ Sentry.init({
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <AuthSessionManager />
-        <App />
-      </PersistGate>
-    </Provider>
+    <AuthSessionManager />
+    <App />
   </React.StrictMode>,
 );

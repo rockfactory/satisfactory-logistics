@@ -1,3 +1,4 @@
+import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   Button,
   Checkbox,
@@ -9,30 +10,25 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSettings } from '@tabler/icons-react';
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { factoryActions, useFactorySettings } from '../store/FactoriesSlice';
+import { useFormOnChange } from '../../core/form/useFormOnChange';
+import { useStore } from '../../core/zustand';
+import { GameSettings } from '../../games/Game';
+import { useGameSettings } from '../../games/gamesSlice';
 
 export interface IFactoriesSettingsProps {}
 
-export function FactoriesSettings(props: IFactoriesSettingsProps) {
-  const dispatch = useDispatch();
-  const [opened, { open, close }] = useDisclosure(false);
-  const settings = useFactorySettings();
+const updateGameSettings = (path: Path<GameSettings>, value: any) => {
+  useStore.getState().updateGameSettings(state => {
+    setByPath(state, path, value);
+  });
+};
 
-  const onChangeSettings = useCallback(
-    (path: string) =>
-      (
-        value: string | number | boolean | React.ChangeEvent<HTMLInputElement>,
-      ) => {
-        let targetValue =
-          typeof value === 'object'
-            ? (value.currentTarget.checked ?? value.currentTarget.value)
-            : value;
-        dispatch(factoryActions.setSettings({ [path]: targetValue }));
-      },
-    [dispatch],
-  );
+// TODO Rename in GameSettings
+export function FactoriesSettings(props: IFactoriesSettingsProps) {
+  const [opened, { open, close }] = useDisclosure(false);
+  const settings = useGameSettings();
+  const onChangeHandler = useFormOnChange<GameSettings>(updateGameSettings);
+
   return (
     <>
       <Modal size="md" title="Settings" onClose={close} opened={opened}>
@@ -44,13 +40,13 @@ export function FactoriesSettings(props: IFactoriesSettingsProps) {
             label="Do not highlight 100% usage"
             description="By default factories that are at 100% usage will be highlighted with a different color. Check this to keep them in red."
             checked={settings?.noHighlight100PercentUsage}
-            onChange={onChangeSettings('noHighlight100PercentUsage')}
+            onChange={onChangeHandler('noHighlight100PercentUsage')}
           />
           <ColorInput
             label="Highlight 100% usage color"
             description="Color used to highlight factories that are at 100% usage. By default it's a blue (#339af0)"
             value={settings?.highlight100PercentColor ?? '#339af0'}
-            onChange={onChangeSettings('highlight100PercentColor')}
+            onChange={onChangeHandler('highlight100PercentColor')}
             format="hex"
             swatches={[
               '#339af0',

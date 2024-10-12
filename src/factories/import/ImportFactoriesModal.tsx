@@ -3,15 +3,13 @@ import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconFileImport } from '@tabler/icons-react';
 import dayjs from 'dayjs';
-import { useDispatch } from 'react-redux';
-import { store } from '../../core/store';
-import { factoryActions } from '../store/FactoriesSlice';
+import { useStore } from '../../core/zustand';
+import { serializeGame } from '../../games/store/gameFactoriesActions';
 
 export interface IImportFactoriesModalProps {}
 
 export function ImportFactoriesModal(_props: IImportFactoriesModalProps) {
   const [opened, { open, close }] = useDisclosure(false);
-  const dispatch = useDispatch();
 
   return (
     <>
@@ -22,9 +20,8 @@ export function ImportFactoriesModal(_props: IImportFactoriesModalProps) {
         <Button
           onClick={() => {
             const json = JSON.stringify(
-              {
-                factories: store.getState().factories.present.factories,
-              },
+              // TODO Better gameId?
+              serializeGame(null),
               null,
               2,
             );
@@ -32,6 +29,7 @@ export function ImportFactoriesModal(_props: IImportFactoriesModalProps) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
+            // TODO Rename to game in this component
             a.download = `SatisfactoryLogistics_Factories_${dayjs().format('YYYY_MM_DD[T]HH_mm_ss')}.json`;
             a.click();
             URL.revokeObjectURL(url);
@@ -56,7 +54,7 @@ export function ImportFactoriesModal(_props: IImportFactoriesModalProps) {
               const content = e.target?.result as string;
               console.log(content, file);
               try {
-                dispatch(factoryActions.import({ json: content }));
+                useStore.getState().loadGame(JSON.parse(content));
                 close();
               } catch (error) {
                 notifications.show({
