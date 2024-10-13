@@ -23,7 +23,6 @@ export interface RecipeIngredient {
 
 import { AllFactoryItemsMap } from './FactoryItem';
 import RawFactoryRecipes from './FactoryRecipes.json';
-import { UnlockedByMap } from './FactorySchematic';
 import { isWorldResource } from './WorldResources';
 
 export const AllFactoryRecipes: FactoryRecipe[] =
@@ -55,18 +54,6 @@ export function getAllRecipesForItem(item: string) {
     r.products.some(p => p.resource === item),
   );
   return recipes;
-}
-
-export function getAllDefaultRecipesIds() {
-  return AllFactoryRecipes.filter(r => {
-    // console.log('r:', r, UnlockedByMap[r.id]);
-    return !UnlockedByMap[r.id]?.every(
-      u =>
-        u.type !== 'Milestone' &&
-        u.type !== 'Tutorial' &&
-        !(u.type === 'Custom' && u.id === 'Schematic_StartingRecipes_C'),
-    );
-  }).map(r => r.id);
 }
 
 export function getRecipeProductPerBuilding(

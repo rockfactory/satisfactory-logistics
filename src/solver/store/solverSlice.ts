@@ -1,4 +1,4 @@
-import { getAllDefaultRecipesIds } from '@/recipes/FactoryRecipe';
+import { getAllDefaultRecipesIds } from '@/recipes/graph/getAllDefaultRecipes';
 import { createSlice } from '../../core/zustand-helpers/slices';
 import { SolverInstance } from './Solver';
 

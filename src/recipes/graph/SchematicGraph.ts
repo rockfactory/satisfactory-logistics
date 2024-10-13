@@ -16,16 +16,17 @@ type SchematicNode =
       recipe: FactoryRecipe;
     };
 
-const SchematicsGraph = new Graph<SchematicNode>();
+export const SchematicsGraph = new Graph<SchematicNode>();
 
 for (const schematic of AllFactorySchematics) {
   SchematicsGraph.addNode(schematic.id, { type: 'schematic', schematic });
 }
 
 for (const schematic of AllFactorySchematics) {
-  for (const dependency of schematic.dependencies) {
-    SchematicsGraph.addEdge(dependency, schematic.id);
-  }
+  // TODO Redundant, remove from parsing too
+  // for (const dependency of schematic.dependencies) {
+  //   SchematicsGraph.addEdge(dependency, schematic.id);
+  // }
 
   for (const unlock of schematic.unlocks) {
     if (unlock.type === 'Recipe') {
@@ -48,12 +49,26 @@ for (const schematic of AllFactorySchematics) {
 
 export function isDefaultRecipe(recipeId: string) {
   const sources: SchematicNode[] = [];
-  bfsFromNode(SchematicsGraph, recipeId, (node, attr) => {
-    if (SchematicsGraph.inDegree(node) === 0) {
-      sources.push(attr);
-    }
-  });
+  bfsFromNode(
+    SchematicsGraph,
+    recipeId,
+    (node, attr) => {
+      if (SchematicsGraph.inDegree(node) === 0) {
+        sources.push(attr);
+      }
+    },
+    { mode: 'inbound' },
+  );
 
   console.log(`sources for recipe "${recipeId}":`, sources);
-  return;
+  return (
+    sources.length === 0 ||
+    sources.some(
+      s =>
+        (s.type === 'schematic' &&
+          s.schematic.id === 'Schematic_StartingRecipes_C') ||
+        (s.type === 'schematic' && s.schematic.type === 'Milestone') ||
+        (s.type === 'schematic' && s.schematic.type === 'Tutorial'),
+    )
+  );
 }
