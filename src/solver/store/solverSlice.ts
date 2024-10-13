@@ -1,3 +1,4 @@
+import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import { getAllDefaultRecipesIds } from '@/recipes/graph/getAllDefaultRecipes';
 import { createSlice } from '../../core/zustand-helpers/slices';
 import { SolverInstance } from './Solver';
@@ -65,6 +66,17 @@ export const solversSlice = createSlice({
           allowedRecipes?.splice(index, 1);
         }
       },
+    setAllowedRecipes: (id: string, allowedRecipes: string[]) => state => {
+      state.instances[id].request.allowedRecipes = allowedRecipes;
+    },
+    toggleAllRecipes: (id: string, use: boolean) => state => {
+      const instance = state.instances[id];
+      if (use) {
+        instance.request.allowedRecipes = AllFactoryRecipes.map(r => r.id);
+      } else {
+        instance.request.allowedRecipes = [];
+      }
+    },
     saveSolverSharedId: (id: string, sharedId: string) => state => {
       state.instances[id].sharedId = sharedId;
     },

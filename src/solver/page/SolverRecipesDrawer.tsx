@@ -1,17 +1,24 @@
 import { useStore } from '@/core/zustand';
 import {
+  ActionIcon,
   Button,
   Checkbox,
   Drawer,
   Group,
   Image,
+  Menu,
   Stack,
   Text,
   TextInput,
+  Tooltip,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
+  IconBucket,
+  IconBucketOff,
   IconDeviceFloppy,
+  IconDots,
+  IconDownload,
   IconSearch,
   IconTestPipe,
 } from '@tabler/icons-react';
@@ -58,6 +65,10 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
     );
   }, [search]);
 
+  const areAllSelected = useMemo(() => {
+    return allowedRecipes?.length === AllFactoryRecipes.length;
+  }, [allowedRecipes]);
+
   return (
     <>
       <Button
@@ -83,7 +94,84 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
                 rightSection={<IconSearch size={16} />}
                 size="sm"
               />
-              <Button
+
+              <Tooltip label={areAllSelected ? 'Select none' : 'Select all'}>
+                <ActionIcon
+                  variant="default"
+                  size="lg"
+                  onClick={() => {
+                    useStore
+                      .getState()
+                      .toggleAllRecipes(instance!.id, !areAllSelected);
+                  }}
+                >
+                  {areAllSelected ? (
+                    <IconBucketOff size={16} />
+                  ) : (
+                    <IconBucket size={16} />
+                  )}
+                </ActionIcon>
+              </Tooltip>
+
+              <Menu trigger="click-hover">
+                <Menu.Target>
+                  <ActionIcon
+                    variant="default"
+                    size="lg"
+                    title="Show recipes actions"
+                  >
+                    <IconDots size={16} />
+                  </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Select</Menu.Label>
+                  <Menu.Item
+                    leftSection={<IconBucket size={16} />}
+                    onClick={() => {
+                      useStore.getState().toggleAllRecipes(instance!.id, true);
+                    }}
+                  >
+                    Select all
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={<IconBucketOff size={16} />}
+                    onClick={() => {
+                      useStore.getState().toggleAllRecipes(instance!.id, false);
+                    }}
+                  >
+                    Select none
+                  </Menu.Item>
+
+                  <Menu.Label>Game</Menu.Label>
+                  <Menu.Item
+                    leftSection={<IconDeviceFloppy size={16} />}
+                    onClick={() => {
+                      useStore
+                        .getState()
+                        .setGameAllowedRecipes(undefined, allowedRecipes!);
+                    }}
+                  >
+                    Save as default
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={<IconDownload size={16} />}
+                    onClick={() => {
+                      useStore
+                        .getState()
+                        .setAllowedRecipes(
+                          instance!.id,
+                          useStore.getState().games.games[
+                            useStore.getState().games.selected ?? ''
+                          ]?.allowedRecipes ?? [],
+                        );
+                    }}
+                  >
+                    Load default
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+
+              {/* <Button
                 leftSection={<IconDeviceFloppy size={16} />}
                 variant="default"
                 title="Save the current allowed recipes as default for this game"
@@ -94,7 +182,7 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
                 }}
               >
                 Save
-              </Button>
+              </Button> */}
             </Group>
           </Stack>
         }
