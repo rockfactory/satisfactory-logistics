@@ -39,6 +39,24 @@ export const solversSlice = createSlice({
     removeSolver: (id: string) => state => {
       delete state.instances[id];
     },
+    toggleRecipe:
+      (id: string, options: { recipeId: string; use?: boolean }) => state => {
+        const { recipeId, use } = options;
+        const instance = state.instances[id];
+        if (!instance.request.allowedRecipes) {
+          instance.request.allowedRecipes = getAllDefaultRecipesIds();
+        }
+
+        const allowedRecipes = instance.request.allowedRecipes;
+        const isAllowed = use ?? !allowedRecipes?.includes(recipeId);
+        const index = allowedRecipes?.indexOf(recipeId);
+
+        if (isAllowed && index === -1) {
+          allowedRecipes?.push(recipeId);
+        } else if (!isAllowed && index >= 0) {
+          allowedRecipes?.splice(index, 1);
+        }
+      },
     saveSolverSharedId: (id: string, sharedId: string) => state => {
       state.instances[id].sharedId = sharedId;
     },

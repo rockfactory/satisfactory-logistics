@@ -23,7 +23,7 @@ export interface RecipeIngredient {
 
 import { AllFactoryItemsMap } from './FactoryItem';
 import RawFactoryRecipes from './FactoryRecipes.json';
-import { AllFactorySchematicsMap, UnlockedByMap } from './FactorySchematic';
+import { UnlockedByMap } from './FactorySchematic';
 import { isWorldResource } from './WorldResources';
 
 export const AllFactoryRecipes: FactoryRecipe[] =
@@ -57,7 +57,6 @@ export function getAllRecipesForItem(item: string) {
   return recipes;
 }
 
-console.log('UNLOOCK MAP', UnlockedByMap, AllFactorySchematicsMap);
 export function getAllDefaultRecipesIds() {
   return AllFactoryRecipes.filter(r => {
     // console.log('r:', r, UnlockedByMap[r.id]);

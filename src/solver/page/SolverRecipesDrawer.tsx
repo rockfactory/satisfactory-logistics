@@ -1,3 +1,4 @@
+import { useStore } from '@/core/zustand';
 import {
   Button,
   Checkbox,
@@ -10,7 +11,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSearch, IconTestPipe } from '@tabler/icons-react';
-import { useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { AllFactoryItemsMap } from '../../recipes/FactoryItem';
 import { AllFactoryRecipes, FactoryRecipe } from '../../recipes/FactoryRecipe';
 import {
@@ -38,6 +39,20 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
 
   const allowedRecipes = useSolverAllowedRecipes(instance?.id);
   const [search, setSearch] = useState('');
+
+  const displayedProducts = useMemo(() => {
+    return Object.entries(AllRecipesGroupedByProduct).filter(
+      ([product, recipes]) =>
+        search
+          ? AllFactoryItemsMap[product].name
+              .toLowerCase()
+              .includes(search.toLowerCase()) ||
+            recipes.some(recipe =>
+              recipe.name.toLowerCase().includes(search.toLowerCase()),
+            )
+          : true,
+    );
+  }, [search]);
 
   return (
     <>
@@ -67,50 +82,35 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
         }
       >
         <Stack gap="sm">
-          {Object.entries(AllRecipesGroupedByProduct)
-            .filter(([product, recipes]) =>
-              search
-                ? AllFactoryItemsMap[product].name
-                    .toLowerCase()
-                    .includes(search.toLowerCase()) ||
-                  recipes.some(recipe =>
-                    recipe.name.toLowerCase().includes(search.toLowerCase()),
-                  )
-                : true,
-            )
-            .map(([product, recipes]) => (
-              <>
-                <Group gap="xs">
-                  <Text key={product} size="md">
-                    {AllFactoryItemsMap[product].displayName}
-                  </Text>
-                  <Image
-                    src={AllFactoryItemsMap[product].imagePath}
-                    alt={AllFactoryItemsMap[product].displayName}
-                    w={20}
-                    h={20}
-                  />
-                </Group>
-                {recipes.map(recipe => (
-                  <Checkbox
-                    key={recipe.id}
-                    label={recipe.name}
-                    checked={allowedRecipes?.includes(recipe.id)}
-                    onChange={e => {
-                      console.log('Toggling recipe', recipe.id);
-                      // TODO Reimplement action; plus, add an "apply button" maybe?
-                      // dispatch(
-                      //   solverActions.toggleRecipe({
-                      //     id: instance!.id,
-                      //     recipe: recipe.id,
-                      //     use: e.currentTarget.checked,
-                      //   }),
-                      // );
-                    }}
-                  />
-                ))}
-              </>
-            ))}
+          {displayedProducts.map(([product, recipes]) => (
+            <Fragment key={product}>
+              <Group gap="xs">
+                <Text key={product} size="md">
+                  {AllFactoryItemsMap[product].displayName}
+                </Text>
+                <Image
+                  src={AllFactoryItemsMap[product].imagePath}
+                  alt={AllFactoryItemsMap[product].displayName}
+                  w={20}
+                  h={20}
+                />
+              </Group>
+              {recipes.map(recipe => (
+                <Checkbox
+                  key={recipe.id}
+                  label={recipe.name}
+                  checked={allowedRecipes?.includes(recipe.id)}
+                  onChange={e => {
+                    console.log('Toggling recipe', recipe.id);
+                    useStore.getState().toggleRecipe(instance!.id, {
+                      recipeId: recipe.id,
+                      use: e.currentTarget.checked,
+                    });
+                  }}
+                />
+              ))}
+            </Fragment>
+          ))}
         </Stack>
       </Drawer>
     </>
