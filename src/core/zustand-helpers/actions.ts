@@ -1,5 +1,6 @@
 import { produce } from 'immer';
 import type { RootState } from '../zustand';
+import { ImmerActions } from './immer';
 import { Action } from './slices';
 
 type InferActions<Actions> = Actions extends [infer ActionGroup, ...infer Rest]
@@ -33,10 +34,30 @@ export function withActions<
     get: () => State & InferActions<Actions>,
   ) => {
     const state: Record<string, unknown> = stateMaker(set as never, get);
+    if (!state[ImmerActions]) state[ImmerActions] = {};
+
+    const proxyGet = (state: State) => () =>
+      new Proxy(get(), {
+        get: (target, prop) => {
+          if (typeof prop === 'string' && target[ImmerActions][prop]) {
+            return (...args: any[]) =>
+              target[ImmerActions][prop](state, ...args);
+          }
+          return target.prop;
+        },
+      });
+
     for (const group of actions) {
       for (const [name, action] of Object.entries(group)) {
         state[name] = (...args: any[]) => {
-          set(produce(prevState => action(...args)(prevState, get)));
+          set(
+            produce(prevState =>
+              action(...args)(prevState, proxyGet(prevState)),
+            ),
+          );
+        };
+        (state as any)[ImmerActions][name] = (state: State, ...args: any[]) => {
+          action(...args)(state, get);
         };
       }
     }

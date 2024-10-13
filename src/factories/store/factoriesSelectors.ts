@@ -1,7 +1,7 @@
 import { Path, setByPath } from '@clickbar/dot-diver';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useFormOnChange } from '../../core/form/useFormOnChange';
-import { useStore } from '../../core/zustand';
+import { useShallowStore, useStore } from '../../core/zustand';
 import { SolverRequest } from '../../solver/store/Solver';
 import { Factory } from '../Factory';
 
@@ -16,4 +16,25 @@ export const useFactoryOnChangeHandler = (id: string | null | undefined) => {
   );
   const onChangeHandler = useFormOnChange<Factory | SolverRequest>(updater);
   return onChangeHandler;
+};
+
+export const useFactoryInputsOutputs = (id: string | null | undefined) => {
+  const inputs = useShallowStore(
+    state => state.factories.factories[id ?? '']?.inputs ?? [],
+  );
+  const outputs = useShallowStore(
+    state => state.factories.factories[id ?? '']?.outputs ?? [],
+  );
+  return useMemo(() => ({ inputs, outputs }), [inputs, outputs]);
+};
+
+export const useFactorySimpleAttributes = (id: string | null | undefined) => {
+  return useShallowStore(state => {
+    const factory = state.factories.factories[id ?? ''];
+    return {
+      id: factory?.id,
+      name: factory?.name,
+      description: factory?.description,
+    };
+  });
 };

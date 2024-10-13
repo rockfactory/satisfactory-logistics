@@ -32,6 +32,14 @@ export const gamesSlice = createSlice({
         },
       };
     },
+    addFactoryIdToGame:
+      (gameId: string | undefined, factoryId: string) => state => {
+        const targetId = gameId ?? state.selected;
+        if (!targetId) {
+          throw new Error('No game selected');
+        }
+        state.games[targetId].factoriesIds.push(factoryId);
+      },
     // For selected
     updateGameSettings: (fn: (state: GameSettings) => void) => state => {
       fn(state.games[state.selected!].settings);

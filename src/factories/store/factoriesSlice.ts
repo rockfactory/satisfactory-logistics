@@ -19,6 +19,15 @@ export const factoriesSlice = createSlice({
     addFactory: (factory: Factory) => state => {
       state.factories[factory.id] = factory;
     },
+    createFactory:
+      (id: string, factory?: Partial<Omit<Factory, 'id'>>) => state => {
+        state.factories[id] = {
+          inputs: [],
+          outputs: [],
+          ...factory,
+          id,
+        };
+      },
   },
 });
 

@@ -24,13 +24,6 @@ export const solversSlice = createSlice({
         isFactory: false,
         isOwner: true,
         request: {
-          inputs: [],
-          outputs: [
-            {
-              resource: 'Desc_Cement_C',
-              amount: 30,
-            },
-          ],
           objective: 'minimize_resources',
         },
       };

@@ -1,3 +1,4 @@
+import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
 import { Edge, MarkerType, Node } from '@xyflow/react';
 import highloader, { Highs } from 'highs';
 import { useEffect, useRef, useState } from 'react';
@@ -17,6 +18,11 @@ import { SolverRequest } from './store/Solver';
 
 const logger = log.getLogger('solver:production');
 logger.setLevel('debug');
+
+export interface SolverProductionRequest extends SolverRequest {
+  inputs: FactoryInput[];
+  outputs: FactoryOutput[];
+}
 
 export async function loadHighs() {
   const highs = await highloader({
@@ -47,7 +53,7 @@ export function useHighs() {
   return { highsRef, loading };
 }
 
-function applyObjective(ctx: SolverContext, request: SolverRequest) {
+function applyObjective(ctx: SolverContext, request: SolverProductionRequest) {
   switch (request.objective) {
     case 'minimize_power':
       /** MINIMIZE */
@@ -74,7 +80,10 @@ function applyObjective(ctx: SolverContext, request: SolverRequest) {
   }
 }
 
-export function solveProduction(highs: Highs, request: SolverRequest) {
+export function solveProduction(
+  highs: Highs,
+  request: SolverProductionRequest,
+) {
   const ctx = new SolverContext(request);
   for (const item of request.inputs ?? []) {
     if (!item.amount || !item.resource) continue;

@@ -5,7 +5,6 @@
   },
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.preferences.preferTypeOnlyAutoImports": true,
-  "typescript.referencesCodeLens.enabled": true,
   "typescript.experimental.expandableHover": true,
   "emmet.excludeLanguages": ["typescriptreact", "javascriptreact"]
 }

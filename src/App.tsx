@@ -9,6 +9,7 @@ import {
   RouterProvider,
   useLocation,
   useNavigate,
+  useRouteError,
 } from 'react-router-dom';
 import { LoginPage } from './auth/LoginPage';
 import { PrivacyPolicy } from './auth/privacy/PrivacyPolicy';
@@ -25,6 +26,9 @@ const router = createBrowserRouter([
   {
     path: '/factories/*',
     element: <FactoryRoutes />,
+    ErrorBoundary: () => {
+      throw useRouteError();
+    },
   },
   {
     path: '/login',

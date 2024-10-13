@@ -1,3 +1,7 @@
+import {
+  useFactoryInputsOutputs,
+  useFactorySimpleAttributes,
+} from '@/factories/store/factoriesSelectors';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   Box,
@@ -24,7 +28,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { useFormOnChange } from '../../core/form/useFormOnChange';
 import { useStore } from '../../core/zustand';
-import { useFactory } from '../../factories/store/factoriesSlice';
 import { AfterHeaderSticky } from '../../layout/AfterHeaderSticky';
 import { SolverEdge, SolverNode } from '../computeProductionConstraints';
 import { IMachineNodeData } from '../layout/MachineNode';
@@ -50,26 +53,27 @@ export interface ISolverSolution {
 export function SolverPage(props: ISolverPageProps) {
   const params = useParams<{ id: string }>();
   const id = params.id;
-  const factory = useFactory(id);
 
   const { highsRef, loading } = useHighs();
   const navigate = useNavigate();
 
+  const factory = useFactorySimpleAttributes(id);
+  const inputsOutputs = useFactoryInputsOutputs(id);
   const instance = usePathSolverInstance();
+
+  // TODO We want to have a "default" solver ID you can edit how
+  // many times you want, but if you don't save it, it will be
+  // overwritten by a new one.
   useEffect(() => {
-    // TODO Really noit sure about this
-    if (params.id && !instance && factory) {
+    if (params.id && (!instance || !factory)) {
+      console.log('SolverPage: No instance or factory, creating', id);
       useStore.getState().upsertFactorySolver(id);
-    }
-    // TODO Does it make sense? When do we load if it's first time?
-    if (params.id && !instance) {
-      navigate(`/factories/calculator`);
     }
 
     if (!params.id) {
       const nextId = v4();
-      useStore.getState().createSolver(nextId);
-      navigate(`/factories/calculator/${nextId}`);
+      useStore.getState().upsertFactorySolver(nextId);
+      navigate(`/factories/${nextId}/calculator`);
     }
   }, [instance, factory, id, params.id, navigate]);
 
@@ -89,10 +93,13 @@ export function SolverPage(props: ISolverPageProps) {
   const solution = useMemo(() => {
     if (!instance?.request || !highsRef.current || loading) return null;
 
-    const solution = solveProduction(highsRef.current, instance?.request);
+    const solution = solveProduction(highsRef.current, {
+      ...instance?.request,
+      ...inputsOutputs,
+    });
     console.log(`Solved -> `, solution);
     return solution;
-  }, [highsRef, instance?.request, loading]);
+  }, [highsRef, instance?.request, inputsOutputs, loading]);
 
   // TODO Implemente auto-create on navigate
   // if (params.id == null && current != null) {
@@ -146,6 +153,7 @@ export function SolverPage(props: ISolverPageProps) {
             <SolverRecipesDrawer />
 
             <Button
+              // TODO Show this button only if the solver is not from a _saved_ factory=
               color="red"
               variant="light"
               onClick={() => {

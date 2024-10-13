@@ -1,9 +1,8 @@
 import short from 'short-uuid';
-import { FactoryInput, FactoryOutput } from '../../factories/Factory';
 
 export interface SolverRequest {
-  inputs?: FactoryInput[];
-  outputs: FactoryOutput[];
+  // inputs?: FactoryInput[];
+  // outputs: FactoryOutput[];
   allowedRecipes?: string[] | null;
   objective?: 'minimize_power' | 'minimize_resources' | 'minimize_area';
 }

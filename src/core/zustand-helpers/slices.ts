@@ -1,4 +1,5 @@
 import { produce, WritableDraft } from 'immer';
+import { ImmerActions } from './immer';
 
 type InferState<Slices> = Slices extends [
   SliceConfig<infer Name, infer State, infer Actions>,
@@ -23,6 +24,8 @@ export function withSlices<
     get: () => InferState<Slices>,
   ) => {
     const state: Record<string, any> = {};
+    if (!state[ImmerActions]) state[ImmerActions] = {};
+
     for (const slice of slices) {
       state[slice.name] = slice.value;
 
@@ -31,6 +34,9 @@ export function withSlices<
           set(
             produce(prevState => action(...args)(prevState[slice.name], get)),
           );
+        };
+        (state as any)[ImmerActions][name] = (state: any, ...args: any[]) => {
+          action(...args)(state[slice.name], get);
         };
       }
     }
@@ -48,6 +54,9 @@ export type SliceConfig<
   value: Value;
   actions: Actions;
 };
+
+type SliceImmerArgs<Value> = [state: WritableDraft<Value>, get: () => Value];
+type SliceVanillaArgs<Value> = [state: Value, get: () => Value];
 
 export type Action<Value extends Record<string, any>> = (
   ...args: any[]

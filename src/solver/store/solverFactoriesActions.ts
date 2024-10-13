@@ -1,43 +1,31 @@
-import { cloneDeep } from 'lodash';
+import { loglev } from '@/core/logger/log';
+import { v4 } from 'uuid';
 import { createActions } from '../../core/zustand-helpers/actions';
 import { Factory, FactoryOutput } from '../../factories/Factory';
 import { SolverRequest } from './Solver';
 
+const logger = loglev.getLogger('store:solver-factories');
+
 export const solverFactoriesActions = createActions({
   /**
-   * Prepares a solver to a factory
+   * Prepares a solver-factory
    */
-  upsertFactorySolver: (factoryId: string | undefined) => state => {
-    if (!factoryId) return;
-    if (state.solvers.instances[factoryId]) return;
+  upsertFactorySolver: (factoryId: string | undefined) => (state, get) => {
+    if (!factoryId) factoryId = v4();
+    if (!state.factories.factories[factoryId]) {
+      logger.log('Creating factory', factoryId);
+      get().createFactory(factoryId);
 
-    const factory = state.factories.factories[factoryId];
-    const outputs =
-      factory.outputs && factory.outputs.length > 0
-        ? cloneDeep(factory.outputs)
-        : [
-            {
-              resource: null,
-              amount: 0,
-            },
-          ];
+      // If we are creating a new solver without a factory,
+      // we still don't link the factory to the game.
+      // The player can do this manually later.
+      // get().addFactoryIdToGame(undefined, factoryId);
+    }
 
-    const inputs =
-      factory.inputs?.map(i => ({
-        item: i.resource,
-        amount: i.amount,
-      })) ?? [];
-
-    state.solvers.instances[factoryId] = {
-      id: factoryId,
-      isFactory: true,
-      request: {
-        inputs: inputs,
-        outputs: outputs,
-        objective: 'minimize_resources',
-      },
-    };
-    state.factories.factories[factoryId].solverId = factoryId;
+    if (!state.solvers.instances[factoryId]) {
+      logger.log('Creating solver', factoryId);
+      get().createSolver(factoryId);
+    }
   },
   // Input/Output should be synced
   addFactoryInput: (factoryId: string) => state => {
@@ -45,28 +33,28 @@ export const solverFactoriesActions = createActions({
       resource: null,
       amount: 0,
     });
-    state.solvers.instances[factoryId]?.request.inputs?.push({
-      resource: null,
-      amount: 0,
-    });
+    // state.solvers.instances[factoryId]?.request.inputs?.push({
+    //   resource: null,
+    //   amount: 0,
+    // });
   },
   removeFactoryInput: (factoryId: string, inputIndex: number) => state => {
     state.factories.factories[factoryId]?.inputs?.splice(inputIndex, 1);
-    state.solvers.instances[factoryId]?.request.inputs?.splice(inputIndex, 1);
+    // state.solvers.instances[factoryId]?.request.inputs?.splice(inputIndex, 1);
   },
   addFactoryOutput: (factoryId: string) => state => {
     state.factories.factories[factoryId]?.outputs?.push({
       resource: null,
       amount: 0,
     });
-    state.solvers.instances[factoryId]?.request.outputs.push({
-      resource: null,
-      amount: 0,
-    });
+    // state.solvers.instances[factoryId]?.request.outputs.push({
+    //   resource: null,
+    //   amount: 0,
+    // });
   },
   removeFactoryOutput: (factoryId: string, outputIndex: number) => state => {
     state.factories.factories[factoryId]?.outputs?.splice(outputIndex, 1);
-    state.solvers.instances[factoryId]?.request.outputs.splice(outputIndex, 1);
+    // state.solvers.instances[factoryId]?.request.outputs.splice(outputIndex, 1);
   },
   updateFactoryAndSolverRequest:
     (factoryId: string, fn: (item: Factory | SolverRequest) => void) =>
@@ -74,32 +62,26 @@ export const solverFactoriesActions = createActions({
       if (state.factories.factories[factoryId]) {
         fn(state.factories.factories[factoryId]);
       }
-      if (state.solvers.instances[factoryId]?.request) {
-        fn(state.solvers.instances[factoryId]?.request);
-      }
+      // if (state.solvers.instances[factoryId]?.request) {
+      //   fn(state.solvers.instances[factoryId]?.request);
+      // }
     },
   updateFactoryOutput:
     (factoryId: string, outputIndex: number, output: Partial<FactoryOutput>) =>
-    (state, get) => {
+    state => {
       const factoryOutput =
         state.factories.factories[factoryId]?.outputs![outputIndex];
-      const solverOutput =
-        state.solvers.instances[factoryId]?.request.outputs[outputIndex];
 
       if (output.resource) {
-        if (factoryOutput) factoryOutput.resource = output.resource;
-        if (solverOutput) solverOutput.resource = output.resource;
+        factoryOutput.resource = output.resource;
       }
 
       if (output.amount !== undefined) {
-        if (factoryOutput) factoryOutput.amount = output.amount;
-        if (solverOutput) solverOutput.amount = output.amount;
+        factoryOutput.amount = output.amount;
       }
 
       if (output.somersloops !== undefined) {
-        if (factoryOutput) factoryOutput.somersloops = output.somersloops;
-        if (solverOutput) solverOutput.somersloops = output.somersloops;
-
+        factoryOutput.somersloops = output.somersloops;
         // TODO Add back calculations to update amount vs input amount
       }
     },

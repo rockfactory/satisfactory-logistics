@@ -1,7 +1,7 @@
 import { Button, Drawer, Stack, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconArrowsCross } from '@tabler/icons-react';
-import { useStore } from '../../core/zustand';
+import { useShallowStore, useStore } from '../../core/zustand';
 import {
   FactoryInputIcon,
   FactoryOutputIcon,
@@ -9,7 +9,6 @@ import {
 import { FactoryInputRow } from '../../factories/FactoryInputRow';
 import { FactoryOutputRow } from '../../factories/FactoryOutputRow';
 import { useFactoryOnChangeHandler } from '../../factories/store/factoriesSelectors';
-import { usePathSolverInstance } from '../store/solverSelectors';
 
 export interface ISolverInputOutputsDrawerProps {
   id?: string | null | undefined;
@@ -23,7 +22,12 @@ export function SolverInputOutputsDrawer(
 
   const onChangeHandler = useFactoryOnChangeHandler(id);
 
-  const instance = usePathSolverInstance();
+  const inputs = useShallowStore(
+    state => state.factories.factories[id ?? '']?.inputs ?? [],
+  );
+  const outputs = useShallowStore(
+    state => state.factories.factories[id ?? '']?.outputs ?? [],
+  );
 
   return (
     <>
@@ -37,7 +41,7 @@ export function SolverInputOutputsDrawer(
       </Button>
       <Drawer
         position="right"
-        size="lg"
+        size="xl"
         opened={opened}
         onClose={close}
         title={
@@ -47,9 +51,9 @@ export function SolverInputOutputsDrawer(
         }
       >
         <Stack gap="md">
-          <Stack gap="sm">
+          <Stack gap="xs">
             <Text size="lg">Inputs</Text>
-            {instance?.request?.inputs?.map((input, i) => (
+            {inputs?.map((input, i) => (
               <FactoryInputRow
                 index={i}
                 input={input}
@@ -97,13 +101,8 @@ export function SolverInputOutputsDrawer(
           </Stack>
           <Stack gap="sm">
             <Text size="lg">Outputs</Text>
-            {instance?.request?.outputs.map((output, i) => (
-              <FactoryOutputRow
-                index={i}
-                output={output}
-                factoryId={id!}
-                onChangeHandler={onChangeHandler}
-              />
+            {outputs.map((output, i) => (
+              <FactoryOutputRow index={i} output={output} factoryId={id!} />
               // <Group gap="xs">
               //   <FactoryItemInput
               //     value={output.resource ?? undefined}

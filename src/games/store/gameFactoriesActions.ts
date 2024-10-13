@@ -29,21 +29,15 @@ export const gameFactoriesActions = createActions({
   },
   addGameFactory:
     (gameId?: string | null, factory?: Partial<Omit<Factory, 'id'>>) =>
-    state => {
+    (state, get) => {
       const factoryId = v4();
-      state.factories.factories[factoryId] = {
-        id: factoryId,
-        inputs: [],
-        outputs: [],
-        ...factory,
-      };
-
       const targetId = gameId ?? state.games.selected;
       if (!targetId) {
         throw new Error('No game selected');
       }
 
-      state.games.games[targetId].factoriesIds.push(factoryId);
+      get().createFactory(factoryId, factory);
+      get().addFactoryIdToGame(targetId, factoryId);
     },
   // TODO For now only for selected game
   removeGameFactory: (factoryId: string) => state => {
