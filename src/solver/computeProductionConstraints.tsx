@@ -221,6 +221,11 @@ export function consolidateProductionConstraints(ctx: SolverContext) {
       ctx.constraints.push(
         `${producers.join(' + ')} - p${node.resource.index} = 0`,
       );
+    } else {
+      logger.debug('No producers for', node.resource);
+      // If there are no producers, we need to set the production to 0
+      ctx.bounds.push(`p${node.resource.index} = 0`);
+      ctx.bounds.push(`b${node.resource.index} = 0`);
     }
 
     // Even if there are no consumers, we still need to add the constraint
@@ -276,7 +281,11 @@ export function consolidateProductionConstraints(ctx: SolverContext) {
 
     // From producers P1, P2, P3 to consumer C
     for (const consumerVar of consumers) {
-      if (producers.length === 0) continue;
+      if (producers.length === 0) {
+        ctx.constraints.push(`${consumerVar} = 0`);
+        continue;
+      }
+
       const consumer = ctx.graph.getNodeAttributes(consumerVar);
       ctx.constraints.push(
         `${consumerVar} - ${producers.map(producerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} = 0`,
@@ -292,11 +301,14 @@ export function consolidateProductionConstraints(ctx: SolverContext) {
     const node = ctx.graph.getNodeAttributes(nodeName);
     // Es. `b${productItem.index}r${recipe.index}`
     const byproductEdges = ctx.graph.inboundEdges(nodeName);
-
     if (byproductEdges.length > 0) {
       ctx.constraints.push(
         `${node.variable} - ${byproductEdges.join(' - ')} = 0`,
       );
+    } else {
+      // TODO Verify
+      logger.warn('Byproduct without producers', node);
+      ctx.bounds.push(`${node.variable} = 0`);
     }
   }
 }
@@ -367,6 +379,7 @@ export function computeProductionConstraints(
   }
 
   if (amount) {
+    setGraphResource(ctx, resource);
     ctx.constraints.push(`b${resourceItem.index} = ${amount}`);
   }
 

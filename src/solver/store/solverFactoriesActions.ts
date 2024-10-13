@@ -26,7 +26,9 @@ export const solverFactoriesActions = createActions({
 
       if (!state.solvers.instances[factoryId]) {
         logger.log('Creating solver', factoryId);
-        get().createSolver(factoryId);
+        const gameAllowedRecipes =
+          state.games.games[state.games.selected ?? '']?.allowedRecipes;
+        get().createSolver(factoryId, { allowedRecipes: gameAllowedRecipes });
       }
     },
   // Input/Output should be synced

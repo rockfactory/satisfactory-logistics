@@ -6,6 +6,7 @@ export interface Game {
   factoriesIds: string[];
   // factories: Factory[];
   settings: GameSettings;
+  allowedRecipes?: string[];
 }
 
 export interface GameSettings {

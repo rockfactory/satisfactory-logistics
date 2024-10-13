@@ -19,23 +19,31 @@ export const solversSlice = createSlice({
       (id: string, fn: (solver: SolverInstance) => void) => state => {
         fn(state.instances[id]);
       },
-    createSolver: (id: string) => state => {
-      state.instances[id] = {
-        id,
-        isFactory: false,
-        isOwner: true,
-        request: {
-          allowedRecipes: getAllDefaultRecipesIds(),
-          objective: 'minimize_resources',
+    createSolver:
+      (
+        id: string,
+        options?: {
+          allowedRecipes?: string[];
         },
-      };
-      console.log(
-        'Creating solver',
-        id,
-        'recipes=',
-        state.instances[id].request.allowedRecipes,
-      );
-    },
+      ) =>
+      state => {
+        state.instances[id] = {
+          id,
+          isFactory: false,
+          isOwner: true,
+          request: {
+            allowedRecipes:
+              options?.allowedRecipes ?? getAllDefaultRecipesIds(),
+            objective: 'minimize_resources',
+          },
+        };
+        console.log(
+          'Creating solver',
+          id,
+          'recipes=',
+          state.instances[id].request.allowedRecipes,
+        );
+      },
     removeSolver: (id: string) => state => {
       delete state.instances[id];
     },

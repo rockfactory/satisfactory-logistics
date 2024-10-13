@@ -10,7 +10,11 @@ import {
   TextInput,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconSearch, IconTestPipe } from '@tabler/icons-react';
+import {
+  IconDeviceFloppy,
+  IconSearch,
+  IconTestPipe,
+} from '@tabler/icons-react';
 import { Fragment, useMemo, useState } from 'react';
 import { AllFactoryItemsMap } from '../../recipes/FactoryItem';
 import { AllFactoryRecipes, FactoryRecipe } from '../../recipes/FactoryRecipe';
@@ -71,13 +75,27 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
         title={
           <Stack>
             <Text size="xl">Recipes</Text>
-            <TextInput
-              placeholder="Search..."
-              value={search}
-              onChange={e => setSearch(e.currentTarget.value)}
-              rightSection={<IconSearch size={16} />}
-              size="sm"
-            />
+            <Group gap="xs">
+              <TextInput
+                placeholder="Search..."
+                value={search}
+                onChange={e => setSearch(e.currentTarget.value)}
+                rightSection={<IconSearch size={16} />}
+                size="sm"
+              />
+              <Button
+                leftSection={<IconDeviceFloppy size={16} />}
+                variant="default"
+                title="Save the current allowed recipes as default for this game"
+                onClick={() => {
+                  useStore
+                    .getState()
+                    .setGameAllowedRecipes(undefined, allowedRecipes!);
+                }}
+              >
+                Save
+              </Button>
+            </Group>
           </Stack>
         }
       >

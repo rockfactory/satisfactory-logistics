@@ -47,7 +47,7 @@ for (const schematic of AllFactorySchematics) {
   }
 }
 
-export function isDefaultRecipe(recipeId: string) {
+export function getRecipeRootUnlockSchematics(recipeId: string) {
   const sources: SchematicNode[] = [];
   bfsFromNode(
     SchematicsGraph,
@@ -60,7 +60,11 @@ export function isDefaultRecipe(recipeId: string) {
     { mode: 'inbound' },
   );
 
-  console.log(`sources for recipe "${recipeId}":`, sources);
+  return sources;
+}
+
+export function isDefaultRecipe(recipeId: string) {
+  const sources = getRecipeRootUnlockSchematics(recipeId);
   return (
     sources.length === 0 ||
     sources.some(
@@ -70,5 +74,12 @@ export function isDefaultRecipe(recipeId: string) {
         (s.type === 'schematic' && s.schematic.type === 'Milestone') ||
         (s.type === 'schematic' && s.schematic.type === 'Tutorial'),
     )
+  );
+}
+
+export function isMAMRecipe(recipeId: string) {
+  const sources = getRecipeRootUnlockSchematics(recipeId);
+  return sources.some(
+    s => s.type === 'schematic' && s.schematic.type === 'MAM',
   );
 }

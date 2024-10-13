@@ -2,12 +2,19 @@ import {
   useFactoryInputsOutputs,
   useFactorySimpleAttributes,
 } from '@/factories/store/factoriesSelectors';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
+import {
+  AllFactoryRecipes,
+  AllFactoryRecipesMap,
+} from '@/recipes/FactoryRecipe';
+import { getAllMAMRecipeIds } from '@/recipes/graph/getAllDefaultRecipes';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   Box,
   Button,
   Container,
   Group,
+  Image,
   LoadingOverlay,
   Select,
   Stack,
@@ -17,6 +24,7 @@ import {
 import { notifications } from '@mantine/notifications';
 import {
   IconArrowLeft,
+  IconPlus,
   IconTrash,
   IconZoomExclamation,
 } from '@tabler/icons-react';
@@ -48,6 +56,10 @@ export interface ISolverSolution {
   nodes: Array<Node<IMachineNodeData | IResourceNodeData>>;
   edges: Edge[];
   graph: Graph<SolverNode, SolverEdge, any>;
+}
+
+export interface ISolverSolutionSuggestion {
+  addRecipes?: string[];
 }
 
 export function SolverPage(props: ISolverPageProps) {
@@ -97,15 +109,56 @@ export function SolverPage(props: ISolverPageProps) {
 
   const onChangeHandler = useFormOnChange<SolverInstance>(updater);
 
-  const solution = useMemo(() => {
-    if (!instance?.request || !highsRef.current || loading) return null;
+  const { solution, suggestions } = useMemo(() => {
+    const suggestions: ISolverSolutionSuggestion = {};
+    if (!instance?.request || !highsRef.current || loading)
+      return {
+        solution: null,
+        suggestions,
+      };
 
     const solution = solveProduction(highsRef.current, {
       ...instance?.request,
       ...inputsOutputs,
     });
     console.log(`Solved -> `, solution);
-    return solution;
+
+    if (solution.result.Status !== 'Optimal') {
+      //  1. Try to solve with MAM recipes
+      const withMamRecipes = solveProduction(highsRef.current, {
+        ...instance?.request,
+        objective: 'minimize_power',
+        allowedRecipes: [
+          ...(instance.request.allowedRecipes ?? []),
+          ...getAllMAMRecipeIds(),
+        ],
+        ...inputsOutputs,
+      });
+      if (withMamRecipes.result.Status === 'Optimal') {
+        suggestions.addRecipes = withMamRecipes.nodes
+          .filter(node => node.type === 'Machine')
+          .map(node => (node.data as IMachineNodeData).recipe.id)
+          .filter(id => !instance.request.allowedRecipes?.includes(id));
+      } else {
+        // TODO Change this terrible if/else
+
+        // 2. Try to solve with all recipes
+        const withAllRecipes = solveProduction(highsRef.current, {
+          ...instance?.request,
+          objective: 'minimize_power',
+          allowedRecipes: AllFactoryRecipes.map(recipe => recipe.id),
+          ...inputsOutputs,
+        });
+        if (withAllRecipes.result.Status === 'Optimal') {
+          suggestions.addRecipes = withAllRecipes.nodes
+            .filter(node => node.type === 'Machine')
+            .map(node => (node.data as IMachineNodeData).recipe.id)
+            .filter(id => !instance.request.allowedRecipes?.includes(id));
+        }
+      }
+    }
+
+    return { solution, suggestions };
   }, [highsRef, instance?.request, inputsOutputs, loading]);
 
   // TODO Implemente auto-create on navigate
@@ -209,6 +262,43 @@ export function SolverPage(props: ISolverPageProps) {
               No solution found for the given parameters. Try adjusting the
               inputs, outputs and available recipes.
             </Text>
+            {suggestions?.addRecipes && (
+              <>
+                <Text size="sm" c="dark.2">
+                  Try adding the following recipes:
+                </Text>
+                <Group gap="xs">
+                  {suggestions.addRecipes.map(recipeId => {
+                    const recipe = AllFactoryRecipesMap[recipeId];
+                    const mainProduct =
+                      AllFactoryItemsMap[recipe.products[0].resource];
+                    return (
+                      <Button
+                        key={recipeId}
+                        variant="default"
+                        size="sm"
+                        onClick={() => {
+                          useStore
+                            .getState()
+                            .toggleRecipe(instance.id!, { recipeId });
+                        }}
+                        leftSection={<IconPlus size={16} />}
+                        rightSection={
+                          <Image
+                            src={mainProduct.imagePath}
+                            alt={mainProduct.name}
+                            w={16}
+                            h={16}
+                          />
+                        }
+                      >
+                        {recipe.name}
+                      </Button>
+                    );
+                  })}
+                </Group>
+              </>
+            )}
           </Stack>
         </Container>
       )}

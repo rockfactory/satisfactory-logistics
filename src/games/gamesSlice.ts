@@ -44,6 +44,14 @@ export const gamesSlice = createSlice({
     updateGameSettings: (fn: (state: GameSettings) => void) => state => {
       fn(state.games[state.selected!].settings);
     },
+    setGameAllowedRecipes:
+      (gameId: string | undefined, allowedRecipes: string[]) => state => {
+        const targetId = gameId ?? state.selected;
+        if (!targetId) {
+          throw new Error('No game selected');
+        }
+        state.games[targetId].allowedRecipes = allowedRecipes;
+      },
     // addFactory: (gameId: string, factory: Factory) =>
     //   set(state => {
     //     state.games[gameId].factories.push(factory);

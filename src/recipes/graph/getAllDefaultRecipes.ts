@@ -1,5 +1,5 @@
 import { AllFactoryRecipes } from '../FactoryRecipe';
-import { isDefaultRecipe } from './SchematicGraph';
+import { isDefaultRecipe, isMAMRecipe } from './SchematicGraph';
 
 export function getAllDefaultRecipesIds() {
   return AllFactoryRecipes.filter(r => {
@@ -11,5 +11,11 @@ export function getAllDefaultRecipesIds() {
     //     u.type !== 'Tutorial' &&
     //     !(u.type === 'Custom' && u.id === 'Schematic_StartingRecipes_C'),
     // );
+  }).map(r => r.id);
+}
+
+export function getAllMAMRecipeIds() {
+  return AllFactoryRecipes.filter(r => {
+    return isMAMRecipe(r.id);
   }).map(r => r.id);
 }
