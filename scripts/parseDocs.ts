@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import fs from 'node:fs';
-import { parseClearanceData } from './parsers/parseClearanceData.js';
+import { parseClearanceData } from './parsers/parseClearanceData';
+import { parseIngredients } from './parsers/parseIngredients';
+import { parseSchematics } from './parsers/parseSchematic';
 
 const ImageRegex = /(?:UI|QuantumEnergy)\/(?:IconDesc_)?(.*)_256\./;
-const IngredientRegex =
-  /\(ItemClass=(?:[^\)]*)\.([^']*)(?:[^)]*)Amount=([\d.]+)\)/gm;
 
 const docsJson = JSON.parse(fs.readFileSync('./data/docs-en.json', 'utf8'));
 const toolsJson = JSON.parse(fs.readFileSync('./data/docs-tools.json', 'utf8'));
@@ -73,6 +73,9 @@ function parseDocs() {
     './src/recipes/FactoryRecipes.json',
     JSON.stringify(recipes, null, 2),
   );
+
+  // Schematics
+  parseSchematics(docsJson, allItemsMap);
 }
 
 parseDocs();
@@ -157,39 +160,6 @@ function parseRecipe(recipe, index, allItemsMap, buildings) {
     powerConsumption: parseFloat(recipe.mVariablePowerConsumptionConstant),
     powerConsumptionFactor: parseFloat(recipe.mVariablePowerConsumptionFactor),
   };
-}
-
-function parseIngredients(ingredients, allItemsMap, building, dir) {
-  const matches = [...ingredients.matchAll(IngredientRegex)];
-  return matches.map(([_, resource, amount]) => {
-    if (!allItemsMap[resource]) {
-      console.log(`Missing ingredient: "${resource}"`);
-    }
-    const parsedAmount = parseFloat(amount);
-
-    // Liquids are written in cm³, we need to convert them to m³
-    let normalizedAmount =
-      allItemsMap[resource].form === 'Solid'
-        ? parsedAmount
-        : parsedAmount / 1_000;
-
-    // Pre-LP fixes
-    const displayAmount = normalizedAmount;
-
-    // Fix for LP: we make sure that Pakcagers are a little bit _LESS_ efficient than raw resources
-    if (building.id === 'Build_Packager_C') {
-      normalizedAmount =
-        dir === 'in' ? normalizedAmount + 0.001 : normalizedAmount - 0.001;
-    }
-
-    return {
-      resource,
-      // Liquids are written in cm³, we need to convert them to m³
-      amount: normalizedAmount,
-      displayAmount,
-      originalAmount: parsedAmount,
-    };
-  });
 }
 
 function parseBestProducedIn(producedIn) {

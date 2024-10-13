@@ -34,7 +34,7 @@ export function parseClearanceData(raw) {
 
   // Step 8: Parse the string into a JavaScript object
   //   console.log('trying to parse', raw, '<---');
-  var parsedData = JSON.parse(data);
+  const parsedData = JSON.parse(data);
   console.log(
     `Clearances:`,
     parsedData.map(

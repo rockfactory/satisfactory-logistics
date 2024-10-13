@@ -10,23 +10,25 @@ export const solverFactoriesActions = createActions({
   /**
    * Prepares a solver-factory
    */
-  upsertFactorySolver: (factoryId: string | undefined) => (state, get) => {
-    if (!factoryId) factoryId = v4();
-    if (!state.factories.factories[factoryId]) {
-      logger.log('Creating factory', factoryId);
-      get().createFactory(factoryId);
+  upsertFactorySolver:
+    (factoryId: string | undefined, factory?: Partial<Factory>) =>
+    (state, get) => {
+      if (!factoryId) factoryId = v4();
+      if (!state.factories.factories[factoryId]) {
+        logger.log('Creating factory', factoryId);
+        get().createFactory(factoryId, factory);
 
-      // If we are creating a new solver without a factory,
-      // we still don't link the factory to the game.
-      // The player can do this manually later.
-      // get().addFactoryIdToGame(undefined, factoryId);
-    }
+        // If we are creating a new solver without a factory,
+        // we still don't link the factory to the game.
+        // The player can do this manually later.
+        // get().addFactoryIdToGame(undefined, factoryId);
+      }
 
-    if (!state.solvers.instances[factoryId]) {
-      logger.log('Creating solver', factoryId);
-      get().createSolver(factoryId);
-    }
-  },
+      if (!state.solvers.instances[factoryId]) {
+        logger.log('Creating solver', factoryId);
+        get().createSolver(factoryId);
+      }
+    },
   // Input/Output should be synced
   addFactoryInput: (factoryId: string) => state => {
     state.factories.factories[factoryId]?.inputs?.push({

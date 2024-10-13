@@ -72,7 +72,14 @@ export function SolverPage(props: ISolverPageProps) {
 
     if (!params.id) {
       const nextId = v4();
-      useStore.getState().upsertFactorySolver(nextId);
+      useStore.getState().upsertFactorySolver(nextId, {
+        outputs: [
+          {
+            resource: 'Desc_Cement_C',
+            amount: 60,
+          },
+        ],
+      });
       navigate(`/factories/${nextId}/calculator`);
     }
   }, [instance, factory, id, params.id, navigate]);

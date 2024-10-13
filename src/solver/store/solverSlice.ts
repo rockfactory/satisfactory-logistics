@@ -1,3 +1,4 @@
+import { getAllDefaultRecipesIds } from '@/recipes/FactoryRecipe';
 import { createSlice } from '../../core/zustand-helpers/slices';
 import { SolverInstance } from './Solver';
 
@@ -24,9 +25,16 @@ export const solversSlice = createSlice({
         isFactory: false,
         isOwner: true,
         request: {
+          allowedRecipes: getAllDefaultRecipesIds(),
           objective: 'minimize_resources',
         },
       };
+      console.log(
+        'Creating solver',
+        id,
+        'recipes=',
+        state.instances[id].request.allowedRecipes,
+      );
     },
     removeSolver: (id: string) => state => {
       delete state.instances[id];
