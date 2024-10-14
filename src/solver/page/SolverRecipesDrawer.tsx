@@ -19,7 +19,11 @@ import {
   IconDeviceFloppy,
   IconDots,
   IconDownload,
+  IconHome,
+  IconHomeOff,
   IconSearch,
+  IconServer,
+  IconServerOff,
   IconTestPipe,
 } from '@tabler/icons-react';
 import { Fragment, useMemo, useState } from 'react';
@@ -139,7 +143,47 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
                       useStore.getState().toggleAllRecipes(instance!.id, false);
                     }}
                   >
-                    Select none
+                    Remove all
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={<IconHome size={16} />}
+                    onClick={() => {
+                      useStore
+                        .getState()
+                        .toggleDefaultRecipes(instance!.id, true);
+                    }}
+                  >
+                    Base: select all
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={<IconHomeOff size={16} />}
+                    onClick={() => {
+                      useStore
+                        .getState()
+                        .toggleDefaultRecipes(instance!.id, false);
+                    }}
+                  >
+                    Base: remove all
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={<IconServer size={16} />}
+                    onClick={() => {
+                      useStore
+                        .getState()
+                        .toggleAlternateRecipes(instance!.id, true);
+                    }}
+                  >
+                    Alternates: select all
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={<IconServerOff size={16} />}
+                    onClick={() => {
+                      useStore
+                        .getState()
+                        .toggleAlternateRecipes(instance!.id, true);
+                    }}
+                  >
+                    Alternates: remove all
                   </Menu.Item>
 
                   <Menu.Label>Game</Menu.Label>
@@ -160,9 +204,10 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
                         .getState()
                         .setAllowedRecipes(
                           instance!.id,
-                          useStore.getState().games.games[
-                            useStore.getState().games.selected ?? ''
-                          ]?.allowedRecipes ?? [],
+                          savedRecipes =>
+                            useStore.getState().games.games[
+                              useStore.getState().games.selected ?? ''
+                            ]?.allowedRecipes ?? [],
                         );
                     }}
                   >

@@ -19,3 +19,7 @@ export function getAllMAMRecipeIds() {
     return isMAMRecipe(r.id);
   }).map(r => r.id);
 }
+
+export function getAllAlternateRecipeIds() {
+  return AllFactoryRecipes.filter(r => !isDefaultRecipe(r.id)).map(r => r.id);
+}

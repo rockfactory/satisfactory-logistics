@@ -1,5 +1,9 @@
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
-import { getAllDefaultRecipesIds } from '@/recipes/graph/getAllDefaultRecipes';
+import {
+  getAllAlternateRecipeIds,
+  getAllDefaultRecipesIds,
+} from '@/recipes/graph/getAllDefaultRecipes';
+import { uniq, without } from 'lodash';
 import { createSlice } from '../../core/zustand-helpers/slices';
 import { SolverInstance } from './Solver';
 
@@ -66,15 +70,50 @@ export const solversSlice = createSlice({
           allowedRecipes?.splice(index, 1);
         }
       },
-    setAllowedRecipes: (id: string, allowedRecipes: string[]) => state => {
-      state.instances[id].request.allowedRecipes = allowedRecipes;
-    },
+    setAllowedRecipes:
+      (id: string, fn: (recipes: string[]) => string[]) => state => {
+        state.instances[id].request.allowedRecipes = fn(
+          state.instances[id].request.allowedRecipes ?? [],
+        );
+      },
     toggleAllRecipes: (id: string, use: boolean) => state => {
       const instance = state.instances[id];
       if (use) {
         instance.request.allowedRecipes = AllFactoryRecipes.map(r => r.id);
       } else {
         instance.request.allowedRecipes = [];
+      }
+    },
+    toggleDefaultRecipes: (id: string, use: boolean) => state => {
+      const instance = state.instances[id];
+      if (!instance.request.allowedRecipes) {
+        instance.request.allowedRecipes = [];
+      }
+      if (use) {
+        instance.request.allowedRecipes = uniq(
+          instance.request.allowedRecipes.concat(getAllDefaultRecipesIds()),
+        );
+      } else {
+        instance.request.allowedRecipes = without(
+          instance.request.allowedRecipes,
+          ...getAllDefaultRecipesIds(),
+        );
+      }
+    },
+    toggleAlternateRecipes: (id: string, use: boolean) => state => {
+      const instance = state.instances[id];
+      if (!instance.request.allowedRecipes) {
+        instance.request.allowedRecipes = [];
+      }
+      if (use) {
+        instance.request.allowedRecipes = uniq(
+          instance.request.allowedRecipes.concat(getAllAlternateRecipeIds()),
+        );
+      } else {
+        instance.request.allowedRecipes = without(
+          instance.request.allowedRecipes,
+          ...getAllAlternateRecipeIds(),
+        );
       }
     },
     saveSolverSharedId: (id: string, sharedId: string) => state => {
