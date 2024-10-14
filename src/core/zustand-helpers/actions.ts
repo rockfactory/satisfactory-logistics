@@ -34,14 +34,13 @@ export function withActions<
     get: () => State & InferActions<Actions>,
   ) => {
     const state: Record<string, unknown> = stateMaker(set as never, get);
-    if (!state[ImmerActions]) state[ImmerActions] = {};
 
     const proxyGet = (state: State) => () =>
       new Proxy(get(), {
         get: (target, prop) => {
-          if (typeof prop === 'string' && target[ImmerActions][prop]) {
+          if (typeof prop === 'string' && target[prop]?.[ImmerActions]) {
             return (...args: any[]) =>
-              target[ImmerActions][prop](state, ...args);
+              target[prop][ImmerActions](state, ...args);
           }
           return target.prop;
         },
@@ -56,7 +55,7 @@ export function withActions<
             ),
           );
         };
-        (state as any)[ImmerActions][name] = (state: State, ...args: any[]) => {
+        (state[name] as any)[ImmerActions] = (state: State, ...args: any[]) => {
           action(...args)(state, get);
         };
       }

@@ -24,7 +24,6 @@ export function withSlices<
     get: () => InferState<Slices>,
   ) => {
     const state: Record<string, any> = {};
-    if (!state[ImmerActions]) state[ImmerActions] = {};
 
     for (const slice of slices) {
       state[slice.name] = slice.value;
@@ -35,7 +34,7 @@ export function withSlices<
             produce(prevState => action(...args)(prevState[slice.name], get)),
           );
         };
-        (state as any)[ImmerActions][name] = (state: any, ...args: any[]) => {
+        (state[name] as any)[ImmerActions] = (state: any, ...args: any[]) => {
           action(...args)(state[slice.name], get);
         };
       }

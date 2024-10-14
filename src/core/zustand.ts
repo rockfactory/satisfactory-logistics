@@ -1,5 +1,7 @@
+import { gameSaveSlice } from '@/games/save/gameSaveSlice';
+import { omit } from 'lodash';
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 import { useShallow } from 'zustand/shallow';
 import { authSlice } from '../auth/authSlice';
 import { factoryViewSlice } from '../factories/factoryViewSlice';
@@ -14,6 +16,7 @@ import { withSlices } from './zustand-helpers/slices';
 const slices = withSlices(
   authSlice,
   gamesSlice,
+  gameSaveSlice,
   factoriesSlice,
   factoryViewSlice,
   solversSlice,
@@ -26,7 +29,15 @@ const slicesWithActions = withActions(
   solverFactoriesActions,
 );
 
-export const useStore = create(devtools(slicesWithActions));
+export const useStore = create(
+  devtools(
+    persist(slicesWithActions, {
+      name: 'mainstore',
+      partialize: state => omit(state, ['gameSave']),
+      version: 0,
+    }),
+  ),
+);
 
 export const useShallowStore = <T>(selector: (state: RootState) => T) =>
   useStore(useShallow(selector));
