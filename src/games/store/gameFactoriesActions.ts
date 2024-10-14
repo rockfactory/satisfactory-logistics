@@ -1,3 +1,4 @@
+import type { SolverInstance } from '@/solver/store/Solver';
 import { v4 } from 'uuid';
 import { useStore } from '../../core/zustand';
 import { createActions } from '../../core/zustand-helpers/actions';
@@ -63,6 +64,7 @@ export const gameFactoriesActions = createActions({
 export type SerializedGame = {
   game: Game;
   factories: Factory[];
+  solvers: SolverInstance[];
 };
 
 export function serializeGame(
@@ -78,5 +80,8 @@ export function serializeGame(
     factories: game?.factoriesIds.map(
       factoryId => state.factories.factories[factoryId],
     ),
+    solvers: game?.factoriesIds
+      .map(factoryId => state.solvers.instances[factoryId])
+      .filter(Boolean) as SolverInstance[],
   };
 }

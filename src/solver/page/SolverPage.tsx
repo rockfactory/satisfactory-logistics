@@ -7,7 +7,10 @@ import {
   AllFactoryRecipes,
   AllFactoryRecipesMap,
 } from '@/recipes/FactoryRecipe';
-import { getAllMAMRecipeIds } from '@/recipes/graph/getAllDefaultRecipes';
+import {
+  getAllDefaultRecipesIds,
+  getAllMAMRecipeIds,
+} from '@/recipes/graph/getAllDefaultRecipes';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   Box,
@@ -31,6 +34,7 @@ import {
 import { Edge, Node, Panel, ReactFlowProvider } from '@xyflow/react';
 import Graph from 'graphology';
 import { HighsSolution } from 'highs';
+import { without } from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { v4 } from 'uuid';
@@ -124,22 +128,46 @@ export function SolverPage(props: ISolverPageProps) {
     console.log(`Solved -> `, solution);
 
     if (solution.result.Status !== 'Optimal') {
+      console.log('No solution found, trying MAM recipes');
       //  1. Try to solve with MAM recipes
       const withMamRecipes = solveProduction(highsRef.current, {
         ...instance?.request,
         objective: 'minimize_power',
         allowedRecipes: [
           ...(instance.request.allowedRecipes ?? []),
+          ...getAllDefaultRecipesIds(),
           ...getAllMAMRecipeIds(),
         ],
         ...inputsOutputs,
       });
       if (withMamRecipes.result.Status === 'Optimal') {
+        console.log('Solution found with MAM recipes', withMamRecipes);
         suggestions.addRecipes = withMamRecipes.nodes
           .filter(node => node.type === 'Machine')
           .map(node => (node.data as IMachineNodeData).recipe.id)
           .filter(id => !instance.request.allowedRecipes?.includes(id));
+
+        // TODO BUg. Inputs influences outputs, so much that if they can't be used, the solver is Infeasible
+        // We should atleast:
+        // 1) Add an option to "ignore" the inputs (or to "force" their usage).
+        // 2) Add a solver fallback which tries to remove the inputs and solve again.
+        const usedBatterRecipe = withMamRecipes.nodes.filter(
+          node =>
+            node.type === 'Machine' &&
+            (node.data as IMachineNodeData).recipe.id.includes('Batter'),
+        );
+        console.log('usedBatterRecipe', usedBatterRecipe);
+
+        console.log(
+          'suggestions.addRecipes',
+          instance.request.allowedRecipes,
+          without(
+            suggestions.addRecipes,
+            ...(instance.request.allowedRecipes ?? []),
+          ),
+        );
       } else {
+        console.log('No solution found, trying all recipes');
         // TODO Change this terrible if/else
 
         // 2. Try to solve with all recipes

@@ -25,7 +25,10 @@ export const solverFactoriesActions = createActions({
       }
 
       if (!state.solvers.instances[factoryId]) {
-        logger.log('Creating solver', factoryId);
+        logger.log('Creating solver', factoryId, {
+          gt: get(),
+          cs: get().createSolver,
+        });
         const gameAllowedRecipes =
           state.games.games[state.games.selected ?? '']?.allowedRecipes;
         get().createSolver(factoryId, { allowedRecipes: gameAllowedRecipes });

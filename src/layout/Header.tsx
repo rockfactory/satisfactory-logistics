@@ -1,3 +1,4 @@
+import { GameMenu } from '@/games/menu/GameMenu';
 import {
   Burger,
   Container,
@@ -36,6 +37,7 @@ export function Header(props: HeaderProps) {
           </Group>
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
           <Group>
+            <GameMenu />
             <UserMenu />
           </Group>
         </Group>

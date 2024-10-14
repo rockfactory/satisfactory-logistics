@@ -17,7 +17,7 @@ import { IResourceNodeData } from './layout/ResourceNode';
 import { SolverRequest } from './store/Solver';
 
 const logger = log.getLogger('solver:production');
-logger.setLevel('debug');
+logger.setLevel('info');
 
 export interface SolverProductionRequest extends SolverRequest {
   inputs: FactoryInput[];
