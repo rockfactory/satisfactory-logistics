@@ -10,7 +10,7 @@ import {
 } from '@tabler/icons-react';
 import { useEffect, useMemo } from 'react';
 import { v4 } from 'uuid';
-import { loadRemoteGamesList } from '../save/loadRemoteGames';
+import { loadRemoteGamesList } from '../save/loadRemoteGamesList';
 import { saveRemoteGame } from '../save/saveRemoteGame';
 import { GameDetailModal } from './GameDetailModal';
 

@@ -69,3 +69,10 @@ export function createActions<
 >(actions: Actions) {
   return actions;
 }
+
+export function actionWith<Actions extends Record<string, Action<any>>[]>(
+  ...actions: [...Actions]
+) {
+  return <A extends Action<RootState & InferActions<Actions>>>(action: A) =>
+    action;
+}

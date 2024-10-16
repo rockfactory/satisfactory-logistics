@@ -1,4 +1,5 @@
 import { gameSaveSlice } from '@/games/save/gameSaveSlice';
+import { gameRemoteActions } from '@/games/store/gameRemoteActions';
 import { omit } from 'lodash';
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
@@ -27,6 +28,7 @@ const slicesWithActions = withActions(
   slices,
   gameFactoriesActions,
   solverFactoriesActions,
+  gameRemoteActions,
 );
 
 export const useStore = create(

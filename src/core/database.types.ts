@@ -34,15 +34,7 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "factories_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       factories_users: {
         Row: {
@@ -74,13 +66,6 @@ export type Database = {
             referencedRelation: "factories"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "factories_users_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
         ]
       }
       games: {
@@ -89,6 +74,7 @@ export type Database = {
           data: Json | null
           id: string
           name: string | null
+          share_token: string | null
           updated_at: string
           user_id: string | null
         }
@@ -97,6 +83,7 @@ export type Database = {
           data?: Json | null
           id?: string
           name?: string | null
+          share_token?: string | null
           updated_at?: string
           user_id?: string | null
         }
@@ -105,47 +92,55 @@ export type Database = {
           data?: Json | null
           id?: string
           name?: string | null
+          share_token?: string | null
           updated_at?: string
           user_id?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "games_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      shared_factories: {
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          id: string
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          id: string
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          id?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
+      shared_games: {
         Row: {
           created_at: string
-          data: Json | null
+          game_id: string
           id: number
-          updated_at: string | null
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           created_at?: string
-          data?: Json | null
+          game_id: string
           id?: number
-          updated_at?: string | null
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           created_at?: string
-          data?: Json | null
+          game_id?: string
           id?: number
-          updated_at?: string | null
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "shared_factories_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "shared_games_game_id_fkey"
+            columns: ["game_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "games"
             referencedColumns: ["id"]
           },
         ]
@@ -175,22 +170,38 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "shared_solvers_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_user_shared_game_id: {
+        Args: {
+          gid: string
+        }
+        Returns: boolean
+      }
+      is_user_sharing_game_with: {
+        Args: {
+          uid: string
+        }
+        Returns: boolean
+      }
+      secure_token_for_game_id: {
+        Args: {
+          gid: string
+        }
+        Returns: string
+      }
+      share_token_matches_game_id: {
+        Args: {
+          token: string
+          gid: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
@@ -281,4 +292,19 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never

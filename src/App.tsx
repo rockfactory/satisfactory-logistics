@@ -14,6 +14,7 @@ import {
 import { LoginPage } from './auth/LoginPage';
 import { PrivacyPolicy } from './auth/privacy/PrivacyPolicy';
 import { SyncManager } from './auth/sync/SyncManager';
+import { GamesRoutes } from './games/page/GamesRoutes';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
 import { RecipeSolverDemo } from './solver/RecipeSolverDemo';
 import { theme } from './theme';
@@ -26,6 +27,13 @@ const router = createBrowserRouter([
   {
     path: '/factories/*',
     element: <FactoryRoutes />,
+    ErrorBoundary: () => {
+      throw useRouteError();
+    },
+  },
+  {
+    path: '/games/*',
+    element: <GamesRoutes />,
     ErrorBoundary: () => {
       throw useRouteError();
     },

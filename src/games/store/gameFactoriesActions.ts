@@ -51,9 +51,12 @@ export const gameFactoriesActions = createActions({
   // TODO Solvers? centralize them?
   loadGame: (serialized: SerializedGame) => state => {
     state.games.selected = serialized.game.id;
-    state.games.games[serialized.game.id] = serialized.game;
+    Object.assign(state.games.games[serialized.game.id], serialized.game);
     serialized.factories.forEach(factory => {
       state.factories.factories[factory.id] = factory;
+    });
+    serialized.solvers.forEach(solver => {
+      state.solvers.instances[solver.id] = solver;
     });
   },
   setSavedGameId: (gameId: string, savedId: string) => state => {

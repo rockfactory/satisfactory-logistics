@@ -2,7 +2,6 @@ import { useShallow } from 'zustand/shallow';
 import { useStore } from '../core/zustand';
 import { createSlice } from '../core/zustand-helpers/slices';
 import { Game, GameSettings } from './Game';
-import type { RemoteLoadedGamesList } from './save/loadRemoteGames';
 
 export interface GamesSlice {
   games: Record<string, Game>;
@@ -41,8 +40,11 @@ export const gamesSlice = createSlice({
         }
         state.games[targetId].factoriesIds.push(factoryId);
       },
-    setName: (gameId: string, name: string) => state => {
+    setGameName: (gameId: string, name: string) => state => {
       state.games[gameId].name = name;
+    },
+    setSharedGameToken: (gameId: string, token: string) => state => {
+      state.games[gameId].shareToken = token;
     },
     // For selected
     updateGameSettings: (fn: (state: GameSettings) => void) => state => {
@@ -56,24 +58,6 @@ export const gamesSlice = createSlice({
         }
         state.games[targetId].allowedRecipes = allowedRecipes;
       },
-    // Sync
-    setRemoteGames: (games: RemoteLoadedGamesList) => state => {
-      for (const game of games) {
-        if (!state.games[game.id]) {
-          state.games[game.id] = {
-            ...game,
-            name: game.name ?? 'Loaded Game',
-            factoriesIds: [],
-            settings: {
-              noHighlight100PercentUsage: false,
-              highlight100PercentColor: '#339af0',
-            },
-          };
-        }
-
-        state.games[game.id]!.name ??= game.name ?? 'Loaded Game';
-      }
-    },
   },
 });
 

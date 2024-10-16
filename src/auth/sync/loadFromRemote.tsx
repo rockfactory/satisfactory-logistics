@@ -77,6 +77,7 @@ export async function loadFromOldRemote(
         inputs: factory.inputs ?? [],
         outputs: factory.outputs ?? [],
       })) ?? [],
+    solvers: Object.values(serialized.solver?.instances ?? {}),
   });
 
   const remoteUpdatedAt = new Date(data!.updated_at).getTime();

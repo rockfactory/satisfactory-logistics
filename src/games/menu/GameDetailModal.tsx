@@ -21,7 +21,7 @@ export function GameDetailModal(props: IGameDetailModalProps) {
         label="Game Name"
         value={name}
         onChange={e => {
-          useStore.getState().setName(gameId, e.currentTarget.value);
+          useStore.getState().setGameName(gameId, e.currentTarget.value);
         }}
       />
     </Modal>

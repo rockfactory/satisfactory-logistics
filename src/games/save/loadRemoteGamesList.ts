@@ -3,9 +3,18 @@ import { useStore } from '@/core/zustand';
 import { notifications } from '@mantine/notifications';
 import type { QueryData } from '@supabase/supabase-js';
 
+// Shared and normal
 const loadRemoteGamesQuery = supabaseClient
   .from('games')
-  .select('id, name, created_at, updated_at')
+  .select(
+    `
+    id, name, user_id, 
+    author:profiles!user_id (
+      id, username, avatar_url
+    ), 
+    created_at, updated_at
+  `,
+  )
   .order('created_at', { ascending: false });
 
 export type RemoteLoadedGamesList = QueryData<typeof loadRemoteGamesQuery>;
