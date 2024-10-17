@@ -70,33 +70,41 @@ export type Database = {
       }
       games: {
         Row: {
+          author_id: string
           created_at: string
           data: Json | null
           id: string
           name: string | null
           share_token: string | null
           updated_at: string
-          user_id: string | null
         }
         Insert: {
+          author_id: string
           created_at?: string
           data?: Json | null
           id?: string
           name?: string | null
           share_token?: string | null
           updated_at?: string
-          user_id?: string | null
         }
         Update: {
+          author_id?: string
           created_at?: string
           data?: Json | null
           id?: string
           name?: string | null
           share_token?: string | null
           updated_at?: string
-          user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "games_author_id_fkey1"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -141,6 +149,13 @@ export type Database = {
             columns: ["game_id"]
             isOneToOne: false
             referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_games_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]

@@ -1,5 +1,5 @@
+import { serializeGame } from '@/games/store/gameFactoriesActions';
 import { notifications } from '@mantine/notifications';
-import { pick } from 'lodash';
 import { Json } from '../../core/database.types';
 import { supabaseClient } from '../../core/supabase';
 import { useStore } from '../../core/zustand';
@@ -48,14 +48,10 @@ export async function saveLocalState() {
     .from('games')
     .upsert({
       id: game.savedId ?? undefined,
-      user_id: auth?.session?.user.id,
+      author_id: game.authorId ?? auth.session!.user.id,
       name: game.name,
       // We save only the _current_ state, not the whole state with undo history
-      data: {
-        game,
-        factories: pick(factories.factories, game.factoriesIds),
-        solvers: pick(solvers.instances, game.factoriesIds),
-      } as ISerializedState as unknown as Json,
+      data: serializeGame(game.id) as unknown as Json,
       updated_at: new Date().toISOString(),
     })
     .select('id')
@@ -78,7 +74,7 @@ export async function saveLocalState() {
 
   console.log('Saved factories to remote:', data);
   // TODO add date?
-  useStore.getState().setSavedGameId(game.id, data?.id);
+  // useStore.getState().setSavedGameId(game.id, data?.id);
 }
 
 // Minimum interval between syncs

@@ -54,7 +54,9 @@ export function ImportFactoriesModal(_props: IImportFactoriesModalProps) {
               const content = e.target?.result as string;
               console.log(content, file);
               try {
-                useStore.getState().loadGame(JSON.parse(content));
+                useStore.getState().loadRemoteGame(JSON.parse(content), {
+                  created_at: dayjs().toISOString(),
+                });
                 close();
               } catch (error) {
                 notifications.show({

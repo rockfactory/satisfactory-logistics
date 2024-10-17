@@ -63,22 +63,26 @@ export async function loadFromOldRemote(
 
   const serialized = data.data as unknown as IV020SerializedState;
   const game = useStore.getState().games.games[gameId];
-  useStore.getState().loadGame({
-    game: {
-      ...game,
-      settings: serialized.factories?.settings ?? game.settings,
-      createdAt: new Date(data!.created_at),
-      factoriesIds:
-        serialized.factories?.factories?.map(factory => factory.id) ?? [],
+  useStore.getState().loadRemoteGame(
+    {
+      game: {
+        ...game,
+        settings: serialized.factories?.settings ?? game.settings,
+        factoriesIds:
+          serialized.factories?.factories?.map(factory => factory.id) ?? [],
+      },
+      factories:
+        serialized.factories?.factories?.map(factory => ({
+          ...factory,
+          inputs: factory.inputs ?? [],
+          outputs: factory.outputs ?? [],
+        })) ?? [],
+      solvers: Object.values(serialized.solver?.instances ?? {}),
     },
-    factories:
-      serialized.factories?.factories?.map(factory => ({
-        ...factory,
-        inputs: factory.inputs ?? [],
-        outputs: factory.outputs ?? [],
-      })) ?? [],
-    solvers: Object.values(serialized.solver?.instances ?? {}),
-  });
+    {
+      created_at: data.created_at,
+    },
+  );
 
   const remoteUpdatedAt = new Date(data!.updated_at).getTime();
 

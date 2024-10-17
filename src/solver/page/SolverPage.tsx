@@ -151,12 +151,12 @@ export function SolverPage(props: ISolverPageProps) {
         // We should atleast:
         // 1) Add an option to "ignore" the inputs (or to "force" their usage).
         // 2) Add a solver fallback which tries to remove the inputs and solve again.
-        const usedBatterRecipe = withMamRecipes.nodes.filter(
-          node =>
-            node.type === 'Machine' &&
-            (node.data as IMachineNodeData).recipe.id.includes('Batter'),
-        );
-        console.log('usedBatterRecipe', usedBatterRecipe);
+        // const usedBatterRecipe = withMamRecipes.nodes.filter(
+        //   node =>
+        //     node.type === 'Machine' &&
+        //     (node.data as IMachineNodeData).recipe.id.includes('Batter'),
+        // );
+        // console.log('usedBatterRecipe', usedBatterRecipe);
 
         console.log(
           'suggestions.addRecipes',

@@ -35,13 +35,13 @@ export async function saveRemoteGame(gameId?: string | null) {
       .from('games')
       .upsert({
         id: game.savedId ?? undefined,
-        user_id: auth?.session?.user.id,
+        author_id: game.authorId ?? auth.session!.user.id,
         name: game.name,
         // We save only the _current_ state, not the whole state with undo history
         data: serializeGame(gameId) as unknown as Json,
         updated_at: new Date().toISOString(),
       })
-      .select('id')
+      .select('id, author_id, created_at, share_token')
       .single();
 
     if (error) {
@@ -50,8 +50,7 @@ export async function saveRemoteGame(gameId?: string | null) {
     }
 
     console.log('Saved game to remote:', data);
-    // TODO add date?
-    useStore.getState().setSavedGameId(game.id, data?.id);
+    useStore.getState().setRemoteGameData(game.id, data);
   } catch (error: any) {
     console.error('Error saving game:', error);
     notifications.show({

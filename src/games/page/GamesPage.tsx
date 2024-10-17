@@ -15,6 +15,7 @@ import {
   IconPlayerPlayFilled,
 } from '@tabler/icons-react';
 import dayjs from 'dayjs';
+import { GamePlayers } from './detail/GamePlayers';
 import { ShareGamePanel } from './share/ShareGamePanel';
 
 export interface IGamesPageProps {}
@@ -22,6 +23,7 @@ export interface IGamesPageProps {}
 export function GamesPage(props: IGamesPageProps) {
   const selectedId = useStore(state => state.games.selected);
   const games = useShallowStore(state => Object.values(state.games.games));
+
   return (
     <div>
       <Container size="lg" mt="sm">
@@ -75,6 +77,7 @@ export function GamesPage(props: IGamesPageProps) {
                     )}
                   </Group>
                 </Group>
+                <GamePlayers gameId={game.id} />
               </Stack>
             </Paper>
           ))}

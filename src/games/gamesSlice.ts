@@ -1,7 +1,8 @@
+import dayjs from 'dayjs';
 import { useShallow } from 'zustand/shallow';
 import { useStore } from '../core/zustand';
 import { createSlice } from '../core/zustand-helpers/slices';
-import { Game, GameSettings } from './Game';
+import { Game, GameSettings, type GameRemoteData } from './Game';
 
 export interface GamesSlice {
   games: Record<string, Game>;
@@ -23,7 +24,7 @@ export const gamesSlice = createSlice({
       state.games[gameId] = {
         id: gameId,
         name: 'New Game',
-        createdAt: new Date(),
+        createdAt: dayjs().toISOString(),
         ...game,
         factoriesIds: [],
         settings: {
@@ -58,6 +59,12 @@ export const gamesSlice = createSlice({
         }
         state.games[targetId].allowedRecipes = allowedRecipes;
       },
+    setRemoteGameData: (gameId: string, data: GameRemoteData) => state => {
+      state.games[gameId].authorId = data.author_id;
+      state.games[gameId].createdAt = data.created_at;
+      state.games[gameId].savedId = data.id;
+      state.games[gameId].shareToken = data.share_token;
+    },
   },
 });
 

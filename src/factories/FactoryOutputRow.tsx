@@ -20,9 +20,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
 
   // TODO A bit messy, but we need to get the outputs from the factory if it exists only.
   const outputs = useStore(
-    state =>
-      state.solvers.instances[factoryId]?.request.outputs ??
-      state.factories.factories[factoryId]?.outputs,
+    state => state.factories.factories[factoryId]?.outputs,
   );
 
   // We use a dedicated onChangeHandler for this component since outputs

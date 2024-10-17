@@ -47,7 +47,7 @@ export function SharedGameImporterPage(props: ISharedGameImporterPageProps) {
         }
 
         const serialized = data.data as unknown as SerializedGame;
-        useStore.getState().loadRemoteGame(serialized);
+        useStore.getState().loadRemoteGame(serialized, data);
         useStore.getState().selectGame(serialized.game.id);
         navigate('/games');
         // TODO better message

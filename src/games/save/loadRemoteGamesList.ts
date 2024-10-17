@@ -8,11 +8,13 @@ const loadRemoteGamesQuery = supabaseClient
   .from('games')
   .select(
     `
-    id, name, user_id, 
-    author:profiles!user_id (
-      id, username, avatar_url
-    ), 
-    created_at, updated_at
+    id, 
+    name, 
+    author_id,
+    data,
+    created_at, 
+    updated_at,
+    share_token
   `,
   )
   .order('created_at', { ascending: false });

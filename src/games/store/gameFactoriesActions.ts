@@ -1,4 +1,6 @@
 import type { SolverInstance } from '@/solver/store/Solver';
+import dayjs from 'dayjs';
+import { omit } from 'lodash';
 import { v4 } from 'uuid';
 import { useStore } from '../../core/zustand';
 import { createActions } from '../../core/zustand-helpers/actions';
@@ -19,7 +21,7 @@ export const gameFactoriesActions = createActions({
     state.games.games[gameId] = {
       id: gameId,
       name: 'New Game',
-      createdAt: new Date(),
+      createdAt: dayjs().toISOString(),
       settings: {
         noHighlight100PercentUsage: false,
         highlight100PercentColor: '#339af0',
@@ -47,25 +49,10 @@ export const gameFactoriesActions = createActions({
     state.games.games[state.games.selected!].factoriesIds.splice(index, 1);
     delete state.factories.factories[factoryId];
   },
-  // TODO Handle pre-v0.3.0 factories? Add "version" field?
-  // TODO Solvers? centralize them?
-  loadGame: (serialized: SerializedGame) => state => {
-    state.games.selected = serialized.game.id;
-    Object.assign(state.games.games[serialized.game.id], serialized.game);
-    serialized.factories.forEach(factory => {
-      state.factories.factories[factory.id] = factory;
-    });
-    serialized.solvers.forEach(solver => {
-      state.solvers.instances[solver.id] = solver;
-    });
-  },
-  setSavedGameId: (gameId: string, savedId: string) => state => {
-    state.games.games[gameId].savedId = savedId;
-  },
 });
 
 export type SerializedGame = {
-  game: Game;
+  game: Omit<Game, 'createdAt' | 'authorId' | 'savedId'>;
   factories: Factory[];
   solvers: SolverInstance[];
 };
@@ -79,7 +66,7 @@ export function serializeGame(
     throw new Error('Game not found');
   }
   return {
-    game,
+    game: omit(game, ['createdAt', 'authorId', 'savedId']),
     factories: game?.factoriesIds.map(
       factoryId => state.factories.factories[factoryId],
     ),

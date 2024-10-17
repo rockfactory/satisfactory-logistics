@@ -18,7 +18,7 @@ export async function loadRemoteGame(gameId: string) {
 
     const { data, error } = await supabaseClient
       .from('games')
-      .select('data, created_at, updated_at')
+      .select('data, author_id, id, created_at, updated_at')
       .eq('id', gameId)
       .single();
 
@@ -27,7 +27,7 @@ export async function loadRemoteGame(gameId: string) {
 
     const serialized = data.data as unknown as SerializedGame;
     logger.info('Loaded game:', serialized);
-    useStore.getState().loadGame(serialized);
+    useStore.getState().loadRemoteGame(serialized, data);
     useStore.getState().selectGame(serialized.game.id);
   } catch (error: any) {
     logger.error('Error loading game:', error);
