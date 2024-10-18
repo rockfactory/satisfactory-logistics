@@ -1,4 +1,3 @@
-import { original } from 'immer';
 import { useStore } from '../../core/zustand';
 import { createSlice } from '../../core/zustand-helpers/slices';
 import { Factory } from '../Factory';
@@ -13,7 +12,6 @@ export const factoriesSlice = createSlice({
   } as FactoriesSlice,
   actions: {
     updateFactory: (id: string, fn: (factory: Factory) => void) => state => {
-      console.log('updateFactory', id, original(state.factories[id]));
       fn(state.factories[id]);
     },
     addFactory: (factory: Factory) => state => {

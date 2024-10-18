@@ -35,7 +35,7 @@ export function SharedGameImporterPage(props: ISharedGameImporterPageProps) {
           throw error;
         }
 
-        if (session) {
+        if (session && data.author_id !== session.user.id) {
           await supabaseClient
             .from('shared_games')
             .upsert({

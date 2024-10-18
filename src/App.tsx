@@ -67,9 +67,6 @@ function Redirect({ to }: { to: string }) {
 }
 
 export default function App() {
-  const tabs = ['Factories'];
-
-  // const [currentTab, setCurrentTab] = useState(tabs[0] as string | null);
   return (
     <MantineProvider theme={theme} forceColorScheme="dark">
       <SyncManager />

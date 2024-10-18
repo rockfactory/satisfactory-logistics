@@ -33,6 +33,12 @@ export const gamesSlice = createSlice({
         },
       };
     },
+    removeGame: (gameId: string) => state => {
+      delete state.games[gameId];
+      if (state.selected === gameId) {
+        state.selected = null;
+      }
+    },
     addFactoryIdToGame:
       (gameId: string | undefined, factoryId: string) => state => {
         const targetId = gameId ?? state.selected;
@@ -64,6 +70,9 @@ export const gamesSlice = createSlice({
       state.games[gameId].createdAt = data.created_at;
       state.games[gameId].savedId = data.id;
       state.games[gameId].shareToken = data.share_token;
+    },
+    removeGameShareToken: (gameId: string) => state => {
+      state.games[gameId].shareToken = undefined;
     },
   },
 });

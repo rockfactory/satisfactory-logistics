@@ -11,10 +11,11 @@ export const gameRemoteActions = createActions({
   // Sync
   setRemoteGames: (games: RemoteLoadedGamesList) => (state, get) => {
     for (const existing of Object.values(state.games.games)) {
-      if (existing.savedId && !games.find(g => g.id === existing.savedId)) {
+      if (!games.find(g => g.id === existing.savedId)) {
         // Registered game not found in remote list
         existing.savedId = undefined;
         existing.shareToken = undefined;
+        existing.authorId = undefined;
       }
     }
 
@@ -24,17 +25,27 @@ export const gameRemoteActions = createActions({
     }
   },
   loadRemoteGame:
-    (serialized: SerializedGame, data: Partial<GameRemoteData>) => state => {
-      loadSerializedGameIntoState(serialized, data, state);
+    (
+      serialized: SerializedGame,
+      data: Partial<GameRemoteData>,
+      options?: ILoadRemoteGameOptions,
+    ) =>
+    state => {
+      loadSerializedGameIntoState(serialized, data, state, options);
     },
 });
+
+export interface ILoadRemoteGameOptions {
+  override?: boolean;
+}
 
 function loadSerializedGameIntoState(
   serialized: SerializedGame,
   data: Partial<GameRemoteData>,
   state: RootState,
+  options: ILoadRemoteGameOptions = {},
 ) {
-  if (state.games[serialized.game.id]) {
+  if (state.games.games[serialized.game.id] && !options.override) {
     logger.info('Already loaded game:', serialized);
     return;
   }

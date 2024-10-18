@@ -20,6 +20,7 @@ interface HeaderProps {
 }
 
 export function Header(props: HeaderProps) {
+  const { children } = props;
   const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
 
@@ -42,6 +43,7 @@ export function Header(props: HeaderProps) {
           </Group>
         </Group>
       </Container>
+      {children}
       {props.tabs && (
         <Container size="lg">
           <Tabs

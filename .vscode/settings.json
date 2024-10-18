@@ -6,5 +6,12 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.preferences.preferTypeOnlyAutoImports": true,
   "typescript.experimental.expandableHover": true,
-  "emmet.excludeLanguages": ["typescriptreact", "javascriptreact"]
+  "emmet.excludeLanguages": ["typescriptreact", "javascriptreact"],
+  "cssVariables.lookupFiles": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.less",
+    "node_modules/@mantine/core/styles.css"
+  ]
 }

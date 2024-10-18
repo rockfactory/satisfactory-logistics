@@ -1,3 +1,4 @@
+import { GamesAtleastOneManager } from '@/games/manager/GamesAtleastOneManager';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { ChartsTab } from '../factories/charts/ChartsTab';
 import { FactoriesTab } from '../factories/FactoriesTab';
@@ -13,6 +14,8 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
 
   return (
     <>
+      <GamesAtleastOneManager />
+
       <Header
         tabs={['factories', 'charts', 'calculator']}
         activeTab={

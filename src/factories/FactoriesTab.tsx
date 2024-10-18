@@ -29,19 +29,18 @@ import { FactoryWideCard } from './wide/FactoryWideCard';
 export interface IFactoriesTabProps {}
 
 export function FactoriesTab(_props: IFactoriesTabProps) {
-  // const dispatch = useDispatch();
-  // const factories = useFactories();
   const session = useSession();
 
-  // TODO Path? route?
   const gameId = useStore(state => state.games.selected);
-
   const viewMode = useStore(state => state.factoryView.viewMode ?? 'wide');
 
   const [loadingFactories, setLoadingFactories] = useState(false);
 
   const hasFactories = useStore(
-    state => Object.keys(state.games.games).length > 0,
+    state =>
+      Object.keys(state.games.games).length > 0 &&
+      state.games.selected &&
+      state.games.games[state.games.selected]?.factoriesIds.length > 0,
   );
   const factoriesIds = useGameFactoriesIds(gameId);
 
@@ -61,11 +60,17 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
               leftSection={<IconPlus size={16} />}
               mt="lg"
               size="lg"
-              onClick={() => useStore.getState().initGame({})}
+              onClick={() =>
+                gameId
+                  ? useStore.getState().addGameFactory(gameId)
+                  : // TODO This technically should not be possible
+                    useStore.getState().initGame({})
+              }
             >
               Add first factory
             </Button>
-            {session && (
+            {/* TODO Do we need this now that we have games? */}
+            {false && session && (
               <>
                 <Divider
                   w="60%"
@@ -84,7 +89,6 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
                   }
                   onClick={async () => {
                     setLoadingFactories(true);
-                    // TODO Reimplement
                     // await loadFromRemote(session, true);
                     setLoadingFactories(false);
                   }}
@@ -106,11 +110,9 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
             ))}
         </Stack>
         {!hasFactories && <Divider mb="lg" />}
-        {/* <FactoryItemInput /> */}
         <Group mt="lg" justify="space-between">
           <Group>
             <Button
-              // TODO Add "&& gameId" to the condition
               onClick={() => useStore.getState().addGameFactory(gameId!)}
               leftSection={<IconPlus size={16} />}
             >
