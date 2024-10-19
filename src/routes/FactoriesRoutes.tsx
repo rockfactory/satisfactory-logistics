@@ -8,9 +8,18 @@ import { SolverPage } from '../solver/page/SolverPage';
 import { SolverShareImporterPage } from '../solver/share/SolverShareImporter';
 export interface IFactoryRoutesProps {}
 
+function useActiveTab() {
+  const pathname = useLocation().pathname;
+  if (pathname.includes('calculator')) {
+    return 'calculator';
+  }
+  return pathname.split('/')[2];
+}
+
 export function FactoryRoutes(props: IFactoryRoutesProps) {
   const navigate = useNavigate();
-  const activeTab = useLocation().pathname.split('/')[2];
+
+  const activeTab = useActiveTab();
 
   return (
     <>
