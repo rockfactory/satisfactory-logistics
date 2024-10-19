@@ -16,12 +16,10 @@ import {
 import { useState } from 'react';
 import { useSession } from '../auth/authSelectors';
 // import { loadFromRemote } from '../auth/sync/loadFromRemote';
-import { SyncButton } from '../auth/sync/SyncButton';
 import { useStore } from '../core/zustand';
 import { useGameFactoriesIds } from '../games/gamesSlice';
 import { FactoryRow } from './FactoryRow';
 import { FactoriesFiltersMenu } from './filters/FactoriesFiltersMenu';
-import { ImportFactoriesModal } from './import/ImportFactoriesModal';
 import { FactoriesSettings } from './settings/FactoriesSettings';
 import { FactoryUndoButtons } from './store/FactoryUndoButtons';
 import { FactoryWideCard } from './wide/FactoryWideCard';
@@ -121,7 +119,7 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
             <FactoryUndoButtons />
           </Group>
           <Group>
-            <SyncButton />
+            {/* <SyncButton /> */}
             {/* <Button
               leftSection={<IconTrash size={16} />}
               color="red"
@@ -138,7 +136,6 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
             >
               Clear All
             </Button> */}
-            <ImportFactoriesModal />
             <FactoriesSettings />
           </Group>
         </Group>

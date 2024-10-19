@@ -5,6 +5,9 @@ import { saveLocalState } from './useSyncLocalAndRemoteStore';
 
 export interface ISyncButtonProps {}
 
+/**
+ * @deprecated
+ */
 export function SyncButton(props: ISyncButtonProps) {
   // const sync = useSync();
   const session = useSession();
