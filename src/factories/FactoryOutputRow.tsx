@@ -18,7 +18,6 @@ export interface IFactoryOutputRowProps {
 export function FactoryOutputRow(props: IFactoryOutputRowProps) {
   const { factoryId, output, index } = props;
 
-  // TODO A bit messy, but we need to get the outputs from the factory if it exists only.
   const outputs = useStore(
     state => state.factories.factories[factoryId]?.outputs,
   );

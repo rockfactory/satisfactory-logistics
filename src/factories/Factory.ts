@@ -5,9 +5,6 @@ export interface Factory {
   inputs: FactoryInput[];
   outputs: FactoryOutput[];
   powerConsumption?: number | null;
-  // TODO currently planned but it should be equal to the factory ID. Not present in migrations
-  // TODO if we remove the solver, this doesn't get updated
-  solverId?: string;
 }
 
 export interface FactoryInput {

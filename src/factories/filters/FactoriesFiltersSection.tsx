@@ -60,9 +60,7 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
             <Menu.Item
               leftSection={<IconTextGrammar width={16} height={16} />}
               onClick={_e => {
-                updateFactoryView(state => {
-                  state.sortBy = 'name';
-                });
+                useStore.getState().sortFactoriesBy('name');
               }}
             >
               By Name

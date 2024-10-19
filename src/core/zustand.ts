@@ -1,3 +1,4 @@
+import { factoryViewSortActions } from '@/factories/store/factoryViewSortActions';
 import { gameSaveSlice } from '@/games/save/gameSaveSlice';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
 import { omit } from 'lodash';
@@ -5,8 +6,8 @@ import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { useShallow } from 'zustand/shallow';
 import { authSlice } from '../auth/authSlice';
-import { factoryViewSlice } from '../factories/factoryViewSlice';
 import { factoriesSlice } from '../factories/store/factoriesSlice';
+import { factoryViewSlice } from '../factories/store/factoryViewSlice';
 import { gamesSlice } from '../games/gamesSlice';
 import { gameFactoriesActions } from '../games/store/gameFactoriesActions';
 import { solverFactoriesActions } from '../solver/store/solverFactoriesActions';
@@ -29,6 +30,7 @@ const slicesWithActions = withActions(
   gameFactoriesActions,
   solverFactoriesActions,
   gameRemoteActions,
+  factoryViewSortActions,
 );
 
 export const useStore = create(

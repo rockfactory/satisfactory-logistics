@@ -36,9 +36,6 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
 
   const [focused, setFocused] = useState(false);
 
-  // TODO: Remove since deprecated
-  const isHighlighted = false;
-
   const sourceOutputs = useStore(
     state => state.factories.factories[input.factoryId ?? '']?.outputs,
   );
@@ -63,12 +60,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   if (!isVisible) return null;
 
   return (
-    <Group
-      key={index}
-      align="flex-start"
-      gap="sm"
-      bg={isHighlighted ? 'blue.2' : undefined}
-    >
+    <Group key={index} align="flex-start" gap="sm">
       <FactorySelectInput
         exceptId={factoryId}
         value={input.factoryId}

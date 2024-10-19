@@ -24,7 +24,6 @@ export function FactoryUsage(props: IFactoryUsageProps) {
 
 export function BaseFactoryUsage(props: { percentage: number }) {
   const { percentage } = props;
-  // TODO Pick only the settings we need
   const settings = useGameSettings();
   const is100Percent = Math.abs(percentage - 1) < Number.EPSILON;
   const color =

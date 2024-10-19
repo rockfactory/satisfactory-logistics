@@ -1,5 +1,5 @@
 import { Draft } from 'immer';
-import { createSlice } from '../core/zustand-helpers/slices';
+import { createSlice } from '../../core/zustand-helpers/slices';
 
 interface FactoryViewSlice {
   filterName: string | null;
@@ -17,7 +17,6 @@ export const factoryViewSlice = createSlice({
     viewMode: 'compact',
   } as FactoryViewSlice,
   actions: {
-    // TODO Apply sort
     updateFactoryView:
       (fn: (state: Draft<FactoryViewSlice>) => void) => state => {
         fn(state);
