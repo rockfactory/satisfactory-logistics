@@ -103,7 +103,7 @@ function parseFactoryItem(json, index) {
     form: parseFactoryItemForm(json.mForm),
     sinkPoints: parseFloat(json.mResourceSinkPoints),
     sinkable: json.mCanBeDiscarded === 'True',
-    powerConsumption: parseFloat(json.mEnergyValue),
+    energyValue: parseFloat(json.mEnergyValue),
     radioactiveDecay: parseFloat(json.mRadioactiveDecay),
     canBeDiscarded: json.mCanBeDiscarded === 'True',
     color: json.mFluidColor, // Assuming color is from mFluidColor
