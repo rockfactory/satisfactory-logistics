@@ -15,7 +15,9 @@ import { useStore } from '../../core/zustand';
 import { GameSettings } from '../../games/Game';
 import { useGameSettings } from '../../games/gamesSlice';
 
-export interface IFactoriesSettingsProps {}
+export interface IFactoriesSettingsProps {
+  withLabel?: boolean;
+}
 
 const updateGameSettings = (path: Path<GameSettings>, value: any) => {
   useStore.getState().updateGameSettings(state => {
@@ -68,14 +70,20 @@ export function FactoriesSettings(props: IFactoriesSettingsProps) {
         </Stack>
         <Space h={50} />
       </Modal>
-      <Button
-        onClick={open}
-        variant="default"
-        size="sm"
-        leftSection={<IconSettings size={16} />}
-      >
-        Settings
-      </Button>
+      {props.withLabel ? (
+        <Button
+          onClick={open}
+          variant="default"
+          size="sm"
+          leftSection={<IconSettings size={16} />}
+        >
+          Settings
+        </Button>
+      ) : (
+        <Button onClick={open} variant="default" size="sm" pl="xs" pr="xs">
+          <IconSettings size={16} />
+        </Button>
+      )}
     </>
   );
 }

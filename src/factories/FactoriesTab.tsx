@@ -21,7 +21,6 @@ import { useGameFactoriesIds } from '../games/gamesSlice';
 import { FactoryRow } from './FactoryRow';
 import { FactoriesFiltersMenu } from './filters/FactoriesFiltersMenu';
 import { FactoriesSettings } from './settings/FactoriesSettings';
-import { FactoryUndoButtons } from './store/FactoryUndoButtons';
 import { FactoryWideCard } from './wide/FactoryWideCard';
 
 export interface IFactoriesTabProps {}
@@ -116,9 +115,11 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
             >
               Add Factory
             </Button>
-            <FactoryUndoButtons />
+
+            {/* <FactoryUndoButtons /> */}
           </Group>
           <Group>
+            <FactoriesSettings withLabel />
             {/* <SyncButton /> */}
             {/* <Button
               leftSection={<IconTrash size={16} />}
@@ -136,7 +137,6 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
             >
               Clear All
             </Button> */}
-            <FactoriesSettings />
           </Group>
         </Group>
       </Container>

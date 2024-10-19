@@ -13,6 +13,7 @@ import {
 } from '@tabler/icons-react';
 import { useStore } from '../../core/zustand';
 import { FactoryItemInput } from '../inputs/FactoryItemInput';
+import { FactoriesSettings } from '../settings/FactoriesSettings';
 
 export interface IFactoriesFiltersSectionProps {}
 
@@ -89,6 +90,7 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
         />
       </Group>
       <Group>
+        <FactoriesSettings />
         {/* <FactoryUndoButtons /> */}
         <Button
           onClick={e => useStore.getState().addGameFactory()}
