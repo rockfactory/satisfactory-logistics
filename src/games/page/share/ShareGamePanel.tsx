@@ -32,7 +32,6 @@ export function ShareGamePanel(props: IShareGamePanelProps) {
     ? `${window.location.origin}/games/shared?gameSavedId=${savedId}&token=${encodeURIComponent(token)}`
     : null;
 
-  // TODO COnfirm old link will stop working
   const handleShare = async () => {
     setLoading(true);
     try {

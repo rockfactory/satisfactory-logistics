@@ -18,7 +18,12 @@ export function SharedGameImporterPage(props: ISharedGameImporterPageProps) {
     async function loadSharedGame() {
       if (!gameSavedId || !token) {
         console.error('Missing gameId or token');
-        return; // TODO Show error
+        notifications.show({
+          title: 'Error loading shared solver',
+          message: 'Link is missing required parameters',
+        });
+        navigate('/factories/calculator');
+        return;
       }
 
       const session = useStore.getState().auth.session;
@@ -50,10 +55,9 @@ export function SharedGameImporterPage(props: ISharedGameImporterPageProps) {
         useStore.getState().loadRemoteGame(serialized, data);
         useStore.getState().selectGame(serialized.game.id);
         navigate('/games');
-        // TODO better message
         notifications.show({
-          title: 'Game loaded',
-          message: 'Game loaded successfully',
+          title: 'Game added',
+          message: `Game "${serialized.game.name}" has been loaded`,
         });
       } catch (error) {
         console.error('Error loading shared solver:', error);
@@ -65,9 +69,7 @@ export function SharedGameImporterPage(props: ISharedGameImporterPageProps) {
       }
     }
 
-    if (gameSavedId && token) {
-      loadSharedGame();
-    }
+    loadSharedGame();
   }, [navigate, gameSavedId, token]);
 
   return (
