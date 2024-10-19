@@ -5,6 +5,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import {
   IconChevronDown,
+  IconCircleFilled,
   IconDeviceFloppy,
   IconDeviceGamepad,
   IconDownload,
@@ -112,6 +113,14 @@ export function GameMenu(props: IGameMenuProps) {
                   useStore.getState().selectGame(option.value);
                   navigate(`/factories`);
                 }}
+                rightSection={
+                  selectedId == option.value && (
+                    <IconCircleFilled
+                      size={8}
+                      color="var(--mantine-color-green-7)"
+                    />
+                  )
+                }
               >
                 {option.label}
               </Menu.Item>
