@@ -69,7 +69,9 @@ export function UserMenu(props: IUserMenuProps) {
           <Group gap={7}>
             <Avatar src={session.user.user_metadata.avatar_url} size={32} />
             <Text fw={500} size="sm" lh={1} mr={3}>
-              {session.user.user_metadata.name ?? session.user.email}
+              {session.user.user_metadata.full_name ??
+                session.user.user_metadata.name ??
+                session.user.email}
             </Text>
             <IconChevronDown
               style={{ width: rem(12), height: rem(12) }}
