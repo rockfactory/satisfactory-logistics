@@ -1,8 +1,8 @@
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import {
   Button,
   Drawer,
   Group,
-  Image,
   Stack,
   Table,
   Text,
@@ -138,12 +138,7 @@ export function SolverSummaryDrawer(props: ISolverSummaryDrawerProps) {
                 return (
                   <Table.Tr key={id}>
                     <Table.Td width="40px">
-                      <Image
-                        w={32}
-                        h={32}
-                        src={resource.imagePath}
-                        alt={resource.name}
-                      />
+                      <FactoryItemImage size={32} id={resource.id} />
                     </Table.Td>
                     <Table.Td>
                       <Text size="sm">{resource.name}</Text>

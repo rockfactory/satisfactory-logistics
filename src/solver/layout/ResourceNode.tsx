@@ -1,4 +1,5 @@
-import { Box, Group, Image, Stack, Text } from '@mantine/core';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { Box, Group, Stack, Text } from '@mantine/core';
 import { NodeProps } from '@xyflow/react';
 import { memo } from 'react';
 import { RepeatingNumber } from '../../core/intl/NumberFormatter';
@@ -21,7 +22,7 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
   return (
     <Box p="sm" style={{ borderRadius: 4 }} bg="blue.8">
       <Group gap="xs">
-        <Image w="32" h="32" src={resource.imagePath} />
+        <FactoryItemImage id={resource.id} size={32} />
         <Stack gap={2} align="center">
           <Group gap="xs">
             <Text size="sm">{resource.displayName}</Text>

@@ -95,12 +95,17 @@ export const solverFactoriesActions = createActions({
       }
 
       if (output.amount !== undefined) {
-        factoryOutput.amount = output.amount;
+        if (output.amount != factoryOutput.amount) {
+          factoryOutput.somersloops = 0;
+          factoryOutput.amount = output.amount;
+        }
       }
 
       if (output.somersloops !== undefined) {
         factoryOutput.somersloops = output.somersloops;
-        // TODO Add back calculations to update amount vs input amount
+        // TODO Add back calculations to update amount vs input amount.
+        // This could be calculated based on the Plan (solver), only if present.
+        // We need to save selected recipes too.
       }
     },
 

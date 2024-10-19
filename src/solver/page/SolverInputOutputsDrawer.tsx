@@ -6,8 +6,8 @@ import {
   FactoryInputIcon,
   FactoryOutputIcon,
 } from '../../factories/components/peek/icons/OutputInputIcons';
-import { FactoryInputRow } from '../../factories/FactoryInputRow';
-import { FactoryOutputRow } from '../../factories/FactoryOutputRow';
+import { FactoryInputRow } from '../../factories/inputs/input-row/FactoryInputRow';
+import { FactoryOutputRow } from '../../factories/inputs/output-row/FactoryOutputRow';
 import { useFactoryOnChangeHandler } from '../../factories/store/factoriesSelectors';
 
 export interface ISolverInputOutputsDrawerProps {

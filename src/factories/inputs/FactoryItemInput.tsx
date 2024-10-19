@@ -1,8 +1,8 @@
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import {
   CloseButton,
   Combobox,
   Group,
-  Image,
   Input,
   InputWrapperProps,
   ScrollArea,
@@ -36,7 +36,7 @@ function FactoryItemOption({ item, size }: FactoryItemOptionProps) {
   const imageSize = size === 'sm' ? 22 : size === 'md' ? 24 : 32;
   return (
     <Group gap="sm">
-      <Image src={item.imagePath} w={imageSize} h={imageSize} radius="sm" />
+      <FactoryItemImage id={item.id} size={imageSize} />
       <div>
         <Text size="sm" truncate="end" maw="300px">
           {item.displayName}

@@ -19,8 +19,8 @@ import {
   FactoryOutputIcon,
 } from './components/peek/icons/OutputInputIcons';
 import { Factory } from './Factory';
-import { FactoryInputRow } from './FactoryInputRow';
-import { FactoryOutputRow } from './FactoryOutputRow';
+import { FactoryInputRow } from './inputs/input-row/FactoryInputRow';
+import { FactoryOutputRow } from './inputs/output-row/FactoryOutputRow';
 import { useIsFactoryVisible } from './useIsFactoryVisible';
 
 export interface IFactoryRowProps {

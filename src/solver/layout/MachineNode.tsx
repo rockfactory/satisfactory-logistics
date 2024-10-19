@@ -24,6 +24,7 @@ import { NodeProps, useReactFlow } from '@xyflow/react';
 import React, { memo } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { RepeatingNumber } from '../../core/intl/NumberFormatter';
 import { useStore } from '../../core/zustand';
 import { AllFactoryBuildingsMap } from '../../recipes/FactoryBuilding';
@@ -144,7 +145,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                 x<RepeatingNumber value={buildingsAmount} /> {building.name}
               </Text>
             </Stack>
-            <Image w="32" h="32" src={product.imagePath} />
+            <FactoryItemImage id={product.id} size={32} />
           </Group>
 
           <InvisibleHandles />
@@ -317,7 +318,7 @@ const RecipeIngredientRow = ({
         </Table.Td>
       )} */}
       <Table.Td>
-        <Image w="24" h="24" src={item.imagePath} />
+        <FactoryItemImage size={16} id={item.id} />
       </Table.Td>
       <Table.Td>
         <Text size="sm">{item.displayName}</Text>

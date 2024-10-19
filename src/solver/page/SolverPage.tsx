@@ -5,13 +5,13 @@ import {
 } from '@/factories/store/factoriesSelectors';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { AllFactoryRecipesMap } from '@/recipes/FactoryRecipe';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   Box,
   Button,
   Container,
   Group,
-  Image,
   LoadingOverlay,
   Select,
   Stack,
@@ -297,12 +297,7 @@ export function SolverPage(props: ISolverPageProps) {
                         }}
                         leftSection={<IconPlus size={16} />}
                         rightSection={
-                          <Image
-                            src={mainProduct.imagePath}
-                            alt={mainProduct.name}
-                            w={16}
-                            h={16}
-                          />
+                          <FactoryItemImage size={16} id={mainProduct.id} />
                         }
                       >
                         {recipe.name}

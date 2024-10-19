@@ -1,4 +1,5 @@
-import { alpha, Box, Group, Image, Text } from '@mantine/core';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { alpha, Box, Group, Text } from '@mantine/core';
 import {
   BaseEdge,
   Edge,
@@ -99,7 +100,7 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
           className="nodrag nopan"
         >
           <Group gap="4px">
-            <Image w="16" h="16" src={data?.resource.imagePath} />
+            <FactoryItemImage size={16} id={data?.resource.id} />
             <Text size="10px">
               <RepeatingNumber value={data?.value} />
               /min
