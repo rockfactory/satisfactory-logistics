@@ -18,9 +18,9 @@ import { useSession } from '../auth/authSelectors';
 // import { loadFromRemote } from '../auth/sync/loadFromRemote';
 import { useStore } from '../core/zustand';
 import { useGameFactoriesIds } from '../games/gamesSlice';
+import { GameSettingsModal } from '../games/settings/GameSettingsModal';
 import { FactoryRow } from './FactoryRow';
 import { FactoriesFiltersMenu } from './filters/FactoriesFiltersMenu';
-import { FactoriesSettings } from './settings/FactoriesSettings';
 import { FactoryWideCard } from './wide/FactoryWideCard';
 
 export interface IFactoriesTabProps {}
@@ -119,7 +119,7 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
             {/* <FactoryUndoButtons /> */}
           </Group>
           <Group>
-            <FactoriesSettings withLabel />
+            <GameSettingsModal withLabel />
             {/* <SyncButton /> */}
             {/* <Button
               leftSection={<IconTrash size={16} />}

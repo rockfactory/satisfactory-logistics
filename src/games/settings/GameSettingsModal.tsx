@@ -12,10 +12,10 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconSettings } from '@tabler/icons-react';
 import { useFormOnChange } from '../../core/form/useFormOnChange';
 import { useStore } from '../../core/zustand';
-import { GameSettings } from '../../games/Game';
-import { useGameSettings } from '../../games/gamesSlice';
+import { GameSettings } from '../Game';
+import { useGameSettings } from '../gamesSlice';
 
-export interface IFactoriesSettingsProps {
+export interface IGameSettingsModalProps {
   withLabel?: boolean;
 }
 
@@ -25,8 +25,7 @@ const updateGameSettings = (path: Path<GameSettings>, value: any) => {
   });
 };
 
-// TODO Rename in GameSettings
-export function FactoriesSettings(props: IFactoriesSettingsProps) {
+export function GameSettingsModal(props: IGameSettingsModalProps) {
   const [opened, { open, close }] = useDisclosure(false);
   const settings = useGameSettings();
   const onChangeHandler = useFormOnChange<GameSettings>(updateGameSettings);
