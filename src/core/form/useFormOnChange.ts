@@ -7,7 +7,12 @@ type Updater<Obj, P extends Path<Obj> = Path<Obj>> = (
   value: any,
 ) => void;
 
-type Value = string | null | number | React.ChangeEvent<HTMLInputElement>;
+type Value =
+  | string
+  | null
+  | boolean
+  | number
+  | React.ChangeEvent<HTMLInputElement>;
 
 export function useFormOnChange<Obj>(updater: Updater<Obj>) {
   const handlers = useRef<Record<string, (value: Value) => void>>({});
@@ -16,9 +21,19 @@ export function useFormOnChange<Obj>(updater: Updater<Obj>) {
     (path: Path<Obj>) => {
       if (!handlers.current[path as string]) {
         handlers.current[path as string] = (value: Value) => {
-          if (typeof value === 'object' && value?.currentTarget) {
-            value = value.currentTarget.value;
+          // console.log(
+          //   'useFormOnChange',
+          //   path,
+          //   value,
+          //   "type: + '" + typeof value + "'",
+          // );
+          if (typeof value === 'object' && value?.target) {
+            value =
+              value?.target?.type === 'checkbox'
+                ? value.target.checked
+                : value.target.value;
           }
+
           updater(path, value as unknown as PathValue<Obj, Path<Obj>>);
         };
       }
