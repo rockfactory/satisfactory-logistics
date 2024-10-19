@@ -8,6 +8,9 @@ import { createSlice } from '../../core/zustand-helpers/slices';
 import { SolverInstance, type SolverNodeState } from './Solver';
 
 export interface SolversSlice {
+  /**
+   * Used only for unlinked solvers
+   */
   current: string | null;
   instances: Record<string, SolverInstance>;
 }
@@ -15,11 +18,13 @@ export interface SolversSlice {
 export const solversSlice = createSlice({
   name: 'solvers',
   value: {
-    // TODO Remove current
     current: null,
     instances: {},
   } as SolversSlice,
   actions: {
+    setCurrentSolver: (id: string | null) => state => {
+      state.current = id;
+    },
     updateSolver:
       (id: string, fn: (solver: SolverInstance) => void) => state => {
         fn(state.instances[id]);
@@ -125,23 +130,5 @@ export const solversSlice = createSlice({
     saveSolverSharedId: (id: string, sharedId: string) => state => {
       state.instances[id].sharedId = sharedId;
     },
-    loadSharedSolver:
-      (
-        instance: SolverInstance,
-        data: {
-          isOwner: boolean;
-          localId: string;
-        },
-      ) =>
-      state => {
-        const { isOwner, localId } = data;
-        state.instances[localId] = instance;
-        if (!isOwner) {
-          state.instances[localId].sharedId = undefined; // We need to unlink the shared instance
-          state.instances[localId].isOwner = false;
-          state.instances[localId].isFactory = false;
-          state.instances[localId].remoteSharedId = instance.sharedId;
-        }
-      },
   },
 });

@@ -2,7 +2,7 @@ import { loglev } from '@/core/logger/log';
 import { v4 } from 'uuid';
 import { createActions } from '../../core/zustand-helpers/actions';
 import { Factory, FactoryOutput } from '../../factories/Factory';
-import { SolverRequest } from './Solver';
+import { SolverRequest, type SolverInstance } from './Solver';
 
 const logger = loglev.getLogger('store:solver-factories');
 
@@ -25,14 +25,25 @@ export const solverFactoriesActions = createActions({
       }
 
       if (!state.solvers.instances[factoryId]) {
-        logger.log('Creating solver', factoryId, {
-          gt: get(),
-          cs: get().createSolver,
-        });
+        logger.log('Creating solver', factoryId);
         const gameAllowedRecipes =
           state.games.games[state.games.selected ?? '']?.allowedRecipes;
         get().createSolver(factoryId, { allowedRecipes: gameAllowedRecipes });
       }
+    },
+  createFactoryWithSolver:
+    (gameId: string | null, factory?: Partial<Factory>) => (state, get) => {
+      const factoryId = factory?.id ?? v4();
+      const targetId = gameId ?? state.games.selected;
+      if (!targetId) {
+        throw new Error('No game selected');
+      }
+
+      get().createFactory(factoryId, factory);
+      get().addFactoryIdToGame(targetId, factoryId);
+
+      const gameAllowedRecipes = state.games.games[targetId]?.allowedRecipes;
+      get().createSolver(factoryId, { allowedRecipes: gameAllowedRecipes });
     },
   // Input/Output should be synced
   addFactoryInput: (factoryId: string) => state => {
@@ -90,6 +101,30 @@ export const solverFactoriesActions = createActions({
       if (output.somersloops !== undefined) {
         factoryOutput.somersloops = output.somersloops;
         // TODO Add back calculations to update amount vs input amount
+      }
+    },
+
+  loadSharedSolver:
+    (
+      instance: SolverInstance,
+      factory: Factory,
+      data: {
+        isOwner: boolean;
+        localId: string;
+        sharedId: string;
+      },
+    ) =>
+    state => {
+      const { isOwner, localId } = data;
+      state.solvers.instances[localId] = instance;
+      instance.id = localId;
+      state.factories.factories[localId] = factory;
+      factory.id = localId;
+      if (!isOwner) {
+        state.solvers.instances[localId].sharedId = undefined; // We need to unlink the shared instance
+        state.solvers.instances[localId].isOwner = false;
+        state.solvers.instances[localId].isFactory = false;
+        state.solvers.instances[localId].remoteSharedId = data.sharedId;
       }
     },
 });

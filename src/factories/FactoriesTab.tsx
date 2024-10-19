@@ -7,15 +7,19 @@ import {
   Space,
   Stack,
   Text,
+  Tooltip,
 } from '@mantine/core';
 import {
   IconBuildingFactory,
+  IconCalculator,
   IconDownload,
   IconPlus,
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useSession } from '../auth/authSelectors';
 // import { loadFromRemote } from '../auth/sync/loadFromRemote';
+import { useNavigate } from 'react-router-dom';
+import { v4 } from 'uuid';
 import { useStore } from '../core/zustand';
 import { useGameFactoriesIds } from '../games/gamesSlice';
 import { GameSettingsModal } from '../games/settings/GameSettingsModal';
@@ -27,6 +31,7 @@ export interface IFactoriesTabProps {}
 
 export function FactoriesTab(_props: IFactoriesTabProps) {
   const session = useSession();
+  const navigate = useNavigate();
 
   const gameId = useStore(state => state.games.selected);
   const viewMode = useStore(state => state.factoryView.viewMode ?? 'wide');
@@ -115,6 +120,28 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
             >
               Add Factory
             </Button>
+            <Tooltip
+              label="Adds a new factory to the game and opens it in the Calculator"
+              position="bottom"
+              withArrow
+            >
+              <Button
+                color="cyan"
+                onClick={() => {
+                  const newFactoryId = v4();
+                  useStore.getState().createFactoryWithSolver(gameId!, {
+                    id: newFactoryId,
+                    inputs: [],
+                    outputs: [{ resource: 'Desc_Cement_C', amount: 10 }],
+                  });
+                  navigate(`/factories/${newFactoryId}/calculator`);
+                }}
+                leftSection={<IconPlus size={16} />}
+                rightSection={<IconCalculator size={16} />}
+              >
+                Add and Plan Factory
+              </Button>
+            </Tooltip>
 
             {/* <FactoryUndoButtons /> */}
           </Group>

@@ -1,3 +1,4 @@
+import type { Factory } from '@/factories/Factory';
 import {
   ActionIcon,
   Alert,
@@ -23,8 +24,8 @@ import { sharedSolverUUIDTranslator, SolverInstance } from '../store/Solver';
 import { usePathSolverInstance } from '../store/solverSelectors';
 
 export interface ISharedSolverData {
-  // TODO Compress recipes
   instance: SolverInstance;
+  factory?: Factory;
 }
 
 export interface ISolverShareButtonProps {}
@@ -67,6 +68,7 @@ export function SolverShareButton(props: ISolverShareButtonProps) {
           // We save only the request
           data: {
             instance,
+            factory: useStore.getState().factories.factories[instance.id],
           } as ISharedSolverData as unknown as Json,
           updated_at: new Date().toISOString(),
         })

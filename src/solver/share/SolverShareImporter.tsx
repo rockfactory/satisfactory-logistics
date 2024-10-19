@@ -1,3 +1,4 @@
+import { loglev } from '@/core/logger/log';
 import { Center, Container, Loader } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useEffect } from 'react';
@@ -7,6 +8,8 @@ import { supabaseClient } from '../../core/supabase';
 import { useStore } from '../../core/zustand';
 import { sharedSolverUUIDTranslator } from '../store/Solver';
 import { ISharedSolverData } from './SolverShareButton';
+
+const logger = loglev.getLogger('solver:importer');
 
 export interface ISolverShareImporterPageProps {}
 
@@ -30,9 +33,13 @@ export function SolverShareImporterPage(props: ISolverShareImporterPageProps) {
           throw error;
         }
 
-        const { instance } = data.data as unknown as ISharedSolverData;
+        const { instance, factory } = data.data as unknown as ISharedSolverData;
         if (!instance) {
           throw new Error('Shared solver not found');
+        }
+
+        if (!factory) {
+          throw new Error('Old shared solver format, cannot load');
         }
 
         const isOwner =
@@ -47,25 +54,27 @@ export function SolverShareImporterPage(props: ISolverShareImporterPageProps) {
             )?.[1];
 
         if (existing) {
-          console.log('Already loaded shared solver');
+          logger.info('Already loaded shared solver with id', existing.id, 'remote id is', sharedId); // prettier-ignore
           // TODO Update? Only if newer?
-          navigate(`/factories/calculator/${existing.id}`);
+          navigate(`/factories/${existing.id}/calculator`);
           return;
         }
 
-        useStore.getState().loadSharedSolver(instance, {
+        logger.info('Loading shared solver with id', localId, 'remote id is', sharedId, { instance }); // prettier-ignore
+        useStore.getState().loadSharedSolver(instance, factory, {
           isOwner,
           localId,
+          sharedId,
         });
 
-        navigate(`/factories/calculator/${localId}`);
+        navigate(`/factories/${localId}/calculator`);
       } catch (error) {
         console.error('Error loading shared solver:', error);
         notifications.show({
           title: 'Error loading shared solver',
           message: (error as Error)?.message ?? 'Unknown error',
         });
-        navigate('/factories/calculator');
+        navigate('/factories');
       }
     }
 

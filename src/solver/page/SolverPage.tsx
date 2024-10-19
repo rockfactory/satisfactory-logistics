@@ -16,6 +16,7 @@ import {
   Select,
   Stack,
   Text,
+  TextInput,
   Title,
 } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
@@ -41,7 +42,12 @@ import { SolverShareButton } from '../share/SolverShareButton';
 import { solveProduction, useHighs } from '../solveProduction';
 import { SolverLayout } from '../SolverLayout';
 import { SolverInstance } from '../store/Solver';
-import { usePathSolverInstance } from '../store/solverSelectors';
+import {
+  getSolverGame,
+  useCurrentSolverId,
+  usePathSolverInstance,
+  useSolverGameId,
+} from '../store/solverSelectors';
 import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';
 import {
@@ -71,31 +77,30 @@ export function SolverPage(props: ISolverPageProps) {
   const factory = useFactorySimpleAttributes(id);
   const inputsOutputs = useFactoryInputsOutputs(id);
   const instance = usePathSolverInstance();
+  // This is not the _displayed_ solver ID, but the one that is to be used if no solver ID is provided
+  const currentSolverId = useCurrentSolverId();
+  const solverGameId = useSolverGameId(id);
 
   // TODO We want to have a "default" solver ID you can edit how
   // many times you want, but if you don't save it, it will be
   // overwritten by a new one.
   useEffect(() => {
-    if (params.id && (!instance || !factory)) {
-      logger.log('SolverPage: No instance or factory, creating', id);
-      useStore.getState().upsertFactorySolver(id);
-    }
+    if (!params.id) return;
+    if (instance && factory) return;
 
-    if (!params.id) {
-      const nextId = v4();
-      useStore.getState().upsertFactorySolver(nextId, {
-        outputs: [
-          {
-            resource: 'Desc_Cement_C',
-            amount: 60,
-          },
-        ],
-      });
-      navigate(`/factories/${nextId}/calculator`);
-    }
+    logger.log('SolverPage: No instance or factory, creating', id);
+    useStore.getState().upsertFactorySolver(id, {
+      inputs: [],
+      outputs: [
+        {
+          resource: 'Desc_Cement_C',
+          amount: 20,
+        },
+      ],
+    });
   }, [instance, factory, id, params.id, navigate]);
 
-  console.log('SolverPage', instance);
+  logger.log('SolverPage', instance);
 
   const updater = useCallback(
     (path: Path<SolverInstance>, value: string | null | number) => {
@@ -135,12 +140,21 @@ export function SolverPage(props: ISolverPageProps) {
     // We don't want to re-run computation if instance changes, only if its request changes
   }, [highsRef, instance?.request, inputsOutputs, loading]);
 
-  // TODO Implemente auto-create on navigate
-  // if (params.id == null && current != null) {
-  //   // TODO/Debug
-  //   navigate(`/factories/calculator/${current}`);
-  //   return;
-  // }
+  if (params.id == null) {
+    const hasCurrentSolverGame = getSolverGame(
+      useStore.getState(),
+      currentSolverId ?? '',
+    );
+    if (!currentSolverId || hasCurrentSolverGame) {
+      logger.log('No solver ID, creating');
+      const newSolverId = v4();
+      useStore.getState().setCurrentSolver(newSolverId);
+      navigate(`/factories/${v4()}/calculator`);
+    } else {
+      logger.log('No solver ID, redirecting to', currentSolverId);
+      navigate(`/factories/${currentSolverId}/calculator`);
+    }
+  }
 
   const hasSolution =
     solution &&
@@ -156,7 +170,7 @@ export function SolverPage(props: ISolverPageProps) {
       <AfterHeaderSticky>
         <Group gap="sm" justify="space-between">
           <Group gap="sm">
-            {factory && (
+            {solverGameId && (
               <>
                 <Button
                   component={Link}
@@ -167,8 +181,33 @@ export function SolverPage(props: ISolverPageProps) {
                 >
                   All Factories
                 </Button>
-                <Title order={4}>{factory.name ?? 'Factory'}</Title>
               </>
+            )}
+            <Title order={4}>
+              <TextInput
+                value={factory?.name ?? 'Solver'}
+                placeholder="Factory Name"
+                onChange={e => {
+                  useStore
+                    .getState()
+                    .updateFactory(
+                      factory.id,
+                      f => (f.name = e.currentTarget.value),
+                    );
+                }}
+              />
+            </Title>
+            {!solverGameId && id && (
+              <Button
+                variant="filled"
+                color="blue"
+                onClick={() => {
+                  useStore.getState().addFactoryIdToGame(undefined, id);
+                }}
+                leftSection={<IconPlus size={16} />}
+              >
+                Add to Game
+              </Button>
             )}
           </Group>
           <Group gap="sm">
