@@ -5,7 +5,7 @@ import {
 } from '@/recipes/graph/getAllDefaultRecipes';
 import { uniq, without } from 'lodash';
 import { createSlice } from '../../core/zustand-helpers/slices';
-import { SolverInstance } from './Solver';
+import { SolverInstance, type SolverNodeState } from './Solver';
 
 export interface SolversSlice {
   current: string | null;
@@ -23,6 +23,17 @@ export const solversSlice = createSlice({
     updateSolver:
       (id: string, fn: (solver: SolverInstance) => void) => state => {
         fn(state.instances[id]);
+      },
+    updateSolverNode:
+      (id: string, nodeId: string, fn: (node: SolverNodeState) => void) =>
+      state => {
+        if (!state.instances[id].nodes) {
+          state.instances[id].nodes = {};
+        }
+        if (!state.instances[id].nodes[nodeId]) {
+          state.instances[id].nodes[nodeId] = {};
+        }
+        fn(state.instances[id].nodes[nodeId]);
       },
     createSolver:
       (
@@ -76,6 +87,7 @@ export const solversSlice = createSlice({
           state.instances[id].request.allowedRecipes ?? [],
         );
       },
+
     toggleAllRecipes: (id: string, use: boolean) => state => {
       const instance = state.instances[id];
       if (use) {

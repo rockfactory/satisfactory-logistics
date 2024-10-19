@@ -1,6 +1,7 @@
 import {
   Badge,
   Box,
+  Button,
   CloseButton,
   Grid,
   Group,
@@ -17,6 +18,7 @@ import {
   IconBuildingFactory2,
   IconCircleCheckFilled,
   IconClockBolt,
+  IconTrash,
 } from '@tabler/icons-react';
 import { NodeProps, useReactFlow } from '@xyflow/react';
 import React, { memo } from 'react';
@@ -237,39 +239,34 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
           <Box w="250px" p="xs">
             {props.selected ? (
               <Stack gap="sm" align="flex-start">
-                {/* TODO Restore these buttons */}
-                {/* <Button
+                <Button
                   color="red"
                   variant="outline"
                   leftSection={<IconTrash size={16} />}
                   onClick={() =>
-                    dispatch(
-                      solverActions.toggleRecipe({
-                        id: solverId,
-                        use: false,
-                        recipe: recipe.id,
-                      }),
-                    )
+                    useStore.getState().toggleRecipe(solverId!, {
+                      recipeId: recipe.id,
+                      use: false,
+                    })
                   }
                 >
                   Ignore this recipe
                 </Button>
+
                 <Button
                   color="green"
                   variant="outline"
                   leftSection={<IconCircleCheckFilled size={16} />}
                   onClick={() =>
-                    dispatch(
-                      solverActions.updateAtPath({
-                        id: solverId,
-                        path: `nodes.${props.id}.done`,
-                        value: nodeState?.done ? false : true,
-                      }),
-                    )
+                    useStore
+                      .getState()
+                      .updateSolverNode(solverId!, props.id, node => {
+                        node.done = !node.done;
+                      })
                   }
                 >
                   Mark as built
-                </Button> */}
+                </Button>
                 <SwitchRecipeAction recipeId={recipe.id} />
               </Stack>
             ) : (

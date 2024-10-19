@@ -1,7 +1,10 @@
-import { MultiSelect } from '@mantine/core';
-import { useMemo } from 'react';
+import { Button, Checkbox, Group, Stack } from '@mantine/core';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { useStore } from '@/core/zustand';
+import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
+import { xor } from 'lodash';
 import {
   AllFactoryRecipes,
   AllFactoryRecipesMap,
@@ -12,6 +15,9 @@ export interface ISwitchRecipeActionProps {
   recipeId: string;
 }
 
+/**
+ * Select alternate recipes for a given product
+ */
 export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
   const { recipeId } = props;
   const recipe = AllFactoryRecipesMap[recipeId];
@@ -26,30 +32,67 @@ export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
   const solverId = useParams<{ id: string }>().id;
   const allAllowedRecipes = useSolverAllowedRecipes(solverId);
 
+  const defaultAllowedRecipes = useMemo(() => {
+    return (
+      allAllowedRecipes?.filter(id => recipes.some(r => r.id === id)) ??
+      recipes.map(r => r.id)
+    );
+  }, [allAllowedRecipes, recipes]);
+
+  const [allowedRecipes, setAllowedRecipes] = useState<string[]>(
+    defaultAllowedRecipes,
+  );
+
+  useEffect(() => {
+    setAllowedRecipes(defaultAllowedRecipes);
+  }, [defaultAllowedRecipes, recipes]);
+
+  const isDisabled = xor(allowedRecipes, defaultAllowedRecipes).length === 0;
+
   return (
-    <MultiSelect
-      w="200px"
-      label="Alternate recipe"
-      placeholder="Select recipes"
-      data={recipes.map(recipe => ({ value: recipe.id, label: recipe.name }))}
-      searchable
-      value={recipes
-        .map(recipe => recipe.id)
-        .filter(
-          id => allAllowedRecipes?.includes(id) || allAllowedRecipes === null,
-        )}
-      // TODO Enhanche this. Right now it's sync, not good
-      // onChange={selected => {
-      //   dispatch(
-      //     solverActions.updateAtPath({
-      //       id: solverId,
-      //       path: 'request.allowedRecipes',
-      //       value: allAllowedRecipes
-      //         ?.filter(id => !recipes.map(recipe => recipe.id).includes(id))
-      //         .concat(selected),
-      //     }),
-      //   );
-      // }}
-    />
+    <Checkbox.Group
+      w="100%"
+      labelProps={{ w: '100%' }}
+      label={
+        <Group justify="space-between">
+          <span>Alternate recipes</span>
+          <Button
+            variant={isDisabled ? 'default' : 'filled'}
+            color="blue"
+            size="xs"
+            disabled={isDisabled}
+            onClick={() => {
+              useStore
+                .getState()
+                .setAllowedRecipes(solverId!, all =>
+                  all
+                    ?.filter(id => !recipes.some(r => r.id === id))
+                    .concat(allowedRecipes),
+                );
+            }}
+          >
+            Apply
+          </Button>
+        </Group>
+      }
+      value={allowedRecipes}
+      onChange={ids => {
+        setAllowedRecipes(ids);
+      }}
+    >
+      <Stack gap="xs">
+        {recipes.map(r => (
+          <Checkbox
+            key={r.id}
+            value={r.id}
+            label={
+              <RecipeTooltip key={r.id} recipeId={r.id}>
+                <span>{r.name}</span>
+              </RecipeTooltip>
+            }
+          />
+        ))}
+      </Stack>
+    </Checkbox.Group>
   );
 }

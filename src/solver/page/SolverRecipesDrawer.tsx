@@ -1,4 +1,5 @@
 import { useStore } from '@/core/zustand';
+import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
 import {
   ActionIcon,
   Button,
@@ -153,7 +154,7 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
                         .toggleDefaultRecipes(instance!.id, true);
                     }}
                   >
-                    Base: select all
+                    Default: select all
                   </Menu.Item>
                   <Menu.Item
                     leftSection={<IconHomeOff size={16} />}
@@ -163,7 +164,7 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
                         .toggleDefaultRecipes(instance!.id, false);
                     }}
                   >
-                    Base: remove all
+                    Default: remove all
                   </Menu.Item>
                   <Menu.Item
                     leftSection={<IconServer size={16} />}
@@ -195,7 +196,7 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
                         .setGameAllowedRecipes(undefined, allowedRecipes!);
                     }}
                   >
-                    Save as default
+                    Save as default for this game
                   </Menu.Item>
                   <Menu.Item
                     leftSection={<IconDownload size={16} />}
@@ -215,19 +216,6 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
-
-              {/* <Button
-                leftSection={<IconDeviceFloppy size={16} />}
-                variant="default"
-                title="Save the current allowed recipes as default for this game"
-                onClick={() => {
-                  useStore
-                    .getState()
-                    .setGameAllowedRecipes(undefined, allowedRecipes!);
-                }}
-              >
-                Save
-              </Button> */}
             </Group>
           </Stack>
         }
@@ -249,10 +237,13 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
               {recipes.map(recipe => (
                 <Checkbox
                   key={recipe.id}
-                  label={recipe.name}
+                  label={
+                    <RecipeTooltip recipeId={recipe.id}>
+                      <span>{recipe.name}</span>
+                    </RecipeTooltip>
+                  }
                   checked={allowedRecipes?.includes(recipe.id)}
                   onChange={e => {
-                    console.log('Toggling recipe', recipe.id);
                     useStore.getState().toggleRecipe(instance!.id, {
                       recipeId: recipe.id,
                       use: e.currentTarget.checked,
