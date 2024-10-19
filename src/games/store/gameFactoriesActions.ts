@@ -49,6 +49,22 @@ export const gameFactoriesActions = createActions({
     state.games.games[state.games.selected!].factoriesIds.splice(index, 1);
     delete state.factories.factories[factoryId];
   },
+  removeGame: (gameId: string) => state => {
+    const game = state.games.games[gameId ?? ''];
+    if (!game) {
+      throw new Error('No game found');
+    }
+
+    for (const factoryId of game.factoriesIds) {
+      delete state.factories.factories[factoryId];
+      delete state.solvers.instances[factoryId];
+    }
+
+    delete state.games.games[gameId];
+    if (state.games.selected === gameId) {
+      state.games.selected = null;
+    }
+  },
 });
 
 export type SerializedGame = {

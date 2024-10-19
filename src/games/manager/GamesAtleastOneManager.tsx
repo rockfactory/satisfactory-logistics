@@ -14,7 +14,10 @@ export function GamesAtleastOneManager(props: IGamesAtleastOneManagerProps) {
 
   useEffect(() => {
     console.log('Games count:', gamesCount);
-    if (gamesCount === 0) {
+    if (
+      gamesCount === 0 &&
+      Object.keys(useStore.getState().games.games).length === 0
+    ) {
       useStore.getState().createGame(v4(), {
         name: 'First Game',
       });

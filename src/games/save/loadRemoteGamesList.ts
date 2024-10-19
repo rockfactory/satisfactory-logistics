@@ -28,6 +28,7 @@ export async function loadRemoteGamesList() {
     return;
   }
 
+  useStore.getState().setIsLoading(true);
   const { data, error } = await loadRemoteGamesQuery;
 
   if (error) {
@@ -37,13 +38,16 @@ export async function loadRemoteGamesList() {
       title: 'Error loading games',
       message: error.message,
     });
+    useStore.getState().setIsLoading(false);
   }
 
   if (!data) {
     console.log('No games loaded');
+    useStore.getState().setIsLoading(false);
     return;
   }
 
   console.log('Loaded games:', data);
   useStore.getState().setRemoteGames(data);
+  useStore.getState().setIsLoading(false);
 }

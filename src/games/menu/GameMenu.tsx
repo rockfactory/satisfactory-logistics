@@ -61,7 +61,7 @@ export function GameMenu(props: IGameMenuProps) {
 
   useEffect(() => {
     loadRemoteGamesList().catch(console.error);
-  }, []);
+  }, [session]);
 
   const handleSaveGame = useCallback(
     async (gameId: string | null) => {

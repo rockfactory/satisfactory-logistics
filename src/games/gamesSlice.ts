@@ -33,12 +33,6 @@ export const gamesSlice = createSlice({
         },
       };
     },
-    removeGame: (gameId: string) => state => {
-      delete state.games[gameId];
-      if (state.selected === gameId) {
-        state.selected = null;
-      }
-    },
     addFactoryIdToGame:
       (gameId: string | undefined, factoryId: string) => state => {
         const targetId = gameId ?? state.selected;

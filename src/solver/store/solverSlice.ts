@@ -53,12 +53,6 @@ export const solversSlice = createSlice({
             objective: 'minimize_resources',
           },
         };
-        console.log(
-          'Creating solver',
-          id,
-          'recipes=',
-          state.instances[id].request.allowedRecipes,
-        );
       },
     removeSolver: (id: string) => state => {
       delete state.instances[id];

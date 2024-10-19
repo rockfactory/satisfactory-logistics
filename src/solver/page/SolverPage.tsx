@@ -1,16 +1,10 @@
+import { loglev } from '@/core/logger/log';
 import {
   useFactoryInputsOutputs,
   useFactorySimpleAttributes,
 } from '@/factories/store/factoriesSelectors';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import {
-  AllFactoryRecipes,
-  AllFactoryRecipesMap,
-} from '@/recipes/FactoryRecipe';
-import {
-  getAllDefaultRecipesIds,
-  getAllMAMRecipeIds,
-} from '@/recipes/graph/getAllDefaultRecipes';
+import { AllFactoryRecipesMap } from '@/recipes/FactoryRecipe';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   Box,
@@ -34,7 +28,6 @@ import {
 import { Edge, Node, Panel, ReactFlowProvider } from '@xyflow/react';
 import Graph from 'graphology';
 import { HighsSolution } from 'highs';
-import { without } from 'lodash';
 import { useCallback, useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { v4 } from 'uuid';
@@ -51,7 +44,13 @@ import { SolverInstance } from '../store/Solver';
 import { usePathSolverInstance } from '../store/solverSelectors';
 import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';
+import {
+  proposeSolverSolutionSuggestions,
+  type ISolverSolutionSuggestion,
+} from './suggestions/proposeSolverSolutionSuggestions';
 import { SolverSummaryDrawer } from './summary/SolverSummaryDrawer';
+
+const logger = loglev.getLogger('solver:page');
 
 export interface ISolverPageProps {}
 
@@ -60,10 +59,6 @@ export interface ISolverSolution {
   nodes: Array<Node<IMachineNodeData | IResourceNodeData>>;
   edges: Edge[];
   graph: Graph<SolverNode, SolverEdge, any>;
-}
-
-export interface ISolverSolutionSuggestion {
-  addRecipes?: string[];
 }
 
 export function SolverPage(props: ISolverPageProps) {
@@ -82,7 +77,7 @@ export function SolverPage(props: ISolverPageProps) {
   // overwritten by a new one.
   useEffect(() => {
     if (params.id && (!instance || !factory)) {
-      console.log('SolverPage: No instance or factory, creating', id);
+      logger.log('SolverPage: No instance or factory, creating', id);
       useStore.getState().upsertFactorySolver(id);
     }
 
@@ -114,79 +109,30 @@ export function SolverPage(props: ISolverPageProps) {
   const onChangeHandler = useFormOnChange<SolverInstance>(updater);
 
   const { solution, suggestions } = useMemo(() => {
-    const suggestions: ISolverSolutionSuggestion = {};
-    if (!instance?.request || !highsRef.current || loading)
+    let suggestions: ISolverSolutionSuggestion = {};
+    if (!instance?.request || !highsRef.current || loading) {
       return {
         solution: null,
         suggestions,
       };
+    }
 
     const solution = solveProduction(highsRef.current, {
       ...instance?.request,
       ...inputsOutputs,
     });
-    console.log(`Solved -> `, solution);
+    logger.log(`Solved -> `, solution);
 
     if (solution.result.Status !== 'Optimal') {
-      console.log('No solution found, trying MAM recipes');
-      //  1. Try to solve with MAM recipes
-      const withMamRecipes = solveProduction(highsRef.current, {
-        ...instance?.request,
-        objective: 'minimize_power',
-        allowedRecipes: [
-          ...(instance.request.allowedRecipes ?? []),
-          ...getAllDefaultRecipesIds(),
-          ...getAllMAMRecipeIds(),
-        ],
-        ...inputsOutputs,
-      });
-      if (withMamRecipes.result.Status === 'Optimal') {
-        console.log('Solution found with MAM recipes', withMamRecipes);
-        suggestions.addRecipes = withMamRecipes.nodes
-          .filter(node => node.type === 'Machine')
-          .map(node => (node.data as IMachineNodeData).recipe.id)
-          .filter(id => !instance.request.allowedRecipes?.includes(id));
-
-        // TODO BUg. Inputs influences outputs, so much that if they can't be used, the solver is Infeasible
-        // We should atleast:
-        // 1) Add an option to "ignore" the inputs (or to "force" their usage).
-        // 2) Add a solver fallback which tries to remove the inputs and solve again.
-        // const usedBatterRecipe = withMamRecipes.nodes.filter(
-        //   node =>
-        //     node.type === 'Machine' &&
-        //     (node.data as IMachineNodeData).recipe.id.includes('Batter'),
-        // );
-        // console.log('usedBatterRecipe', usedBatterRecipe);
-
-        console.log(
-          'suggestions.addRecipes',
-          instance.request.allowedRecipes,
-          without(
-            suggestions.addRecipes,
-            ...(instance.request.allowedRecipes ?? []),
-          ),
-        );
-      } else {
-        console.log('No solution found, trying all recipes');
-        // TODO Change this terrible if/else
-
-        // 2. Try to solve with all recipes
-        const withAllRecipes = solveProduction(highsRef.current, {
-          ...instance?.request,
-          objective: 'minimize_power',
-          allowedRecipes: AllFactoryRecipes.map(recipe => recipe.id),
-          ...inputsOutputs,
-        });
-        if (withAllRecipes.result.Status === 'Optimal') {
-          suggestions.addRecipes = withAllRecipes.nodes
-            .filter(node => node.type === 'Machine')
-            .map(node => (node.data as IMachineNodeData).recipe.id)
-            .filter(id => !instance.request.allowedRecipes?.includes(id));
-        }
-      }
+      suggestions = proposeSolverSolutionSuggestions(
+        highsRef.current,
+        instance.request,
+        inputsOutputs,
+      );
     }
 
     return { solution, suggestions };
+    // We don't want to re-run computation if instance changes, only if its request changes
   }, [highsRef, instance?.request, inputsOutputs, loading]);
 
   // TODO Implemente auto-create on navigate
@@ -200,12 +146,12 @@ export function SolverPage(props: ISolverPageProps) {
     solution &&
     solution.result.Status === 'Optimal' &&
     solution?.nodes.length > 0;
-  console.log('hasSolution', hasSolution, solution);
+
+  logger.log('hasSolution =', hasSolution);
+
   return (
     <Box w="100%" pos="relative">
       <LoadingOverlay visible={loading} />
-      {/* <RecipeSolverDemo />
-      z */}
 
       <AfterHeaderSticky>
         <Group gap="sm" justify="space-between">
@@ -241,7 +187,7 @@ export function SolverPage(props: ISolverPageProps) {
             <SolverRecipesDrawer />
 
             <Button
-              // TODO Show this button only if the solver is not from a _saved_ factory=
+              // TODO Show this button only if the solver is not from a _saved_ factory (why ?)
               color="red"
               variant="light"
               onClick={() => {
