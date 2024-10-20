@@ -107,17 +107,17 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
             ) : (
               'N/A (Choose factory & resource)'
             )}
-            {usage.percentage > 1 && (
-              <Group gap="sm" align="center">
-                Missing {usage.usedAmount - usage.producedAmount}
-                <Text size="sm">
-                  <FactoryOutputIcon size={16} /> {usage.producedAmount}
-                </Text>
-                <Text size="sm">
-                  <FactoryInputIcon size={16} /> {usage.usedAmount}
-                </Text>
-              </Group>
-            )}
+            <Group gap="sm" align="center">
+              {usage.percentage > 1 && (
+                <span>Missing {usage.usedAmount - usage.producedAmount}</span>
+              )}
+              <Text size="sm">
+                <FactoryOutputIcon size={16} /> {usage.producedAmount}
+              </Text>
+              <Text size="sm">
+                <FactoryInputIcon size={16} /> {usage.usedAmount}
+              </Text>
+            </Group>
           </Group>
         }
         position="top-start"
