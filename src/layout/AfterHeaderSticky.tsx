@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 export interface IAfterHeaderStickyProps {}
 
-export function useHeaderTop() {
+function useHeaderTop() {
   const [headerTop, setHeaderTop] = useState(0);
 
   useEffect(() => {

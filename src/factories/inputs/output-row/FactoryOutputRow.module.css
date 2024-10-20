@@ -1,0 +1,18 @@
+.factoryOutputAmount {
+  &.factoryOutputAmountSomersloops {
+    &:focus {
+      background-color: #f0f0f0;
+    }
+  }
+}
+
+.factoryOutputAmountInput {
+  .factoryOutputAmountSomersloops & {
+    /* On focus we reset to standard input style, since we want the user to edit the original value */
+    &:not(:focus) {
+      color: var(--mantine-color-grape-5);
+      border-color: var(--mantine-color-grape-5);
+      font-weight: bold;
+    }
+  }
+}

@@ -3,6 +3,7 @@ import loglevel from 'loglevel';
 import prefix from 'loglevel-plugin-prefix';
 
 export const log = loglevel;
+export const loglev = log;
 log.setLevel('debug');
 prefix.reg(log);
 
@@ -22,8 +23,8 @@ prefix.apply(log, {
 });
 
 function djb2(str: string) {
-  var hash = 5381;
-  for (var i = 0; i < str.length; i++) {
+  let hash = 5381;
+  for (let i = 0; i < str.length; i++) {
     hash = (hash << 5) + hash + str.charCodeAt(i); /* hash * 33 + c */
   }
   return hash;

@@ -11,13 +11,31 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "noImplicitAny": false,
     "jsx": "react-jsx",
 
     /* Linting */
     "strict": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Paths */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
+    /* Plugins */
+    "plugins": [
+      // { "name": "typescript-plugin-css-modules" }, // TODO try to re-enable this
+      {
+        "name": "ts-plugin-sort-import-suggestions",
+        // Matches `@/`, `../` and `./`, move them up in the suggestions (This is the default config if you leave it empty)
+        "moveUpPatterns": ["@/", "@/core/zustand", "\\.{1,2}/"],
+        // Move `dist` down in the suggestions, by deafult it's `[]`
+        "moveDownPatterns": ["^zustand"]
+      }
+    ]
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }],
-  "plugins": [{ "name": "typescript-plugin-css-modules" }]
+  "include": ["src", "scripts"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

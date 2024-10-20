@@ -1,14 +1,18 @@
 import { Button, Group, Text } from '@mantine/core';
 import { IconCheck, IconUpload } from '@tabler/icons-react';
-import { useSession, useSync } from '../AuthSlice';
+import { useSession } from '../authSelectors';
 import { saveLocalState } from './useSyncLocalAndRemoteStore';
 
 export interface ISyncButtonProps {}
 
+/**
+ * @deprecated
+ */
 export function SyncButton(props: ISyncButtonProps) {
-  const sync = useSync();
+  // const sync = useSync();
   const session = useSession();
-  const isSynced = sync.latestChangeDetectedAt <= sync.syncedAt;
+  const isSynced = false; // TODO
+  // const isSynced = sync.latestChangeDetectedAt <= sync.syncedAt;
   // console.log('isSynced', isSynced, sync.latestChangeDetectedAt, sync.syncedAt);
   const handleSync = async () => {
     await saveLocalState();
@@ -28,7 +32,7 @@ export function SyncButton(props: ISyncButtonProps) {
       leftSection={<IconUpload size={16} />}
       variant="default"
       onClick={handleSync}
-      loading={sync.isSyncing}
+      // loading={sync.isSyncing}
     >
       Save online
     </Button>

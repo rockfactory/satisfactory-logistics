@@ -1,20 +1,21 @@
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import { loglev } from '../core/logger/log';
 import { supabaseClient } from '../core/supabase';
-import { authActions } from './AuthSlice';
+import { useStore } from '../core/zustand';
+
+const logger = loglev.getLogger('auth');
 
 export interface IAuthSessionManagerProps {}
 
 export function AuthSessionManager(props: IAuthSessionManagerProps) {
-  //   const session = useSelector((state: RootState) => state.auth.session);
-  const dispatch = useDispatch();
+  const setSession = useStore(state => state.setSession);
 
   React.useEffect(() => {
     supabaseClient.auth
       .getSession()
       .then(({ data: { session } }) => {
-        console.log('Loading Session:', session);
-        dispatch(authActions.setSession(session));
+        logger.log('Loading Session:', session);
+        setSession(session);
       })
       .catch(err => {
         console.warn('No session', err);
@@ -24,15 +25,15 @@ export function AuthSessionManager(props: IAuthSessionManagerProps) {
       data: { subscription },
     } = supabaseClient.auth.onAuthStateChange(async (_event, session) => {
       // Load factories from remote
-      console.log('Loading from remote', _event);
+      logger.info('Loading session from remote', _event);
       // await loadFromRemote(session);
-      console.log('Session Loaded from remote', session);
+      logger.log('Session Loaded from remote', session);
 
-      dispatch(authActions.setSession(session));
+      setSession(session);
     });
 
     return () => subscription.unsubscribe();
-  }, [dispatch]);
+  }, [setSession]);
 
   return null;
 }

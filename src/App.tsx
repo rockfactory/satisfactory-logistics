@@ -9,12 +9,14 @@ import {
   RouterProvider,
   useLocation,
   useNavigate,
+  useRouteError,
 } from 'react-router-dom';
 import { LoginPage } from './auth/LoginPage';
 import { PrivacyPolicy } from './auth/privacy/PrivacyPolicy';
 import { SyncManager } from './auth/sync/SyncManager';
-import { RecipeSolverDemo } from './recipes/solver/RecipeSolverDemo';
+import { GamesRoutes } from './games/page/GamesRoutes';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
+import { RecipeSolverDemo } from './solver/RecipeSolverDemo';
 import { theme } from './theme';
 
 const router = createBrowserRouter([
@@ -25,6 +27,16 @@ const router = createBrowserRouter([
   {
     path: '/factories/*',
     element: <FactoryRoutes />,
+    ErrorBoundary: () => {
+      throw useRouteError();
+    },
+  },
+  {
+    path: '/games/*',
+    element: <GamesRoutes />,
+    ErrorBoundary: () => {
+      throw useRouteError();
+    },
   },
   {
     path: '/login',
@@ -49,15 +61,12 @@ function Redirect({ to }: { to: string }) {
       search: location.search,
       hash: location.hash,
     });
-  }, [location]);
+  }, [location, navigate, to]);
 
   return null;
 }
 
 export default function App() {
-  const tabs = ['Factories'];
-
-  // const [currentTab, setCurrentTab] = useState(tabs[0] as string | null);
   return (
     <MantineProvider theme={theme} forceColorScheme="dark">
       <SyncManager />

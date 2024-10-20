@@ -1,0 +1,9 @@
+.gamePlayer {
+  border-radius: 8px;
+  padding: 8px;
+  background-color: var(--mantine-color-dark-7);
+}
+
+.gamePlayerAuthor {
+  border-left: 8px solid var(--mantine-color-blue-7);
+}

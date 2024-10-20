@@ -1,21 +1,22 @@
+import { serializeGame } from '@/games/store/gameFactoriesActions';
 import { notifications } from '@mantine/notifications';
-import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
 import { Json } from '../../core/database.types';
-import { RootState, store } from '../../core/store';
 import { supabaseClient } from '../../core/supabase';
-import { useFactories } from '../../factories/store/FactoriesSlice';
-import { authActions, useSession, useSync } from '../AuthSlice';
-import { loadFromRemote } from './loadFromRemote';
+import { useStore } from '../../core/zustand';
+import { Factory } from '../../factories/Factory';
+import { Game } from '../../games/Game';
+import { SolverInstance } from '../../solver/store/Solver';
 
 export interface ISerializedState {
   // We serialize only the _current_ state, not the whole state with undo history
-  factories: RootState['factories']['present'];
-  solver?: RootState['solver']['present'];
+  // TODO Restore typings and support saving. We need to be careful with previous versions
+  game: Game;
+  factories: Record<string, Factory>;
+  solvers: Record<string, SolverInstance>;
 }
 
 export async function saveLocalState() {
-  const { auth, factories, solver } = store.getState();
+  const { auth, factories, solvers } = useStore.getState();
   if (!auth.session) {
     console.log('No session, skipping save, previous at ' + auth.sync.syncedAt);
   }
@@ -25,22 +26,32 @@ export async function saveLocalState() {
   //   return;
   // }
 
-  store.dispatch(
-    authActions.setSync({
-      isSyncing: true,
-    }),
-  );
+  // TODO Restore
+  // store.dispatch(
+  //   authActions.setSync({
+  //     isSyncing: true,
+  //   }),
+  // );
+
+  const state = useStore.getState();
+  const game = state.games.games[state.games.selected ?? ''];
+  if (!game) {
+    console.error('No game, skipping save');
+    notifications.show({
+      title: 'Error saving game',
+      message: 'No game selected',
+    });
+    return;
+  }
 
   const { data, error } = await supabaseClient
-    .from('factories')
+    .from('games')
     .upsert({
-      id: auth.sync?.versionId ?? undefined,
-      user_id: auth?.session?.user.id,
+      id: game.savedId ?? undefined,
+      author_id: game.authorId ?? auth.session!.user.id,
+      name: game.name,
       // We save only the _current_ state, not the whole state with undo history
-      data: {
-        factories: factories.present,
-        solver: solver.present,
-      } as ISerializedState as unknown as Json,
+      data: serializeGame(game.id) as unknown as Json,
       updated_at: new Date().toISOString(),
     })
     .select('id')
@@ -52,69 +63,58 @@ export async function saveLocalState() {
       title: 'Error syncing factories',
       message: error.message,
     });
-    store.dispatch(
-      authActions.setSync({
-        isSyncing: false,
-      }),
-    );
+    // TODO Restore
+    // store.dispatch(
+    //   authActions.setSync({
+    //     isSyncing: false,
+    //   }),
+    // );
     return;
   }
 
   console.log('Saved factories to remote:', data);
-  store.dispatch(
-    authActions.setSync({
-      isSynced: true,
-      isSyncing: false,
-      syncedAt: Date.now(),
-      versionId: data?.id,
-    }),
-  );
+  // TODO add date?
+  // useStore.getState().setSavedGameId(game.id, data?.id);
 }
 
 // Minimum interval between syncs
 const SAVE_INTERVAL = 30_000;
 
 export function useSyncLocalAndRemoteStore() {
-  const session = useSession();
-  const sync = useSync();
-  const dispatch = useDispatch();
-  const factories = useFactories();
-
-  const updatedAt = useRef(0);
-  const latestSessionId = useRef(null as string | null);
-  const isFetching = useRef(false);
-  useEffect(() => {
-    async function update() {
-      if (Date.now() - updatedAt.current < SAVE_INTERVAL) {
-        dispatch(
-          authActions.setSync({
-            isSynced: false,
-            latestChangeDetectedAt: Date.now(),
-          }),
-        );
-        console.log('Skipping sync');
-      }
-
-      dispatch(
-        authActions.setSync({
-          latestChangeDetectedAt: Date.now(),
-        }),
-      );
-      //   await saveLocalState();
-
-      updatedAt.current = Date.now();
-    }
-
-    update().catch(console.error);
-  }, [factories, dispatch]);
-
-  useEffect(() => {
-    if (!session || session?.user.id === latestSessionId.current) {
-      console.log('Skipping sync, same session', session);
-      return;
-    }
-
-    latestSessionId.current = session?.user.id;
-    loadFromRemote(session).catch(console.error);
-  }, [session]);
+  // const session = useSession();
+  // const sync = useSync();
+  // const dispatch = useDispatch();
+  // const factories = useFactories();
+  // const updatedAt = useRef(0);
+  // const latestSessionId = useRef(null as string | null);
+  // const isFetching = useRef(false);
+  // useEffect(() => {
+  //   async function update() {
+  //     if (Date.now() - updatedAt.current < SAVE_INTERVAL) {
+  //       dispatch(
+  //         authActions.setSync({
+  //           isSynced: false,
+  //           latestChangeDetectedAt: Date.now(),
+  //         }),
+  //       );
+  //       console.log('Skipping sync');
+  //     }
+  //     dispatch(
+  //       authActions.setSync({
+  //         latestChangeDetectedAt: Date.now(),
+  //       }),
+  //     );
+  //     //   await saveLocalState();
+  //     updatedAt.current = Date.now();
+  //   }
+  //   update().catch(console.error);
+  // }, [factories, dispatch]);
+  // useEffect(() => {
+  //   if (!session || session?.user.id === latestSessionId.current) {
+  //     console.log('Skipping sync, same session', session);
+  //     return;
+  //   }
+  //   latestSessionId.current = session?.user.id;
+  //   loadFromRemote(session).catch(console.error);
+  // }, [session]);
 }

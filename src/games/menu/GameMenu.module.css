@@ -1,0 +1,5 @@
+.gameMenuSecondaryButton {
+  border-left: 1px solid var(--mantine-color-dark-3);
+  padding-left: var(--mantine-spacing-xs);
+  padding-right: var(--mantine-spacing-xs);
+}

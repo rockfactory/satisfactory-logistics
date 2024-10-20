@@ -64,3 +64,9 @@ export function getRecipeProductPerBuilding(
   const product = recipe.products.find(p => p.resource === productId)!;
   return (product.amount * 60) / recipe.time;
 }
+
+export function getRecipeDisplayName(recipe: FactoryRecipe) {
+  const product = AllFactoryItemsMap[recipe.products[0].resource];
+  const isAlt = recipe.name.includes('Alternate');
+  return isAlt ? recipe.name.replace('Alternate: ', '') : recipe.name;
+}

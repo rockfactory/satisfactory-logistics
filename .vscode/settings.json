@@ -1,7 +1,17 @@
 {
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": "explicit"
-    },
-    "typescript.tsdk": "node_modules/typescript/lib"
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "typescript.experimental.expandableHover": true,
+  "emmet.excludeLanguages": ["typescriptreact", "javascriptreact"],
+  "cssVariables.lookupFiles": [
+    "**/*.css",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.less",
+    "node_modules/@mantine/core/styles.css"
+  ]
 }

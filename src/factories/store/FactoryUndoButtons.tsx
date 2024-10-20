@@ -1,26 +1,26 @@
 import { ActionIcon, Group, Tooltip } from '@mantine/core';
 import { useHotkeys } from '@mantine/hooks';
 import { IconArrowBackUp, IconArrowForwardUp } from '@tabler/icons-react';
-import { useDispatch } from 'react-redux';
-import { ActionCreators } from 'redux-undo';
 
 export interface IFactoryUndoButtonsProps {}
 
+/**
+ * @deprecated
+ */
 export function FactoryUndoButtons(props: IFactoryUndoButtonsProps) {
-  const dispatch = useDispatch();
   useHotkeys([
     [
       'mod+z',
       e => {
         e.preventDefault();
-        dispatch(ActionCreators.undo());
+        // dispatch(ActionCreators.undo());
       },
     ],
     [
       'shift+mod+z',
       e => {
         e.preventDefault();
-        dispatch(ActionCreators.redo());
+        // dispatch(ActionCreators.redo());
       },
     ],
   ]);
@@ -30,7 +30,7 @@ export function FactoryUndoButtons(props: IFactoryUndoButtonsProps) {
         <ActionIcon
           variant="light"
           size="lg"
-          onClick={() => dispatch(ActionCreators.undo())}
+          // onClick={() => dispatch(ActionCreators.undo())}
         >
           <IconArrowBackUp size={16} />
         </ActionIcon>
@@ -39,7 +39,7 @@ export function FactoryUndoButtons(props: IFactoryUndoButtonsProps) {
         <ActionIcon
           variant="light"
           size="lg"
-          onClick={() => dispatch(ActionCreators.redo())}
+          // onClick={() => dispatch(ActionCreators.redo())}
         >
           <IconArrowForwardUp size={16} />
         </ActionIcon>

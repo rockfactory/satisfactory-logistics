@@ -1,37 +1,35 @@
-import { useSelector } from 'react-redux';
-import { RootState } from '../core/store';
-import { useFactories } from './store/FactoriesSlice';
+import { useShallowStore, useStore } from '../core/zustand';
 
 export function useIsFactoryVisible(
   factoryId: string,
   isRoot: boolean,
   resource?: string | null | undefined,
 ) {
-  const filters = useSelector(
-    (state: RootState) => state.factories.present.filters,
+  const { filterName, filterResource, viewMode } = useStore(
+    state => state.factoryView,
   );
-  const factories = useFactories();
-  const source = factories.find(f => f.id === factoryId);
+  const factoryName = useStore(
+    state => state.factories.factories[factoryId]?.name,
+  );
+  const factoryResources = useShallowStore(state => [
+    ...(state.factories.factories[factoryId]?.outputs?.map(o => o.resource) ??
+      []),
+    ...(state.factories.factories[factoryId]?.inputs?.map(i => i.resource) ??
+      []),
+  ]);
 
   if (
-    filters?.name &&
-    !source?.name?.toLowerCase().includes(filters.name?.toLowerCase() ?? '')
+    filterName &&
+    !factoryName?.toLowerCase().includes(filterName?.toLowerCase() ?? '')
   ) {
     return false;
   }
 
-  if (filters?.resource && !isRoot && resource !== filters.resource) {
+  if (filterResource && !isRoot && resource !== filterResource) {
     return false;
   }
 
-  if (
-    filters?.resource &&
-    isRoot &&
-    (source?.outputs ?? []).filter(o => o.resource === filters.resource)
-      .length === 0 &&
-    (source?.inputs ?? []).filter(i => i.resource === filters.resource)
-      .length === 0
-  ) {
+  if (filterResource && isRoot && !factoryResources.includes(filterResource)) {
     return false;
   }
 

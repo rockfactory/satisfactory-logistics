@@ -1,8 +1,8 @@
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import {
   CloseButton,
   Combobox,
   Group,
-  Image,
   Input,
   InputWrapperProps,
   ScrollArea,
@@ -28,7 +28,7 @@ export interface IFactoryItemInputProps
 }
 
 interface FactoryItemOptionProps {
-  item: FactoryItem;
+  item: FactoryItem | null;
   size: 'md' | 'lg' | 'sm';
 }
 
@@ -36,14 +36,14 @@ function FactoryItemOption({ item, size }: FactoryItemOptionProps) {
   const imageSize = size === 'sm' ? 22 : size === 'md' ? 24 : 32;
   return (
     <Group gap="sm">
-      <Image src={item.imagePath} w={imageSize} h={imageSize} radius="sm" />
+      <FactoryItemImage id={item?.id} size={imageSize} />
       <div>
         <Text size="sm" truncate="end" maw="300px">
-          {item.displayName}
+          {item?.displayName ?? 'Unknown item'}
         </Text>
         {size === 'lg' && (
           <Text size="xs" opacity={0.5} truncate="end" maw={'280px'}>
-            {item.description}
+            {item?.description ?? ''}
           </Text>
         )}
       </div>
@@ -91,8 +91,14 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
           <FactoryItemOption item={item} size={size} />
         </Combobox.Option>
       )),
-    [search, allowedItems],
+    [search, allowedItems, size],
   );
+
+  if (selectedItem && !AllFactoryItemsMap[selectedItem]) {
+    console.warn(`Unknown item: ${selectedItem}`);
+    setSelectedItem(null);
+    onChange?.(null);
+  }
 
   return (
     <>
@@ -186,12 +192,4 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
       </Combobox>
     </>
   );
-  // return (
-  //   <Select
-  //     data={AllFactoryItemsIds}
-  //     filter={optionsFilter}
-  //     searchable
-  //     renderOption={renderAutocompleteOption}
-  //   />
-  // );
 }

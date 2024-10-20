@@ -7,43 +7,44 @@ import {
   Space,
   Stack,
   Text,
+  Tooltip,
 } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import {
   IconBuildingFactory,
+  IconCalculator,
   IconDownload,
   IconPlus,
-  IconTrash,
 } from '@tabler/icons-react';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSession } from '../auth/AuthSlice';
-import { loadFromRemote } from '../auth/sync/loadFromRemote';
-import { SyncButton } from '../auth/sync/SyncButton';
-import { RootState } from '../core/store';
+import { useSession } from '../auth/authSelectors';
+// import { loadFromRemote } from '../auth/sync/loadFromRemote';
+import { useNavigate } from 'react-router-dom';
+import { v4 } from 'uuid';
+import { useStore } from '../core/zustand';
+import { useGameFactoriesIds } from '../games/gamesSlice';
+import { GameSettingsModal } from '../games/settings/GameSettingsModal';
 import { FactoryRow } from './FactoryRow';
 import { FactoriesFiltersMenu } from './filters/FactoriesFiltersMenu';
-import { ImportFactoriesModal } from './import/ImportFactoriesModal';
-import { FactoriesSettings } from './settings/FactoriesSettings';
-import { factoryActions, useFactories } from './store/FactoriesSlice';
-import { FactoryUndoButtons } from './store/FactoryUndoButtons';
 import { FactoryWideCard } from './wide/FactoryWideCard';
 
 export interface IFactoriesTabProps {}
 
 export function FactoriesTab(_props: IFactoriesTabProps) {
-  const dispatch = useDispatch();
-  const factories = useFactories();
   const session = useSession();
-  const viewMode = useSelector(
-    (state: RootState) => state.factories.present.filters?.viewMode ?? 'wide',
-  );
+  const navigate = useNavigate();
+
+  const gameId = useStore(state => state.games.selected);
+  const viewMode = useStore(state => state.factoryView.viewMode ?? 'wide');
 
   const [loadingFactories, setLoadingFactories] = useState(false);
 
-  const hasFactories = useSelector(
-    (state: RootState) => state.factories.present.factories.length > 0,
+  const hasFactories = useStore(
+    state =>
+      Object.keys(state.games.games).length > 0 &&
+      state.games.selected &&
+      state.games.games[state.games.selected]?.factoriesIds.length > 0,
   );
+  const factoriesIds = useGameFactoriesIds(gameId);
 
   return (
     <div>
@@ -61,11 +62,17 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
               leftSection={<IconPlus size={16} />}
               mt="lg"
               size="lg"
-              onClick={() => dispatch(factoryActions.add({}))}
+              onClick={() =>
+                gameId
+                  ? useStore.getState().addGameFactory(gameId)
+                  : // TODO This technically should not be possible
+                    useStore.getState().initGame({})
+              }
             >
               Add first factory
             </Button>
-            {session && (
+            {/* TODO Do we need this now that we have games? */}
+            {false && session && (
               <>
                 <Divider
                   w="60%"
@@ -84,7 +91,7 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
                   }
                   onClick={async () => {
                     setLoadingFactories(true);
-                    await loadFromRemote(session, true);
+                    // await loadFromRemote(session, true);
                     setLoadingFactories(false);
                   }}
                 >
@@ -96,33 +103,52 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
         )}
         <Stack gap="md">
           {viewMode === 'wide' &&
-            factories.map((factory, index) => (
-              <FactoryWideCard
-                key={factory.id}
-                factory={factory}
-                index={index}
-              />
+            factoriesIds.map((factoryId, index) => (
+              <FactoryWideCard key={factoryId} id={factoryId} index={index} />
             ))}
           {viewMode === 'compact' &&
-            factories.map((factory, index) => (
-              <FactoryRow key={factory.id} factory={factory} index={index} />
+            factoriesIds.map((factoryId, index) => (
+              <FactoryRow key={factoryId} id={factoryId} index={index} />
             ))}
         </Stack>
-        <Divider mb="lg" />
-        {/* <FactoryItemInput /> */}
+        {!hasFactories && <Divider mb="lg" />}
         <Group mt="lg" justify="space-between">
           <Group>
             <Button
-              onClick={() => dispatch(factoryActions.add({}))}
+              onClick={() => useStore.getState().addGameFactory(gameId!)}
               leftSection={<IconPlus size={16} />}
             >
               Add Factory
             </Button>
-            <FactoryUndoButtons />
+            <Tooltip
+              label="Adds a new factory to the game and opens it in the Calculator"
+              position="bottom"
+              withArrow
+            >
+              <Button
+                color="cyan"
+                onClick={() => {
+                  const newFactoryId = v4();
+                  useStore.getState().createFactoryWithSolver(gameId!, {
+                    id: newFactoryId,
+                    inputs: [],
+                    outputs: [{ resource: 'Desc_Cement_C', amount: 10 }],
+                  });
+                  navigate(`/factories/${newFactoryId}/calculator`);
+                }}
+                leftSection={<IconPlus size={16} />}
+                rightSection={<IconCalculator size={16} />}
+              >
+                Add and Plan Factory
+              </Button>
+            </Tooltip>
+
+            {/* <FactoryUndoButtons /> */}
           </Group>
           <Group>
-            <SyncButton />
-            <Button
+            <GameSettingsModal withLabel />
+            {/* <SyncButton /> */}
+            {/* <Button
               leftSection={<IconTrash size={16} />}
               color="red"
               variant="light"
@@ -137,9 +163,7 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
               }}
             >
               Clear All
-            </Button>
-            <ImportFactoriesModal />
-            <FactoriesSettings />
+            </Button> */}
           </Group>
         </Group>
       </Container>

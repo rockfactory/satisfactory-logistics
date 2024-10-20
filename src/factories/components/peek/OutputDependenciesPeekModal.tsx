@@ -1,12 +1,12 @@
 import { ActionIcon, Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconEye } from '@tabler/icons-react';
-import { GameFactoryOutput } from '../../store/FactoriesSlice';
+import { FactoryOutput } from '../../Factory';
 import { OutputDependenciesTable } from './OutputDependenciesTable';
 
 export interface IOutputDependenciesPeekModalProps {
   factoryId: string;
-  output: GameFactoryOutput;
+  output: FactoryOutput;
 }
 
 export function OutputDependenciesPeekModal(

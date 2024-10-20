@@ -1,8 +1,134 @@
 [
   {
+    "id": "Build_GeneratorCoal_C",
+    "name": "Coal-Powered Generator",
+    "index": 0,
+    "description": "Burns Coal to boil Water. The steam produced rotates turbines that generate electricity for the power grid.\r\nHas Conveyor Belt and Pipeline input ports that allow the Coal and Water supply to be automated.\r\n\r\nCaution: Always generates power at the set clock speed. Shuts down if fuel requirements are not met.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearanceData": "((ClearanceBox=(Min=(X=-500.000000,Y=-1350.000000,Z=0.000000),Max=(X=500.000000,Y=1250.000000,Z=900.000000),IsValid=True)),(ClearanceBox=(Min=(X=-60.000000,Y=-50.000000,Z=0.000000),Max=(X=200.000000,Y=200.000000,Z=2300.000000),IsValid=True),RelativeTransform=(Translation=(X=-348.724685,Y=800.000000,Z=900.000000)),ExcludeForSnapping=True),(Type=CT_Soft,ClearanceBox=(Min=(X=-20.000000,Y=-20.000000,Z=0.000000),Max=(X=20.000000,Y=20.000000,Z=200.000000),IsValid=True),RelativeTransform=(Translation=(X=265.000000,Y=-1275.000000,Z=900.000000)),ExcludeForSnapping=True),(Type=CT_Soft,ClearanceBox=(Min=(X=-30.000000,Y=-30.000000,Z=0.000000),Max=(X=30.000000,Y=30.000000,Z=75.000000),IsValid=True),RelativeTransform=(Translation=(X=-265.000000,Y=-1300.000000,Z=900.000000)),ExcludeForSnapping=True))",
+    "clearance": {
+      "width": 10,
+      "length": 26,
+      "height": 9
+    },
+    "imagePath": "/images/coal-powered-generator_256.png",
+    "powerGenerator": {
+      "fuels": [
+        {
+          "resource": "Desc_Coal_C"
+        },
+        {
+          "resource": "Desc_CompactedCoal_C"
+        },
+        {
+          "resource": "Desc_PetroleumCoke_C"
+        }
+      ],
+      "powerProduction": 75,
+      "supplementalLoadAmount": 1000,
+      "fuelLoadAmount": 1,
+      "requiresSupplementalResource": true
+    }
+  },
+  {
+    "id": "Build_GeneratorFuel_C",
+    "name": "Fuel-Powered Generator",
+    "index": 1,
+    "description": "Consumes Fuel to generate electricity for the power grid.\r\nHas a Pipeline input port that allows the Fuel supply to be automated.\r\n\r\nCaution: Always generates power at the set clock speed. Shuts down if fuel requirements are not met.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearanceData": "((ClearanceBox=(Min=(X=-1100.000000,Y=-200.000000,Z=0.000000),Max=(X=1100.000000,Y=200.000000,Z=550.000000),IsValid=True),RelativeTransform=(Rotation=(X=0.000000,Y=-0.000000,Z=0.382683,W=0.923880))),(ClearanceBox=(Min=(X=-1000.000000,Y=-200.000000,Z=0.000000),Max=(X=1000.000000,Y=200.000000,Z=1100.000000),IsValid=True)),(ClearanceBox=(Min=(X=-1100.000000,Y=-200.000000,Z=0.000000),Max=(X=1100.000000,Y=200.000000,Z=550.000000),IsValid=True),RelativeTransform=(Rotation=(X=-0.000000,Y=0.000000,Z=-0.382683,W=0.923880))),(ClearanceBox=(Min=(X=-118.594091,Y=-117.696511,Z=-1350.000000),Max=(X=117.645476,Y=116.963520,Z=500.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=0.000000,Z=2156.785808)),ExcludeForSnapping=True),(ClearanceBox=(Min=(X=-320.000000,Y=-320.000000,Z=-700.000000),Max=(X=320.000000,Y=320.000000,Z=-500.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=0.000000,Z=2156.785808)),ExcludeForSnapping=True),(ClearanceBox=(Min=(X=-200.000000,Y=-1000.000000,Z=0.000000),Max=(X=200.000000,Y=1000.000000,Z=700.000000),IsValid=True)),(Type=CT_Soft,ClearanceBox=(Min=(X=-20.000000,Y=-20.000000,Z=0.000000),Max=(X=20.000000,Y=20.000000,Z=175.000000),IsValid=True),RelativeTransform=(Translation=(X=-170.000000,Y=-520.000000,Z=700.000000)),ExcludeForSnapping=True),(Type=CT_Soft,ClearanceBox=(Min=(X=-100.000000,Y=-100.000000,Z=0.000000),Max=(X=100.000000,Y=150.000000,Z=250.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=425.000000,Z=700.000000)),ExcludeForSnapping=True))",
+    "clearance": {
+      "width": 22,
+      "length": 20,
+      "height": 11
+    },
+    "imagePath": "/images/fuel-powered-generator_256.png",
+    "powerGenerator": {
+      "fuels": [
+        {
+          "resource": "Desc_LiquidFuel_C"
+        },
+        {
+          "resource": "Desc_LiquidTurboFuel_C"
+        },
+        {
+          "resource": "Desc_LiquidBiofuel_C"
+        },
+        {
+          "resource": "Desc_RocketFuel_C"
+        },
+        {
+          "resource": "Desc_IonizedFuel_C"
+        }
+      ],
+      "powerProduction": 250,
+      "supplementalLoadAmount": 0,
+      "fuelLoadAmount": 1000,
+      "requiresSupplementalResource": false
+    }
+  },
+  {
+    "id": "Build_GeneratorBiomass_Automated_C",
+    "name": "Biomass Burner",
+    "index": 2,
+    "description": "Burns various forms of Biomass to generate electricity for the power grid.\r\nHas a Conveyor Belt input port that allows the Biomass supply to be automated.\r\n\r\nResource consumption will automatically be lowered to meet power demands.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearanceData": "((ClearanceBox=(Min=(X=-400.000000,Y=-400.000000,Z=0.000000),Max=(X=400.000000,Y=400.000000,Z=700.000000),IsValid=True)))",
+    "clearance": {
+      "width": 8,
+      "length": 8,
+      "height": 7
+    },
+    "imagePath": "/images/biomass-burner_256.png",
+    "powerGenerator": {
+      "fuels": [
+        {
+          "resource": "Desc_Leaves_C"
+        },
+        {
+          "resource": "Desc_Wood_C"
+        },
+        {
+          "resource": "Desc_Mycelia_C"
+        },
+        {
+          "resource": "Desc_GenericBiomass_C"
+        },
+        {
+          "resource": "Desc_Biofuel_C"
+        },
+        {
+          "resource": "Desc_PackagedBiofuel_C"
+        }
+      ],
+      "powerProduction": 30,
+      "supplementalLoadAmount": 0,
+      "fuelLoadAmount": 1,
+      "requiresSupplementalResource": false
+    }
+  },
+  {
     "id": "Build_QuantumEncoder_C",
     "name": "Quantum Encoder",
-    "index": 0,
+    "index": 3,
     "description": "The Quantum Encoder uses Excited Photonic Matter to produce the most complex of parts, controlling development up to the quantum level.\r\n\r\nWarning: Power usage is extremely high and unstable.",
     "minimumPowerConsumption": 0,
     "maximumPowerConsumption": 2000,
@@ -22,7 +148,7 @@
   {
     "id": "Build_Converter_C",
     "name": "Converter",
-    "index": 1,
+    "index": 4,
     "description": "The Converter harnesses Reanimated SAM to enable precise matter and energy transmutation.\r\n\r\nWarning: Power usage is very high and unstable.",
     "minimumPowerConsumption": 100,
     "maximumPowerConsumption": 400,
@@ -42,7 +168,7 @@
   {
     "id": "Build_HadronCollider_C",
     "name": "Particle Accelerator",
-    "index": 2,
+    "index": 5,
     "description": "Uses electromagnetic fields to propel particles to very high speeds and energies. The specific design allows for a variety of processes, including matter generation and conversion.\r\n\r\nWarning: Power usage is extremely high and unstable, and varies per recipe.",
     "minimumPowerConsumption": 250,
     "maximumPowerConsumption": 1500,
@@ -62,7 +188,7 @@
   {
     "id": "Build_OilRefinery_C",
     "name": "Refinery",
-    "index": 3,
+    "index": 6,
     "description": "Refines fluid and/or solid parts into other parts.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nContains both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -82,7 +208,7 @@
   {
     "id": "Build_FoundryMk1_C",
     "name": "Foundry",
-    "index": 4,
+    "index": 7,
     "description": "Smelts 2 resources into alloy ingots.\r\n\r\nCan be automated by feeding ore in via Conveyor Belts connected to the input ports. The resulting ingots can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -102,7 +228,7 @@
   {
     "id": "Build_Packager_C",
     "name": "Packager",
-    "index": 5,
+    "index": 8,
     "description": "Packages and unpackages fluids.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nContains both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -122,7 +248,7 @@
   {
     "id": "Build_ManufacturerMk1_C",
     "name": "Manufacturer",
-    "index": 6,
+    "index": 9,
     "description": "Crafts 3 or 4 parts into another part.\r\n\r\nCan be automated by feeding component parts in via Conveyor Belts connected to the input ports. The resulting parts can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -142,7 +268,7 @@
   {
     "id": "Build_AssemblerMk1_C",
     "name": "Assembler",
-    "index": 7,
+    "index": 10,
     "description": "Crafts 2 parts into another part.\r\n\r\nCan be automated by feeding component parts in via Conveyor Belts connected to the input ports. The resulting parts can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -162,7 +288,7 @@
   {
     "id": "Build_Blender_C",
     "name": "Blender",
-    "index": 8,
+    "index": 11,
     "description": "Blends fluids together or combines them with solid parts in a wide variety of processes.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nHas both Conveyor Belt and Pipeline input and output ports.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -182,7 +308,7 @@
   {
     "id": "Build_SmelterMk1_C",
     "name": "Smelter",
-    "index": 9,
+    "index": 12,
     "description": "Smelts ore into ingots.\r\n\r\nCan be automated by feeding ore in via a Conveyor Belt connected to the input port. The resulting ingots can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -202,7 +328,7 @@
   {
     "id": "Build_ConstructorMk1_C",
     "name": "Constructor",
-    "index": 10,
+    "index": 13,
     "description": "Crafts 1 part into another part.\r\n\r\nCan be automated by feeding component parts in via a Conveyor Belt connected to the input port. The resulting parts can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -218,5 +344,64 @@
       "height": 6
     },
     "imagePath": "/images/constructor_256.png"
+  },
+  {
+    "id": "Build_GeneratorNuclear_C",
+    "name": "Nuclear Power Plant",
+    "index": 14,
+    "description": "Consumes Nuclear Fuel Rods and Water to produce electricity for the power grid.\r\n\r\nProduces Nuclear Waste, which is extracted via the Conveyor Belt output.\r\n\r\nCaution: Always generates power at the set clock speed. Shuts down if fuel requirements are not met.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearanceData": "((ClearanceBox=(Min=(X=-600.000000,Y=-2100.000000,Z=0.000000),Max=(X=600.000000,Y=2100.000000,Z=800.000000),IsValid=True)),(ClearanceBox=(Min=(X=-1800.000000,Y=-800.000000,Z=0.000000),Max=(X=1800.000000,Y=800.000000,Z=1000.000000),IsValid=True)),(ClearanceBox=(Min=(X=-900.000000,Y=-900.000000,Z=0.000000),Max=(X=900.000000,Y=900.000000,Z=2700.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=0.000000,Z=900.000000)),ExcludeForSnapping=True),(ClearanceBox=(Min=(X=-500.000000,Y=-200.000000,Z=-100.000000),Max=(X=500.000000,Y=850.000000,Z=2500.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=1100.000000,Z=900.000000)),ExcludeForSnapping=True),(Type=CT_Soft,ClearanceBox=(Min=(X=-100.000000,Y=-20.000000,Z=0.000000),Max=(X=100.000000,Y=20.000000,Z=250.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=900.000000,Z=3600.000000)),ExcludeForSnapping=True),(Type=CT_Soft,ClearanceBox=(Min=(X=-20.000000,Y=-100.000000,Z=0.000000),Max=(X=20.000000,Y=100.000000,Z=250.000000),IsValid=True),RelativeTransform=(Translation=(X=900.000000,Y=0.000000,Z=3600.000000)),ExcludeForSnapping=True),(Type=CT_Soft,ClearanceBox=(Min=(X=-20.000000,Y=-100.000000,Z=0.000000),Max=(X=20.000000,Y=100.000000,Z=250.000000),IsValid=True),RelativeTransform=(Translation=(X=-900.000000,Y=0.000000,Z=3600.000000)),ExcludeForSnapping=True),(ClearanceBox=(Min=(X=-1300.000000,Y=-1500.000000,Z=0.000000),Max=(X=1300.000000,Y=1500.000000,Z=1000.000000),IsValid=True),ExcludeForSnapping=True))",
+    "clearance": {
+      "width": 36,
+      "length": 42,
+      "height": 10
+    },
+    "imagePath": "/images/nuclear-power-plant_256.png",
+    "powerGenerator": {
+      "fuels": [
+        {
+          "resource": "Desc_NuclearFuelRod_C",
+          "byproductAmount": 50
+        },
+        {
+          "resource": "Desc_PlutoniumFuelRod_C",
+          "byproductAmount": 10
+        },
+        {
+          "resource": "Desc_FicsoniumFuelRod_C"
+        }
+      ],
+      "powerProduction": 2500,
+      "supplementalLoadAmount": 10000,
+      "fuelLoadAmount": 1,
+      "requiresSupplementalResource": true
+    }
+  },
+  {
+    "id": "Build_GeneratorGeoThermal_C",
+    "name": "Geothermal Generator",
+    "index": 15,
+    "description": "Harnesses geothermal energy to generate power. Must be built on a Geyser.\r\n\r\nCaution: Power production fluctuates.\r\n\r\nPower Production:\r\nImpure Geyser: 50-150 MW (100 MW average)\r\nNormal Geyser: 100-300 MW (200 MW average)\r\nPure Geyser: 200-600 MW (400 MW average)",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearanceData": "((ClearanceBox=(Min=(X=-1000.000000,Y=-950.000000,Z=-1600.000000),Max=(X=1000.000000,Y=950.000000,Z=1600.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=0.000000,Z=1600.000000))))",
+    "clearance": {
+      "width": 20,
+      "length": 19,
+      "height": 32
+    },
+    "imagePath": "/images/geothermal-generator_256.png"
   }
 ]

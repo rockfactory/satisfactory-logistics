@@ -2,7 +2,6 @@ import {
   Avatar,
   Button,
   Group,
-  Loader,
   Menu,
   rem,
   Text,
@@ -10,30 +9,24 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import {
-  IconChevronDown,
-  IconDownload,
-  IconLogin2,
-  IconLogout,
-} from '@tabler/icons-react';
+import { IconChevronDown, IconLogin2, IconLogout } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { store } from '../core/store';
 import { supabaseClient } from '../core/supabase';
-import { authActions, useSession } from './AuthSlice';
+import { useStore } from '../core/zustand';
 import { LoginModal } from './LoginModal';
 import classes from './UserMenu.module.css';
-import { loadFromRemote } from './sync/loadFromRemote';
+import { useSession } from './authSelectors';
 
 export interface IUserMenuProps {}
 
 export function UserMenu(props: IUserMenuProps) {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const session = useSession();
-  const dispatch = useDispatch();
   const [loginOpened, loginOpenedHandler] = useDisclosure(false);
   const [loadingFactories, setLoadingFactories] = useState(false);
+
+  const setSession = useStore(state => state.setSession);
 
   if (!session) {
     return (
@@ -69,7 +62,9 @@ export function UserMenu(props: IUserMenuProps) {
           <Group gap={7}>
             <Avatar src={session.user.user_metadata.avatar_url} size={32} />
             <Text fw={500} size="sm" lh={1} mr={3}>
-              {session.user.user_metadata.name ?? session.user.email}
+              {session.user.user_metadata.full_name ??
+                session.user.user_metadata.name ??
+                session.user.email}
             </Text>
             <IconChevronDown
               style={{ width: rem(12), height: rem(12) }}
@@ -84,7 +79,7 @@ export function UserMenu(props: IUserMenuProps) {
           onClick={async () => {
             const result = await supabaseClient.auth.signOut();
             if (result.error && result.error.code === 'session_not_found') {
-              dispatch(authActions.setSession(null));
+              setSession(null);
               return;
             }
             notifications.show({
@@ -96,18 +91,18 @@ export function UserMenu(props: IUserMenuProps) {
         >
           Logout
         </Menu.Item>
-        <Menu.Item
+        {/* <Menu.Item
           leftSection={
             loadingFactories ? <Loader size={16} /> : <IconDownload size={16} />
           }
           onClick={async () => {
             setLoadingFactories(true);
-            await loadFromRemote(store.getState().auth.session, true);
+            await loadFromOldRemote(useStore.getState().auth.session, true);
             setLoadingFactories(false);
           }}
         >
-          Load saved factories
-        </Menu.Item>
+          Load previously saved factories
+        </Menu.Item> */}
       </Menu.Dropdown>
     </Menu>
   );
