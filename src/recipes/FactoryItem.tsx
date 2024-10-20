@@ -25,6 +25,7 @@ export enum FactoryItemForm {
 }
 
 import { IconBolt } from '@tabler/icons-react';
+import { last } from 'lodash';
 import type React from 'react';
 import RawFactoryItems from './FactoryItems.json';
 
@@ -32,8 +33,8 @@ export const AllFactoryItems: FactoryItem[] = RawFactoryItems as FactoryItem[];
 
 AllFactoryItems.push({
   imagePath: '',
-  id: 'Cust_Power',
-  index: -10,
+  id: 'Desc_Power_CX',
+  index: last(AllFactoryItems)!.index + 1,
   name: 'Power',
   displayName: 'Power',
   description: 'Power',

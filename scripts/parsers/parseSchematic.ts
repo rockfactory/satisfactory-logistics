@@ -5,7 +5,7 @@ import type {
 import fs from 'fs';
 import { parseIngredients } from './parseIngredients';
 
-export function parseSchematics(docsJson: any, allItemsMap) {
+export function parseSchematics(docsJson: any) {
   const raws: RawSchematic[] = docsJson.flatMap(nativeClass => {
     if (nativeClass.NativeClass?.includes('Schematic')) {
       return nativeClass.Classes;
@@ -13,9 +13,7 @@ export function parseSchematics(docsJson: any, allItemsMap) {
     return [];
   });
 
-  const schematics = raws
-    .map(raw => parseSchematic(raw, allItemsMap))
-    .filter(Boolean);
+  const schematics = raws.map(raw => parseSchematic(raw)).filter(Boolean);
 
   fs.writeFileSync(
     './src/recipes/FactorySchematics.json',
@@ -31,7 +29,7 @@ function parseScriptsArray(raw: string | null) {
   });
 }
 
-function parseSchematic(raw: RawSchematic, allItemsMap): FactorySchematic {
+function parseSchematic(raw: RawSchematic): FactorySchematic {
   return {
     id: raw.ClassName,
     name: raw.mDisplayName,
@@ -45,7 +43,7 @@ function parseSchematic(raw: RawSchematic, allItemsMap): FactorySchematic {
         dep => parseScriptsArray(dep.mSchematics) ?? [],
       ) ?? [],
     hiddenUntilDependeciesMet: raw.mHiddenUntilDependenciesMet === 'true',
-    cost: parseIngredients(raw.mCost, allItemsMap, null, 'in'),
+    cost: parseIngredients(raw.mCost, null, 'in'),
     unlocks: raw.mUnlocks.flatMap(unlock => {
       const scripts = parseScriptsArray(
         unlock.mRecipes ?? unlock.mSchematics ?? '',

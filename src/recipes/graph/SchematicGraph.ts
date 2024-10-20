@@ -49,16 +49,18 @@ for (const schematic of AllFactorySchematics) {
 
 export function getRecipeRootUnlockSchematics(recipeId: string) {
   const sources: SchematicNode[] = [];
-  bfsFromNode(
-    SchematicsGraph,
-    recipeId,
-    (node, attr) => {
-      if (SchematicsGraph.inDegree(node) === 0) {
-        sources.push(attr);
-      }
-    },
-    { mode: 'inbound' },
-  );
+  if (SchematicsGraph.hasNode(recipeId)) {
+    bfsFromNode(
+      SchematicsGraph,
+      recipeId,
+      (node, attr) => {
+        if (SchematicsGraph.inDegree(node) === 0) {
+          sources.push(attr);
+        }
+      },
+      { mode: 'inbound' },
+    );
+  }
 
   return sources;
 }

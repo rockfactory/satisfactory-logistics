@@ -186,6 +186,12 @@ const allImages = [
   'https://www.satisfactorytools.com/assets/images/items/quantum-encoder_256.png',
   'https://www.satisfactorytools.com/assets/images/items/refinery_256.png',
   'https://www.satisfactorytools.com/assets/images/items/smelter_256.png',
+  // Generators
+  'https://www.satisfactorytools.com/assets/images/items/coal-powered-generator_256.png',
+  'https://www.satisfactorytools.com/assets/images/items/fuel-powered-generator_256.png',
+  'https://www.satisfactorytools.com/assets/images/items/geothermal-generator_256.png',
+  'https://www.satisfactorytools.com/assets/images/items/nuclear-power-plant_256.png',
+  'https://www.satisfactorytools.com/assets/images/items/biomass-burner_256.png',
 ];
 
 await Promise.all(

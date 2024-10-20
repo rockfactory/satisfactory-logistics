@@ -1,12 +1,11 @@
+import { ParsingContext } from './ParsingContext';
+
 const IngredientRegex =
   /\(ItemClass=(?:[^)]*)\.([^']*)(?:[^)]*)Amount=([\d.]+)\)/gm;
 
-export function parseIngredients(
-  ingredients: string,
-  allItemsMap,
-  building,
-  dir,
-) {
+export function parseIngredients(ingredients: string, building, dir) {
+  const allItemsMap = ParsingContext.itemsMap;
+
   const matches = [...ingredients.matchAll(IngredientRegex)];
   return matches.map(([_, resource, amount]) => {
     if (!allItemsMap[resource]) {
@@ -14,12 +13,7 @@ export function parseIngredients(
     }
     const parsedAmount = parseFloat(amount);
 
-    // Liquids are written in cm³, we need to convert them to m³
-    let normalizedAmount =
-      allItemsMap[resource]?.form === 'Liquid' ||
-      allItemsMap[resource]?.form === 'Gas'
-        ? parsedAmount / 1_000
-        : parsedAmount;
+    let normalizedAmount = normalizeResourceAmount(resource, parsedAmount);
 
     // Pre-LP fixes
     const displayAmount = normalizedAmount;
@@ -38,4 +32,12 @@ export function parseIngredients(
       originalAmount: parsedAmount,
     };
   });
+}
+
+// Liquids are written in cm³, we need to convert them to m³
+export function normalizeResourceAmount(resource: string, amount: number) {
+  return ParsingContext.itemsMap[resource]?.form === 'Liquid' ||
+    ParsingContext.itemsMap[resource]?.form === 'Gas'
+    ? amount / 1_000
+    : amount;
 }

@@ -1,6 +1,6 @@
 import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
 import { Edge, MarkerType, Node } from '@xyflow/react';
-import highloader, { Highs } from 'highs';
+import highloader, { Highs, type HighsSolution } from 'highs';
 import { useEffect, useRef, useState } from 'react';
 import { log } from '../core/logger/log';
 import { getWorldResourceMax } from '../recipes/WorldResources';
@@ -99,7 +99,18 @@ export function solveProduction(
   applyObjective(ctx, request);
 
   const problem = ctx.formulateProblem();
-  const result = highs.solve(problem, {});
+  let result: HighsSolution;
+  try {
+    result = highs.solve(problem, {});
+  } catch (error) {
+    logger.error('Solver error:', { error, problem });
+    return {
+      result: { Status: 'Error', Error: error },
+      nodes: [],
+      edges: [],
+      graph: ctx.graph,
+    };
+  }
 
   // logger.log('Problem:', problem);
 

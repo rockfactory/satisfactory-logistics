@@ -15,6 +15,7 @@ export function RecipeTooltip(props: IRecipeTooltipProps) {
   return (
     <Tooltip
       color="dark.8"
+      keepMounted={false}
       label={
         <Stack gap="xs">
           <Text size="sm" c="dimmed">
