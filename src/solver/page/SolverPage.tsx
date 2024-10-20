@@ -29,7 +29,7 @@ import {
 import { Edge, Node, Panel, ReactFlowProvider } from '@xyflow/react';
 import Graph from 'graphology';
 import { HighsSolution } from 'highs';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { useFormOnChange } from '../../core/form/useFormOnChange';
@@ -100,10 +100,10 @@ export function SolverPage(props: ISolverPageProps) {
     });
   }, [instance, factory, id, params.id, navigate]);
 
-  logger.log('SolverPage', instance);
+  logger.log('SolverPage', instance, id);
 
-  const updater = useCallback(
-    (path: Path<SolverInstance>, value: string | null | number) => {
+  const updater = useMemo(
+    () => (path: Path<SolverInstance>, value: string | null | number) => {
       useStore.getState().updateSolver(id!, state => {
         setByPath(state, path, value);
       });

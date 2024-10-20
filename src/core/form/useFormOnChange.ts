@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 
 import { Path, PathValue } from '@clickbar/dot-diver';
 
@@ -17,8 +17,10 @@ type Value =
 export function useFormOnChange<Obj>(updater: Updater<Obj>) {
   const handlers = useRef<Record<string, (value: Value) => void>>({});
 
-  return useCallback(
-    (path: Path<Obj>) => {
+  return useMemo(() => {
+    handlers.current = {};
+
+    return (path: Path<Obj>) => {
       if (!handlers.current[path as string]) {
         handlers.current[path as string] = (value: Value) => {
           // console.log(
@@ -38,9 +40,8 @@ export function useFormOnChange<Obj>(updater: Updater<Obj>) {
         };
       }
       return handlers.current[path as string];
-    },
-    [updater],
-  );
+    };
+  }, [updater]);
 }
 
 export type FormOnChangeHandler<Obj> = (
