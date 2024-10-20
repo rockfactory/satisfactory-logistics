@@ -128,7 +128,7 @@ export function SolverPage(props: ISolverPageProps) {
     });
     logger.log(`Solved -> `, solution);
 
-    if (solution.result.Status !== 'Optimal') {
+    if (solution && solution.result.Status !== 'Optimal') {
       suggestions = proposeSolverSolutionSuggestions(
         highsRef.current,
         instance.request,

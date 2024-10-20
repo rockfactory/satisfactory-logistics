@@ -44,7 +44,7 @@ export function proposeSolverSolutionSuggestions(
     ...inputsOutputs,
   });
 
-  if (withMamRecipes.result.Status === 'Optimal') {
+  if (withMamRecipes?.result.Status === 'Optimal') {
     console.log('Solution found with MAM recipes');
     console.log('Solution found with MAM recipes', withMamRecipes);
     suggestions.addRecipes = withMamRecipes.nodes
@@ -61,7 +61,7 @@ export function proposeSolverSolutionSuggestions(
     allowedRecipes: AllFactoryRecipes.map(recipe => recipe.id),
     ...inputsOutputs,
   });
-  if (withAllRecipes.result.Status === 'Optimal') {
+  if (withAllRecipes?.result.Status === 'Optimal') {
     suggestions.addRecipes = withAllRecipes.nodes
       .filter(node => node.type === 'Machine')
       .map(node => (node.data as IMachineNodeData).recipe.id)

@@ -104,12 +104,7 @@ export function solveProduction(
     result = highs.solve(problem, {});
   } catch (error) {
     logger.error('Solver error:', { error, problem });
-    return {
-      result: { Status: 'Error', Error: error },
-      nodes: [],
-      edges: [],
-      graph: ctx.graph,
-    };
+    return null;
   }
 
   // logger.log('Problem:', problem);
