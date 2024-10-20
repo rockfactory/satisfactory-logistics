@@ -3,7 +3,7 @@ import { gameSaveSlice } from '@/games/save/gameSaveSlice';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
 import { omit } from 'lodash';
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { useShallow } from 'zustand/shallow';
 import { authSlice } from '../auth/authSlice';
 import { factoriesSlice } from '../factories/store/factoriesSlice';
@@ -12,7 +12,9 @@ import { gamesSlice } from '../games/gamesSlice';
 import { gameFactoriesActions } from '../games/store/gameFactoriesActions';
 import { solverFactoriesActions } from '../solver/store/solverFactoriesActions';
 import { solversSlice } from '../solver/store/solverSlice';
+import { migratePersistedStoreFromRedux } from './migrations/migratePersistedStoreFromRedux';
 import { withActions } from './zustand-helpers/actions';
+import { forceMigrationOnInitialPersist } from './zustand-helpers/forceMigrationOnInitialPersist';
 import { withSlices } from './zustand-helpers/slices';
 
 const slices = withSlices(
@@ -36,9 +38,24 @@ const slicesWithActions = withActions(
 export const useStore = create(
   devtools(
     persist(slicesWithActions, {
-      name: 'mainstore',
+      name: 'zustand:persist',
       partialize: state => omit(state, ['gameSave']),
-      version: 0,
+      version: 1,
+      storage: forceMigrationOnInitialPersist(
+        createJSONStorage(() => localStorage),
+      ),
+      migrate: (state, version) => {
+        if (version === 0) {
+          console.log('Migrating from version 0 to 1', state);
+          const migrated = migratePersistedStoreFromRedux();
+          console.log('Migrated to:', migrated);
+          if (migrated) {
+            return { ...(state as any), ...(migrated as any), version: 1 };
+          }
+        }
+
+        return state;
+      },
     }),
   ),
 );

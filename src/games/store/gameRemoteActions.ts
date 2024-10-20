@@ -47,14 +47,19 @@ function loadSerializedGameIntoState(
 ) {
   if (state.games.games[serialized.game.id] && !options.override) {
     logger.info('Already loaded game:', serialized);
+    state.games.games[serialized.game.id].authorId = data.author_id;
+    state.games.games[serialized.game.id].createdAt = data.created_at;
+    state.games.games[serialized.game.id].savedId = data.id;
+    state.games.games[serialized.game.id].shareToken = data.share_token;
     return;
   }
 
-  logger.info('Fully loaded game:', serialized);
+  logger.info(`Fully loaded game "${serialized.game.name}" (id=${serialized.game.id})`, serialized); // prettier-ignore
   state.games.games[serialized.game.id] = { ...serialized.game };
   state.games.games[serialized.game.id].authorId = data.author_id;
   state.games.games[serialized.game.id].createdAt = data.created_at;
   state.games.games[serialized.game.id].savedId = data.id;
+  state.games.games[serialized.game.id].shareToken = data.share_token;
 
   serialized.factories.forEach(factory => {
     state.factories.factories[factory.id] = factory;
