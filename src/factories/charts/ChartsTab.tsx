@@ -47,7 +47,8 @@ export function ChartsTab(_props: IChartsTabProps) {
           target: target.name!,
           value: input.amount ?? 0,
           resourceLabel: getResourceName(input.resource ?? ''),
-        }));
+        }))
+        .filter(l => l.source !== l.target);
     });
 
     return { nodes, links };

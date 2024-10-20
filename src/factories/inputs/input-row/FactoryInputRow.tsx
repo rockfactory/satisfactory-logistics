@@ -62,7 +62,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   return (
     <Group key={index} align="flex-start" gap="sm">
       <FactorySelectInput
-        exceptId={factoryId}
+        // exceptId={factoryId}
         value={input.factoryId}
         worldSection={
           <Popover width={200} position="bottom-start" withArrow shadow="md">
