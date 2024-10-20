@@ -68,5 +68,5 @@ export function getRecipeProductPerBuilding(
 export function getRecipeDisplayName(recipe: FactoryRecipe) {
   const product = AllFactoryItemsMap[recipe.products[0].resource];
   const isAlt = recipe.name.includes('Alternate');
-  return isAlt ? recipe.name.replace('Alternate: ', '') : product.displayName;
+  return isAlt ? recipe.name.replace('Alternate: ', '') : recipe.name;
 }

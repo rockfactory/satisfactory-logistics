@@ -23,30 +23,38 @@ function parseBuildingForPowerRecipes(building: RawGenerator) {
   }
 
   const powerProduction = parseFloat(building.mPowerProduction);
+  const fuelLoadAmount = parseFloat(building.mFuelLoadAmount);
 
   building.mFuel.forEach(fuel => {
     const fuelItem = ParsingContext.itemsMap[fuel.mFuelClass];
 
     const burnTime =
-      fuelItem.energyValue / parseFloat(building.mPowerProduction);
+      (fuelItem.energyValue * fuelLoadAmount) /
+      parseFloat(building.mPowerProduction);
 
     const recipePowerProduction =
       (parseFloat(building.mPowerProduction) / 60) * burnTime;
 
-    const supplementalAmount =
-      (normalizeResourceAmount(
-        fuel.mSupplementalResourceClass,
-        parseFloat(building.mSupplementalLoadAmount),
-      ) *
-        powerProduction) /
-      parseFloat(building.mSupplementalToPowerRatio);
+    // water Per MW
+    const originalSupplementalAmount =
+      parseFloat(building.mSupplementalToPowerRatio) *
+      powerProduction *
+      burnTime;
+    const recipeSupplementalAmount = normalizeResourceAmount(
+      fuel.mSupplementalResourceClass,
+      originalSupplementalAmount,
+    );
 
-    const recipeSupplementalAmount = (supplementalAmount / 60) * burnTime;
+    const originalFuelAmount = parseFloat(building.mFuelLoadAmount);
+    const recipeFuelAmount = normalizeResourceAmount(
+      fuel.mFuelClass,
+      originalFuelAmount,
+    );
 
     ParsingContext.recipes.push({
       index: _.last(ParsingContext.recipes)!.index + 1,
       id: `RecipeCustom_${building.ClassName}_${fuel.mFuelClass}`,
-      name: `${building.mDisplayName} (${fuel.mFuelClass})`,
+      name: `${building.mDisplayName}: ${fuelItem.displayName}`,
       powerConsumption: 0,
       powerConsumptionFactor: 0,
       producedIn: building.ClassName,
@@ -54,13 +62,17 @@ function parseBuildingForPowerRecipes(building: RawGenerator) {
       ingredients: [
         {
           resource: fuel.mFuelClass,
-          amount: parseFloat(building.mFuelLoadAmount),
+          amount: recipeFuelAmount,
+          displayAmount: recipeFuelAmount,
+          originalAmount: originalFuelAmount,
         },
         ...(fuel.mSupplementalResourceClass
           ? [
               {
                 resource: fuel.mSupplementalResourceClass,
-                amount: supplementalAmount,
+                amount: recipeSupplementalAmount,
+                displayAmount: recipeSupplementalAmount,
+                originalAmount: originalSupplementalAmount,
               },
             ]
           : []),
@@ -69,12 +81,19 @@ function parseBuildingForPowerRecipes(building: RawGenerator) {
         {
           resource: 'Desc_Power_CX',
           amount: recipePowerProduction,
+          displayAmount: recipePowerProduction,
+          originalAmount: recipePowerProduction,
         },
         ...(fuel.mByproduct
           ? [
               {
                 resource: fuel.mByproduct,
                 amount: (parseFloat(fuel.mByproductAmount) / 60) * burnTime,
+                displayAmount:
+                  (parseFloat(fuel.mByproductAmount) / 60) * burnTime,
+                // TODO: Handle water if it's a byproduct, doesn't happen right now (1.0)
+                originalAmount:
+                  (parseFloat(fuel.mByproductAmount) / 60) * burnTime,
               },
             ]
           : []),

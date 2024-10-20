@@ -9038,7 +9038,7 @@
   {
     "index": 830,
     "id": "RecipeCustom_Build_GeneratorCoal_C_Desc_Coal_C",
-    "name": "Coal-Powered Generator (Desc_Coal_C)",
+    "name": "Coal-Powered Generator: Coal",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorCoal_C",
@@ -9046,24 +9046,30 @@
     "ingredients": [
       {
         "resource": "Desc_Coal_C",
-        "amount": 1
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 7.5
+        "amount": 3,
+        "displayAmount": 3,
+        "originalAmount": 3000
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 5
+        "amount": 5,
+        "displayAmount": 5,
+        "originalAmount": 5
       }
     ]
   },
   {
     "index": 831,
     "id": "RecipeCustom_Build_GeneratorCoal_C_Desc_CompactedCoal_C",
-    "name": "Coal-Powered Generator (Desc_CompactedCoal_C)",
+    "name": "Coal-Powered Generator: Compacted Coal",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorCoal_C",
@@ -9071,24 +9077,30 @@
     "ingredients": [
       {
         "resource": "Desc_CompactedCoal_C",
-        "amount": 1
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 7.5
+        "amount": 6.3,
+        "displayAmount": 6.3,
+        "originalAmount": 6300
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 10.5
+        "amount": 10.5,
+        "displayAmount": 10.5,
+        "originalAmount": 10.5
       }
     ]
   },
   {
     "index": 832,
     "id": "RecipeCustom_Build_GeneratorCoal_C_Desc_PetroleumCoke_C",
-    "name": "Coal-Powered Generator (Desc_PetroleumCoke_C)",
+    "name": "Coal-Powered Generator: Petroleum Coke",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorCoal_C",
@@ -9096,129 +9108,155 @@
     "ingredients": [
       {
         "resource": "Desc_PetroleumCoke_C",
-        "amount": 1
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 7.5
+        "amount": 1.8,
+        "displayAmount": 1.8,
+        "originalAmount": 1800
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 3
+        "amount": 3,
+        "displayAmount": 3,
+        "originalAmount": 3
       }
     ]
   },
   {
     "index": 833,
     "id": "RecipeCustom_Build_GeneratorFuel_C_Desc_LiquidFuel_C",
-    "name": "Fuel-Powered Generator (Desc_LiquidFuel_C)",
+    "name": "Fuel-Powered Generator: Fuel",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorFuel_C",
-    "time": 0.003,
+    "time": 3,
     "ingredients": [
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 1000
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1000
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 0.0125
+        "amount": 12.5,
+        "displayAmount": 12.5,
+        "originalAmount": 12.5
       }
     ]
   },
   {
     "index": 834,
     "id": "RecipeCustom_Build_GeneratorFuel_C_Desc_LiquidTurboFuel_C",
-    "name": "Fuel-Powered Generator (Desc_LiquidTurboFuel_C)",
+    "name": "Fuel-Powered Generator: Turbofuel",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorFuel_C",
-    "time": 0.008,
+    "time": 8,
     "ingredients": [
       {
         "resource": "Desc_LiquidTurboFuel_C",
-        "amount": 1000
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1000
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 0.03333333333333334
+        "amount": 33.333333333333336,
+        "displayAmount": 33.333333333333336,
+        "originalAmount": 33.333333333333336
       }
     ]
   },
   {
     "index": 835,
     "id": "RecipeCustom_Build_GeneratorFuel_C_Desc_LiquidBiofuel_C",
-    "name": "Fuel-Powered Generator (Desc_LiquidBiofuel_C)",
+    "name": "Fuel-Powered Generator: Liquid Biofuel",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorFuel_C",
-    "time": 0.003,
+    "time": 3,
     "ingredients": [
       {
         "resource": "Desc_LiquidBiofuel_C",
-        "amount": 1000
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1000
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 0.0125
+        "amount": 12.5,
+        "displayAmount": 12.5,
+        "originalAmount": 12.5
       }
     ]
   },
   {
     "index": 836,
     "id": "RecipeCustom_Build_GeneratorFuel_C_Desc_RocketFuel_C",
-    "name": "Fuel-Powered Generator (Desc_RocketFuel_C)",
+    "name": "Fuel-Powered Generator: Rocket Fuel",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorFuel_C",
-    "time": 0.0144,
+    "time": 14.4,
     "ingredients": [
       {
         "resource": "Desc_RocketFuel_C",
-        "amount": 1000
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1000
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 0.060000000000000005
+        "amount": 60.00000000000001,
+        "displayAmount": 60.00000000000001,
+        "originalAmount": 60.00000000000001
       }
     ]
   },
   {
     "index": 837,
     "id": "RecipeCustom_Build_GeneratorFuel_C_Desc_IonizedFuel_C",
-    "name": "Fuel-Powered Generator (Desc_IonizedFuel_C)",
+    "name": "Fuel-Powered Generator: Ionized Fuel",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorFuel_C",
-    "time": 0.02,
+    "time": 20,
     "ingredients": [
       {
         "resource": "Desc_IonizedFuel_C",
-        "amount": 1000
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1000
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 0.08333333333333334
+        "amount": 83.33333333333334,
+        "displayAmount": 83.33333333333334,
+        "originalAmount": 83.33333333333334
       }
     ]
   },
   {
     "index": 838,
     "id": "RecipeCustom_Build_GeneratorBiomass_Automated_C_Desc_Leaves_C",
-    "name": "Biomass Burner (Desc_Leaves_C)",
+    "name": "Biomass Burner: Leaves",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorBiomass_Automated_C",
@@ -9226,20 +9264,24 @@
     "ingredients": [
       {
         "resource": "Desc_Leaves_C",
-        "amount": 1
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 0.25
+        "amount": 0.25,
+        "displayAmount": 0.25,
+        "originalAmount": 0.25
       }
     ]
   },
   {
     "index": 839,
     "id": "RecipeCustom_Build_GeneratorBiomass_Automated_C_Desc_Wood_C",
-    "name": "Biomass Burner (Desc_Wood_C)",
+    "name": "Biomass Burner: Wood",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorBiomass_Automated_C",
@@ -9247,20 +9289,24 @@
     "ingredients": [
       {
         "resource": "Desc_Wood_C",
-        "amount": 1
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 1.6666666666666667
+        "amount": 1.6666666666666667,
+        "displayAmount": 1.6666666666666667,
+        "originalAmount": 1.6666666666666667
       }
     ]
   },
   {
     "index": 840,
     "id": "RecipeCustom_Build_GeneratorBiomass_Automated_C_Desc_Mycelia_C",
-    "name": "Biomass Burner (Desc_Mycelia_C)",
+    "name": "Biomass Burner: Mycelia",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorBiomass_Automated_C",
@@ -9268,20 +9314,24 @@
     "ingredients": [
       {
         "resource": "Desc_Mycelia_C",
-        "amount": 1
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 0.3333333333333333
+        "amount": 0.3333333333333333,
+        "displayAmount": 0.3333333333333333,
+        "originalAmount": 0.3333333333333333
       }
     ]
   },
   {
     "index": 841,
     "id": "RecipeCustom_Build_GeneratorBiomass_Automated_C_Desc_GenericBiomass_C",
-    "name": "Biomass Burner (Desc_GenericBiomass_C)",
+    "name": "Biomass Burner: Biomass",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorBiomass_Automated_C",
@@ -9289,20 +9339,24 @@
     "ingredients": [
       {
         "resource": "Desc_GenericBiomass_C",
-        "amount": 1
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 3
+        "amount": 3,
+        "displayAmount": 3,
+        "originalAmount": 3
       }
     ]
   },
   {
     "index": 842,
     "id": "RecipeCustom_Build_GeneratorBiomass_Automated_C_Desc_Biofuel_C",
-    "name": "Biomass Burner (Desc_Biofuel_C)",
+    "name": "Biomass Burner: Solid Biofuel",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorBiomass_Automated_C",
@@ -9310,20 +9364,24 @@
     "ingredients": [
       {
         "resource": "Desc_Biofuel_C",
-        "amount": 1
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 7.5
+        "amount": 7.5,
+        "displayAmount": 7.5,
+        "originalAmount": 7.5
       }
     ]
   },
   {
     "index": 843,
     "id": "RecipeCustom_Build_GeneratorBiomass_Automated_C_Desc_PackagedBiofuel_C",
-    "name": "Biomass Burner (Desc_PackagedBiofuel_C)",
+    "name": "Biomass Burner: Packaged Liquid Biofuel",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorBiomass_Automated_C",
@@ -9331,20 +9389,24 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedBiofuel_C",
-        "amount": 1
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 12.5
+        "amount": 12.5,
+        "displayAmount": 12.5,
+        "originalAmount": 12.5
       }
     ]
   },
   {
     "index": 844,
     "id": "RecipeCustom_Build_GeneratorNuclear_C_Desc_NuclearFuelRod_C",
-    "name": "Nuclear Power Plant (Desc_NuclearFuelRod_C)",
+    "name": "Nuclear Power Plant: Uranium Fuel Rod",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorNuclear_C",
@@ -9352,28 +9414,36 @@
     "ingredients": [
       {
         "resource": "Desc_NuclearFuelRod_C",
-        "amount": 1
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 15625
+        "amount": 1200,
+        "displayAmount": 1200,
+        "originalAmount": 1200000
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 12500
+        "amount": 12500,
+        "displayAmount": 12500,
+        "originalAmount": 12500
       },
       {
         "resource": "Desc_NuclearWaste_C",
-        "amount": 250
+        "amount": 250,
+        "displayAmount": 250,
+        "originalAmount": 250
       }
     ]
   },
   {
     "index": 845,
     "id": "RecipeCustom_Build_GeneratorNuclear_C_Desc_PlutoniumFuelRod_C",
-    "name": "Nuclear Power Plant (Desc_PlutoniumFuelRod_C)",
+    "name": "Nuclear Power Plant: Plutonium Fuel Rod",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorNuclear_C",
@@ -9381,28 +9451,36 @@
     "ingredients": [
       {
         "resource": "Desc_PlutoniumFuelRod_C",
-        "amount": 1
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 15625
+        "amount": 2400,
+        "displayAmount": 2400,
+        "originalAmount": 2400000
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 25000
+        "amount": 25000,
+        "displayAmount": 25000,
+        "originalAmount": 25000
       },
       {
         "resource": "Desc_PlutoniumWaste_C",
-        "amount": 100
+        "amount": 100,
+        "displayAmount": 100,
+        "originalAmount": 100
       }
     ]
   },
   {
     "index": 846,
     "id": "RecipeCustom_Build_GeneratorNuclear_C_Desc_FicsoniumFuelRod_C",
-    "name": "Nuclear Power Plant (Desc_FicsoniumFuelRod_C)",
+    "name": "Nuclear Power Plant: Ficsonium Fuel Rod",
     "powerConsumption": 0,
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorNuclear_C",
@@ -9410,17 +9488,23 @@
     "ingredients": [
       {
         "resource": "Desc_FicsoniumFuelRod_C",
-        "amount": 1
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       },
       {
         "resource": "Desc_Water_C",
-        "amount": 15625
+        "amount": 240,
+        "displayAmount": 240,
+        "originalAmount": 240000
       }
     ],
     "products": [
       {
         "resource": "Desc_Power_CX",
-        "amount": 2500
+        "amount": 2500,
+        "displayAmount": 2500,
+        "originalAmount": 2500
       }
     ]
   }

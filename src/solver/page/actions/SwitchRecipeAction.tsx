@@ -1,4 +1,4 @@
-import { Button, Checkbox, Group, Stack } from '@mantine/core';
+import { Button, Checkbox, Group, ScrollArea, Stack } from '@mantine/core';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -80,19 +80,22 @@ export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
         setAllowedRecipes(ids);
       }}
     >
-      <Stack gap="xs">
-        {recipes.map(r => (
-          <Checkbox
-            key={r.id}
-            value={r.id}
-            label={
-              <RecipeTooltip key={r.id} recipeId={r.id}>
-                <span>{r.name}</span>
-              </RecipeTooltip>
-            }
-          />
-        ))}
-      </Stack>
+      <ScrollArea.Autosize mah={200} mx="auto">
+        <Stack gap="xs">
+          {recipes.map(r => (
+            <Checkbox
+              size="xs"
+              key={r.id}
+              value={r.id}
+              label={
+                <RecipeTooltip key={r.id} recipeId={r.id}>
+                  <span>{r.name}</span>
+                </RecipeTooltip>
+              }
+            />
+          ))}
+        </Stack>
+      </ScrollArea.Autosize>
     </Checkbox.Group>
   );
 }

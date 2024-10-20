@@ -1,4 +1,5 @@
 import { useStore } from '@/core/zustand';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
 import {
   ActionIcon,
@@ -6,7 +7,6 @@ import {
   Checkbox,
   Drawer,
   Group,
-  Image,
   Menu,
   Stack,
   Text,
@@ -227,12 +227,7 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
                 <Text key={product} size="md">
                   {AllFactoryItemsMap[product].displayName}
                 </Text>
-                <Image
-                  src={AllFactoryItemsMap[product].imagePath}
-                  alt={AllFactoryItemsMap[product].displayName}
-                  w={20}
-                  h={20}
-                />
+                <FactoryItemImage id={product} size={20} />
               </Group>
               {recipes.map(recipe => (
                 <Checkbox
