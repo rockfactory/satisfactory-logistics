@@ -2,7 +2,6 @@ import {
   Avatar,
   Button,
   Group,
-  Loader,
   Menu,
   rem,
   Text,
@@ -10,12 +9,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import {
-  IconChevronDown,
-  IconDownload,
-  IconLogin2,
-  IconLogout,
-} from '@tabler/icons-react';
+import { IconChevronDown, IconLogin2, IconLogout } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
 import { supabaseClient } from '../core/supabase';
@@ -23,7 +17,6 @@ import { useStore } from '../core/zustand';
 import { LoginModal } from './LoginModal';
 import classes from './UserMenu.module.css';
 import { useSession } from './authSelectors';
-import { loadFromOldRemote } from './sync/loadFromRemote';
 
 export interface IUserMenuProps {}
 
@@ -98,7 +91,7 @@ export function UserMenu(props: IUserMenuProps) {
         >
           Logout
         </Menu.Item>
-        <Menu.Item
+        {/* <Menu.Item
           leftSection={
             loadingFactories ? <Loader size={16} /> : <IconDownload size={16} />
           }
@@ -109,7 +102,7 @@ export function UserMenu(props: IUserMenuProps) {
           }}
         >
           Load previously saved factories
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu.Dropdown>
     </Menu>
   );
