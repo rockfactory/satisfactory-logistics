@@ -1,4 +1,4 @@
-import { MantineProvider } from '@mantine/core';
+import { Center, Loader, MantineProvider, Modal } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
@@ -14,6 +14,7 @@ import {
 import { LoginPage } from './auth/LoginPage';
 import { PrivacyPolicy } from './auth/privacy/PrivacyPolicy';
 import { SyncManager } from './auth/sync/SyncManager';
+import { useStore } from './core/zustand';
 import { GamesRoutes } from './games/page/GamesRoutes';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
 import { RecipeSolverDemo } from './solver/RecipeSolverDemo';
@@ -67,6 +68,33 @@ function Redirect({ to }: { to: string }) {
 }
 
 export default function App() {
+  const hasRehydrated = useStore(
+    state => state.gameSave.hasRehydratedLocalData,
+  );
+
+  if (!hasRehydrated) {
+    console.log('Waiting for rehydration');
+    return (
+      <MantineProvider theme={theme} forceColorScheme="dark">
+        <Modal
+          opened
+          onClose={() => {}}
+          closeOnClickOutside={false}
+          closeOnEscape={false}
+          withCloseButton={false}
+          centered
+          size="sm"
+        >
+          <Center p="md">
+            <Loader size="xl" />
+          </Center>
+        </Modal>
+      </MantineProvider>
+    );
+  }
+
+  console.log('Rehydrated, rendering app');
+
   return (
     <MantineProvider theme={theme} forceColorScheme="dark">
       <SyncManager />
