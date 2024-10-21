@@ -1,3 +1,4 @@
+import type { FactoryInput } from '@/factories/Factory';
 import Graph from 'graphology';
 import voca from 'voca';
 import { log } from '../core/logger/log';
@@ -42,6 +43,7 @@ export type SolverRawInputNode = {
   label: string;
   resource: FactoryItem;
   variable: string;
+  forceUsage?: boolean;
 };
 
 export type SolverOutputNode = {
@@ -340,20 +342,26 @@ function setGraphByproduct(ctx: SolverContext, resource: string) {
 
 export function addInputResourceConstraints(
   ctx: SolverContext,
-  resource: string,
-  amount?: number,
+  { resource, amount, forceUsage }: FactoryInput,
 ) {
-  setGraphResource(ctx, resource);
-  const resourceItem = AllFactoryItemsMap[resource];
+  setGraphResource(ctx, resource!);
+  const resourceItem = AllFactoryItemsMap[resource!];
   const rawVar = `r${resourceItem.index}`;
   ctx.graph.mergeNode(rawVar, {
     type: 'raw_input',
-    label: resource,
+    label: resource!,
     resource: resourceItem,
     variable: rawVar,
+    forceUsage,
   });
-  ctx.graph.mergeEdge(rawVar, resource);
-  ctx.constraints.push(`${rawVar} = ${amount ?? 0}`);
+  ctx.graph.mergeEdge(rawVar, resource!);
+
+  // If the resource is forced, we need to add a constraint to be _exactly_ the amount
+  if (forceUsage) {
+    ctx.constraints.push(`${rawVar} = ${amount ?? 0}`);
+  } else {
+    ctx.constraints.push(`${rawVar} - ${amount ?? 0} >= 0`);
+  }
 }
 
 export function computeProductionConstraints(

@@ -12,6 +12,8 @@ export interface FactoryInput {
   resource?: string | null;
   amount?: number | null;
   note?: string | null;
+  /** Force usage in calculator. Eventual surplus will be converted in byproduct */
+  forceUsage?: boolean;
 }
 
 export interface FactoryOutput {

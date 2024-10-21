@@ -12,6 +12,7 @@ import {
   SolverContext,
 } from './computeProductionConstraints';
 import { IIngredientEdgeData } from './edges/IngredientEdge';
+import type { IByproductNodeData } from './layout/ByproductNode';
 import { IMachineNodeData } from './layout/MachineNode';
 import { IResourceNodeData } from './layout/ResourceNode';
 import { SolverRequest } from './store/Solver';
@@ -87,7 +88,7 @@ export function solveProduction(
   const ctx = new SolverContext(request);
   for (const item of request.inputs ?? []) {
     if (!item.amount || !item.resource) continue;
-    addInputResourceConstraints(ctx, item.resource, item.amount);
+    addInputResourceConstraints(ctx, item);
   }
   for (const item of request.outputs) {
     if (!item.amount || !item.resource) continue;
@@ -109,7 +110,9 @@ export function solveProduction(
 
   // logger.log('Problem:', problem);
 
-  const nodes: Node<IResourceNodeData | IMachineNodeData>[] = [];
+  const nodes: Node<
+    IResourceNodeData | IMachineNodeData | IByproductNodeData
+  >[] = [];
   const edges: Edge[] = [];
 
   if (result.Status === 'Optimal') {
@@ -148,7 +151,7 @@ export function solveProduction(
               label: `${node.resource.name}`,
               value: Number(value.Primal),
               resource: node.resource,
-            },
+            } as IResourceNodeData,
             position: { x: 0, y: 0 },
           });
           continue;

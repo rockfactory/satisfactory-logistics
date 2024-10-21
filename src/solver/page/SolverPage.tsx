@@ -38,6 +38,7 @@ import { AfterHeaderSticky } from '../../layout/AfterHeaderSticky';
 import { SolverEdge, SolverNode } from '../computeProductionConstraints';
 import { IMachineNodeData } from '../layout/MachineNode';
 import { IResourceNodeData } from '../layout/ResourceNode';
+import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
 import { SolverShareButton } from '../share/SolverShareButton';
 import { solveProduction, useHighs } from '../solveProduction';
 import { SolverLayout } from '../SolverLayout';
@@ -255,14 +256,16 @@ export function SolverPage(props: ISolverPageProps) {
       {solution && hasSolution && (
         <Stack gap="md">
           <ReactFlowProvider>
-            <SolverLayout nodes={solution.nodes} edges={solution.edges}>
-              <Panel>
-                <Group gap="xs">
-                  <SolverSummaryDrawer solution={solution} />
-                  <SolverShareButton />
-                </Group>
-              </Panel>
-            </SolverLayout>
+            <SolverSolutionProvider solution={solution}>
+              <SolverLayout nodes={solution.nodes} edges={solution.edges}>
+                <Panel>
+                  <Group gap="xs">
+                    <SolverSummaryDrawer solution={solution} />
+                    <SolverShareButton />
+                  </Group>
+                </Panel>
+              </SolverLayout>
+            </SolverSolutionProvider>
           </ReactFlowProvider>
         </Stack>
       )}
