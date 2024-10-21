@@ -57,6 +57,19 @@ export function GamesPage(props: IGamesPageProps) {
                       <Title order={4}>{game.name}</Title>
                       <GameDetailEditButton gameId={game.id} />
                       <GameDeleteButton gameId={game.id} />
+                      {/* {import.meta.env.DEV && (
+                        <Button
+                          size="xs"
+                          variant="subtle"
+                          onClick={() => {
+                            useStore
+                              .getState()
+                              .deleteGameKeepFactories(game.id);
+                          }}
+                        >
+                          Delete only game, keep factories
+                        </Button>
+                      )} */}
                     </Group>
                     <Group gap="xs">
                       <Text size="xs" c="dark.2">
