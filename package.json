@@ -1,7 +1,7 @@
 {
   "name": "satisfactory-logistics",
   "private": true,
-  "version": "0.3.3",
+  "version": "0.4.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -37,6 +37,7 @@
     "graphology": "^0.25.4",
     "graphology-traversal": "^0.3.1",
     "highs": "^1.0.1",
+    "idb-keyval": "^6.2.1",
     "leva": "^0.9.35",
     "lodash": "^4.17.21",
     "loglevel": "^1.9.2",

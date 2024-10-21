@@ -59,6 +59,7 @@ export function SolverInputOutputsDrawer(
                 input={input}
                 factoryId={id!}
                 onChangeHandler={onChangeHandler}
+                displayMode="solver"
               />
               // <Group gap="xs">
               //   <FactoryItemInput

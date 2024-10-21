@@ -7,7 +7,12 @@ import {
   TextInput,
   Tooltip,
 } from '@mantine/core';
-import { IconTrash, IconWorld } from '@tabler/icons-react';
+import {
+  IconTransform,
+  IconTransformFilled,
+  IconTrash,
+  IconWorld,
+} from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { FormOnChangeHandler } from '../../../core/form/useFormOnChange';
 import { useStore } from '../../../core/zustand';
@@ -29,10 +34,11 @@ export interface IFactoryInputRowProps {
   input: FactoryInput;
   index: number;
   onChangeHandler: FormOnChangeHandler<Factory>;
+  displayMode?: 'solver' | 'factory';
 }
 
 export function FactoryInputRow(props: IFactoryInputRowProps) {
-  const { index, input, factoryId } = props;
+  const { index, input, factoryId, displayMode } = props;
 
   const [focused, setFocused] = useState(false);
 
@@ -143,6 +149,26 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           onChange={onChangeHandler(`inputs.${index}.amount`)}
         />
       </Tooltip>
+      {displayMode === 'solver' && (
+        <Tooltip label="Force usage in calculator. Eventual surplus will be converted in byproducts">
+          <ActionIcon
+            size="md"
+            mt={3}
+            color="blue"
+            variant={input.forceUsage ? 'filled' : 'outline'}
+            onClick={() => {
+              useStore.getState().toggleInputForceUsage(factoryId, index);
+            }}
+          >
+            {input.forceUsage ? (
+              <IconTransformFilled size={16} stroke={1.5} />
+            ) : (
+              <IconTransform size={16} stroke={1.5} />
+            )}
+          </ActionIcon>
+        </Tooltip>
+      )}
+
       <ActionIcon
         variant="outline"
         color="red"

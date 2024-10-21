@@ -3,6 +3,7 @@ import { createSlice } from '@/core/zustand-helpers/slices';
 export const gameSaveSlice = createSlice({
   name: 'gameSave',
   value: {
+    hasRehydratedLocalData: false,
     isSaving: false,
     isLoading: false,
   },
@@ -12,6 +13,9 @@ export const gameSaveSlice = createSlice({
     },
     setIsLoading: (isLoading: boolean) => state => {
       state.isLoading = isLoading;
+    },
+    setHasRehydratedLocalData: (hasRehydratedLocalData: boolean) => state => {
+      state.hasRehydratedLocalData = hasRehydratedLocalData;
     },
   },
 });
