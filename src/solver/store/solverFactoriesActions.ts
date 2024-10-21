@@ -46,16 +46,20 @@ export const solverFactoriesActions = createActions({
       get().createSolver(factoryId, { allowedRecipes: gameAllowedRecipes });
     },
   // Input/Output should be synced
-  addFactoryInput: (factoryId: string) => state => {
-    state.factories.factories[factoryId]?.inputs?.push({
-      resource: null,
-      amount: 0,
-    });
-    // state.solvers.instances[factoryId]?.request.inputs?.push({
-    //   resource: null,
-    //   amount: 0,
-    // });
-  },
+  addFactoryInput:
+    (
+      factoryId: string,
+      input?: {
+        resource: string | null;
+        amount: number | null;
+      },
+    ) =>
+    state => {
+      state.factories.factories[factoryId]?.inputs?.push({
+        resource: input?.resource ?? null,
+        amount: input?.amount ?? 0,
+      });
+    },
   removeFactoryInput: (factoryId: string, inputIndex: number) => state => {
     state.factories.factories[factoryId]?.inputs?.splice(inputIndex, 1);
     // state.solvers.instances[factoryId]?.request.inputs?.splice(inputIndex, 1);

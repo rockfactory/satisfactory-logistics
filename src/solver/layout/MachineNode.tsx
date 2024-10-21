@@ -1,9 +1,8 @@
 import {
+  ActionIcon,
   Badge,
   Box,
-  Button,
   CloseButton,
-  Grid,
   Group,
   Image,
   Popover,
@@ -11,6 +10,7 @@ import {
   Table,
   Text,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -21,9 +21,10 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import { NodeProps, useReactFlow } from '@xyflow/react';
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { RepeatingNumber } from '../../core/intl/NumberFormatter';
 import { useStore } from '../../core/zustand';
@@ -33,10 +34,10 @@ import {
   FactoryRecipe,
   getRecipeDisplayName,
   getRecipeProductPerBuilding,
-  RecipeIngredient,
 } from '../../recipes/FactoryRecipe';
 import { SwitchRecipeAction } from '../page/actions/SwitchRecipeAction';
 import { InvisibleHandles } from './InvisibleHandles';
+import { RecipeIngredientRow } from './machine-node/RecipeIngredientRow';
 
 export interface IMachineNodeData {
   label: string;
@@ -240,34 +241,57 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
           <Box w="250px" p="xs">
             {props.selected ? (
               <Stack gap="sm" align="flex-start">
-                <Button
-                  color="red"
-                  variant="outline"
-                  leftSection={<IconTrash size={16} />}
-                  onClick={() =>
-                    useStore.getState().toggleRecipe(solverId!, {
-                      recipeId: recipe.id,
-                      use: false,
-                    })
-                  }
-                >
-                  Ignore this recipe
-                </Button>
+                <Group gap="sm">
+                  <Tooltip label="Ignore this recipe">
+                    <ActionIcon
+                      color="red"
+                      variant="outline"
+                      onClick={() =>
+                        useStore.getState().toggleRecipe(solverId!, {
+                          recipeId: recipe.id,
+                          use: false,
+                        })
+                      }
+                    >
+                      <IconTrash size={16} />
+                    </ActionIcon>
+                  </Tooltip>
 
-                <Button
-                  color="green"
-                  variant="outline"
-                  leftSection={<IconCircleCheckFilled size={16} />}
-                  onClick={() =>
-                    useStore
-                      .getState()
-                      .updateSolverNode(solverId!, props.id, node => {
-                        node.done = !node.done;
-                      })
-                  }
-                >
-                  Mark as built
-                </Button>
+                  <Tooltip
+                    label={
+                      nodeState?.done ? 'Remove built marker' : 'Mark as built'
+                    }
+                  >
+                    <ActionIcon
+                      color="green"
+                      variant={nodeState?.done ? 'filled' : 'outline'}
+                      onClick={() =>
+                        useStore
+                          .getState()
+                          .updateSolverNode(solverId!, props.id, node => {
+                            node.done = !node.done;
+                          })
+                      }
+                    >
+                      <IconCircleCheckFilled size={16} />
+                    </ActionIcon>
+                  </Tooltip>
+
+                  <Tooltip label="Remove recipe and replace it with an Input of the same amount.">
+                    <ActionIcon
+                      color="blue"
+                      variant="outline"
+                      onClick={() =>
+                        useStore.getState().addFactoryInput(solverId!, {
+                          resource: recipe.products[0].resource,
+                          amount: value,
+                        })
+                      }
+                    >
+                      <FactoryInputIcon size={16} />
+                    </ActionIcon>
+                  </Tooltip>
+                </Group>
                 <SwitchRecipeAction recipeId={recipe.id} />
               </Stack>
             ) : (
@@ -284,83 +308,3 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
     </Popover>
   );
 });
-
-const RecipeIngredientRow = ({
-  index,
-  type,
-  recipe,
-  ingredient,
-  buildingsAmount,
-}: {
-  index: number;
-  type: 'Ingredients' | 'Products';
-  recipe: FactoryRecipe;
-  ingredient: RecipeIngredient;
-  buildingsAmount: number;
-}) => {
-  const item = AllFactoryItemsMap[ingredient.resource];
-  const amountPerMinute = (ingredient.displayAmount * 60) / recipe.time;
-  return (
-    <Table.Tr>
-      {/* {index === 0 && (
-        <Table.Td
-          rowSpan={
-            type === 'Ingredients'
-              ? recipe.ingredients.length
-              : recipe.products.length
-          }
-        >
-          {type === 'Ingredients' ? (
-            <FactoryInputIcon size={16} />
-          ) : (
-            <FactoryOutputIcon size={16} />
-          )}
-        </Table.Td>
-      )} */}
-      <Table.Td>
-        <FactoryItemImage size={16} id={item.id} />
-      </Table.Td>
-      <Table.Td>
-        <Text size="sm">{item.displayName}</Text>
-      </Table.Td>
-      <Table.Td>
-        <Text size="sm" fs="italic">
-          <RepeatingNumber value={ingredient.displayAmount} />
-        </Text>
-      </Table.Td>
-      <Table.Td>
-        <Text size="sm" fs="italic">
-          <RepeatingNumber value={amountPerMinute} />
-          /min
-        </Text>
-      </Table.Td>
-      <Table.Td>
-        <Text size="sm" fw="bold">
-          <RepeatingNumber value={amountPerMinute * buildingsAmount} />
-          /min
-        </Text>
-      </Table.Td>
-    </Table.Tr>
-  );
-};
-
-const DetailRow = ({
-  label,
-  value,
-}: {
-  label: React.ReactNode;
-  value: React.ReactNode;
-}) => (
-  <Grid>
-    <Grid.Col span={6}>
-      <Text size="sm" fw="bold">
-        {label}
-      </Text>
-    </Grid.Col>
-    <Grid.Col span={6}>
-      <Text size="sm" ta="right">
-        {value}
-      </Text>
-    </Grid.Col>
-  </Grid>
-);
