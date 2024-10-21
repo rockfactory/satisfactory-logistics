@@ -69,12 +69,12 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
   const selectedItem = value ?? rawSelectedItem;
   const combobox = useCombobox({
     onDropdownClose: () => {
-      combobox.resetSelectedOption();
-      combobox.focusTarget();
+      combobox?.resetSelectedOption();
+      combobox?.focusTarget();
       setSearch('');
     },
     onDropdownOpen: () => {
-      combobox.focusSearchInput();
+      combobox?.focusSearchInput();
     },
   });
 
