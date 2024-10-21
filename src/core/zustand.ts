@@ -15,6 +15,7 @@ import { solversSlice } from '../solver/store/solverSlice';
 import { migratePersistedStoreFromRedux } from './migrations/migratePersistedStoreFromRedux';
 import { withActions } from './zustand-helpers/actions';
 import { forceMigrationOnInitialPersist } from './zustand-helpers/forceMigrationOnInitialPersist';
+import { indexedDbStorage } from './zustand-helpers/indexedDbStorage';
 import { withSlices } from './zustand-helpers/slices';
 
 const slices = withSlices(
@@ -42,18 +43,31 @@ export const useStore = create(
       partialize: state => omit(state, ['gameSave']),
       version: 1,
       storage: forceMigrationOnInitialPersist(
-        createJSONStorage(() => localStorage),
+        createJSONStorage(() => indexedDbStorage),
       ),
       migrate: (state, version) => {
         if (version === 0) {
-          console.log('Migrating from version 0 to 1', state);
-          const migrated = migratePersistedStoreFromRedux();
-          console.log('Migrated to:', migrated);
-          if (migrated) {
-            return { ...(state as any), ...(migrated as any), version: 1 };
+          if (localStorage.getItem('zustand:persist')) {
+            console.log('Migrating from version 0 to 1 [indexedDB]', state);
+            const previous = localStorage.getItem('zustand:persist');
+            if (!previous) return { ...(state as any), version: 1 };
+            try {
+              const parsed = JSON.parse(previous);
+
+              console.log('Migrating from previous localStorage', state);
+              return { ...(state as any), ...parsed?.state, version: 1 };
+            } catch (e) {
+              console.error('Error migrating from version 0 to 1', e);
+            }
+          } else {
+            console.log('Migrating from version 0 to 1', state);
+            const migrated = migratePersistedStoreFromRedux();
+            console.log('Migrated to:', migrated);
+            if (migrated) {
+              return { ...(state as any), ...(migrated as any), version: 1 };
+            }
           }
         }
-
         return state;
       },
     }),
