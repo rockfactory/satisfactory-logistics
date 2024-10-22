@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { ParsingContext } from './ParsingContext';
+import { convertImageName } from './images/convertImageName';
 
 const toolsJson = JSON.parse(fs.readFileSync('./data/docs-tools.json', 'utf8'));
 
@@ -39,19 +40,11 @@ export function parseItems(docsJson: any) {
   }, {});
 }
 
-// from `Desc_NuclearWaste_C` to `nuclear-waste.png`
-// should convert to kebab-case and append `.png`, remove `Desc` prefix and `_C` suffix
-function convertImageName(className) {
-  const mappedSlug =
-    (toolsJson.items[className]?.slug ?? 'not-available') + '_256.png';
-  return mappedSlug;
-}
-
 function parseFactoryItem(json, index) {
-  if (!toolsJson.items[json.ClassName]) {
-    console.log(`Missing item: ${json.ClassName}`);
-    // return null;
-  }
+  // if (!toolsJson.items[json.ClassName]) {
+  //   console.log(`Missing item: ${json.ClassName}`);
+  //   // return null;
+  // }
 
   return {
     id: json.ClassName,
@@ -67,7 +60,7 @@ function parseFactoryItem(json, index) {
     canBeDiscarded: json.mCanBeDiscarded === 'True',
     color: json.mFluidColor, // Assuming color is from mFluidColor
     // es. from `Desc_NuclearWaste_C` to `nuclear-waste.png`
-    imagePath: '/images/' + convertImageName(json.ClassName),
+    imagePath: '/images/game/' + convertImageName(json.mPersistentBigIcon),
     isFicsmas: json.mSmallIcon.includes('Christmas'),
   };
 }

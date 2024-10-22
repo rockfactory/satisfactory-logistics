@@ -1,5 +1,5 @@
 import fs from 'fs';
-import _ from 'lodash';
+import { convertImageName } from './images/convertImageName';
 import { parseClearanceData } from './parseClearanceData';
 import { ParsingContext } from './ParsingContext';
 
@@ -13,8 +13,21 @@ export function parseBuildings(docsJson: any) {
     return [];
   });
 
+  const buildingDescriptorsImages = docsJson
+    .flatMap(nativeClass => {
+      if (nativeClass.NativeClass?.includes('FGBuildingDescriptor'))
+        return nativeClass.Classes;
+      return [];
+    })
+    .reduce((acc, desc) => {
+      acc[desc.ClassName] = desc.mPersistentBigIcon;
+      return acc;
+    }, {});
+
   const buildings = rawBuildings
-    .map((building, index) => parseBuilding(building, index))
+    .map((building, index) =>
+      parseBuilding(building, index, buildingDescriptorsImages),
+    )
     .filter(Boolean);
 
   ParsingContext.buildings = buildings;
@@ -25,7 +38,7 @@ export function parseBuildings(docsJson: any) {
   );
 }
 
-function parseBuilding(building, index) {
+function parseBuilding(building, index, buildingDescriptorsImages) {
   console.log(`Importing -> `, building.ClassName);
 
   const minimumPowerConsumption = building.mEstimatedMininumPowerConsumption
@@ -55,7 +68,13 @@ function parseBuilding(building, index) {
     somersloopSlots: parseFloat(building.mProductionShardSlotSize),
     clearanceData: building.mClearanceData,
     clearance: parseClearanceData(building.mClearanceData),
-    imagePath: '/images/' + _.kebabCase(building.mDisplayName) + '_256.png',
+    imagePath:
+      '/images/game/' +
+      convertImageName(
+        buildingDescriptorsImages[
+          building.ClassName.replace('Build_', 'Desc_')
+        ],
+      ),
     powerGenerator: building.mFuel
       ? {
           fuels: building.mFuel.map(fuel => {
