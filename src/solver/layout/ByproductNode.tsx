@@ -22,7 +22,7 @@ export const ByproductNode = memo((props: IByproductNodeProps) => {
   return (
     <Box p="sm" style={{ borderRadius: 4 }} bg="teal.9">
       <Group gap="xs">
-        <FactoryItemImage id={resource.id} size={32} />
+        <FactoryItemImage id={resource.id} size={32} highRes />
         <Stack gap={2} align="center">
           <Group gap="xs">
             <Text size="sm">{resource.displayName}</Text>
