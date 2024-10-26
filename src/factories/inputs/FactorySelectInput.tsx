@@ -14,12 +14,13 @@ import { WORLD_SOURCE_ID } from '../Factory';
 
 export interface IFactorySelectInputProps extends SelectProps {
   exceptId?: string;
+  showOnlyIds?: string[] | null;
   /** To provide note handling */
   worldSection?: React.ReactNode;
 }
 
 export function FactorySelectInput(props: IFactorySelectInputProps) {
-  const { exceptId, worldSection, ...inputProps } = props;
+  const { exceptId, showOnlyIds, worldSection, ...inputProps } = props;
 
   const factories = useStore(
     useShallow(state =>
@@ -36,10 +37,15 @@ export function FactorySelectInput(props: IFactorySelectInputProps) {
         label: 'World',
       },
       ...factories
-        .filter(f => f.name && f.id !== exceptId)
+        .filter(
+          f =>
+            f.name &&
+            f.id !== exceptId &&
+            (!showOnlyIds || showOnlyIds.includes(f.id)),
+        )
         .map(f => ({ value: f.id, label: f.name! })),
     ],
-    [factories, exceptId],
+    [factories, exceptId, showOnlyIds],
   );
 
   const renderOption = useCallback(
