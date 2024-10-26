@@ -76,6 +76,8 @@ export function FactorySelectInput(props: IFactorySelectInputProps) {
         // Not accessible, but it's faster
         comboboxProps={{
           keepMounted: false,
+          width: 250,
+          position: 'bottom-start',
         }}
         leftSection={
           inputProps.value === WORLD_SOURCE_ID
