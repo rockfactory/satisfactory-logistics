@@ -81,6 +81,11 @@ function applyObjective(ctx: SolverContext, request: SolverProductionRequest) {
   }
 }
 
+export type SolutionNode =
+  | Node<IMachineNodeData, 'Machine'>
+  | Node<IResourceNodeData, 'Resource'>
+  | Node<IByproductNodeData, 'Byproduct'>;
+
 export function solveProduction(
   highs: Highs,
   request: SolverProductionRequest,
@@ -110,10 +115,8 @@ export function solveProduction(
 
   // logger.log('Problem:', problem);
 
-  const nodes: Node<
-    IResourceNodeData | IMachineNodeData | IByproductNodeData
-  >[] = [];
-  const edges: Edge[] = [];
+  const nodes: SolutionNode[] = [];
+  const edges: Edge[] = []; // TODO Type this like SolutionNode
 
   if (result.Status === 'Optimal') {
     for (const [varName, value] of Object.entries(result.Columns)) {
@@ -151,6 +154,7 @@ export function solveProduction(
               label: `${node.resource.name}`,
               value: Number(value.Primal),
               resource: node.resource,
+              isRaw: node.type === 'raw',
             } as IResourceNodeData,
             position: { x: 0, y: 0 },
           });

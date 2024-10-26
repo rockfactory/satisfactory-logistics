@@ -11,6 +11,7 @@ import { useSolverSolution } from './solution-context/SolverSolutionContext';
 export interface IResourceNodeData {
   resource: FactoryItem;
   value: number;
+  isRaw: boolean;
   [key: string]: unknown;
 }
 
