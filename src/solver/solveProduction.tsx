@@ -75,7 +75,8 @@ function applyObjective(ctx: SolverContext, request: SolverProductionRequest) {
       /** MINIMIZE */
       ctx.objective = `${Array.from(ctx.getWorldVars())
         .map(
-          v => `${1 / getWorldResourceMax(v.resource.id)} r${v.resource.index}`,
+          v =>
+            `${1 / getWorldResourceMax(v.resource.id, 'weight')} r${v.resource.index}`,
         )
         .join(' + ')}\n`;
   }

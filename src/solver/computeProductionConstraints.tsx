@@ -348,7 +348,7 @@ export function addInputResourceConstraints(
   const resourceItem = AllFactoryItemsMap[resource!];
   const rawVar = `r${resourceItem.index}`;
   ctx.graph.mergeNode(rawVar, {
-    type: 'raw_input',
+    type: isWorldResource(resource!) ? 'raw' : 'raw_input',
     label: resource!,
     resource: resourceItem,
     variable: rawVar,
@@ -360,7 +360,7 @@ export function addInputResourceConstraints(
   if (forceUsage) {
     ctx.constraints.push(`${rawVar} = ${amount ?? 0}`);
   } else {
-    ctx.constraints.push(`${rawVar} - ${amount ?? 0} >= 0`);
+    // ctx.constraints.push(`${rawVar} - ${amount ?? 0} >= 0`);
   }
 }
 

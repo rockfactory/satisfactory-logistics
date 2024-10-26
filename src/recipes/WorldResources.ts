@@ -33,20 +33,31 @@ export const WorldResources = {
     max: 2100,
   },
   Desc_SAM_C: {
-    max: 10, // 10200,
+    max: 10200,
+    maxForWeight: 10200 / 10, // We want to highly discourage solver from using SAM, unless it's 10 times better
   },
   Desc_Water_C: {
     max: 1_000_000_000,
   },
 };
 
-export const getWorldResourceMax = (resource: string | null | undefined) => {
+export const getWorldResourceMax = (
+  resource: string | null | undefined,
+  type: 'weight' | 'availability' = 'availability',
+) => {
   const resourceKey = resource as keyof typeof WorldResources;
   if (!resourceKey || !WorldResources[resourceKey]) {
     return 0;
   }
 
-  return WorldResources[resourceKey]?.max;
+  const worldResource = WorldResources[resourceKey] as {
+    max: number;
+    maxForWeight?: number;
+  };
+
+  return type === 'weight'
+    ? (worldResource.maxForWeight ?? worldResource.max)
+    : worldResource.max;
 };
 
 export const WorldResourcesList = Object.keys(WorldResources);
