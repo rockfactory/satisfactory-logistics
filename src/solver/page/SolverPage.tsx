@@ -26,7 +26,7 @@ import {
   IconTrash,
   IconZoomExclamation,
 } from '@tabler/icons-react';
-import { Edge, Node, Panel, ReactFlowProvider } from '@xyflow/react';
+import { Edge, Panel, ReactFlowProvider } from '@xyflow/react';
 import Graph from 'graphology';
 import { HighsSolution } from 'highs';
 import { useEffect, useMemo } from 'react';
@@ -36,11 +36,13 @@ import { useFormOnChange } from '../../core/form/useFormOnChange';
 import { useStore } from '../../core/zustand';
 import { AfterHeaderSticky } from '../../layout/AfterHeaderSticky';
 import { SolverEdge, SolverNode } from '../computeProductionConstraints';
-import { IMachineNodeData } from '../layout/MachineNode';
-import { IResourceNodeData } from '../layout/ResourceNode';
 import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
 import { SolverShareButton } from '../share/SolverShareButton';
-import { solveProduction, useHighs } from '../solveProduction';
+import {
+  solveProduction,
+  useHighs,
+  type SolutionNode,
+} from '../solveProduction';
 import { SolverLayout } from '../SolverLayout';
 import { SolverInstance } from '../store/Solver';
 import {
@@ -63,7 +65,7 @@ export interface ISolverPageProps {}
 
 export interface ISolverSolution {
   result: HighsSolution;
-  nodes: Array<Node<IMachineNodeData | IResourceNodeData>>;
+  nodes: SolutionNode[];
   edges: Edge[];
   graph: Graph<SolverNode, SolverEdge, any>;
 }
@@ -212,7 +214,7 @@ export function SolverPage(props: ISolverPageProps) {
             )}
           </Group>
           <Group gap="sm">
-            <SolverInputOutputsDrawer id={id} />
+            <SolverInputOutputsDrawer id={id} solution={solution} />
             <Select
               data={[
                 { value: 'minimize_resources', label: 'Minimize Resources' },
