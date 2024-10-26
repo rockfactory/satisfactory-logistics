@@ -15,7 +15,12 @@ export async function loadRemoteGame(
   useStore.getState().setIsLoading(true);
   try {
     if (!auth.session) {
-      logger.info('No session, skipping save');
+      logger.info('No session, skipping load');
+      notifications.show({
+        title: 'Login to load games',
+        message: 'You need to login to load games',
+      });
+      return;
     }
 
     const existingGame = useStore.getState().games.games[gameId];

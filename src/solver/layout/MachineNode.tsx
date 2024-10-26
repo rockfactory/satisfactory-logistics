@@ -146,7 +146,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                 x<RepeatingNumber value={buildingsAmount} /> {building.name}
               </Text>
             </Stack>
-            <FactoryItemImage id={product.id} size={32} />
+            <FactoryItemImage id={product.id} size={32} highRes />
           </Group>
 
           <InvisibleHandles />

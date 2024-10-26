@@ -15,7 +15,7 @@ import {
 } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { FormOnChangeHandler } from '../../../core/form/useFormOnChange';
-import { useStore } from '../../../core/zustand';
+import { useShallowStore, useStore } from '../../../core/zustand';
 import { WorldResourcesList } from '../../../recipes/WorldResources';
 import {
   FactoryInputIcon,
@@ -46,6 +46,18 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
     state => state.factories.factories[input.factoryId ?? '']?.outputs,
   );
 
+  // Only if the factory is not selected, we can use the resource to filter
+  // the allowed factories
+  const factoriesIdsProducingInputResource = useShallowStore(state =>
+    input.resource && !input.factoryId
+      ? state.games.games[state.games.selected ?? '']?.factoriesIds.filter(id =>
+          state.factories.factories[id]?.outputs.some(
+            o => o.resource === input.resource,
+          ),
+        )
+      : null,
+  );
+
   const allowedItems = useMemo(() => {
     return input.factoryId === WORLD_SOURCE_ID
       ? WorldResourcesList
@@ -70,6 +82,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
       <FactorySelectInput
         // exceptId={factoryId}
         value={input.factoryId}
+        showOnlyIds={factoriesIdsProducingInputResource}
         worldSection={
           <Popover width={200} position="bottom-start" withArrow shadow="md">
             <Popover.Target>

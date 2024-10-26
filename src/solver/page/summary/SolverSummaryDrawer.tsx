@@ -38,7 +38,8 @@ export function SolverSummaryDrawer(props: ISolverSummaryDrawerProps) {
 
   const stats = useMemo(() => {
     const machineNodes = solution.nodes.filter(
-      (node): node is Node<IMachineNodeData> => node.type === 'Machine',
+      (node): node is Node<IMachineNodeData, 'Machine'> =>
+        node.type === 'Machine',
     );
 
     // Power
@@ -61,7 +62,8 @@ export function SolverSummaryDrawer(props: ISolverSummaryDrawerProps) {
     // All resources
     const resources = solution.nodes
       .filter(
-        (node): node is Node<IResourceNodeData> => node.type === 'Resource',
+        (node): node is Node<IResourceNodeData, 'Resource'> =>
+          node.type === 'Resource',
       )
       .reduce(
         (acc, node) => {

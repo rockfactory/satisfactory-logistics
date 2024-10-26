@@ -11,6 +11,7 @@ import { useSolverSolution } from './solution-context/SolverSolutionContext';
 export interface IResourceNodeData {
   resource: FactoryItem;
   value: number;
+  isRaw: boolean;
   [key: string]: unknown;
 }
 
@@ -51,7 +52,7 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
               </Tooltip>
             </div>
           )}
-          <FactoryItemImage id={resource.id} size={32} />
+          <FactoryItemImage id={resource.id} size={32} highRes />
         </Box>
         <Stack gap={2} align="center">
           <Group gap="xs">

@@ -4,10 +4,12 @@ import { AllFactoryItemsMap } from '../FactoryItem';
 export interface IFactoryItemImageProps {
   id: string | null | undefined;
   size?: number;
+  /** Force high resolution */
+  highRes?: boolean;
 }
 
 export function FactoryItemImage(props: IFactoryItemImageProps) {
-  const { size = 42 } = props;
+  const { size = 42, highRes = false } = props;
   if (!props.id) {
     return null;
   }
@@ -18,6 +20,11 @@ export function FactoryItemImage(props: IFactoryItemImageProps) {
     return <item.imageComponent size={size} />;
   }
 
-  const imagePath = item?.imagePath ?? '';
+  const baseImagePath = item?.imagePath ?? '';
+  // Lower resolution image for smaller sizes
+  const imagePath =
+    size <= 32 && !highRes
+      ? baseImagePath.replace('_256', '_64')
+      : baseImagePath;
   return <Image w={size} h={size} src={imagePath} alt={item.displayName} />;
 }

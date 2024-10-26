@@ -17,7 +17,7 @@
       "length": 26,
       "height": 9
     },
-    "imagePath": "/images/coal-powered-generator_256.png",
+    "imagePath": "/images/game/coal-generator_256.png",
     "powerGenerator": {
       "fuels": [
         {
@@ -54,7 +54,7 @@
       "length": 20,
       "height": 11
     },
-    "imagePath": "/images/fuel-powered-generator_256.png",
+    "imagePath": "/images/game/fuel-generator_256.png",
     "powerGenerator": {
       "fuels": [
         {
@@ -97,7 +97,7 @@
       "length": 8,
       "height": 7
     },
-    "imagePath": "/images/biomass-burner_256.png",
+    "imagePath": "/images/game/biomass-generator_256.png",
     "powerGenerator": {
       "fuels": [
         {
@@ -143,7 +143,7 @@
       "length": 50,
       "height": 14
     },
-    "imagePath": "/images/quantum-encoder_256.png"
+    "imagePath": "/images/game/quantum-encoder_256.png"
   },
   {
     "id": "Build_Converter_C",
@@ -163,7 +163,7 @@
       "length": 16,
       "height": 4
     },
-    "imagePath": "/images/converter_256.png"
+    "imagePath": "/images/game/converter_256.png"
   },
   {
     "id": "Build_HadronCollider_C",
@@ -183,7 +183,7 @@
       "length": 22,
       "height": 8
     },
-    "imagePath": "/images/particle-accelerator_256.png"
+    "imagePath": "/images/game/hadron-collider_256.png"
   },
   {
     "id": "Build_OilRefinery_C",
@@ -203,7 +203,7 @@
       "length": 22,
       "height": 15
     },
-    "imagePath": "/images/refinery_256.png"
+    "imagePath": "/images/game/oil-refinery_256.png"
   },
   {
     "id": "Build_FoundryMk1_C",
@@ -223,7 +223,7 @@
       "length": 10,
       "height": 4.5
     },
-    "imagePath": "/images/foundry_256.png"
+    "imagePath": "/images/game/foundry_256.png"
   },
   {
     "id": "Build_Packager_C",
@@ -243,7 +243,7 @@
       "length": 8,
       "height": 12
     },
-    "imagePath": "/images/packager_256.png"
+    "imagePath": "/images/game/packager_256.png"
   },
   {
     "id": "Build_ManufacturerMk1_C",
@@ -263,7 +263,7 @@
       "length": 13,
       "height": 15
     },
-    "imagePath": "/images/manufacturer_256.png"
+    "imagePath": "/images/game/manufacturer_256.png"
   },
   {
     "id": "Build_AssemblerMk1_C",
@@ -283,7 +283,7 @@
       "length": 16,
       "height": 3
     },
-    "imagePath": "/images/assembler_256.png"
+    "imagePath": "/images/game/assembler-mk-1_256.png"
   },
   {
     "id": "Build_Blender_C",
@@ -303,7 +303,7 @@
       "length": 16,
       "height": 8.84322006
     },
-    "imagePath": "/images/blender_256.png"
+    "imagePath": "/images/game/blender_256.png"
   },
   {
     "id": "Build_SmelterMk1_C",
@@ -323,7 +323,7 @@
       "length": 10,
       "height": 4.5
     },
-    "imagePath": "/images/smelter_256.png"
+    "imagePath": "/images/game/smelter-mk-1_256.png"
   },
   {
     "id": "Build_ConstructorMk1_C",
@@ -343,7 +343,7 @@
       "length": 10,
       "height": 6
     },
-    "imagePath": "/images/constructor_256.png"
+    "imagePath": "/images/game/constructor-mk-1_256.png"
   },
   {
     "id": "Build_GeneratorNuclear_C",
@@ -363,7 +363,7 @@
       "length": 42,
       "height": 10
     },
-    "imagePath": "/images/nuclear-power-plant_256.png",
+    "imagePath": "/images/game/nuclear-powerplant_256.png",
     "powerGenerator": {
       "fuels": [
         {
@@ -402,6 +402,6 @@
       "length": 19,
       "height": 32
     },
-    "imagePath": "/images/geothermal-generator_256.png"
+    "imagePath": "/images/game/geo-thermal-power-generator_256.png"
   }
 ]
