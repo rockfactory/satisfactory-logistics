@@ -1,4 +1,4 @@
-import type { FactoryInput } from '@/factories/Factory';
+import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
 import Graph from 'graphology';
 import voca from 'voca';
 import { log } from '../core/logger/log';
@@ -346,6 +346,9 @@ function setGraphByproduct(ctx: SolverContext, resource: string) {
   });
 }
 
+/**
+ * Compute the constraints for a given input resource.
+ */
 export function addInputResourceConstraints(
   ctx: SolverContext,
   { resource, amount, forceUsage }: FactoryInput,
@@ -375,6 +378,44 @@ export function addInputResourceConstraints(
   }
 }
 
+/**
+ * Compute the constraints for a given output resource.
+ */
+export function addOutputProductionConstraints(
+  ctx: SolverContext,
+  output: FactoryOutput,
+) {
+  const { resource, amount, objective } = output;
+  if (!resource) {
+    logger.error('Missing resource in output', output);
+    return;
+  }
+
+  const resourceItem = AllFactoryItemsMap[resource];
+
+  // If we are requesting a specific amount, we need to add a constraint
+  // (this means we are in a user-configured output and not in recursive mode)
+  // Depending on the objective, we can set the amount as a minimum
+  // or as a fixed value.
+  if (amount) {
+    setGraphResource(ctx, resource);
+    switch (objective) {
+      case 'max':
+        ctx.constraints.push(`b${resourceItem.index} >= ${amount}`);
+        break;
+      case 'default':
+      default:
+        ctx.constraints.push(`b${resourceItem.index} = ${amount}`);
+    }
+  }
+
+  computeProductionConstraints(ctx, resource);
+}
+
+/**
+ * Recursively compute the constraints for a given resource, given
+ * the available recipes.
+ */
 export function computeProductionConstraints(
   ctx: SolverContext,
   resource: string,
@@ -395,11 +436,6 @@ export function computeProductionConstraints(
       variable: rawVar,
     });
     ctx.graph.mergeEdge(rawVar, resource);
-  }
-
-  if (amount) {
-    setGraphResource(ctx, resource);
-    ctx.constraints.push(`b${resourceItem.index} = ${amount}`);
   }
 
   for (const recipe of recipes) {

@@ -6,8 +6,8 @@ import { log } from '../core/logger/log';
 import { getWorldResourceMax } from '../recipes/WorldResources';
 import {
   addInputResourceConstraints,
+  addOutputProductionConstraints,
   avoidUnproducibleResources,
-  computeProductionConstraints,
   consolidateProductionConstraints,
   SolverContext,
 } from './computeProductionConstraints';
@@ -105,8 +105,8 @@ export function solveProduction(
     addInputResourceConstraints(ctx, item);
   }
   for (const item of request.outputs) {
-    if (!item.amount || !item.resource) continue;
-    computeProductionConstraints(ctx, item.resource, item.amount);
+    if (!item.resource) continue;
+    addOutputProductionConstraints(ctx, item);
   }
   consolidateProductionConstraints(ctx);
   avoidUnproducibleResources(ctx);
