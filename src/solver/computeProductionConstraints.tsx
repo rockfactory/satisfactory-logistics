@@ -135,6 +135,12 @@ export class SolverContext {
       .map(node => this.graph.getNodeAttributes(node) as SolverRawNode);
   }
 
+  getWorldInputVars() {
+    return this.graph
+      .filterNodes((node, attributes) => attributes.type === 'raw_input')
+      .map(node => this.graph.getNodeAttributes(node) as SolverRawInputNode);
+  }
+
   getEnergyVars() {
     return this.graph
       .filterNodes((node, attributes) => attributes.type === 'energy')
@@ -346,7 +352,9 @@ export function addInputResourceConstraints(
 ) {
   setGraphResource(ctx, resource!);
   const resourceItem = AllFactoryItemsMap[resource!];
-  const rawVar = `r${resourceItem.index}`;
+  const rawVar = isWorldResource(resource!)
+    ? `r${resourceItem.index}`
+    : `ri${resourceItem.index}`;
   ctx.graph.mergeNode(rawVar, {
     type: isWorldResource(resource!) ? 'raw' : 'raw_input',
     label: resource!,
@@ -361,6 +369,9 @@ export function addInputResourceConstraints(
     ctx.constraints.push(`${rawVar} = ${amount ?? 0}`);
   } else {
     // ctx.constraints.push(`${rawVar} - ${amount ?? 0} >= 0`);
+    if (!isWorldResource(resource!)) {
+      ctx.constraints.push(`ri${resourceItem.index} <= ${amount ?? 0}`);
+    }
   }
 }
 

@@ -27,7 +27,8 @@ export interface SolverProductionRequest extends SolverRequest {
 
 export async function loadHighs() {
   const highs = await highloader({
-    locateFile: file => `/highs/${file}`,
+    locateFile:
+      typeof process === 'undefined' ? file => `/highs/${file}` : undefined,
   });
   return highs;
 }
@@ -78,7 +79,14 @@ function applyObjective(ctx: SolverContext, request: SolverProductionRequest) {
           v =>
             `${1 / getWorldResourceMax(v.resource.id, 'weight')} r${v.resource.index}`,
         )
-        .join(' + ')}\n`;
+        .join(' + ')}`;
+
+      // const inputs = ctx.getWorldInputVars();
+      // if (inputs.some(v => v.resource.id === 'Desc_SAMIngot_C')) {
+      //   ctx.objective += ` + 0.0001 r${inputs.find(v => v.resource.id === 'Desc_SAMIngot_C')?.resource.index}`;
+      // }
+
+      ctx.objective += '\n';
   }
 }
 
