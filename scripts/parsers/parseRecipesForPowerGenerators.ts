@@ -88,12 +88,10 @@ function parseBuildingForPowerRecipes(building: RawGenerator) {
           ? [
               {
                 resource: fuel.mByproduct,
-                amount: (parseFloat(fuel.mByproductAmount) / 60) * burnTime,
-                displayAmount:
-                  (parseFloat(fuel.mByproductAmount) / 60) * burnTime,
+                amount: parseFloat(fuel.mByproductAmount),
+                displayAmount: parseFloat(fuel.mByproductAmount),
                 // TODO: Handle water if it's a byproduct, doesn't happen right now (1.0)
-                originalAmount:
-                  (parseFloat(fuel.mByproductAmount) / 60) * burnTime,
+                originalAmount: parseFloat(fuel.mByproductAmount),
               },
             ]
           : []),
