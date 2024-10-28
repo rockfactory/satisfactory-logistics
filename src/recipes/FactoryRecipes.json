@@ -9434,9 +9434,9 @@
       },
       {
         "resource": "Desc_NuclearWaste_C",
-        "amount": 250,
-        "displayAmount": 250,
-        "originalAmount": 250
+        "amount": 50,
+        "displayAmount": 50,
+        "originalAmount": 50
       }
     ]
   },
@@ -9471,9 +9471,9 @@
       },
       {
         "resource": "Desc_PlutoniumWaste_C",
-        "amount": 100,
-        "displayAmount": 100,
-        "originalAmount": 100
+        "amount": 10,
+        "displayAmount": 10,
+        "originalAmount": 10
       }
     ]
   },
