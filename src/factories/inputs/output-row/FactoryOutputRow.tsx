@@ -120,6 +120,15 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       >
         <IconTrash size={16} stroke={1.5} />
       </ActionIcon>
+
+      {/*
+      Currently disabled, we need to implement a better way to compute it
+       */}
+      {/* <FactoryOutputObjectiveSelect
+        output={output}
+        onChange={onChangeHandler(`outputs.${index}.objective`)}
+      /> */}
+
       <OutputDependenciesPeekModal factoryId={factoryId} output={output} />
 
       <FactoryUsage factoryId={factoryId} output={output.resource} />

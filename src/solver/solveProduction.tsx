@@ -6,8 +6,8 @@ import { log } from '../core/logger/log';
 import { getWorldResourceMax } from '../recipes/WorldResources';
 import {
   addInputResourceConstraints,
+  addOutputProductionConstraints,
   avoidUnproducibleResources,
-  computeProductionConstraints,
   consolidateProductionConstraints,
   SolverContext,
 } from './computeProductionConstraints';
@@ -27,7 +27,8 @@ export interface SolverProductionRequest extends SolverRequest {
 
 export async function loadHighs() {
   const highs = await highloader({
-    locateFile: file => `/highs/${file}`,
+    locateFile:
+      typeof process === 'undefined' ? file => `/highs/${file}` : undefined,
   });
   return highs;
 }
@@ -78,7 +79,14 @@ function applyObjective(ctx: SolverContext, request: SolverProductionRequest) {
           v =>
             `${1 / getWorldResourceMax(v.resource.id, 'weight')} r${v.resource.index}`,
         )
-        .join(' + ')}\n`;
+        .join(' + ')}`;
+
+      // const inputs = ctx.getWorldInputVars();
+      // if (inputs.some(v => v.resource.id === 'Desc_SAMIngot_C')) {
+      //   ctx.objective += ` + 0.0001 r${inputs.find(v => v.resource.id === 'Desc_SAMIngot_C')?.resource.index}`;
+      // }
+
+      ctx.objective += '\n';
   }
 }
 
@@ -97,8 +105,8 @@ export function solveProduction(
     addInputResourceConstraints(ctx, item);
   }
   for (const item of request.outputs) {
-    if (!item.amount || !item.resource) continue;
-    computeProductionConstraints(ctx, item.resource, item.amount);
+    if (!item.resource) continue;
+    addOutputProductionConstraints(ctx, item);
   }
   consolidateProductionConstraints(ctx);
   avoidUnproducibleResources(ctx);
@@ -122,6 +130,8 @@ export function solveProduction(
   if (result.Status === 'Optimal') {
     for (const [varName, value] of Object.entries(result.Columns)) {
       if (Math.abs(value.Primal) < Number.EPSILON) continue;
+      // Hides "0x" nodes
+      if (Math.abs(value.Primal) <= 0.0001) continue;
       logger.debug(`${varName} = ${value.Primal}`);
 
       if (ctx.graph.hasNode(varName)) {

@@ -29,7 +29,10 @@ import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { RepeatingNumber } from '../../core/intl/NumberFormatter';
 import { useStore } from '../../core/zustand';
 import { AllFactoryBuildingsMap } from '../../recipes/FactoryBuilding';
-import { AllFactoryItemsMap } from '../../recipes/FactoryItem';
+import {
+  AllFactoryItemsMap,
+  type FactoryItem,
+} from '../../recipes/FactoryItem';
 import {
   FactoryRecipe,
   getRecipeDisplayName,
@@ -43,6 +46,7 @@ export interface IMachineNodeData {
   label: string;
   value: number;
   recipe: FactoryRecipe;
+  resource: FactoryItem;
   [key: string]: unknown;
 }
 

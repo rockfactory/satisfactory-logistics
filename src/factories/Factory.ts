@@ -20,7 +20,10 @@ export interface FactoryOutput {
   resource: string | null;
   amount: number | null;
   somersloops?: number | null;
+  objective?: FactoryOutputObjective;
 }
+
+export type FactoryOutputObjective = 'default' | 'max';
 
 interface FactoriesSettings {
   noHighlight100PercentUsage?: boolean;
