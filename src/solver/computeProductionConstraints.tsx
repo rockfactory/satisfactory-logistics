@@ -370,12 +370,10 @@ export function addInputResourceConstraints(
   // If the resource is forced, we need to add a constraint to be _exactly_ the amount
   if (forceUsage) {
     ctx.constraints.push(`${rawVar} = ${amount ?? 0}`);
-  } else {
-    // ctx.constraints.push(`${rawVar} - ${amount ?? 0} >= 0`);
-    if (!isWorldResource(resource!)) {
-      ctx.constraints.push(`ri${resourceItem.index} <= ${amount ?? 0}`);
-    }
+  } else if (!isWorldResource(resource!)) {
+    ctx.constraints.push(`ri${resourceItem.index} <= ${amount ?? 0}`);
   }
+  // ctx.constraints.push(`${rawVar} - ${amount ?? 0} >= 0`);
 }
 
 /**
