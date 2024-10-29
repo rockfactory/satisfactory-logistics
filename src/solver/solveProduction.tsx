@@ -130,6 +130,8 @@ export function solveProduction(
   if (result.Status === 'Optimal') {
     for (const [varName, value] of Object.entries(result.Columns)) {
       if (Math.abs(value.Primal) < Number.EPSILON) continue;
+      // Hides "0x" nodes
+      if (Math.abs(value.Primal) <= 0.0001) continue;
       logger.debug(`${varName} = ${value.Primal}`);
 
       if (ctx.graph.hasNode(varName)) {
