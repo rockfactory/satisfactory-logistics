@@ -1,4 +1,5 @@
 import fs from 'fs';
+import voca from 'voca';
 import { convertImageName } from './images/convertImageName';
 import { parseClearanceData } from './parseClearanceData';
 import { ParsingContext } from './ParsingContext';
@@ -7,7 +8,10 @@ export function parseBuildings(docsJson: any) {
   const rawBuildings = docsJson.flatMap(nativeClass => {
     if (
       nativeClass.NativeClass?.includes('FGBuildableManufacturer') ||
-      nativeClass.NativeClass?.includes('FGBuildableGenerator')
+      nativeClass.NativeClass?.includes('FGBuildableGenerator') ||
+      nativeClass.NativeClass?.includes('FGBuildableWaterPump') ||
+      nativeClass.NativeClass?.includes('FGBuildableResourceExtractor') ||
+      nativeClass.NativeClass?.includes('FGBuildableFrackingExtractor')
     )
       return nativeClass.Classes;
     return [];
@@ -75,6 +79,7 @@ function parseBuilding(building, index, buildingDescriptorsImages) {
           building.ClassName.replace('Build_', 'Desc_')
         ],
       ),
+    extractor: parseBuildingExtractor(building),
     powerGenerator: building.mFuel
       ? {
           fuels: building.mFuel.map(fuel => {
@@ -94,5 +99,36 @@ function parseBuilding(building, index, buildingDescriptorsImages) {
             building.mRequiresSupplementalResource === 'True',
         }
       : undefined,
+  };
+}
+
+const ResourceRegex = /\.(Desc_\w+)/g;
+
+function parseBuildingExtractor(building) {
+  if (!building.mExtractorTypeName) return null;
+
+  const isSolid = building.mAllowedResourceForms === '(RF_SOLID)';
+  let itemsPerCycle = parseFloat(building.mItemsPerCycle);
+  if (!isSolid) {
+    itemsPerCycle = itemsPerCycle / 1_000;
+  }
+
+  console.log(`Importing -> `, building.ClassName);
+  return {
+    type: building.mExtractorTypeName,
+    // (RF_LIQUID,RF_GAS)" -> ["Liquid", "Gas"]
+    allowedForms: building.mAllowedResourceForms
+      .match(/RF_(\w+)/g)
+      .map(f => voca.capitalize(f.replace('RF_', '').toLowerCase())),
+    allowedResources:
+      building.mOnlyAllowCertainResources === 'False'
+        ? null
+        : building.mAllowedResources
+            .match(ResourceRegex)
+            .map(r => r.replace('.', '')),
+    itemsPerCycle: itemsPerCycle,
+    cycleTime: parseFloat(building.mExtractCycleTime),
+    itemsPerMinute:
+      (itemsPerCycle / parseFloat(building.mExtractCycleTime)) * 60,
   };
 }

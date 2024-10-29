@@ -18,6 +18,7 @@
       "height": 9
     },
     "imagePath": "/images/game/coal-generator_256.png",
+    "extractor": null,
     "powerGenerator": {
       "fuels": [
         {
@@ -55,6 +56,7 @@
       "height": 11
     },
     "imagePath": "/images/game/fuel-generator_256.png",
+    "extractor": null,
     "powerGenerator": {
       "fuels": [
         {
@@ -98,6 +100,7 @@
       "height": 7
     },
     "imagePath": "/images/game/biomass-generator_256.png",
+    "extractor": null,
     "powerGenerator": {
       "fuels": [
         {
@@ -126,9 +129,41 @@
     }
   },
   {
+    "id": "Build_WaterPump_C",
+    "name": "Water Extractor",
+    "index": 3,
+    "description": "Extracts water from the body of water it is built on.\r\nNote: the water needs to be sufficiently deep, and rivers are generally not deep enough.\r\n\r\nDefault Extraction Rate: 120 m³ of water per minute.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 20,
+    "powerConsumption": 20,
+    "powerConsumptionExponent": 1.321929,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearanceData": "((ClearanceBox=(Min=(X=-1000.000000,Y=-900.000000,Z=-1200.000000),Max=(X=1000.000000,Y=900.000000,Z=0.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=400.000000,Z=400.000000))),(ClearanceBox=(Min=(X=-500.000000,Y=-900.000000,Z=0.000000),Max=(X=450.000000,Y=200.000000,Z=1100.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=400.000000,Z=400.000000)),ExcludeForSnapping=True))",
+    "clearance": {
+      "width": 20,
+      "length": 18,
+      "height": 12
+    },
+    "imagePath": "/images/game/waterpump_256.png",
+    "extractor": {
+      "type": "None",
+      "allowedForms": [
+        "Liquid"
+      ],
+      "allowedResources": [
+        "Desc_Water_C"
+      ],
+      "itemsPerCycle": 2,
+      "cycleTime": 1,
+      "itemsPerMinute": 120
+    }
+  },
+  {
     "id": "Build_QuantumEncoder_C",
     "name": "Quantum Encoder",
-    "index": 3,
+    "index": 4,
     "description": "The Quantum Encoder uses Excited Photonic Matter to produce the most complex of parts, controlling development up to the quantum level.\r\n\r\nWarning: Power usage is extremely high and unstable.",
     "minimumPowerConsumption": 0,
     "maximumPowerConsumption": 2000,
@@ -143,12 +178,13 @@
       "length": 50,
       "height": 14
     },
-    "imagePath": "/images/game/quantum-encoder_256.png"
+    "imagePath": "/images/game/quantum-encoder_256.png",
+    "extractor": null
   },
   {
     "id": "Build_Converter_C",
     "name": "Converter",
-    "index": 4,
+    "index": 5,
     "description": "The Converter harnesses Reanimated SAM to enable precise matter and energy transmutation.\r\n\r\nWarning: Power usage is very high and unstable.",
     "minimumPowerConsumption": 100,
     "maximumPowerConsumption": 400,
@@ -163,12 +199,13 @@
       "length": 16,
       "height": 4
     },
-    "imagePath": "/images/game/converter_256.png"
+    "imagePath": "/images/game/converter_256.png",
+    "extractor": null
   },
   {
     "id": "Build_HadronCollider_C",
     "name": "Particle Accelerator",
-    "index": 5,
+    "index": 6,
     "description": "Uses electromagnetic fields to propel particles to very high speeds and energies. The specific design allows for a variety of processes, including matter generation and conversion.\r\n\r\nWarning: Power usage is extremely high and unstable, and varies per recipe.",
     "minimumPowerConsumption": 250,
     "maximumPowerConsumption": 1500,
@@ -183,12 +220,135 @@
       "length": 22,
       "height": 8
     },
-    "imagePath": "/images/game/hadron-collider_256.png"
+    "imagePath": "/images/game/hadron-collider_256.png",
+    "extractor": null
+  },
+  {
+    "id": "Build_OilPump_C",
+    "name": "Oil Extractor",
+    "index": 7,
+    "description": "Extracts Crude Oil when built on an oil node. Extraction rates vary based on node purity.\r\n\r\nDefault Extraction Rate: 120 m³ of oil per minute.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 40,
+    "powerConsumption": 40,
+    "powerConsumptionExponent": 1.321929,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearanceData": "((ClearanceBox=(Min=(X=-400.000000,Y=-650.000000,Z=-900.000000),Max=(X=400.000000,Y=650.000000,Z=900.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=140.000000,Z=920.000000))))",
+    "clearance": {
+      "width": 8,
+      "length": 13,
+      "height": 18
+    },
+    "imagePath": "/images/game/oil-pump_256.png",
+    "extractor": {
+      "type": "None",
+      "allowedForms": [
+        "Liquid"
+      ],
+      "allowedResources": [
+        "Desc_LiquidOil_C"
+      ],
+      "itemsPerCycle": 2,
+      "cycleTime": 1,
+      "itemsPerMinute": 120
+    }
+  },
+  {
+    "id": "Build_MinerMk2_C",
+    "name": "Miner Mk.2",
+    "index": 8,
+    "description": "Extracts solid resources from the resource node it is built on. \r\nDefault extraction rate is 120 resources per minute. \r\nExtraction rate varies based on resource node purity. Outputs all extracted resources onto connected Conveyor Belts.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 15,
+    "powerConsumption": 15,
+    "powerConsumptionExponent": 1.321929,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearanceData": "((ClearanceBox=(Min=(X=-300.000000,Y=-700.000000,Z=0.000000),Max=(X=300.000000,Y=700.000000,Z=400.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=200.000000,Z=0.000000))),(ClearanceBox=(Min=(X=-300.000000,Y=-700.000000,Z=0.000000),Max=(X=300.000000,Y=300.000000,Z=1350.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=200.000000,Z=400.000000)),ExcludeForSnapping=True),(Type=CT_Soft,ClearanceBox=(Min=(X=-30.000000,Y=-30.000000,Z=0.000000),Max=(X=30.000000,Y=30.000000,Z=100.000000),IsValid=True),RelativeTransform=(Translation=(X=135.000000,Y=24.000000,Z=1750.000000),Scale3D=(X=1.000000,Y=1.000000,Z=0.000000)),ExcludeForSnapping=True))",
+    "clearance": {
+      "width": 6,
+      "length": 14,
+      "height": 4
+    },
+    "imagePath": "/images/game/miner-mk-2_256.png",
+    "extractor": {
+      "type": "Miner",
+      "allowedForms": [
+        "Solid"
+      ],
+      "allowedResources": null,
+      "itemsPerCycle": 1,
+      "cycleTime": 0.5,
+      "itemsPerMinute": 120
+    }
+  },
+  {
+    "id": "Build_MinerMk1_C",
+    "name": "Miner Mk.1",
+    "index": 9,
+    "description": "Extracts solid resources from the resource node it is built on. \r\nDefault extraction rate is 60 resources per minute. \r\nExtraction rate varies based on resource node purity. Outputs all extracted resources onto connected Conveyor Belts.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 5,
+    "powerConsumption": 5,
+    "powerConsumptionExponent": 1.321929,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearanceData": "((ClearanceBox=(Min=(X=-300.000000,Y=-700.000000,Z=0.000000),Max=(X=300.000000,Y=700.000000,Z=400.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=200.000000,Z=0.000000))),(ClearanceBox=(Min=(X=-300.000000,Y=-700.000000,Z=0.000000),Max=(X=300.000000,Y=300.000000,Z=1230.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=200.000000,Z=400.000000)),ExcludeForSnapping=True),(Type=CT_Soft,ClearanceBox=(Min=(X=-50.000000,Y=-30.000000,Z=0.000000),Max=(X=50.000000,Y=30.000000,Z=205.000000),IsValid=True),RelativeTransform=(Translation=(X=125.000000,Y=20.000000,Z=1630.000000)),ExcludeForSnapping=True))",
+    "clearance": {
+      "width": 6,
+      "length": 14,
+      "height": 4
+    },
+    "imagePath": "/images/game/miner-mk-1_256.png",
+    "extractor": {
+      "type": "Miner",
+      "allowedForms": [
+        "Solid"
+      ],
+      "allowedResources": null,
+      "itemsPerCycle": 1,
+      "cycleTime": 1,
+      "itemsPerMinute": 60
+    }
+  },
+  {
+    "id": "Build_MinerMk3_C",
+    "name": "Miner Mk.3",
+    "index": 10,
+    "description": "Extracts solid resources from the resource node it is built on. \r\nDefault extraction rate is 240 resources per minute. \r\nExtraction rate varies based on resource node purity. Outputs all extracted resources onto connected Conveyor Belts.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 45,
+    "powerConsumption": 45,
+    "powerConsumptionExponent": 1.321929,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearanceData": "((ClearanceBox=(Min=(X=-300.000000,Y=-700.000000,Z=0.000000),Max=(X=300.000000,Y=700.000000,Z=600.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=200.000000,Z=0.000000))),(ClearanceBox=(Min=(X=-300.000000,Y=-700.000000,Z=0.000000),Max=(X=300.000000,Y=300.000000,Z=1150.000000),IsValid=True),RelativeTransform=(Translation=(X=0.000000,Y=200.000000,Z=600.000000)),ExcludeForSnapping=True),(Type=CT_Soft,ClearanceBox=(Min=(X=-30.000000,Y=-30.000000,Z=0.000000),Max=(X=30.000000,Y=30.000000,Z=90.000000),IsValid=True),RelativeTransform=(Translation=(X=140.000000,Y=20.000000,Z=1750.000000)),ExcludeForSnapping=True))",
+    "clearance": {
+      "width": 6,
+      "length": 14,
+      "height": 6
+    },
+    "imagePath": "/images/game/miner-mk-3_256.png",
+    "extractor": {
+      "type": "Miner",
+      "allowedForms": [
+        "Solid"
+      ],
+      "allowedResources": null,
+      "itemsPerCycle": 1,
+      "cycleTime": 0.25,
+      "itemsPerMinute": 240
+    }
   },
   {
     "id": "Build_OilRefinery_C",
     "name": "Refinery",
-    "index": 6,
+    "index": 11,
     "description": "Refines fluid and/or solid parts into other parts.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nContains both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -203,12 +363,13 @@
       "length": 22,
       "height": 15
     },
-    "imagePath": "/images/game/oil-refinery_256.png"
+    "imagePath": "/images/game/oil-refinery_256.png",
+    "extractor": null
   },
   {
     "id": "Build_FoundryMk1_C",
     "name": "Foundry",
-    "index": 7,
+    "index": 12,
     "description": "Smelts 2 resources into alloy ingots.\r\n\r\nCan be automated by feeding ore in via Conveyor Belts connected to the input ports. The resulting ingots can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -223,12 +384,13 @@
       "length": 10,
       "height": 4.5
     },
-    "imagePath": "/images/game/foundry_256.png"
+    "imagePath": "/images/game/foundry_256.png",
+    "extractor": null
   },
   {
     "id": "Build_Packager_C",
     "name": "Packager",
-    "index": 8,
+    "index": 13,
     "description": "Packages and unpackages fluids.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nContains both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -243,12 +405,13 @@
       "length": 8,
       "height": 12
     },
-    "imagePath": "/images/game/packager_256.png"
+    "imagePath": "/images/game/packager_256.png",
+    "extractor": null
   },
   {
     "id": "Build_ManufacturerMk1_C",
     "name": "Manufacturer",
-    "index": 9,
+    "index": 14,
     "description": "Crafts 3 or 4 parts into another part.\r\n\r\nCan be automated by feeding component parts in via Conveyor Belts connected to the input ports. The resulting parts can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -263,12 +426,13 @@
       "length": 13,
       "height": 15
     },
-    "imagePath": "/images/game/manufacturer_256.png"
+    "imagePath": "/images/game/manufacturer_256.png",
+    "extractor": null
   },
   {
     "id": "Build_AssemblerMk1_C",
     "name": "Assembler",
-    "index": 10,
+    "index": 15,
     "description": "Crafts 2 parts into another part.\r\n\r\nCan be automated by feeding component parts in via Conveyor Belts connected to the input ports. The resulting parts can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -283,12 +447,13 @@
       "length": 16,
       "height": 3
     },
-    "imagePath": "/images/game/assembler-mk-1_256.png"
+    "imagePath": "/images/game/assembler-mk-1_256.png",
+    "extractor": null
   },
   {
     "id": "Build_Blender_C",
     "name": "Blender",
-    "index": 11,
+    "index": 16,
     "description": "Blends fluids together or combines them with solid parts in a wide variety of processes.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nHas both Conveyor Belt and Pipeline input and output ports.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -303,12 +468,13 @@
       "length": 16,
       "height": 8.84322006
     },
-    "imagePath": "/images/game/blender_256.png"
+    "imagePath": "/images/game/blender_256.png",
+    "extractor": null
   },
   {
     "id": "Build_SmelterMk1_C",
     "name": "Smelter",
-    "index": 12,
+    "index": 17,
     "description": "Smelts ore into ingots.\r\n\r\nCan be automated by feeding ore in via a Conveyor Belt connected to the input port. The resulting ingots can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -323,12 +489,13 @@
       "length": 10,
       "height": 4.5
     },
-    "imagePath": "/images/game/smelter-mk-1_256.png"
+    "imagePath": "/images/game/smelter-mk-1_256.png",
+    "extractor": null
   },
   {
     "id": "Build_ConstructorMk1_C",
     "name": "Constructor",
-    "index": 13,
+    "index": 18,
     "description": "Crafts 1 part into another part.\r\n\r\nCan be automated by feeding component parts in via a Conveyor Belt connected to the input port. The resulting parts can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -343,12 +510,13 @@
       "length": 10,
       "height": 6
     },
-    "imagePath": "/images/game/constructor-mk-1_256.png"
+    "imagePath": "/images/game/constructor-mk-1_256.png",
+    "extractor": null
   },
   {
     "id": "Build_GeneratorNuclear_C",
     "name": "Nuclear Power Plant",
-    "index": 14,
+    "index": 19,
     "description": "Consumes Nuclear Fuel Rods and Water to produce electricity for the power grid.\r\n\r\nProduces Nuclear Waste, which is extracted via the Conveyor Belt output.\r\n\r\nCaution: Always generates power at the set clock speed. Shuts down if fuel requirements are not met.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -364,6 +532,7 @@
       "height": 10
     },
     "imagePath": "/images/game/nuclear-powerplant_256.png",
+    "extractor": null,
     "powerGenerator": {
       "fuels": [
         {
@@ -385,9 +554,44 @@
     }
   },
   {
+    "id": "Build_FrackingExtractor_C",
+    "name": "Resource Well Extractor",
+    "index": 20,
+    "description": "Collects pressurized resources when placed on the activated sub-nodes of a Resource Well. Does not require power.\r\n\r\nDefault Extraction Rate: 60 m³ of fluid per minute.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.321929,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearanceData": "((ClearanceBox=(Min=(X=-250.000000,Y=-250.000000,Z=0.000000),Max=(X=250.000000,Y=250.000000,Z=570.000000),IsValid=True)))",
+    "clearance": {
+      "width": 5,
+      "length": 5,
+      "height": 5.7
+    },
+    "imagePath": "/images/game/extractor_256.png",
+    "extractor": {
+      "type": "None",
+      "allowedForms": [
+        "Liquid",
+        "Gas"
+      ],
+      "allowedResources": [
+        "Desc_LiquidOil_C",
+        "Desc_NitrogenGas_C",
+        "Desc_Water_C"
+      ],
+      "itemsPerCycle": 1,
+      "cycleTime": 1,
+      "itemsPerMinute": 60
+    }
+  },
+  {
     "id": "Build_GeneratorGeoThermal_C",
     "name": "Geothermal Generator",
-    "index": 15,
+    "index": 21,
     "description": "Harnesses geothermal energy to generate power. Must be built on a Geyser.\r\n\r\nCaution: Power production fluctuates.\r\n\r\nPower Production:\r\nImpure Geyser: 50-150 MW (100 MW average)\r\nNormal Geyser: 100-300 MW (200 MW average)\r\nPure Geyser: 200-600 MW (400 MW average)",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -402,6 +606,7 @@
       "length": 19,
       "height": 32
     },
-    "imagePath": "/images/game/geo-thermal-power-generator_256.png"
+    "imagePath": "/images/game/geo-thermal-power-generator_256.png",
+    "extractor": null
   }
 ]

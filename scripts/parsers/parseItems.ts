@@ -34,6 +34,13 @@ export function parseItems(docsJson: any) {
     JSON.stringify(items, null, 2),
   );
 
+  fs.writeFileSync(
+    './src/recipes/FactoryItemId.ts',
+    `export type FactoryItemId = ${items
+      .map(item => `'${item.id}'`)
+      .join(' | ')};`,
+  );
+
   ParsingContext.itemsMap = items.reduce((acc, item) => {
     acc[item.id] = item;
     return acc;
