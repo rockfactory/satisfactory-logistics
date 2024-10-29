@@ -10,12 +10,15 @@ export interface FactoryBuilding {
   powerConsumptionExponent: number;
   somersloopPowerConsumptionExponent: number;
   somersloopSlots: number;
-  clearanceData: string;
   clearance: {
     width: number;
     length: number;
     height: number;
   };
+  conveyor: {
+    isBelt: boolean;
+    speed: number;
+  } | null;
   imagePath: string;
   powerGenerator: PowerGenerator | null;
   extractor: Extractor | null;
@@ -43,6 +46,7 @@ interface Extractor {
   itemsPerMinute: number;
 }
 
+import { sortBy } from 'lodash';
 import RawFactoryBuildings from './FactoryBuildings.json';
 import type { FactoryItemForm } from './FactoryItem';
 export const AllFactoryBuildings: FactoryBuilding[] =
@@ -59,3 +63,8 @@ export const AllFactoryBuildingsMap = AllFactoryBuildings.reduce(
 export function getFactoryBuildingByName(name: string) {
   return AllFactoryBuildings.find(b => b.name === name);
 }
+
+export const FactoryConveyorBelts = sortBy(
+  AllFactoryBuildings.filter(building => building.conveyor?.isBelt),
+  'name',
+);

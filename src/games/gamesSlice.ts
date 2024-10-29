@@ -1,3 +1,4 @@
+import { FactoryConveyorBelts } from '@/recipes/FactoryBuilding';
 import dayjs from 'dayjs';
 import { useShallow } from 'zustand/shallow';
 import { useStore } from '../core/zustand';
@@ -83,6 +84,27 @@ export function useGameSettings() {
       state => state.games.games[state.games.selected ?? '']?.settings,
     ),
   );
+}
+
+export function useGameSetting(
+  key: keyof GameSettings,
+  defaultValue?: GameSettings[keyof GameSettings],
+) {
+  return useStore(
+    useShallow(
+      state =>
+        state.games.games[state.games.selected ?? '']?.settings?.[key] ??
+        defaultValue,
+    ),
+  );
+}
+
+export function useGameSettingMaxBelt() {
+  const maxBelt = useGameSetting('maxBelt', 'Build_ConveyorBeltMk1_C');
+  const maxBeltBuilding = FactoryConveyorBelts.find(
+    belt => belt.id === maxBelt,
+  )!;
+  return maxBeltBuilding;
 }
 
 export function useGameFactoriesIds(gameId: string | null | undefined) {

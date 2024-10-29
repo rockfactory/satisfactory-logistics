@@ -11,9 +11,13 @@ export function parseBuildings(docsJson: any) {
       nativeClass.NativeClass?.includes('FGBuildableGenerator') ||
       nativeClass.NativeClass?.includes('FGBuildableWaterPump') ||
       nativeClass.NativeClass?.includes('FGBuildableResourceExtractor') ||
-      nativeClass.NativeClass?.includes('FGBuildableFrackingExtractor')
+      nativeClass.NativeClass?.includes('FGBuildableFrackingExtractor') ||
+      nativeClass.NativeClass?.includes('FGBuildableConveyorBelt')
     )
-      return nativeClass.Classes;
+      return nativeClass.Classes.map(c => ({
+        ...c,
+        NativeClass: nativeClass.NativeClass,
+      }));
     return [];
   });
 
@@ -70,7 +74,6 @@ function parseBuilding(building, index, buildingDescriptorsImages) {
       building.mProductionBoostPowerConsumptionExponent,
     ),
     somersloopSlots: parseFloat(building.mProductionShardSlotSize),
-    clearanceData: building.mClearanceData,
     clearance: parseClearanceData(building.mClearanceData),
     imagePath:
       '/images/game/' +
@@ -79,6 +82,7 @@ function parseBuilding(building, index, buildingDescriptorsImages) {
           building.ClassName.replace('Build_', 'Desc_')
         ],
       ),
+    conveyor: parseBuildingBelt(building),
     extractor: parseBuildingExtractor(building),
     powerGenerator: building.mFuel
       ? {
@@ -99,6 +103,14 @@ function parseBuilding(building, index, buildingDescriptorsImages) {
             building.mRequiresSupplementalResource === 'True',
         }
       : undefined,
+  };
+}
+
+function parseBuildingBelt(building) {
+  if (!building.NativeClass.includes('FGBuildableConveyorBelt')) return null;
+  return {
+    isBelt: building.NativeClass.includes('FGBuildableConveyorBelt'),
+    speed: parseFloat(building.mSpeed) / 2.0, // Don't know why, but the speed is doubled
   };
 }
 
