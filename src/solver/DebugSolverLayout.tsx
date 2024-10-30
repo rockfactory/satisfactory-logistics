@@ -13,9 +13,8 @@ import { useEffect } from 'react';
 
 import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
-import Graph from 'graphology';
-import { HighsLinearSolutionColumn } from 'highs';
 import { log } from '../core/logger/log';
+import type { ISolverSolution } from './page/SolverPage';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -25,16 +24,14 @@ const logger = log.getLogger('solver:debug-layout');
 const nodeWidth = 172;
 const nodeHeight = 36;
 
-const getLayoutedElements = (
-  graph: Graph,
-  solution: Record<string, HighsLinearSolutionColumn>,
-  direction = 'LR',
-) => {
+const getLayoutedElements = (solution: ISolverSolution, direction = 'LR') => {
+  const { graph, result } = solution;
   const isHorizontal = direction === 'LR';
   dagreGraph.setGraph({ rankdir: direction });
   const usedNodes = [] as string[];
   graph.forEachNode(node => {
-    if (Math.abs(solution[node]?.Primal ?? 0) < Number.EPSILON) return;
+    if (Math.abs((result.Columns[node] as any)?.Primal ?? 0) < Number.EPSILON)
+      return;
     logger.debug(`Node ${node} = ${solution[node]?.Primal}`);
     usedNodes.push(node);
     dagreGraph.setNode(node, { width: nodeWidth, height: nodeHeight });
@@ -96,8 +93,7 @@ const getLayoutedElements = (
 };
 
 interface DebugSolverLayoutProps {
-  graph: Graph;
-  solution: Record<string, HighsLinearSolutionColumn>;
+  solution: ISolverSolution;
 }
 
 export const DebugSolverLayout = (props: DebugSolverLayoutProps) => {
@@ -106,13 +102,12 @@ export const DebugSolverLayout = (props: DebugSolverLayoutProps) => {
 
   useEffect(() => {
     const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
-      props.graph,
       props.solution,
     );
 
     setNodes([...layoutedNodes]);
     setEdges([...layoutedEdges]);
-  }, [props.graph, props.solution, setEdges, setNodes]);
+  }, [props.solution, setEdges, setNodes]);
 
   return (
     <Box w="100%" h={600}>

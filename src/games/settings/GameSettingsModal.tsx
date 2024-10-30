@@ -1,8 +1,11 @@
+import { SelectIconInput } from '@/core/form/SelectIconInput';
+import { FactoryConveyorBelts } from '@/recipes/FactoryBuilding';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   Button,
   Checkbox,
   ColorInput,
+  Image,
   Modal,
   Space,
   Stack,
@@ -24,6 +27,15 @@ const updateGameSettings = (path: Path<GameSettings>, value: any) => {
     setByPath(state, path, value);
   });
 };
+
+const BeltsOptions = FactoryConveyorBelts.map(
+  belt =>
+    ({
+      label: belt.name,
+      value: belt.id,
+      icon: <Image src={belt.imagePath} alt={belt.name} w={16} h={16} />,
+    }) as const,
+);
 
 export function GameSettingsModal(props: IGameSettingsModalProps) {
   const [opened, { open, close }] = useDisclosure(false);
@@ -65,6 +77,15 @@ export function GameSettingsModal(props: IGameSettingsModalProps) {
               '#fab005',
               '#fd7e14',
             ]}
+          />
+          <SelectIconInput
+            label="Max Belt Level"
+            data={BeltsOptions}
+            description="Select the max belt level you have unlocked. Will be used to highlight belts in the calculator."
+            value={settings?.maxBelt}
+            clearable
+            onChange={onChangeHandler('maxBelt')}
+            placeholder="No belt selected"
           />
         </Stack>
         <Space h={50} />

@@ -11,6 +11,12 @@
   z-index: 10;
 }
 
+.devBanner {
+  position: fixed;
+  top: 5px;
+  left: 5px;
+}
+
 .mainSection {
   padding-bottom: var(--mantine-spacing-sm);
 }

@@ -1,5 +1,6 @@
 import { GameMenu } from '@/games/menu/GameMenu';
 import {
+  Badge,
   Burger,
   Container,
   Group,
@@ -27,6 +28,13 @@ export function Header(props: HeaderProps) {
 
   return (
     <header className={classes.header}>
+      {import.meta.env.VITE_DEV_BANNER === 'true' && (
+        <div className={classes.devBanner}>
+          <Badge color="lime" variant="filled">
+            Preview Build
+          </Badge>
+        </div>
+      )}
       <Container className={classes.mainSection} size="lg">
         <Group justify="space-between">
           <Group align="flex-start">

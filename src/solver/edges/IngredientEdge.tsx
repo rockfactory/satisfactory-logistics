@@ -1,3 +1,4 @@
+import { useGameSettingMaxBelt } from '@/games/gamesSlice';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { alpha, Box, Group, Text } from '@mantine/core';
 import {
@@ -47,6 +48,9 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
     return edgeExists;
   });
 
+  const maxBelt = useGameSettingMaxBelt();
+  const isOverMaxBelt = maxBelt && (data?.value ?? 0) > maxBelt.conveyor!.speed;
+
   if (!sourceNode || !targetNode) {
     return null;
   }
@@ -93,7 +97,10 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
           p={'4px'}
           style={{
             borderRadius: 4,
-            backgroundColor: alpha('var(--mantine-color-dark-6)', 0.8),
+            backgroundColor: alpha(
+              isOverMaxBelt ? '#75341e' : 'var(--mantine-color-dark-6)',
+              0.8,
+            ),
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
           }}

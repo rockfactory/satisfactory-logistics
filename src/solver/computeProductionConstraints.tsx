@@ -1,4 +1,4 @@
-import type { FactoryInput } from '@/factories/Factory';
+import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
 import Graph from 'graphology';
 import voca from 'voca';
 import { log } from '../core/logger/log';
@@ -133,6 +133,12 @@ export class SolverContext {
     return this.graph
       .filterNodes((node, attributes) => attributes.type === 'raw')
       .map(node => this.graph.getNodeAttributes(node) as SolverRawNode);
+  }
+
+  getWorldInputVars() {
+    return this.graph
+      .filterNodes((node, attributes) => attributes.type === 'raw_input')
+      .map(node => this.graph.getNodeAttributes(node) as SolverRawInputNode);
   }
 
   getEnergyVars() {
@@ -340,13 +346,18 @@ function setGraphByproduct(ctx: SolverContext, resource: string) {
   });
 }
 
+/**
+ * Compute the constraints for a given input resource.
+ */
 export function addInputResourceConstraints(
   ctx: SolverContext,
   { resource, amount, forceUsage }: FactoryInput,
 ) {
   setGraphResource(ctx, resource!);
   const resourceItem = AllFactoryItemsMap[resource!];
-  const rawVar = `r${resourceItem.index}`;
+  const rawVar = isWorldResource(resource!)
+    ? `r${resourceItem.index}`
+    : `ri${resourceItem.index}`;
   ctx.graph.mergeNode(rawVar, {
     type: isWorldResource(resource!) ? 'raw' : 'raw_input',
     label: resource!,
@@ -359,11 +370,50 @@ export function addInputResourceConstraints(
   // If the resource is forced, we need to add a constraint to be _exactly_ the amount
   if (forceUsage) {
     ctx.constraints.push(`${rawVar} = ${amount ?? 0}`);
-  } else {
-    // ctx.constraints.push(`${rawVar} - ${amount ?? 0} >= 0`);
+  } else if (!isWorldResource(resource!)) {
+    ctx.constraints.push(`ri${resourceItem.index} <= ${amount ?? 0}`);
   }
+  // ctx.constraints.push(`${rawVar} - ${amount ?? 0} >= 0`);
 }
 
+/**
+ * Compute the constraints for a given output resource.
+ */
+export function addOutputProductionConstraints(
+  ctx: SolverContext,
+  output: FactoryOutput,
+) {
+  const { resource, amount, objective } = output;
+  if (!resource) {
+    logger.error('Missing resource in output', output);
+    return;
+  }
+
+  const resourceItem = AllFactoryItemsMap[resource];
+
+  // If we are requesting a specific amount, we need to add a constraint
+  // (this means we are in a user-configured output and not in recursive mode)
+  // Depending on the objective, we can set the amount as a minimum
+  // or as a fixed value.
+  if (amount) {
+    setGraphResource(ctx, resource);
+    switch (objective) {
+      case 'max':
+        ctx.constraints.push(`b${resourceItem.index} >= ${amount}`);
+        break;
+      case 'default':
+      default:
+        ctx.constraints.push(`b${resourceItem.index} = ${amount}`);
+    }
+  }
+
+  computeProductionConstraints(ctx, resource);
+}
+
+/**
+ * Recursively compute the constraints for a given resource, given
+ * the available recipes.
+ */
 export function computeProductionConstraints(
   ctx: SolverContext,
   resource: string,
@@ -384,11 +434,6 @@ export function computeProductionConstraints(
       variable: rawVar,
     });
     ctx.graph.mergeEdge(rawVar, resource);
-  }
-
-  if (amount) {
-    setGraphResource(ctx, resource);
-    ctx.constraints.push(`b${resourceItem.index} = ${amount}`);
   }
 
   for (const recipe of recipes) {
