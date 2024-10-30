@@ -2,7 +2,8 @@ import dagre from '@dagrejs/dagre';
 import {
   Background,
   BackgroundVariant,
-  ConnectionLineType, ControlButton,
+  ConnectionLineType,
+  ControlButton,
   Controls,
   Edge,
   InternalNode,
@@ -16,7 +17,6 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import React, { useEffect, useRef, useState } from 'react';
-import { EnterFullScreenIcon, ExitFullScreenIcon } from '@radix-ui/react-icons';
 
 import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
@@ -27,6 +27,7 @@ import { ByproductNode } from './layout/ByproductNode';
 import { MachineNode } from './layout/MachineNode';
 import { ResourceNode } from './layout/ResourceNode';
 import { toogleFullscreen } from '@/utils/Utilities.tsx';
+import { IconWindowMaximize, IconWindowMinimize } from '@tabler/icons-react';
 
 // const dagreGraph = new dagre.graphlib.Graph();
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -246,8 +247,12 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         snapGrid={[10, 10]}
       >
         <Controls showFitView>
-          <ControlButton onClick={handleToggleFullscreen} aria-label="toggle fullscreen" title="toggle fullscreen">
-            {isFullscreen ? <ExitFullScreenIcon /> : <EnterFullScreenIcon />}
+          <ControlButton
+            onClick={handleToggleFullscreen}
+            aria-label="toggle fullscreen"
+            title="toggle fullscreen"
+          >
+            {isFullscreen ? <IconWindowMinimize /> : <IconWindowMaximize />}
           </ControlButton>
         </Controls>
         <MiniMap pannable={true} nodeStrokeWidth={3} />
