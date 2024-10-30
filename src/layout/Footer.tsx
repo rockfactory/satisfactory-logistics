@@ -1,20 +1,20 @@
 import { Anchor, Button, Container, Divider, Group, Text } from '@mantine/core';
-import { IconBrandDiscord } from '@tabler/icons-react';
+import { IconBrandDiscord, IconBrandGithub } from '@tabler/icons-react';
 import { FeedbackButton } from '../third-party/FeedbackButton';
 import { KofiSupportButton } from '../third-party/KofiSupportButton';
 import classes from './Footer.module.css';
 
 const links = [
-  // {
-  //   link: 'https://discord.gg/Crd8r87dwY',
-  //   label: 'Discord',
-  //   labelNode: (
-  //     <Group gap="xs">
-  //       <IconBrandDiscord size={16} />
-  //       Discord
-  //     </Group>
-  //   ),
-  // },
+  {
+    link: 'https://github.com/rockfactory/satisfactory-logistics',
+    label: 'GitHub',
+    labelNode: (
+      <Group gap="xs">
+        <IconBrandGithub size={16} />
+        GitHub
+      </Group>
+    ),
+  },
   { link: 'mailto:info@satisfactory-logistics.xyz', label: 'Contact' },
   { link: '/privacy-policy', label: 'Privacy Policy' },
 ];
@@ -29,7 +29,7 @@ export function Footer() {
       rel="noopener noreferrer"
       size="sm"
     >
-      {link.label}
+      {link.labelNode ?? link.label}
     </Anchor>
   ));
 
