@@ -1,4 +1,4 @@
-<img src="./public/images/logo/satisfactory-logistics-logo.png" alt="Satisfactory Logistics" width="600" />
+<a href="https://satisfactory-logistics.xyz" target="_blank"><img src="./public/images/logo/satisfactory-logistics-logo.png" alt="Satisfactory Logistics" width="600" /></a>
 
 ## Description
 
