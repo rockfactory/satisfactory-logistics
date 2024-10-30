@@ -1,4 +1,4 @@
-# Satisfactory Logistics
+<img src="./public/images/logo/satisfactory-logistics-logo.png" alt="Satisfactory Logistics" width="600" />
 
 ## Description
 
@@ -54,3 +54,7 @@ npm run parse-docs
 - Open the destination (as configured in FModel output settings) and copy the `FactoryGame` folder to `data/assets/`
 - Copy the exported `FactoryGame` folder to `data/assets/` (FactoryGame should be a subfolder of `data/assets/`)
 - Run the `npm run parse-docs -- --with-images` command to generate the images
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
