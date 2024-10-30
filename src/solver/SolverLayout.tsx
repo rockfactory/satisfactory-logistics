@@ -26,7 +26,7 @@ import { IngredientEdge } from './edges/IngredientEdge';
 import { ByproductNode } from './layout/ByproductNode';
 import { MachineNode } from './layout/MachineNode';
 import { ResourceNode } from './layout/ResourceNode';
-import { toogleFullscreen } from '@/utils/Utilities.tsx';
+import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
 import { IconWindowMaximize, IconWindowMinimize } from '@tabler/icons-react';
 
 // const dagreGraph = new dagre.graphlib.Graph();
@@ -155,7 +155,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const handleToggleFullscreen = () => {
-    toogleFullscreen(ref);
+    toggleFullscreen(ref);
     setIsFullscreen(!isFullscreen);
   };
 

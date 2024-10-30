@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function toogleFullscreen(ref: React.RefObject<HTMLDivElement>) {
+export function toggleFullscreen(ref: React.RefObject<HTMLDivElement>) {
   if (!ref.current) {
     return;
   }
