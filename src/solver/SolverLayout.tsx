@@ -2,7 +2,7 @@ import dagre from '@dagrejs/dagre';
 import {
   Background,
   BackgroundVariant,
-  ConnectionLineType,
+  ConnectionLineType, ControlButton,
   Controls,
   Edge,
   InternalNode,
@@ -15,7 +15,8 @@ import {
   useNodesState,
   useReactFlow,
 } from '@xyflow/react';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { EnterFullScreenIcon, ExitFullScreenIcon } from '@radix-ui/react-icons';
 
 import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
@@ -25,6 +26,7 @@ import { IngredientEdge } from './edges/IngredientEdge';
 import { ByproductNode } from './layout/ByproductNode';
 import { MachineNode } from './layout/MachineNode';
 import { ResourceNode } from './layout/ResourceNode';
+import { toogleFullscreen } from '@/utils/Utilities.tsx';
 
 // const dagreGraph = new dagre.graphlib.Graph();
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -149,6 +151,12 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   const nodesInitialized = useNodesInitialized();
   const [initialLayoutFinished, setInitialLayoutFinished] = useState(false);
   const [initialFitViewFinished, setInitialFitViewFinished] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const handleToggleFullscreen = () => {
+    toogleFullscreen(ref);
+    setIsFullscreen(!isFullscreen);
+  };
 
   // When nodes change, we need to re-layout them.
   useEffect(() => {
@@ -237,8 +245,12 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         }}
         snapGrid={[10, 10]}
       >
-        <Controls showFitView />
-        <MiniMap nodeStrokeWidth={3} />
+        <Controls showFitView>
+          <ControlButton onClick={handleToggleFullscreen} aria-label="toggle fullscreen" title="toggle fullscreen">
+            {isFullscreen ? <ExitFullScreenIcon /> : <EnterFullScreenIcon />}
+          </ControlButton>
+        </Controls>
+        <MiniMap pannable={true} nodeStrokeWidth={3} />
 
         <svg>
           <defs>
