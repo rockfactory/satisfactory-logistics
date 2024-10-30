@@ -100,7 +100,9 @@ export function useGameSetting(
 }
 
 export function useGameSettingMaxBelt() {
-  const maxBelt = useGameSetting('maxBelt', 'Build_ConveyorBeltMk1_C');
+  const maxBelt = useGameSetting('maxBelt');
+  if (!maxBelt) return null;
+
   const maxBeltBuilding = FactoryConveyorBelts.find(
     belt => belt.id === maxBelt,
   )!;

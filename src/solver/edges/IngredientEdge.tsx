@@ -49,8 +49,8 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
   });
 
   const maxBelt = useGameSettingMaxBelt();
-  const isOverMaxBelt = (data?.value ?? 0) > maxBelt.conveyor!.speed;
-  console.log('isOverMaxBelt', isOverMaxBelt, maxBelt);
+  const isOverMaxBelt = maxBelt && (data?.value ?? 0) > maxBelt.conveyor!.speed;
+
   if (!sourceNode || !targetNode) {
     return null;
   }

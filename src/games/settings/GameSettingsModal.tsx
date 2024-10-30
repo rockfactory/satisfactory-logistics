@@ -82,8 +82,10 @@ export function GameSettingsModal(props: IGameSettingsModalProps) {
             label="Max Belt Level"
             data={BeltsOptions}
             description="Select the max belt level you have unlocked. Will be used to highlight belts in the calculator."
-            value={settings?.maxBelt ?? 'Build_ConveyorBeltMk1_C'}
+            value={settings?.maxBelt}
+            clearable
             onChange={onChangeHandler('maxBelt')}
+            placeholder="No belt selected"
           />
         </Stack>
         <Space h={50} />
