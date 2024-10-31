@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "vunguyentuan.vscode-css-variables",
-    "vunguyentuan.vscode-postcss"
+    "vunguyentuan.vscode-postcss",
+    "gruntfuggly.todo-tree"
   ]
 }
