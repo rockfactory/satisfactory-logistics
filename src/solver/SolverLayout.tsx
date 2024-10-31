@@ -3,6 +3,7 @@ import {
   Background,
   BackgroundVariant,
   ConnectionLineType,
+  ControlButton,
   Controls,
   Edge,
   InternalNode,
@@ -15,8 +16,7 @@ import {
   useNodesState,
   useReactFlow,
 } from '@xyflow/react';
-import { useEffect, useRef, useState } from 'react';
-
+import React, { useEffect, useRef, useState } from 'react';
 import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
 import { log } from '../core/logger/log';
@@ -25,6 +25,10 @@ import { IngredientEdge } from './edges/IngredientEdge';
 import { ByproductNode } from './layout/ByproductNode';
 import { MachineNode } from './layout/MachineNode';
 import { ResourceNode } from './layout/ResourceNode';
+import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
+import { IconArrowsMaximize, IconMaximizeOff } from '@tabler/icons-react';
+import classes from './SolverLayout.module.css';
+
 
 // const dagreGraph = new dagre.graphlib.Graph();
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -149,6 +153,22 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   const nodesInitialized = useNodesInitialized();
   const [initialLayoutFinished, setInitialLayoutFinished] = useState(false);
   const [initialFitViewFinished, setInitialFitViewFinished] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const handleToggleFullscreen = () => {
+    toggleFullscreen(ref);
+  };
+
+  const handleFullscreenChange = () => {
+    setIsFullscreen(document.fullscreenElement === ref.current);
+  };
+
+  useEffect(() => {
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
 
   // When nodes change, we need to re-layout them.
   useEffect(() => {
@@ -237,8 +257,17 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         }}
         snapGrid={[10, 10]}
       >
-        <Controls showFitView />
-        <MiniMap nodeStrokeWidth={3} />
+        <Controls showFitView>
+          <ControlButton
+            onClick={handleToggleFullscreen}
+            aria-label="toggle fullscreen"
+            title="toggle fullscreen"
+            className={classes.fullscreenButton}
+          >
+            {isFullscreen ? <IconMaximizeOff /> : <IconArrowsMaximize />}
+          </ControlButton>
+        </Controls>
+        <MiniMap pannable={true} nodeStrokeWidth={3} />
 
         <svg>
           <defs>
