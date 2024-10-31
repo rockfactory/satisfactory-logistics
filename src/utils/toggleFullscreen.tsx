@@ -1,4 +1,5 @@
 import React from 'react';
+import { notifications } from '@mantine/notifications';
 
 export function toggleFullscreen(ref: React.RefObject<HTMLDivElement>) {
   try {
@@ -11,6 +12,10 @@ export function toggleFullscreen(ref: React.RefObject<HTMLDivElement>) {
       ref.current.requestFullscreen();
     }
   } catch (error) {
-    console.error('Error toggling fullscreen mode:', error);
+    notifications.show({
+      title: 'Fullscreen mode',
+      message: 'Error toggling fullscreen mode',
+      color: 'red',
+    });
   }
 }

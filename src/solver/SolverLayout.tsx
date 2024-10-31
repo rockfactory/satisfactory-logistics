@@ -29,6 +29,7 @@ import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
 import { IconArrowsMaximize, IconMaximizeOff } from '@tabler/icons-react';
 import classes from './SolverLayout.module.css';
 
+
 // const dagreGraph = new dagre.graphlib.Graph();
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
 
