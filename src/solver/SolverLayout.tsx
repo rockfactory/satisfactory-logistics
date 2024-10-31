@@ -17,7 +17,6 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import React, { useEffect, useRef, useState } from 'react';
-
 import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
 import { log } from '../core/logger/log';
@@ -27,7 +26,8 @@ import { ByproductNode } from './layout/ByproductNode';
 import { MachineNode } from './layout/MachineNode';
 import { ResourceNode } from './layout/ResourceNode';
 import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
-import { IconWindowMaximize, IconWindowMinimize } from '@tabler/icons-react';
+import { IconArrowsMaximize, IconMaximizeOff } from '@tabler/icons-react';
+import classes from './SolverLayout.module.css';
 
 // const dagreGraph = new dagre.graphlib.Graph();
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -156,8 +156,18 @@ export const SolverLayout = (props: SolverLayoutProps) => {
 
   const handleToggleFullscreen = () => {
     toggleFullscreen(ref);
-    setIsFullscreen(!isFullscreen);
   };
+
+  const handleFullscreenChange = () => {
+    setIsFullscreen(document.fullscreenElement === ref.current);
+  };
+
+  useEffect(() => {
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
 
   // When nodes change, we need to re-layout them.
   useEffect(() => {
@@ -251,8 +261,9 @@ export const SolverLayout = (props: SolverLayoutProps) => {
             onClick={handleToggleFullscreen}
             aria-label="toggle fullscreen"
             title="toggle fullscreen"
+            className={classes.fullscreenButton}
           >
-            {isFullscreen ? <IconWindowMinimize /> : <IconWindowMaximize />}
+            {isFullscreen ? <IconMaximizeOff /> : <IconArrowsMaximize />}
           </ControlButton>
         </Controls>
         <MiniMap pannable={true} nodeStrokeWidth={3} />
