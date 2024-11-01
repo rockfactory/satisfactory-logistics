@@ -205,6 +205,14 @@ export const solverFactoriesActions = createActions({
         );
       }
     },
+  resetSolverBuiltMarkers: (factoryId: string) => state => {
+    const solver = state.solvers.instances[factoryId];
+    if (!solver) return;
+
+    for (const nodeId in solver.nodes) {
+      delete solver.nodes[nodeId].done;
+    }
+  },
   loadSharedSolver:
     (
       instance: SolverInstance,
