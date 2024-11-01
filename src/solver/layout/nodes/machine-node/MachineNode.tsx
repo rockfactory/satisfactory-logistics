@@ -269,10 +269,21 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
             >
               <Table.Tbody>
                 <Table.Tr>
-                  <Table.Td colSpan={5}>
+                  <Table.Td colSpan={3}>
                     <Text size="sm" fw="bold">
                       Ingredients
                     </Text>
+                  </Table.Td>
+                  <Table.Td colSpan={2}>
+                    <Group align="center" gap={2}>
+                      <FactoryItemImage
+                        id={'Desc_CrystalShard_C' as FactoryItemId}
+                        size={16}
+                      />{' '}
+                      <Text size="sm" fw={overclock != 1 ? 'bold' : 'normal'}>
+                        {PercentageFormatter.format(overclock)}
+                      </Text>
+                    </Group>
                   </Table.Td>
                   {amplifiedRate > 1 && (
                     <Table.Td colSpan={2}>
@@ -296,6 +307,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                     ingredient={ingredient}
                     key={ingredient.resource}
                     buildingsAmount={buildingsAmount}
+                    overclock={overclock}
                     amplifiedRate={amplifiedRate}
                   />
                 ))}
@@ -314,6 +326,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                     ingredient={product}
                     key={product.resource}
                     buildingsAmount={buildingsAmount}
+                    overclock={overclock}
                     amplifiedRate={amplifiedRate}
                   />
                 ))}

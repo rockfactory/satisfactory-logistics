@@ -83,7 +83,7 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
 
   return (
     <Stack gap="sm" align="flex-start">
-      <Group justify="space-between">
+      <Group justify="space-between" w="100%">
         <Group gap="sm">
           <Tooltip label="Ignore this recipe">
             <ActionIcon

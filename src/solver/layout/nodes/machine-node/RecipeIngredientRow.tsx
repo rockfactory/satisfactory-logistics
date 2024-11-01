@@ -10,6 +10,7 @@ export const RecipeIngredientRow = ({
   recipe,
   ingredient,
   buildingsAmount,
+  overclock,
   amplifiedRate,
 }: {
   index: number;
@@ -17,10 +18,12 @@ export const RecipeIngredientRow = ({
   recipe: FactoryRecipe;
   ingredient: RecipeIngredient;
   buildingsAmount: number;
+  overclock: number;
   amplifiedRate: number;
 }) => {
   const item = AllFactoryItemsMap[ingredient.resource];
-  const amountPerMinute = (ingredient.displayAmount * 60) / recipe.time;
+  const amountPerMinute =
+    ((ingredient.displayAmount * 60) / recipe.time) * overclock;
   return (
     <Table.Tr>
       <Table.Td>

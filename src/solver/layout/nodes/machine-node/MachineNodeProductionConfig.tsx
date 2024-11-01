@@ -1,7 +1,7 @@
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { Group, NumberInput } from '@mantine/core';
+import { NumberInput, SimpleGrid } from '@mantine/core';
 import { useParams } from 'react-router-dom';
 import type { IMachineNodeData } from './MachineNode';
 
@@ -36,14 +36,14 @@ export function MachineNodeProductionConfig(
   const maxSlots = Math.ceil(buildingsAmount) * building.somersloopSlots;
 
   return (
-    <Group wrap="nowrap">
+    <SimpleGrid cols={2} spacing={6}>
       <NumberInput
         styles={{
           input: {
             fontWeight: somersloopsValue ? 'bold' : 'normal',
-            backgroundColor: somersloopsValue
-              ? 'var(--mantine-color-grape-5)'
-              : undefined,
+            // backgroundColor: somersloopsValue
+            //   ? 'var(--mantine-color-grape-5)'
+            //   : undefined,
           },
         }}
         placeholder="Somersloops"
@@ -51,16 +51,34 @@ export function MachineNodeProductionConfig(
         onChange={setSomersloopsValue}
         min={0}
         max={maxSlots}
+        error={
+          Number(somersloopsValue) > maxSlots
+            ? `Max slots: ${maxSlots}`
+            : Number(somersloopsValue) < 0
+              ? 'Cannot be negative'
+              : null
+        }
         rightSection={
           <FactoryItemImage size={16} id={'Desc_WAT1_C' as FactoryItemId} />
         }
       />
       <NumberInput
         placeholder="Overlock"
-        value={overclockValue}
+        suffix="%"
+        value={overclockValue ? Number(overclockValue) * 100 : 100}
+        onValueChange={({ floatValue }) =>
+          setOverclockValue(floatValue ? floatValue / 100 : 1)
+        }
         onChange={setOverclockValue}
         min={0}
-        max={2.5}
+        max={250}
+        error={
+          Number(overclockValue) > 2.5
+            ? 'Max overclock: 250%'
+            : Number(overclockValue) < 0
+              ? 'Cannot be negative'
+              : null
+        }
         rightSection={
           <FactoryItemImage
             size={16}
@@ -68,6 +86,6 @@ export function MachineNodeProductionConfig(
           />
         }
       />
-    </Group>
+    </SimpleGrid>
   );
 }
