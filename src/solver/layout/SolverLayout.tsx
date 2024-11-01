@@ -174,9 +174,12 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   // When nodes change, we need to re-layout them.
   useEffect(() => {
     logger.debug('Initializing nodes...');
-    // if (!previousFittedWithNodes.current) {
-    // }
     setOpacity(0);
+
+    // Force re-fit view if nodes change
+    if (props.nodes.length !== getNodes().length) {
+      previousFittedWithNodes.current = false;
+    }
 
     setNodes([...props.nodes]);
     setEdges([...props.edges]);
