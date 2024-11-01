@@ -14,7 +14,6 @@ import { FC } from 'react';
 import { RepeatingNumber } from '../../core/intl/NumberFormatter';
 import { FactoryItem } from '../../recipes/FactoryItem';
 import { getEdgeParams, getSpecialPath } from './utils';
-import { useDisclosure } from '@mantine/hooks';
 
 export interface IIngredientEdgeData {
   resource: FactoryItem;
@@ -39,7 +38,6 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
 }) => {
   const sourceNode = useInternalNode(source);
   const targetNode = useInternalNode(target);
-  const [isTooltipOpen, { close, open }] = useDisclosure(false);
 
   const isBiDirectionEdge = useStore(s => {
     const edgeExists = s.edges.some(
@@ -111,8 +109,6 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
           }}
           className="nodrag nopan"
-          onMouseEnter={maxBelt ? open : undefined}
-          onMouseLeave={maxBelt ? close : undefined}
         >
           <Tooltip
             color="dark.8"
@@ -131,7 +127,6 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
                 </Group>
               )
             }
-            opened={isTooltipOpen}
           >
             <Group gap="4px">
               <FactoryItemImage size={16} id={data?.resource.id} />
