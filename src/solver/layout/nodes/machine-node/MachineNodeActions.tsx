@@ -4,7 +4,7 @@ import { ActionIcon, Button, Group, Stack, Tooltip } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { IconCircleCheckFilled, IconTrash } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
-import type { IMachineNodeData } from '../MachineNode';
+import type { IMachineNodeData } from './MachineNode';
 import { MachineNodeProductionConfig } from './MachineNodeProductionConfig';
 import {
   SwitchRecipeAction,

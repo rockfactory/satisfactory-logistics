@@ -3,7 +3,7 @@ import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { Group, NumberInput } from '@mantine/core';
 import { useParams } from 'react-router-dom';
-import type { IMachineNodeData } from '../MachineNode';
+import type { IMachineNodeData } from './MachineNode';
 
 export interface IMachineNodeProductionConfigProps {
   id: string;

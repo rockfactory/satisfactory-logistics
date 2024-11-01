@@ -5,7 +5,7 @@ import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { Group, Image, Table, Text } from '@mantine/core';
 import { sortBy } from 'lodash';
 import { useMemo } from 'react';
-import type { IResourceNodeData } from '../ResourceNode';
+import type { IResourceNodeData } from '../../ResourceNode';
 
 export interface IResourceNodeExtractorDetailProps {
   id: string;

@@ -21,8 +21,8 @@ import { AllFactoryItemsMap } from '../../../recipes/FactoryItem';
 import {
   SolverAreaNode,
   SolverEnergyNode,
-} from '../../computeProductionConstraints';
-import { IMachineNodeData } from '../../layout/MachineNode';
+} from '../../algorithm/computeProductionConstraints';
+import { IMachineNodeData } from '../../layout/nodes/machine-node/MachineNode';
 import { IResourceNodeData } from '../../layout/ResourceNode';
 import { usePathSolverInstance } from '../../store/solverSelectors';
 import { ISolverSolution } from '../SolverPage';

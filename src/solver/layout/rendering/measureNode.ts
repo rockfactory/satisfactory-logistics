@@ -1,5 +1,5 @@
 import { getRecipeDisplayName } from '@/recipes/FactoryRecipe';
-import type { SolutionNode } from '@/solver/solveProduction';
+import type { SolutionNode } from '@/solver/algorithm/solveProduction';
 import { measureText } from './measureText';
 
 const BaseSizeWithoutTexts = {

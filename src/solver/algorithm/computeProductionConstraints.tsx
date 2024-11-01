@@ -2,19 +2,19 @@ import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
 import Graph from 'graphology';
 import { last } from 'lodash';
 import voca from 'voca';
-import { log } from '../core/logger/log';
-import { AllFactoryBuildingsMap } from '../recipes/FactoryBuilding';
-import { AllFactoryItemsMap, FactoryItem } from '../recipes/FactoryItem';
+import { log } from '../../core/logger/log';
+import { AllFactoryBuildingsMap } from '../../recipes/FactoryBuilding';
+import { AllFactoryItemsMap, FactoryItem } from '../../recipes/FactoryItem';
 import {
   FactoryRecipe,
   NotProducibleItems,
   getAllRecipesForItem,
-} from '../recipes/FactoryRecipe';
+} from '../../recipes/FactoryRecipe';
 import {
   WorldResourcesList,
   getWorldResourceMax,
   isWorldResource,
-} from '../recipes/WorldResources';
+} from '../../recipes/WorldResources';
 import type { SolverProductionRequest } from './solveProduction';
 
 const logger = log.getLogger('recipes:solver');

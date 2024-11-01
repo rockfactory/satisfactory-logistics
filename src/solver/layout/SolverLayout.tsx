@@ -1,3 +1,4 @@
+import { log } from '@/core/logger/log';
 import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
 import dagre from '@dagrejs/dagre';
 import { Box } from '@mantine/core';
@@ -21,12 +22,11 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import React, { useEffect, useRef, useState } from 'react';
-import { log } from '../core/logger/log';
-import { FloatingEdge } from './edges/FloatingEdge';
-import { IngredientEdge } from './edges/IngredientEdge';
-import { ByproductNode } from './layout/ByproductNode';
-import { MachineNode } from './layout/MachineNode';
-import { ResourceNode } from './layout/ResourceNode';
+import { FloatingEdge } from '../edges/FloatingEdge';
+import { IngredientEdge } from '../edges/IngredientEdge';
+import { ByproductNode } from './nodes/byproduct-node/ByproductNode';
+import { MachineNode } from './nodes/machine-node/MachineNode';
+import { ResourceNode } from './nodes/resource-node/ResourceNode';
 import classes from './SolverLayout.module.css';
 
 // const dagreGraph = new dagre.graphlib.Graph();

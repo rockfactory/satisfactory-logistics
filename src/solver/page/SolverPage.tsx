@@ -39,16 +39,16 @@ import {
   SolverEdge,
   SolverNode,
   type SolverContext,
-} from '../computeProductionConstraints';
-import { SolverInspectorDrawer } from '../inspector/SolverInspectorDrawer';
-import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
-import { SolverShareButton } from '../share/SolverShareButton';
+} from '../algorithm/computeProductionConstraints';
 import {
   solveProduction,
   useHighs,
   type SolutionNode,
-} from '../solveProduction';
-import { SolverLayout } from '../SolverLayout';
+} from '../algorithm/solveProduction';
+import { SolverInspectorDrawer } from '../inspector/SolverInspectorDrawer';
+import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
+import { SolverLayout } from '../layout/SolverLayout';
+import { SolverShareButton } from '../share/SolverShareButton';
 import { SolverInstance } from '../store/Solver';
 import {
   getSolverGame,

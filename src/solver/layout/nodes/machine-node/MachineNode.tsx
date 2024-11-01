@@ -26,21 +26,21 @@ import { useParams } from 'react-router-dom';
 import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { RepeatingNumber } from '../../core/intl/NumberFormatter';
-import { useStore } from '../../core/zustand';
-import { AllFactoryBuildingsMap } from '../../recipes/FactoryBuilding';
+import { RepeatingNumber } from '../../../../core/intl/NumberFormatter';
+import { useStore } from '../../../../core/zustand';
+import { AllFactoryBuildingsMap } from '../../../../recipes/FactoryBuilding';
 import {
   AllFactoryItemsMap,
   type FactoryItem,
-} from '../../recipes/FactoryItem';
+} from '../../../../recipes/FactoryItem';
 import {
   FactoryRecipe,
   getRecipeDisplayName,
   getRecipeProductPerBuilding,
-} from '../../recipes/FactoryRecipe';
-import { InvisibleHandles } from './InvisibleHandles';
-import { MachineNodeActions } from './machine-node/MachineNodeActions';
-import { RecipeIngredientRow } from './machine-node/RecipeIngredientRow';
+} from '../../../../recipes/FactoryRecipe';
+import { InvisibleHandles } from '../../rendering/InvisibleHandles';
+import { MachineNodeActions } from './MachineNodeActions';
+import { RecipeIngredientRow } from './RecipeIngredientRow';
 
 export interface IMachineNodeData {
   label: string;

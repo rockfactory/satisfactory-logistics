@@ -4,8 +4,8 @@ import {
   getAllDefaultRecipesIds,
   getAllMAMRecipeIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
-import type { IMachineNodeData } from '@/solver/layout/MachineNode';
-import { solveProduction } from '@/solver/solveProduction';
+import { solveProduction } from '@/solver/algorithm/solveProduction';
+import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
 import type { SolverRequest } from '@/solver/store/Solver';
 import type { Highs } from 'highs';
 
