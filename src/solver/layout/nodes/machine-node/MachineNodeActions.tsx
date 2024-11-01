@@ -4,6 +4,7 @@ import { ActionIcon, Button, Group, Stack, Tooltip } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { IconCircleCheckFilled, IconTrash } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
+import { useSolverSolution } from '../../solution-context/SolverSolutionContext';
 import type { IMachineNodeData } from './MachineNode';
 import { MachineNodeProductionConfig } from './MachineNodeProductionConfig';
 import {
@@ -27,6 +28,7 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
   const { recipe, value } = data;
 
   const solverId = useParams<{ id: string }>().id;
+  const { solution } = useSolverSolution();
 
   const nodeState = useStore(
     state => state.solvers.instances[solverId ?? '']?.nodes?.[props.id],
@@ -65,11 +67,20 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
         );
     }
 
-    // 2. Update the somersloops and overclock
-    if (
-      somersloopsValue !== nodeState?.somersloops ||
-      overclockValue !== nodeState?.overclock
-    )
+    // 2. Update somersloops
+    if (somersloopsValue !== nodeState?.somersloops) {
+      useStore
+        .getState()
+        .updateSolverSomersloops(
+          solution.graph,
+          solverId!,
+          props.id,
+          Number(somersloopsValue),
+        );
+    }
+
+    // 3. Update overclock
+    if (overclockValue !== nodeState?.overclock)
       useStore.getState().updateSolverNode(solverId!, props.id, node => {
         node.somersloops = somersloopsValue
           ? Number(somersloopsValue)

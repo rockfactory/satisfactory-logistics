@@ -18,7 +18,7 @@ import {
 } from './computeProductionConstraints';
 
 const logger = log.getLogger('solver:production');
-logger.setLevel('debug');
+logger.setLevel('info');
 
 export interface SolverProductionRequest extends SolverRequest {
   inputs: FactoryInput[];

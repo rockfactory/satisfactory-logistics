@@ -33,7 +33,8 @@ export function MachineNodeProductionConfig(
   const building = AllFactoryBuildingsMap[machine.recipe.producedIn];
   const solverId = useParams<{ id: string }>().id;
 
-  const maxSlots = Math.ceil(buildingsAmount) * building.somersloopSlots;
+  const maxSlots =
+    Math.ceil(buildingsAmount - 0.0001) * building.somersloopSlots;
 
   return (
     <SimpleGrid cols={2} spacing={6}>
