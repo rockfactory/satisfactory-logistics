@@ -15,14 +15,15 @@ import { IIngredientEdgeData } from './edges/IngredientEdge';
 import type { IByproductNodeData } from './layout/ByproductNode';
 import { IMachineNodeData } from './layout/MachineNode';
 import { IResourceNodeData } from './layout/ResourceNode';
-import { SolverRequest } from './store/Solver';
+import { SolverRequest, type SolverNodeState } from './store/Solver';
 
 const logger = log.getLogger('solver:production');
-logger.setLevel('info');
+logger.setLevel('debug');
 
 export interface SolverProductionRequest extends SolverRequest {
   inputs: FactoryInput[];
   outputs: FactoryOutput[];
+  nodes?: Record<string, SolverNodeState>;
 }
 
 export async function loadHighs() {
@@ -149,6 +150,12 @@ export function solveProduction(
             data: {
               label: `${node.recipe.name}`,
               value: Number(value.Primal),
+              originalValue: Number(
+                result.Columns[node.originalVariable].Primal,
+              ),
+              amplifiedValue: Number(
+                result.Columns[node.amplifiedVariable].Primal,
+              ),
               recipe: node.recipe,
               resource: node.resource,
             },
@@ -254,5 +261,5 @@ export function solveProduction(
     }
   }
 
-  return { result, nodes, edges, graph: ctx.graph };
+  return { result, nodes, edges, graph: ctx.graph, context: ctx };
 }

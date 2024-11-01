@@ -3,6 +3,7 @@ import {
   Badge,
   Box,
   CloseButton,
+  getGradient,
   Group,
   Image,
   Popover,
@@ -11,6 +12,7 @@ import {
   Text,
   Title,
   Tooltip,
+  useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -24,7 +26,9 @@ import { NodeProps, useReactFlow } from '@xyflow/react';
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
 import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
+import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { RepeatingNumber } from '../../core/intl/NumberFormatter';
 import { useStore } from '../../core/zustand';
@@ -40,11 +44,14 @@ import {
 } from '../../recipes/FactoryRecipe';
 import { SwitchRecipeAction } from '../page/actions/SwitchRecipeAction';
 import { InvisibleHandles } from './InvisibleHandles';
+import { MachineNodeProductionConfig } from './machine-node/MachineNodeProductionConfig';
 import { RecipeIngredientRow } from './machine-node/RecipeIngredientRow';
 
 export interface IMachineNodeData {
   label: string;
   value: number;
+  originalValue: number;
+  amplifiedValue: number;
   recipe: FactoryRecipe;
   resource: FactoryItem;
   [key: string]: unknown;
@@ -56,14 +63,16 @@ export type IMachineNodeProps = NodeProps & {
 };
 
 export const MachineNode = memo((props: IMachineNodeProps) => {
-  const { recipe, value } = props.data;
+  const { recipe, value, originalValue, amplifiedValue } = props.data;
+
+  const theme = useMantineTheme();
+
   const product = AllFactoryItemsMap[recipe.products[0].resource];
   const building = AllFactoryBuildingsMap[recipe.producedIn];
   const isAlt = recipe.name.includes('Alternate');
   const { updateNode } = useReactFlow();
 
   const perBuilding = getRecipeProductPerBuilding(recipe, product.id);
-  const buildingsAmount = value / perBuilding;
 
   const [isHovering, { close, open }] = useDisclosure(false);
 
@@ -72,11 +81,16 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
   const nodeState = useStore(
     state => state.solvers.instances[solverId ?? '']?.nodes?.[props.id],
   );
+  const overclock = nodeState?.overclock ?? 1;
+  const buildingsAmount = originalValue / perBuilding / overclock;
+
+  const amplifiedRate = (amplifiedValue + originalValue) / originalValue;
 
   return (
     <Popover
       opened={(isHovering || props.selected) && !props.dragging}
       transitionProps={{}}
+      offset={4}
     >
       <Popover.Target>
         <Box
@@ -136,21 +150,76 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
           </NodeToolbar> */}
 
           <Group gap="sm">
-            <Image w="32" h="32" src={building.imagePath} />
+            <Box pos="relative" p="0">
+              <Image w="32" h="32" src={building.imagePath} />
+              {overclock > 1.0 && (
+                <Box
+                  style={{
+                    borderRadius: '3px',
+                    position: 'absolute',
+                    top: -12,
+                    right: -12,
+                  }}
+                >
+                  <FactoryItemImage
+                    size={16}
+                    id={'Desc_CrystalShard_C' as FactoryItemId}
+                  />
+                </Box>
+              )}
+            </Box>
             <Stack gap={2} align="center">
-              <Group gap="xs">
+              <Group gap={2}>
                 {isAlt && (
                   <Badge size="xs" color="yellow">
                     ALT
                   </Badge>
                 )}
                 <Text size="sm">{getRecipeDisplayName(recipe)}</Text>
+                {nodeState?.somersloops && (
+                  <FactoryItemImage
+                    size={16}
+                    id={'Desc_WAT1_C' as FactoryItemId}
+                  />
+                )}
               </Group>
               <Text size="xs">
                 x<RepeatingNumber value={buildingsAmount} /> {building.name}
               </Text>
             </Stack>
-            <FactoryItemImage id={product.id} size={32} highRes />
+            <Box
+              pos="relative"
+              p={6}
+              m={-6}
+              style={{
+                borderRadius: '3px',
+              }}
+              bg={
+                nodeState?.somersloops
+                  ? getGradient(
+                      { deg: 180, from: 'grape.5', to: 'pink.6' },
+                      theme,
+                    )
+                  : 'transparent'
+              }
+            >
+              <FactoryItemImage id={product.id} size={32} highRes />
+              {/* {nodeState?.somersloops && (
+                <Box
+                  style={{
+                    borderRadius: '3px',
+                    position: 'absolute',
+                    bottom: -14,
+                    right: -14,
+                  }}
+                >
+                  <FactoryItemImage
+                    size={16}
+                    id={'Desc_WAT1_C' as FactoryItemId}
+                  />
+                </Box>
+              )} */}
+            </Box>
           </Group>
 
           <InvisibleHandles />
@@ -211,6 +280,19 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                       Ingredients
                     </Text>
                   </Table.Td>
+                  {amplifiedRate > 1 && (
+                    <Table.Td colSpan={2}>
+                      <Group gap={2} align="center">
+                        <FactoryItemImage
+                          id={'Desc_WAT1_C' as FactoryItemId}
+                          size={16}
+                        />{' '}
+                        <Text size="sm" fw="bold" c="grape.4">
+                          {PercentageFormatter.format(amplifiedRate)}
+                        </Text>
+                      </Group>
+                    </Table.Td>
+                  )}
                 </Table.Tr>
                 {recipe.ingredients.map((ingredient, i) => (
                   <RecipeIngredientRow
@@ -220,6 +302,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                     ingredient={ingredient}
                     key={ingredient.resource}
                     buildingsAmount={buildingsAmount}
+                    amplifiedRate={amplifiedRate}
                   />
                 ))}
                 <Table.Tr>
@@ -237,6 +320,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                     ingredient={product}
                     key={product.resource}
                     buildingsAmount={buildingsAmount}
+                    amplifiedRate={amplifiedRate}
                   />
                 ))}
               </Table.Tbody>
@@ -296,6 +380,14 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                     </ActionIcon>
                   </Tooltip>
                 </Group>
+
+                <MachineNodeProductionConfig
+                  id={props.id}
+                  buildingsAmount={buildingsAmount}
+                  machine={props.data}
+                  nodeState={nodeState}
+                />
+
                 <SwitchRecipeAction recipeId={recipe.id} />
               </Stack>
             ) : (

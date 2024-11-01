@@ -10,12 +10,14 @@ export const RecipeIngredientRow = ({
   recipe,
   ingredient,
   buildingsAmount,
+  amplifiedRate,
 }: {
   index: number;
   type: 'Ingredients' | 'Products';
   recipe: FactoryRecipe;
   ingredient: RecipeIngredient;
   buildingsAmount: number;
+  amplifiedRate: number;
 }) => {
   const item = AllFactoryItemsMap[ingredient.resource];
   const amountPerMinute = (ingredient.displayAmount * 60) / recipe.time;
@@ -44,6 +46,18 @@ export const RecipeIngredientRow = ({
           /min
         </Text>
       </Table.Td>
+      {amplifiedRate > 1 && (
+        <Table.Td>
+          {type === 'Products' && (
+            <Text size="sm" fw="bold" c="grape.4">
+              <RepeatingNumber
+                value={amplifiedRate * amountPerMinute * buildingsAmount}
+              />
+              /min
+            </Text>
+          )}
+        </Table.Td>
+      )}
     </Table.Tr>
   );
 };

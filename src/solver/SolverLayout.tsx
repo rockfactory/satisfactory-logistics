@@ -1,4 +1,7 @@
+import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
 import dagre from '@dagrejs/dagre';
+import { Box } from '@mantine/core';
+import { IconArrowsMaximize, IconMaximizeOff } from '@tabler/icons-react';
 import {
   Background,
   BackgroundVariant,
@@ -16,19 +19,15 @@ import {
   useNodesState,
   useReactFlow,
 } from '@xyflow/react';
-import React, { useEffect, useRef, useState } from 'react';
-import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
+import React, { useEffect, useRef, useState } from 'react';
 import { log } from '../core/logger/log';
 import { FloatingEdge } from './edges/FloatingEdge';
 import { IngredientEdge } from './edges/IngredientEdge';
 import { ByproductNode } from './layout/ByproductNode';
 import { MachineNode } from './layout/MachineNode';
 import { ResourceNode } from './layout/ResourceNode';
-import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
-import { IconArrowsMaximize, IconMaximizeOff } from '@tabler/icons-react';
 import classes from './SolverLayout.module.css';
-
 
 // const dagreGraph = new dagre.graphlib.Graph();
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -170,9 +169,13 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     };
   }, []);
 
+  const previousFittedWithNodes = useRef(false);
+
   // When nodes change, we need to re-layout them.
   useEffect(() => {
     logger.debug('Initializing nodes...');
+    // if (!previousFittedWithNodes.current) {
+    // }
     setOpacity(0);
 
     setNodes([...props.nodes]);
@@ -205,10 +208,15 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     if (nodesInitialized && initialLayoutFinished && !initialFitViewFinished) {
       logger.debug('-> Fitting view...');
       setInitialFitViewFinished(true);
-      fitView().then(() => {
+      if (nodes.length > 0 && !previousFittedWithNodes.current) {
+        previousFittedWithNodes.current = true;
+        fitView().then(() => {
+          setOpacity(1);
+          logger.debug('-> Fitting view completed');
+        });
+      } else {
         setOpacity(1);
-        logger.debug('-> Fitting view completed');
-      });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodesInitialized, initialLayoutFinished, initialFitViewFinished]);
