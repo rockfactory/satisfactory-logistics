@@ -1,26 +1,32 @@
-import { Button, Checkbox, Group, ScrollArea, Stack } from '@mantine/core';
+import { Checkbox, Group, ScrollArea, Stack } from '@mantine/core';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useStore } from '@/core/zustand';
 import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
 import { xor } from 'lodash';
 import {
   AllFactoryRecipes,
   AllFactoryRecipesMap,
+  type FactoryRecipe,
 } from '../../../recipes/FactoryRecipe';
 import { useSolverAllowedRecipes } from '../../store/solverSelectors';
 
 export interface ISwitchRecipeActionProps {
   recipeId: string;
+  /** All recipes for this specific recipe */
+  recipes: FactoryRecipe[];
+  allowedRecipes: string[];
+  setAllowedRecipes: (ids: string[]) => void;
 }
 
-/**
- * Select alternate recipes for a given product
- */
-export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
-  const { recipeId } = props;
+export function useRecipeAlternatesInputState(recipeId: string) {
+  const solverId = useParams<{ id: string }>().id;
+  const allAllowedRecipes = useSolverAllowedRecipes(solverId);
+
   const recipe = AllFactoryRecipesMap[recipeId];
+
+  // All the recipes that produce the same product (alternate recipes).
+  // These are the _saved_ recipes, not the input state.
   const recipes = useMemo(() => {
     return AllFactoryRecipes.filter(r =>
       r.products.some(
@@ -28,9 +34,6 @@ export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
       ),
     );
   }, [recipe.products]);
-
-  const solverId = useParams<{ id: string }>().id;
-  const allAllowedRecipes = useSolverAllowedRecipes(solverId);
 
   const defaultAllowedRecipes = useMemo(() => {
     return (
@@ -43,11 +46,25 @@ export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
     defaultAllowedRecipes,
   );
 
+  // TODO We can probably remove this effect, since the input is re-rendered
+  // when applying the changes.
   useEffect(() => {
     setAllowedRecipes(defaultAllowedRecipes);
   }, [defaultAllowedRecipes, recipes]);
 
-  const isDisabled = xor(allowedRecipes, defaultAllowedRecipes).length === 0;
+  return {
+    recipes,
+    allowedRecipes,
+    setAllowedRecipes,
+    changed: xor(allowedRecipes, defaultAllowedRecipes).length !== 0,
+  };
+}
+
+/**
+ * Select alternate recipes for a given product
+ */
+export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
+  const { recipeId, allowedRecipes, setAllowedRecipes, recipes } = props;
 
   return (
     <Checkbox.Group
@@ -56,23 +73,6 @@ export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
       label={
         <Group justify="space-between">
           <span>Alternate recipes</span>
-          <Button
-            variant={isDisabled ? 'default' : 'filled'}
-            color="blue"
-            size="xs"
-            disabled={isDisabled}
-            onClick={() => {
-              useStore
-                .getState()
-                .setAllowedRecipes(solverId!, all =>
-                  all
-                    ?.filter(id => !recipes.some(r => r.id === id))
-                    .concat(allowedRecipes),
-                );
-            }}
-          >
-            Apply
-          </Button>
         </Group>
       }
       value={allowedRecipes}

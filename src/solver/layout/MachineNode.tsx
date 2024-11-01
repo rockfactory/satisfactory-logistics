@@ -1,5 +1,4 @@
 import {
-  ActionIcon,
   Badge,
   Box,
   CloseButton,
@@ -11,7 +10,6 @@ import {
   Table,
   Text,
   Title,
-  Tooltip,
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -20,14 +18,12 @@ import {
   IconBuildingFactory2,
   IconCircleCheckFilled,
   IconClockBolt,
-  IconTrash,
 } from '@tabler/icons-react';
 import { NodeProps, useReactFlow } from '@xyflow/react';
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
-import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { RepeatingNumber } from '../../core/intl/NumberFormatter';
@@ -42,9 +38,8 @@ import {
   getRecipeDisplayName,
   getRecipeProductPerBuilding,
 } from '../../recipes/FactoryRecipe';
-import { SwitchRecipeAction } from '../page/actions/SwitchRecipeAction';
 import { InvisibleHandles } from './InvisibleHandles';
-import { MachineNodeProductionConfig } from './machine-node/MachineNodeProductionConfig';
+import { MachineNodeActions } from './machine-node/MachineNodeActions';
 import { RecipeIngredientRow } from './machine-node/RecipeIngredientRow';
 
 export interface IMachineNodeData {
@@ -83,7 +78,6 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
   );
   const overclock = nodeState?.overclock ?? 1;
   const buildingsAmount = originalValue / perBuilding / overclock;
-
   const amplifiedRate = (amplifiedValue + originalValue) / originalValue;
 
   return (
@@ -328,68 +322,11 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
           </Stack>
           <Box w="250px" p="xs">
             {props.selected ? (
-              <Stack gap="sm" align="flex-start">
-                <Group gap="sm">
-                  <Tooltip label="Ignore this recipe">
-                    <ActionIcon
-                      color="red"
-                      variant="outline"
-                      onClick={() =>
-                        useStore.getState().toggleRecipe(solverId!, {
-                          recipeId: recipe.id,
-                          use: false,
-                        })
-                      }
-                    >
-                      <IconTrash size={16} />
-                    </ActionIcon>
-                  </Tooltip>
-
-                  <Tooltip
-                    label={
-                      nodeState?.done ? 'Remove built marker' : 'Mark as built'
-                    }
-                  >
-                    <ActionIcon
-                      color="green"
-                      variant={nodeState?.done ? 'filled' : 'outline'}
-                      onClick={() =>
-                        useStore
-                          .getState()
-                          .updateSolverNode(solverId!, props.id, node => {
-                            node.done = !node.done;
-                          })
-                      }
-                    >
-                      <IconCircleCheckFilled size={16} />
-                    </ActionIcon>
-                  </Tooltip>
-
-                  <Tooltip label="Remove recipe and replace it with an Input of the same amount.">
-                    <ActionIcon
-                      color="blue"
-                      variant="outline"
-                      onClick={() =>
-                        useStore.getState().addFactoryInput(solverId!, {
-                          resource: recipe.products[0].resource,
-                          amount: value,
-                        })
-                      }
-                    >
-                      <FactoryInputIcon size={16} />
-                    </ActionIcon>
-                  </Tooltip>
-                </Group>
-
-                <MachineNodeProductionConfig
-                  id={props.id}
-                  buildingsAmount={buildingsAmount}
-                  machine={props.data}
-                  nodeState={nodeState}
-                />
-
-                <SwitchRecipeAction recipeId={recipe.id} />
-              </Stack>
+              <MachineNodeActions
+                data={props.data}
+                id={props.id}
+                buildingsAmount={buildingsAmount}
+              />
             ) : (
               <Stack>
                 <Text fs="italic" size="sm">
