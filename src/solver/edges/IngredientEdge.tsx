@@ -1,6 +1,6 @@
 import { useGameSettingMaxBelt } from '@/games/gamesSlice';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { alpha, Box, Group, Text } from '@mantine/core';
+import { alpha, Box, Group, Image, Text, Tooltip } from '@mantine/core';
 import {
   BaseEdge,
   Edge,
@@ -73,6 +73,9 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
     : getBezierPath(edgePathParams);
 
   const duration = 60 / (data?.value ?? 0);
+  const neededBelts = maxBelt
+    ? Math.ceil((data?.value ?? 0) / maxBelt.conveyor!.speed)
+    : 1;
 
   return (
     <>
@@ -96,6 +99,7 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
         <Box
           p={'4px'}
           style={{
+            pointerEvents: 'all',
             borderRadius: 4,
             backgroundColor: alpha(
               isOverMaxBelt ? '#75341e' : 'var(--mantine-color-dark-6)',
@@ -106,13 +110,32 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
           }}
           className="nodrag nopan"
         >
-          <Group gap="4px">
-            <FactoryItemImage size={16} id={data?.resource.id} />
-            <Text size="10px">
-              <RepeatingNumber value={data?.value} />
-              /min
-            </Text>
-          </Group>
+          <Tooltip
+            color="dark.8"
+            label={
+              maxBelt && (
+                <Group>
+                  <Image
+                    src={maxBelt.imagePath}
+                    alt={maxBelt.name}
+                    w={24}
+                    h={24}
+                  />
+                  <Text>
+                    {neededBelts}x {maxBelt?.name}
+                  </Text>
+                </Group>
+              )
+            }
+          >
+            <Group gap="4px">
+              <FactoryItemImage size={16} id={data?.resource.id} />
+              <Text size="10px">
+                <RepeatingNumber value={data?.value} />
+                /min
+              </Text>
+            </Group>
+          </Tooltip>
         </Box>
       </EdgeLabelRenderer>
     </>
