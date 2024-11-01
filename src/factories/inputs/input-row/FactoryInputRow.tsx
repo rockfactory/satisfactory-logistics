@@ -118,6 +118,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         onChange={onChangeHandler(`inputs.${index}.resource`)}
       />
       <Tooltip
+        color="dark.8"
         label={
           <Group gap="sm">
             Usage

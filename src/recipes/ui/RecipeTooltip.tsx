@@ -37,7 +37,9 @@ export function RecipeTooltip(props: IRecipeTooltipProps) {
                     {AllFactoryItemsMap[ingredient.resource].displayName}
                   </Table.Td>
                   <Table.Td>
-                    <RepeatingNumber value={ingredient.amount} />
+                    <RepeatingNumber
+                      value={(ingredient.displayAmount * 60) / recipe.time}
+                    />
                     /min
                   </Table.Td>
                 </Table.Tr>
@@ -56,7 +58,9 @@ export function RecipeTooltip(props: IRecipeTooltipProps) {
                     {AllFactoryItemsMap[product.resource].displayName}
                   </Table.Td>
                   <Table.Td>
-                    <RepeatingNumber value={product.amount} />
+                    <RepeatingNumber
+                      value={(product.amount * 60) / recipe.time}
+                    />
                     /min
                   </Table.Td>
                 </Table.Tr>

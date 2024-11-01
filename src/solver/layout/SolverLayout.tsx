@@ -1,8 +1,13 @@
+import { log } from '@/core/logger/log';
+import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
 import dagre from '@dagrejs/dagre';
+import { Box } from '@mantine/core';
+import { IconArrowsMaximize, IconMaximizeOff } from '@tabler/icons-react';
 import {
   Background,
   BackgroundVariant,
   ConnectionLineType,
+  ControlButton,
   Controls,
   Edge,
   InternalNode,
@@ -15,16 +20,14 @@ import {
   useNodesState,
   useReactFlow,
 } from '@xyflow/react';
-import { useEffect, useRef, useState } from 'react';
-
-import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
-import { log } from '../core/logger/log';
-import { FloatingEdge } from './edges/FloatingEdge';
-import { IngredientEdge } from './edges/IngredientEdge';
-import { ByproductNode } from './layout/ByproductNode';
-import { MachineNode } from './layout/MachineNode';
-import { ResourceNode } from './layout/ResourceNode';
+import React, { useEffect, useRef, useState } from 'react';
+import { FloatingEdge } from '../edges/FloatingEdge';
+import { IngredientEdge } from '../edges/IngredientEdge';
+import { ByproductNode } from './nodes/byproduct-node/ByproductNode';
+import { MachineNode } from './nodes/machine-node/MachineNode';
+import { ResourceNode } from './nodes/resource-node/ResourceNode';
+import classes from './SolverLayout.module.css';
 
 // const dagreGraph = new dagre.graphlib.Graph();
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -149,11 +152,34 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   const nodesInitialized = useNodesInitialized();
   const [initialLayoutFinished, setInitialLayoutFinished] = useState(false);
   const [initialFitViewFinished, setInitialFitViewFinished] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const handleToggleFullscreen = () => {
+    toggleFullscreen(ref);
+  };
+
+  const handleFullscreenChange = () => {
+    setIsFullscreen(document.fullscreenElement === ref.current);
+  };
+
+  useEffect(() => {
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, []);
+
+  const previousFittedWithNodes = useRef(false);
 
   // When nodes change, we need to re-layout them.
   useEffect(() => {
     logger.debug('Initializing nodes...');
     setOpacity(0);
+
+    // Force re-fit view if nodes change
+    if (props.nodes.length !== getNodes().length) {
+      previousFittedWithNodes.current = false;
+    }
 
     setNodes([...props.nodes]);
     setEdges([...props.edges]);
@@ -185,10 +211,15 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     if (nodesInitialized && initialLayoutFinished && !initialFitViewFinished) {
       logger.debug('-> Fitting view...');
       setInitialFitViewFinished(true);
-      fitView().then(() => {
+      if (nodes.length > 0 && !previousFittedWithNodes.current) {
+        previousFittedWithNodes.current = true;
+        fitView().then(() => {
+          setOpacity(1);
+          logger.debug('-> Fitting view completed');
+        });
+      } else {
         setOpacity(1);
-        logger.debug('-> Fitting view completed');
-      });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodesInitialized, initialLayoutFinished, initialFitViewFinished]);
@@ -237,8 +268,17 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         }}
         snapGrid={[10, 10]}
       >
-        <Controls showFitView />
-        <MiniMap nodeStrokeWidth={3} />
+        <Controls showFitView>
+          <ControlButton
+            onClick={handleToggleFullscreen}
+            aria-label="toggle fullscreen"
+            title="toggle fullscreen"
+            className={classes.fullscreenButton}
+          >
+            {isFullscreen ? <IconMaximizeOff /> : <IconArrowsMaximize />}
+          </ControlButton>
+        </Controls>
+        <MiniMap pannable={true} nodeStrokeWidth={3} />
 
         <svg>
           <defs>

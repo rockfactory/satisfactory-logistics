@@ -1,20 +1,21 @@
 import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
 import Graph from 'graphology';
+import { last } from 'lodash';
 import voca from 'voca';
-import { log } from '../core/logger/log';
-import { AllFactoryBuildingsMap } from '../recipes/FactoryBuilding';
-import { AllFactoryItemsMap, FactoryItem } from '../recipes/FactoryItem';
+import { log } from '../../core/logger/log';
+import { AllFactoryBuildingsMap } from '../../recipes/FactoryBuilding';
+import { AllFactoryItemsMap, FactoryItem } from '../../recipes/FactoryItem';
 import {
   FactoryRecipe,
   NotProducibleItems,
   getAllRecipesForItem,
-} from '../recipes/FactoryRecipe';
+} from '../../recipes/FactoryRecipe';
 import {
   WorldResourcesList,
   getWorldResourceMax,
   isWorldResource,
-} from '../recipes/WorldResources';
-import { SolverRequest } from './store/Solver';
+} from '../../recipes/WorldResources';
+import type { SolverProductionRequest } from './solveProduction';
 
 const logger = log.getLogger('recipes:solver');
 logger.setLevel('info');
@@ -53,6 +54,8 @@ export type SolverOutputNode = {
   recipeMainProductVariable: string;
   resource: FactoryItem;
   variable: string;
+  amplifiedVariable: string;
+  originalVariable: string;
   byproductVariable: string;
 };
 
@@ -109,15 +112,19 @@ export type SolverEdge = {
 
 export class SolverContext {
   // variables: SolverVariables;
-  request: SolverRequest;
+  request: SolverProductionRequest;
   processedRecipes = new Set<string>();
   allowedRecipes = new Set<string>();
   graph = new Graph<SolverNode, SolverEdge>();
   constraints: string[] = [];
+  /**
+   * Not implemented yet.
+   */
+  integers: string[] = [];
   bounds: string[] = [];
   objective?: string;
 
-  constructor(request: SolverRequest) {
+  constructor(request: SolverProductionRequest) {
     this.request = request;
 
     if (this.request.allowedRecipes) {
@@ -208,6 +215,8 @@ export class SolverContext {
           `0 <= r${AllFactoryItemsMap[r].index} <= ${getWorldResourceMax(r)}`,
       ),
       ...this.bounds,
+      // `GENERAL`,
+      // ...this.integers.join(' '),
       `END`,
     ].join('\n');
     logger.log('Problem:\n', problem);
@@ -445,6 +454,16 @@ export function computeProductionConstraints(
     const mainProductAmount = (recipe.products[0].amount * 60) / recipe.time;
     logger.debug(' Processing recipe:', recipe.name, { mainProductItem, recipe }); // prettier-ignore
 
+    // TODO We need to check that this amplification is correct given
+    // the _result_ of the solver, since it's considered based on the source
+    // let amplification = 1.0;
+    // const amplificationVar = `amp${recipe.index}`;
+    // ctx.constraints.push(`${amplificationVar} = ${amplification}`);
+    // if (ctx.request.nodes?.[mainProductVar]?.amplification) {
+    //   amplification = ctx.request.nodes[mainProductVar].amplification;
+    // }
+
+    // const buildingsVar = `c${recipe.index}`;
     const building = AllFactoryBuildingsMap[recipe.producedIn];
 
     // 1. Energy consumption. Used for minimization
@@ -458,6 +477,9 @@ export function computeProductionConstraints(
     // TODO No edge for now. We don't need it for minimization
     const energyConsumptionFactor =
       building.averagePowerConsumption / mainProductAmount;
+
+    const somersloops = ctx.request?.nodes?.[mainProductVar]?.somersloops ?? 0;
+    const overclock = ctx.request?.nodes?.[mainProductVar]?.overclock ?? 1;
 
     ctx.constraints.push(
       `${recipeEnergyVar} - ${energyConsumptionFactor} ${mainProductVar} = 0`,
@@ -476,7 +498,11 @@ export function computeProductionConstraints(
       mainProductAmount;
 
     ctx.constraints.push(
-      `${recipeAreaVar} - ${areaFactor} ${mainProductVar} = 0`,
+      `${recipeAreaVar} - ${areaFactor} ${mainProductVar} >= 0`,
+    );
+    ctx.constraints.push(
+      // Atleast one building
+      `${recipeAreaVar} >= ${building.clearance.width * building.clearance.length}`,
     );
 
     // 3. Ingredients
@@ -503,6 +529,8 @@ export function computeProductionConstraints(
 
       const productItem = AllFactoryItemsMap[product.resource];
       const recipeProductVar = `p${productItem.index}r${recipe.index}`;
+      const recipeOriginalProductVar = `p${productItem.index}r${recipe.index}o`;
+      const recipeAmplifiedProductVar = `p${productItem.index}r${recipe.index}a`;
       const recipeByproductVar = `b${productItem.index}r${recipe.index}`;
       setGraphResource(ctx, product.resource);
       ctx.graph.mergeNode(recipeProductVar, {
@@ -511,11 +539,32 @@ export function computeProductionConstraints(
         recipe,
         resource: productItem,
         variable: recipeProductVar,
+        amplifiedVariable: recipeAmplifiedProductVar,
+        originalVariable: recipeOriginalProductVar,
         recipeMainProductVariable: mainProductVar,
         byproductVariable: recipeByproductVar,
-      });
+      } as SolverOutputNode);
       ctx.graph.mergeEdge(recipeProductVar, product.resource);
       const productAmount = (product.amount * 60) / recipe.time;
+
+      // Sloop
+      ctx.constraints.push(
+        `${recipeProductVar} - ${recipeAmplifiedProductVar} - ${recipeOriginalProductVar} = 0`,
+      );
+
+      if (somersloops > 0) {
+        const productAmountPerSloop =
+          (productAmount / building.somersloopSlots) * overclock;
+        ctx.constraints.push(
+          `${recipeAmplifiedProductVar} - ${recipeOriginalProductVar} <= 0`,
+        );
+        ctx.bounds.push(
+          `${recipeAmplifiedProductVar} <= ${somersloops * productAmountPerSloop}`,
+        );
+        logger.info('  Adding somersloops:', recipe.name, productAmountPerSloop, last(ctx.constraints)); // prettier-ignore
+      } else {
+        ctx.constraints.push(`${recipeAmplifiedProductVar} = 0`);
+      }
 
       // Byproduct
       setGraphByproduct(ctx, product.resource);
@@ -530,7 +579,8 @@ export function computeProductionConstraints(
 
         const factor = mainProductAmount / productAmount;
         ctx.constraints.push(
-          `${factor} ${recipeProductVar} - ${mainProductVar} = 0`,
+          // TODO Enhance variable name.
+          `${factor} ${recipeOriginalProductVar} - ${mainProductVar}o = 0`,
         );
         // logger.debug(
         //   '  Adding constraint:',
@@ -545,7 +595,7 @@ export function computeProductionConstraints(
         const factor = productAmount / ingredientAmount;
 
         ctx.constraints.push(
-          `${factor} ${recipeIngredientVar} - ${recipeProductVar} = 0`,
+          `${factor} ${recipeIngredientVar} - ${recipeOriginalProductVar} = 0`,
         );
 
         computeProductionConstraints(ctx, ingredient.resource);

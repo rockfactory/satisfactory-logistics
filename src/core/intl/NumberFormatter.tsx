@@ -6,6 +6,28 @@ export const NumberFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 3,
 });
 
+/**
+ * string-only version of `RepeatingNumber`.
+ */
+export function formatRepeatingNumber(value = 0): string {
+  const formatted = NumberFormatter.formatToParts(value);
+  const repetend = getRepetend(value);
+  if (repetend?.pattern && repetend.index < 3) {
+    return formatted
+      .map(({ type, value }) => {
+        if (type !== 'fraction') return value;
+
+        return (
+          value.substring(0, repetend.index) +
+          repeat(repetend.pattern.toString(), value.length - repetend.index)
+        );
+      })
+      .join('');
+  }
+
+  return formatted.map(v => v.value).join('');
+}
+
 export const RepeatingNumber = ({
   value = 0,
 }: {

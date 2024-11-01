@@ -17,10 +17,11 @@
   "dependencies": {
     "@clickbar/dot-diver": "^1.0.7",
     "@dagrejs/dagre": "^1.1.4",
-    "@mantine/colors-generator": "^7.13.0",
-    "@mantine/core": "7.13.0",
-    "@mantine/hooks": "7.13.0",
-    "@mantine/notifications": "^7.13.0",
+    "@mantine/colors-generator": "^7.13.4",
+    "@mantine/core": "7.13.4",
+    "@mantine/hooks": "7.13.4",
+    "@mantine/modals": "^7.13.4",
+    "@mantine/notifications": "^7.13.4",
     "@nivo/sankey": "^0.87.0",
     "@sentry/react": "^8.32.0",
     "@sentry/vite-plugin": "^2.22.4",
@@ -30,6 +31,7 @@
     "@supabase/supabase-js": "^2.45.4",
     "@tabler/icons-react": "^3.17.0",
     "@xyflow/react": "^12.3.1",
+    "canvas-confetti": "^1.9.3",
     "chalk": "^5.3.0",
     "chroma-js": "2.4",
     "clsx": "^2.1.1",
@@ -55,6 +57,7 @@
     "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.6.4",
     "@types/chroma-js": "^2.4.4",
     "@types/lodash": "^4.17.9",
     "@types/node": "^22.7.3",

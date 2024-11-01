@@ -134,3 +134,6 @@ dist
 .env.sentry-build-plugin
 
 /data/assets/
+
+# intellij idea
+.idea

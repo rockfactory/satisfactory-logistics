@@ -1,10 +1,10 @@
+import { RepeatingNumber } from '@/core/intl/NumberFormatter';
+import type { FactoryItem } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { Box, Group, Stack, Text } from '@mantine/core';
 import { NodeProps } from '@xyflow/react';
 import { memo } from 'react';
-import { RepeatingNumber } from '../../core/intl/NumberFormatter';
-import { FactoryItem } from '../../recipes/FactoryItem';
-import { InvisibleHandles } from './InvisibleHandles';
+import { InvisibleHandles } from '../../rendering/InvisibleHandles';
 
 export interface IByproductNodeData {
   resource: FactoryItem;

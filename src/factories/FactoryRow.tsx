@@ -52,6 +52,11 @@ export function FactoryRow(props: IFactoryRowProps) {
   const isVisible = useIsFactoryVisible(id, true);
   if (!isVisible) return null;
 
+  if (!factory) {
+    console.error('Factory not found', id);
+    return null;
+  }
+
   return (
     <Card key={id} withBorder>
       {/* <Text size="sm" fw="bold">
