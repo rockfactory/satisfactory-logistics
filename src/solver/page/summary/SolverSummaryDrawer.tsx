@@ -23,7 +23,7 @@ import {
   SolverEnergyNode,
 } from '../../algorithm/computeProductionConstraints';
 import { IMachineNodeData } from '../../layout/nodes/machine-node/MachineNode';
-import { IResourceNodeData } from '../../layout/ResourceNode';
+import { IResourceNodeData } from '../../layout/nodes/resource-node/ResourceNode';
 import { usePathSolverInstance } from '../../store/solverSelectors';
 import { ISolverSolution } from '../SolverPage';
 

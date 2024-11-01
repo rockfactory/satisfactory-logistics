@@ -2,6 +2,7 @@
   "recommendations": [
     "vunguyentuan.vscode-css-variables",
     "vunguyentuan.vscode-postcss",
-    "gruntfuggly.todo-tree"
+    "gruntfuggly.todo-tree",
+    "dbaeumer.vscode-eslint"
   ]
 }

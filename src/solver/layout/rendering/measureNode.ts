@@ -22,7 +22,7 @@ const BaseSizeWithoutTexts = {
  */
 export function measureNode(node: SolutionNode) {
   switch (node.type) {
-    case 'Machine':
+    case 'Machine': {
       const firstLineText = getRecipeDisplayName(node.data.recipe);
       const secondLineText = `x0.00 Machine`;
       return {
@@ -34,7 +34,7 @@ export function measureNode(node: SolutionNode) {
           ),
         height: BaseSizeWithoutTexts.Machine.height,
       };
-
+    }
     case 'Resource':
       return {
         width:
