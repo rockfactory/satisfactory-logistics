@@ -1,4 +1,5 @@
 import {
+  alpha,
   Badge,
   Box,
   CloseButton,
@@ -95,17 +96,46 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
               ? '1px solid var(--mantine-color-gray-3)'
               : '1px solid transparent',
           }}
-          bg={nodeState?.done ? '#1d5b3a' : 'dark.4'}
+          bg={nodeState?.done ? '#304d3e' : 'dark.4'}
           onMouseEnter={open}
           onMouseLeave={close}
         >
-          {nodeState?.done && (
-            <div style={{ position: 'absolute', left: -8, top: -8 }}>
-              {/* <Badge size="sm" color="green" circle> */}
-              <IconCircleCheckFilled size={16} />
-              {/* </Badge> */}
-            </div>
-          )}
+          <Box
+            pos="absolute"
+            left={-8}
+            top={-8}
+            style={{ borderRadius: '3px' }}
+            bg={alpha(
+              nodeState?.done ? '#304d3e' : 'var(--mantine-color-dark-4)',
+              0.7,
+            )}
+          >
+            <Group gap={2}>
+              {nodeState?.done && (
+                <IconCircleCheckFilled
+                  size={16}
+                  color="var(--mantine-color-green-5)"
+                />
+              )}
+              {overclock > 1.0 && (
+                <Box p={2} style={{ borderRadius: 16 }}>
+                  <FactoryItemImage
+                    size={14}
+                    id={'Desc_CrystalShard_C' as FactoryItemId}
+                  />
+                </Box>
+              )}
+              {amplifiedRate > 1 && (
+                <Box p={2} style={{ borderRadius: 16 }}>
+                  <FactoryItemImage
+                    size={14}
+                    id={'Desc_WAT1_C' as FactoryItemId}
+                  />
+                </Box>
+              )}
+            </Group>
+          </Box>
+
           {/* <NodeToolbar>
             <ActionIcon
               variant="outline"
@@ -146,21 +176,6 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
           <Group gap="sm">
             <Box pos="relative" p="0">
               <Image w="32" h="32" src={building.imagePath} />
-              {overclock > 1.0 && (
-                <Box
-                  style={{
-                    borderRadius: '3px',
-                    position: 'absolute',
-                    top: -12,
-                    right: -12,
-                  }}
-                >
-                  <FactoryItemImage
-                    size={16}
-                    id={'Desc_CrystalShard_C' as FactoryItemId}
-                  />
-                </Box>
-              )}
             </Box>
             <Stack gap={2} align="center">
               <Group gap={2}>
@@ -170,12 +185,6 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                   </Badge>
                 )}
                 <Text size="sm">{getRecipeDisplayName(recipe)}</Text>
-                {nodeState?.somersloops && (
-                  <FactoryItemImage
-                    size={16}
-                    id={'Desc_WAT1_C' as FactoryItemId}
-                  />
-                )}
               </Group>
               <Text size="xs">
                 x<RepeatingNumber value={buildingsAmount} /> {building.name}
@@ -198,21 +207,6 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
               }
             >
               <FactoryItemImage id={product.id} size={32} highRes />
-              {/* {nodeState?.somersloops && (
-                <Box
-                  style={{
-                    borderRadius: '3px',
-                    position: 'absolute',
-                    bottom: -14,
-                    right: -14,
-                  }}
-                >
-                  <FactoryItemImage
-                    size={16}
-                    id={'Desc_WAT1_C' as FactoryItemId}
-                  />
-                </Box>
-              )} */}
             </Box>
           </Group>
 
