@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { loadHighs, solveProduction } from '../solveProduction';
+import { loadHighs, solveProduction } from '../algorithm/solveProduction';
 
 describe('solveProduction', () => {
   test('inputs should not change production plan', async () => {

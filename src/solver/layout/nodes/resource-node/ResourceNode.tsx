@@ -1,3 +1,5 @@
+import { RepeatingNumber } from '@/core/intl/NumberFormatter';
+import type { FactoryItem } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { Box, Group, Popover, Stack, Text, Tooltip } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -5,11 +7,9 @@ import { IconTransformFilled } from '@tabler/icons-react';
 import { NodeProps } from '@xyflow/react';
 import { memo, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { RepeatingNumber } from '../../core/intl/NumberFormatter';
-import { FactoryItem } from '../../recipes/FactoryItem';
-import { InvisibleHandles } from './InvisibleHandles';
-import { ResourceNodeExtractorDetail } from './resource-node/ResourceNodeExtractorDetail';
-import { useSolverSolution } from './solution-context/SolverSolutionContext';
+import { InvisibleHandles } from '../../rendering/InvisibleHandles';
+import { useSolverSolution } from '../../solution-context/SolverSolutionContext';
+import { ResourceNodeExtractorDetail } from './ResourceNodeExtractorDetail';
 
 export interface IResourceNodeData {
   resource: FactoryItem;

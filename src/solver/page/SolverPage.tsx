@@ -35,15 +35,20 @@ import { v4 } from 'uuid';
 import { useFormOnChange } from '../../core/form/useFormOnChange';
 import { useStore } from '../../core/zustand';
 import { AfterHeaderSticky } from '../../layout/AfterHeaderSticky';
-import { SolverEdge, SolverNode } from '../computeProductionConstraints';
-import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
-import { SolverShareButton } from '../share/SolverShareButton';
+import {
+  SolverEdge,
+  SolverNode,
+  type SolverContext,
+} from '../algorithm/computeProductionConstraints';
 import {
   solveProduction,
   useHighs,
   type SolutionNode,
-} from '../solveProduction';
-import { SolverLayout } from '../SolverLayout';
+} from '../algorithm/solveProduction';
+import { SolverInspectorDrawer } from '../inspector/SolverInspectorDrawer';
+import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
+import { SolverLayout } from '../layout/SolverLayout';
+import { SolverShareButton } from '../share/SolverShareButton';
 import { SolverInstance } from '../store/Solver';
 import {
   getSolverGame,
@@ -68,6 +73,7 @@ export interface ISolverSolution {
   nodes: SolutionNode[];
   edges: Edge[];
   graph: Graph<SolverNode, SolverEdge, any>;
+  context: SolverContext;
 }
 
 export function SolverPage(props: ISolverPageProps) {
@@ -128,6 +134,7 @@ export function SolverPage(props: ISolverPageProps) {
     const solution = solveProduction(highsRef.current, {
       ...instance?.request,
       ...inputsOutputs,
+      nodes: instance.nodes,
     });
     logger.log(`Solved -> `, solution);
 
@@ -141,7 +148,7 @@ export function SolverPage(props: ISolverPageProps) {
 
     return { solution, suggestions };
     // We don't want to re-run computation if instance changes, only if its request changes
-  }, [highsRef, instance?.request, inputsOutputs, loading]);
+  }, [highsRef, instance?.request, instance?.nodes, inputsOutputs, loading]);
 
   if (params.id == null) {
     const hasCurrentSolverGame = getSolverGame(
@@ -264,6 +271,9 @@ export function SolverPage(props: ISolverPageProps) {
                   <Group gap="xs">
                     <SolverSummaryDrawer solution={solution} />
                     <SolverShareButton />
+                    {import.meta.env.DEV && (
+                      <SolverInspectorDrawer solution={solution} />
+                    )}
                   </Group>
                 </Panel>
               </SolverLayout>

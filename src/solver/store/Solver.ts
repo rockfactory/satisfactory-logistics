@@ -9,6 +9,9 @@ export interface SolverRequest {
 
 export interface SolverNodeState {
   done?: boolean;
+  somersloops?: number;
+  amplification?: number;
+  overclock?: number;
 }
 
 export interface SolverInstance {

@@ -1,6 +1,7 @@
 import { loglev } from '@/core/logger/log';
 import { isWorldResource } from '@/recipes/WorldResources';
 import type { Node } from '@xyflow/react';
+import { bfsFromNode } from 'graphology-traversal';
 import { v4 } from 'uuid';
 import { createActions } from '../../core/zustand-helpers/actions';
 import {
@@ -9,7 +10,7 @@ import {
   WORLD_SOURCE_ID,
   type FactoryInput,
 } from '../../factories/Factory';
-import type { IResourceNodeData } from '../layout/ResourceNode';
+import type { IResourceNodeData } from '../layout/nodes/resource-node/ResourceNode';
 import type { ISolverSolution } from '../page/SolverPage';
 import { SolverRequest, type SolverInstance } from './Solver';
 
@@ -150,6 +151,59 @@ export const solverFactoriesActions = createActions({
         }
       }
       factory.inputs = nextInputs;
+    },
+  /**
+   * Update the solver instance with the new somersloops value.
+   * Doing this will also update the somersloops for all outputs,
+   * recomputing the total somersloops.
+   */
+  updateSolverSomersloops:
+    (
+      graph: ISolverSolution['graph'],
+      factoryId: string,
+      // nodeId is variable name
+      nodeId: string,
+      somersloops: number,
+    ) =>
+    state => {
+      // 1. Update the solver instance with the new somersloops value
+      const solvers = state.solvers.instances;
+      if (!solvers[factoryId]) return;
+      if (!solvers[factoryId].nodes) solvers[factoryId].nodes = {};
+      if (!solvers[factoryId].nodes[nodeId])
+        solvers[factoryId].nodes[nodeId] = {};
+
+      solvers[factoryId].nodes[nodeId].somersloops = somersloops;
+
+      // 2. Recompute somersloops for all outputs
+      const somersloopNodes = Object.entries(solvers[factoryId].nodes).filter(
+        ([_id, nodeState]) =>
+          nodeState.somersloops && nodeState.somersloops > 0,
+      );
+
+      state.factories.factories[factoryId]?.outputs?.forEach(output => {
+        output.somersloops = 0;
+      });
+
+      for (const [somersloopNodeId, somersloopNodeState] of somersloopNodes) {
+        bfsFromNode(
+          graph,
+          somersloopNodeId,
+          (id, attrs) => {
+            if (attrs.type !== 'byproduct') return;
+            const output = state.factories.factories[factoryId]?.outputs?.find(
+              o => o.resource === attrs.resource.id,
+            );
+            if (output) {
+              console.log('Adding somersloops', somersloopNodeState.somersloops, 'to output', output.resource); // prettier-ignore
+              output.somersloops =
+                (output.somersloops ?? 0) +
+                (somersloopNodeState.somersloops ?? 0);
+            }
+          },
+          { mode: 'outbound' },
+        );
+      }
     },
   loadSharedSolver:
     (
