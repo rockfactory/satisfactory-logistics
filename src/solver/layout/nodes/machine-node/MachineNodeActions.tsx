@@ -11,6 +11,7 @@ import {
   SwitchRecipeAction,
   useRecipeAlternatesInputState,
 } from './SwitchRecipeAction';
+import { showConfettiWhenFactoryBuilt } from './showConfettiWhenFactoryBuilt';
 
 export interface IMachineNodeActionsProps {
   id: string;
@@ -117,13 +118,16 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
             <ActionIcon
               color="green"
               variant={nodeState?.done ? 'filled' : 'outline'}
-              onClick={() =>
+              onClick={() => {
                 useStore
                   .getState()
                   .updateSolverNode(solverId!, props.id, node => {
                     node.done = !node.done;
-                  })
-              }
+                  });
+
+                // Ta-da!
+                showConfettiWhenFactoryBuilt(solution, solverId!);
+              }}
             >
               <IconCircleCheckFilled size={16} />
             </ActionIcon>

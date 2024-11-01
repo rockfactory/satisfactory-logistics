@@ -3,6 +3,7 @@ import '@mantine/core/styles.css';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
 
+import { ModalsProvider } from '@mantine/modals';
 import { useEffect } from 'react';
 import {
   createBrowserRouter,
@@ -97,9 +98,11 @@ export default function App() {
 
   return (
     <MantineProvider theme={theme} forceColorScheme="dark">
-      <SyncManager />
-      <Notifications position="top-right" zIndex={1000} />
-      <RouterProvider router={router} />
+      <ModalsProvider>
+        <SyncManager />
+        <Notifications position="top-right" zIndex={1000} />
+        <RouterProvider router={router} />ù
+      </ModalsProvider>
     </MantineProvider>
   );
 }
