@@ -8,17 +8,36 @@ import {
   Stack,
   Tabs,
 } from '@mantine/core';
-import { IconArrowsDiff, IconTestPipe } from '@tabler/icons-react';
+import {
+  IconArrowsDiff,
+  IconBarrierBlock,
+  IconTestPipe,
+} from '@tabler/icons-react';
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import type { ISolverSolution } from '../SolverPage';
 import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
+import { SolverLimitationsDrawer } from './SolverLimitationsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';
 
 export interface ISolverRequestDrawerProps {
   solution: ISolverSolution | null;
   onSolverChangeHandler: FormOnChangeHandler<SolverInstance>;
 }
+
+const SolverRequestTabs = [
+  {
+    value: 'inputs-outputs',
+    label: 'Inputs/Outputs',
+    icon: <IconArrowsDiff size={16} />,
+  },
+  { value: 'recipes', label: 'Recipes', icon: <IconTestPipe size={16} /> },
+  {
+    value: 'limitations',
+    label: 'Limitations',
+    icon: <IconBarrierBlock size={16} />,
+  },
+] as const;
 
 /**
  * Drawer and buttons to configure the request to the solver.
@@ -27,30 +46,26 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
   const id = useParams<{ id: string }>().id;
   const { solution, onSolverChangeHandler } = props;
 
-  const [tab, setTab] = useState<'inputs-outputs' | 'recipes' | null>(null);
+  const [tab, setTab] = useState<
+    'inputs-outputs' | 'recipes' | 'limitations' | null
+  >(null);
   const close = useCallback(() => setTab(null), [setTab]);
 
   return (
     <>
       <Button.Group>
-        <Button
-          variant="light"
-          color="blue"
-          size="sm"
-          leftSection={<IconArrowsDiff size={16} />}
-          onClick={() => setTab('inputs-outputs')}
-        >
-          Inputs/Outputs
-        </Button>
-        <Button
-          variant="light"
-          color="blue"
-          size="sm"
-          leftSection={<IconTestPipe size={16} />}
-          onClick={() => setTab('recipes')}
-        >
-          Recipes
-        </Button>
+        {SolverRequestTabs.map(({ value, label, icon }) => (
+          <Button
+            key={value}
+            variant="light"
+            color="blue"
+            size="sm"
+            leftSection={icon}
+            onClick={() => setTab(value)}
+          >
+            {label}
+          </Button>
+        ))}
       </Button.Group>
       <Drawer
         position="right"
@@ -61,26 +76,15 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
           <Stack align="flex-start">
             <SegmentedControl
               size="md"
-              data={[
-                {
-                  value: 'inputs-outputs',
-                  label: (
-                    <Center style={{ gap: 10 }}>
-                      <IconArrowsDiff size={16} />
-                      Inputs/Outputs
-                    </Center>
-                  ),
-                },
-                {
-                  value: 'recipes',
-                  label: (
-                    <Center style={{ gap: 10 }}>
-                      <IconTestPipe size={16} />
-                      Recipes
-                    </Center>
-                  ),
-                },
-              ]}
+              data={SolverRequestTabs.map(({ value, label, icon }) => ({
+                value,
+                label: (
+                  <Center style={{ gap: 10 }}>
+                    {icon}
+                    {label}
+                  </Center>
+                ),
+              }))}
               value={tab ?? undefined}
               onChange={value => setTab(value as any)}
             />
@@ -110,6 +114,12 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
             <SolverInputOutputsDrawer
               id={id}
               solution={solution}
+              onSolverChangeHandler={onSolverChangeHandler}
+            />
+          </Tabs.Panel>
+          <Tabs.Panel value="limitations">
+            <SolverLimitationsDrawer
+              id={id}
               onSolverChangeHandler={onSolverChangeHandler}
             />
           </Tabs.Panel>

@@ -15,6 +15,7 @@ import { useFactoryOnChangeHandler } from '../../../factories/store/factoriesSel
 import type { ISolverSolution } from '../SolverPage';
 
 const logger = loglev.getLogger('solver:inputs-outputs');
+
 export interface ISolverInputOutputsDrawerProps {
   id?: string | null | undefined;
   solution: ISolverSolution | null;

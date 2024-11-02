@@ -68,3 +68,14 @@ export const FactoryConveyorBelts = sortBy(
   AllFactoryBuildings.filter(building => building.conveyor?.isBelt),
   'name',
 );
+
+/**
+ * List of all factory buildings that are usable for recipes,
+ * in solver, etc.
+ */
+export const FactoryBuildingsForRecipes = sortBy(
+  AllFactoryBuildings.filter(
+    building => !building.extractor && !building.conveyor,
+  ),
+  'name',
+);

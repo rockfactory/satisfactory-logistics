@@ -4,6 +4,8 @@ export interface SolverRequest {
   // inputs?: FactoryInput[];
   // outputs: FactoryOutput[];
   allowedRecipes?: string[] | null;
+  allowedResources?: string[] | null;
+  allowedBuildings?: string[] | null;
   objective?: 'minimize_power' | 'minimize_resources' | 'minimize_area';
 }
 
