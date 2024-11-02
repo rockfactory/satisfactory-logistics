@@ -50,7 +50,7 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
           element={<SolverShareImporterPage />}
         />
       </Routes>
-      <Footer />
+      <Footer compact={activeTab === 'calculator'} />
     </>
   );
 }
