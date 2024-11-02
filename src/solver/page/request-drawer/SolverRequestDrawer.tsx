@@ -1,16 +1,10 @@
 import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
 import type { SolverInstance } from '@/solver/store/Solver';
-import {
-  Button,
-  Center,
-  Drawer,
-  SegmentedControl,
-  Stack,
-  Tabs,
-} from '@mantine/core';
+import { Button, Center, Drawer, Stack, Tabs } from '@mantine/core';
 import {
   IconArrowsDiff,
   IconBarrierBlock,
+  IconSquareX,
   IconTestPipe,
 } from '@tabler/icons-react';
 import { useCallback, useState } from 'react';
@@ -19,6 +13,7 @@ import type { ISolverSolution } from '../SolverPage';
 import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
 import { SolverLimitationsDrawer } from './SolverLimitationsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';
+import classes from './SolverRequestDrawer.module.css';
 
 export interface ISolverRequestDrawerProps {
   solution: ISolverSolution | null;
@@ -67,64 +62,84 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
           </Button>
         ))}
       </Button.Group>
-      <Drawer
+      <Drawer.Root
         position="right"
-        size={tab === 'recipes' ? 'md' : 'xl'}
+        size={'xl'}
         opened={tab !== null}
         onClose={close}
-        title={
-          <Stack align="flex-start">
-            <SegmentedControl
-              size="md"
-              data={SolverRequestTabs.map(({ value, label, icon }) => ({
-                value,
-                label: (
-                  <Center style={{ gap: 10 }}>
-                    {icon}
-                    {label}
-                  </Center>
-                ),
-              }))}
-              value={tab ?? undefined}
-              onChange={value => setTab(value as any)}
-            />
-            <div id="solver-request-drawer_title" />
-          </Stack>
-        }
-        styles={{
-          content: {
-            boxShadow: 'rgb(29 29 29) -4px 0px 4px -3px',
-          },
+        classNames={{
+          header: classes.header,
+          title: classes.title,
+          content: classes.content,
+          body: classes.body,
         }}
         // Allow navigation away from the drawer
         closeOnClickOutside={false}
-        withOverlay={false}
         trapFocus={false}
         lockScroll={false}
       >
-        <Tabs
-          keepMounted={false}
-          value={tab}
-          onChange={value => setTab(value as any)}
-        >
-          <Tabs.Panel value="recipes">
-            <SolverRecipesDrawer />
-          </Tabs.Panel>
-          <Tabs.Panel value="inputs-outputs">
-            <SolverInputOutputsDrawer
-              id={id}
-              solution={solution}
-              onSolverChangeHandler={onSolverChangeHandler}
-            />
-          </Tabs.Panel>
-          <Tabs.Panel value="limitations">
-            <SolverLimitationsDrawer
-              id={id}
-              onSolverChangeHandler={onSolverChangeHandler}
-            />
-          </Tabs.Panel>
-        </Tabs>
-      </Drawer>
+        <Drawer.Content>
+          <Drawer.Header>
+            <Button
+              variant="unstyled"
+              onClick={close}
+              className={classes.closeBanner}
+              leftSection={<IconSquareX size={16} />}
+            >
+              Close
+            </Button>
+            <Drawer.Title>
+              <Stack align="flex-start" gap="xs">
+                <Tabs
+                  variant="unstyled"
+                  value={tab}
+                  onChange={value => setTab(value as any)}
+                  classNames={{
+                    tab: classes.tab,
+                    root: classes.tabsListRoot,
+                  }}
+                >
+                  <Tabs.List>
+                    {SolverRequestTabs.map(({ value, label, icon }) => (
+                      <Tabs.Tab key={value} value={value}>
+                        <Center style={{ gap: 10 }}>
+                          {icon}
+                          {label}
+                        </Center>
+                      </Tabs.Tab>
+                    ))}
+                  </Tabs.List>
+                </Tabs>
+                <div id="solver-request-drawer_title" />
+              </Stack>
+            </Drawer.Title>
+          </Drawer.Header>
+          <Drawer.Body>
+            <Tabs
+              keepMounted={false}
+              value={tab}
+              onChange={value => setTab(value as any)}
+            >
+              <Tabs.Panel value="recipes">
+                <SolverRecipesDrawer />
+              </Tabs.Panel>
+              <Tabs.Panel value="inputs-outputs">
+                <SolverInputOutputsDrawer
+                  id={id}
+                  solution={solution}
+                  onSolverChangeHandler={onSolverChangeHandler}
+                />
+              </Tabs.Panel>
+              <Tabs.Panel value="limitations">
+                <SolverLimitationsDrawer
+                  id={id}
+                  onSolverChangeHandler={onSolverChangeHandler}
+                />
+              </Tabs.Panel>
+            </Tabs>
+          </Drawer.Body>
+        </Drawer.Content>
+      </Drawer.Root>
     </>
   );
 }
