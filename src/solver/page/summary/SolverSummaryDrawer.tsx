@@ -1,13 +1,5 @@
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import {
-  Button,
-  Drawer,
-  Group,
-  Stack,
-  Table,
-  Text,
-  Title,
-} from '@mantine/core';
+import { Button, Drawer, Group, Stack, Table, Tabs, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
   IconInfoHexagon,
@@ -26,6 +18,7 @@ import { IMachineNodeData } from '../../layout/nodes/machine-node/MachineNode';
 import { IResourceNodeData } from '../../layout/nodes/resource-node/ResourceNode';
 import { usePathSolverInstance } from '../../store/solverSelectors';
 import { ISolverSolution } from '../SolverPage';
+import { SummaryBuildings } from './SummaryBuildings';
 
 export interface ISolverSummaryDrawerProps {
   solution: ISolverSolution;
@@ -87,7 +80,8 @@ export function SolverSummaryDrawer(props: ISolverSummaryDrawerProps) {
     <>
       <Button
         size="sm"
-        variant="outline"
+        variant="filled"
+        // color="cyan"
         leftSection={<IconInfoHexagon size={16} />}
         onClick={open}
       >
@@ -125,34 +119,45 @@ export function SolverSummaryDrawer(props: ISolverSummaryDrawerProps) {
               </Text>
             </Group>
           </Group>
-          <Title order={5}>Resources</Title>
-          <Table withColumnBorders>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th></Table.Th>
-                <Table.Th>Resource</Table.Th>
-                <Table.Th>Amount</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {Object.entries(stats.resources).map(([id, value]) => {
-                const resource = AllFactoryItemsMap[id];
-                return (
-                  <Table.Tr key={id}>
-                    <Table.Td width="40px">
-                      <FactoryItemImage size={32} id={resource.id} />
-                    </Table.Td>
-                    <Table.Td>
-                      <Text size="sm">{resource.name}</Text>
-                    </Table.Td>
-                    <Table.Td>
-                      <RepeatingNumber value={value} />
-                    </Table.Td>
+          <Tabs variant="outline" defaultValue="resources">
+            <Tabs.List>
+              <Tabs.Tab value="resources">Resources</Tabs.Tab>
+              <Tabs.Tab value="buildings">Buildings</Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="resources">
+              {/* <Title order={5}>Resources</Title> */}
+              <Table withColumnBorders>
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th></Table.Th>
+                    <Table.Th>Resource</Table.Th>
+                    <Table.Th>Amount</Table.Th>
                   </Table.Tr>
-                );
-              })}
-            </Table.Tbody>
-          </Table>
+                </Table.Thead>
+                <Table.Tbody>
+                  {Object.entries(stats.resources).map(([id, value]) => {
+                    const resource = AllFactoryItemsMap[id];
+                    return (
+                      <Table.Tr key={id}>
+                        <Table.Td width="40px">
+                          <FactoryItemImage size={32} id={resource.id} />
+                        </Table.Td>
+                        <Table.Td>
+                          <Text size="sm">{resource.name}</Text>
+                        </Table.Td>
+                        <Table.Td>
+                          <RepeatingNumber value={value} />
+                        </Table.Td>
+                      </Table.Tr>
+                    );
+                  })}
+                </Table.Tbody>
+              </Table>
+            </Tabs.Panel>
+            <Tabs.Panel value="buildings">
+              <SummaryBuildings solution={solution} />
+            </Tabs.Panel>
+          </Tabs>
         </Stack>
       </Drawer>
     </>
