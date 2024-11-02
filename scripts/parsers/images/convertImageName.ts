@@ -4,7 +4,7 @@ import { ParsingContext } from '../ParsingContext';
 // from `Desc_NuclearWaste_C` to `nuclear-waste.png`
 // should convert to kebab-case and append `.png`, remove `Desc` prefix and `_C` suffix
 export function convertImageName(resourcePath) {
-  if(!resourcePath) {
+  if (!resourcePath) {
     return null;
   }
   const imageName =
