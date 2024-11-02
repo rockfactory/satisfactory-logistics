@@ -17,7 +17,12 @@ export function SolverInspectorDrawer(props: ISolverInspectorDrawerProps) {
 
   return (
     <div>
-      <Button leftSection={<IconPick />} onClick={open}>
+      <Button
+        leftSection={<IconPick />}
+        onClick={open}
+        variant="subtle"
+        color="teal"
+      >
         Inspect
       </Button>
 

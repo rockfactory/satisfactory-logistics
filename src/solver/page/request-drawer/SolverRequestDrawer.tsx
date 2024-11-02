@@ -4,8 +4,8 @@ import { Button, Center, Drawer, Stack, Tabs } from '@mantine/core';
 import {
   IconArrowsDiff,
   IconBarrierBlock,
-  IconSquareX,
   IconTestPipe,
+  IconX,
 } from '@tabler/icons-react';
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -52,9 +52,10 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
         {SolverRequestTabs.map(({ value, label, icon }) => (
           <Button
             key={value}
-            variant="light"
+            // variant="light"
             color="blue"
             size="sm"
+            className={classes.openButton}
             leftSection={icon}
             onClick={() => setTab(value)}
           >
@@ -84,7 +85,8 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
               variant="unstyled"
               onClick={close}
               className={classes.closeBanner}
-              leftSection={<IconSquareX size={16} />}
+              justify="space-between"
+              rightSection={<IconX size={16} />}
             >
               Close
             </Button>

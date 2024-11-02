@@ -180,7 +180,7 @@ export function SolverPage(props: ISolverPageProps) {
                 <Button
                   component={Link}
                   to="/factories"
-                  variant="outline"
+                  variant="light"
                   color="gray"
                   leftSection={<IconArrowLeft size={16} />}
                 >
@@ -205,7 +205,6 @@ export function SolverPage(props: ISolverPageProps) {
             {!solverGameId && id && (
               <Button
                 variant="filled"
-                color="blue"
                 onClick={() => {
                   useStore.getState().addFactoryIdToGame(undefined, id);
                 }}
