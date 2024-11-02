@@ -3,7 +3,6 @@ import {
   Container,
   Divider,
   Group,
-  Loader,
   Space,
   Stack,
   Text,
@@ -12,17 +11,18 @@ import {
 import {
   IconBuildingFactory,
   IconCalculator,
-  IconDownload,
+  IconDeviceGamepad,
   IconPlus,
 } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useSession } from '../auth/authSelectors';
 // import { loadFromRemote } from '../auth/sync/loadFromRemote';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { useStore } from '../core/zustand';
 import { useGameFactoriesIds } from '../games/gamesSlice';
 import { GameSettingsModal } from '../games/settings/GameSettingsModal';
+import classes from './FactoriesTab.module.css';
 import { FactoryRow } from './FactoryRow';
 import { FactoriesFiltersMenu } from './filters/FactoriesFiltersMenu';
 import { FactoryWideCard } from './wide/FactoryWideCard';
@@ -71,34 +71,23 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
             >
               Add first factory
             </Button>
-            {/* TODO Do we need this now that we have games? */}
-            {false && session && (
-              <>
-                <Divider
-                  w="60%"
-                  mt="lg"
-                  mb="lg"
-                  label="Or, if you saved on another device"
-                />
-                <Button
-                  size="lg"
-                  leftSection={
-                    loadingFactories ? (
-                      <Loader size={16} />
-                    ) : (
-                      <IconDownload size={16} />
-                    )
-                  }
-                  onClick={async () => {
-                    setLoadingFactories(true);
-                    // await loadFromRemote(session, true);
-                    setLoadingFactories(false);
-                  }}
-                >
-                  Load saved factories
-                </Button>
-              </>
-            )}
+
+            <Divider
+              w="60%"
+              mt="lg"
+              mb="lg"
+              classNames={{ label: classes.emptyDividerLabel }}
+              label="Do you want to import your factories from this or another tool?"
+            />
+            <Button
+              component={Link}
+              variant="light"
+              size="lg"
+              leftSection={<IconDeviceGamepad size={16} stroke={2} />}
+              to="/games"
+            >
+              Import and Manage Games
+            </Button>
           </Stack>
         )}
         <Stack gap="md">
