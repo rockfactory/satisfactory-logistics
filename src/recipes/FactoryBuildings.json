@@ -18,6 +18,10 @@
     },
     "imagePath": "/images/game/pipe-pump-mk-2_256.png",
     "conveyor": null,
+    "pipeline": {
+      "isPipeline": true,
+      "flowRate": null
+    },
     "extractor": null
   },
   {
@@ -39,6 +43,10 @@
     },
     "imagePath": "/images/game/pipe-pump_256.png",
     "conveyor": null,
+    "pipeline": {
+      "isPipeline": true,
+      "flowRate": null
+    },
     "extractor": null
   },
   {
@@ -60,6 +68,10 @@
     },
     "imagePath": "/images/game/valve_256.png",
     "conveyor": null,
+    "pipeline": {
+      "isPipeline": true,
+      "flowRate": null
+    },
     "extractor": null
   },
   {
@@ -84,6 +96,7 @@
       "isBelt": true,
       "speed": 60
     },
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -108,6 +121,7 @@
       "isBelt": true,
       "speed": 780
     },
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -132,6 +146,7 @@
       "isBelt": true,
       "speed": 1200
     },
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -156,6 +171,7 @@
       "isBelt": true,
       "speed": 480
     },
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -180,6 +196,7 @@
       "isBelt": true,
       "speed": 270
     },
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -204,6 +221,7 @@
       "isBelt": true,
       "speed": 120
     },
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -225,6 +243,7 @@
     },
     "imagePath": "/images/game/coal-generator_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null,
     "powerGenerator": {
       "fuels": [
@@ -263,6 +282,7 @@
     },
     "imagePath": "/images/game/fuel-generator_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null,
     "powerGenerator": {
       "fuels": [
@@ -307,6 +327,7 @@
     },
     "imagePath": "/images/game/biomass-generator_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null,
     "powerGenerator": {
       "fuels": [
@@ -354,6 +375,10 @@
     },
     "imagePath": "/images/game/null",
     "conveyor": null,
+    "pipeline": {
+      "isPipeline": true,
+      "flowRate": null
+    },
     "extractor": null
   },
   {
@@ -375,6 +400,10 @@
     },
     "imagePath": "/images/game/null",
     "conveyor": null,
+    "pipeline": {
+      "isPipeline": true,
+      "flowRate": null
+    },
     "extractor": null
   },
   {
@@ -396,6 +425,10 @@
     },
     "imagePath": "/images/game/null",
     "conveyor": null,
+    "pipeline": {
+      "isPipeline": true,
+      "flowRate": null
+    },
     "extractor": null
   },
   {
@@ -417,6 +450,10 @@
     },
     "imagePath": "/images/game/null",
     "conveyor": null,
+    "pipeline": {
+      "isPipeline": true,
+      "flowRate": null
+    },
     "extractor": null
   },
   {
@@ -438,6 +475,10 @@
     },
     "imagePath": "/images/game/pipe-mk-1-indicator_256.png",
     "conveyor": null,
+    "pipeline": {
+      "isPipeline": true,
+      "flowRate": 300
+    },
     "extractor": null
   },
   {
@@ -459,6 +500,10 @@
     },
     "imagePath": "/images/game/pipe-mk-2-indicator_256.png",
     "conveyor": null,
+    "pipeline": {
+      "isPipeline": true,
+      "flowRate": 600
+    },
     "extractor": null
   },
   {
@@ -480,6 +525,10 @@
     },
     "imagePath": "/images/game/pipe-mk-2_256.png",
     "conveyor": null,
+    "pipeline": {
+      "isPipeline": true,
+      "flowRate": 600
+    },
     "extractor": null
   },
   {
@@ -501,6 +550,10 @@
     },
     "imagePath": "/images/game/pipes_256.png",
     "conveyor": null,
+    "pipeline": {
+      "isPipeline": true,
+      "flowRate": 300
+    },
     "extractor": null
   },
   {
@@ -522,6 +575,10 @@
     },
     "imagePath": "/images/game/pipeline-junction_256.png",
     "conveyor": null,
+    "pipeline": {
+      "isPipeline": true,
+      "flowRate": null
+    },
     "extractor": null
   },
   {
@@ -543,6 +600,7 @@
     },
     "imagePath": "/images/game/waterpump_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": {
       "type": "None",
       "allowedForms": [
@@ -575,6 +633,7 @@
     },
     "imagePath": "/images/game/quantum-encoder_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -596,6 +655,7 @@
     },
     "imagePath": "/images/game/converter_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -617,6 +677,7 @@
     },
     "imagePath": "/images/game/hadron-collider_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -638,6 +699,7 @@
     },
     "imagePath": "/images/game/oil-pump_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": {
       "type": "None",
       "allowedForms": [
@@ -670,6 +732,7 @@
     },
     "imagePath": "/images/game/miner-mk-2_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": {
       "type": "Miner",
       "allowedForms": [
@@ -700,6 +763,7 @@
     },
     "imagePath": "/images/game/miner-mk-1_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": {
       "type": "Miner",
       "allowedForms": [
@@ -730,6 +794,7 @@
     },
     "imagePath": "/images/game/miner-mk-3_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": {
       "type": "Miner",
       "allowedForms": [
@@ -760,6 +825,7 @@
     },
     "imagePath": "/images/game/oil-refinery_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -781,6 +847,7 @@
     },
     "imagePath": "/images/game/foundry_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -802,6 +869,7 @@
     },
     "imagePath": "/images/game/packager_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -823,6 +891,7 @@
     },
     "imagePath": "/images/game/manufacturer_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -844,6 +913,7 @@
     },
     "imagePath": "/images/game/assembler-mk-1_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -865,6 +935,7 @@
     },
     "imagePath": "/images/game/blender_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -886,6 +957,7 @@
     },
     "imagePath": "/images/game/smelter-mk-1_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -907,6 +979,7 @@
     },
     "imagePath": "/images/game/constructor-mk-1_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null
   },
   {
@@ -928,6 +1001,7 @@
     },
     "imagePath": "/images/game/nuclear-powerplant_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null,
     "powerGenerator": {
       "fuels": [
@@ -968,6 +1042,7 @@
     },
     "imagePath": "/images/game/extractor_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": {
       "type": "None",
       "allowedForms": [
@@ -1003,6 +1078,7 @@
     },
     "imagePath": "/images/game/geo-thermal-power-generator_256.png",
     "conveyor": null,
+    "pipeline": null,
     "extractor": null
   }
 ]

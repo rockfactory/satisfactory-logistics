@@ -84,6 +84,7 @@ function parseBuilding(building, index, buildingDescriptorsImages) {
         ],
       ),
     conveyor: parseBuildingBelt(building),
+    pipeline: parseBuildingsPipeline(building),
     extractor: parseBuildingExtractor(building),
     powerGenerator: building.mFuel
       ? {
@@ -112,6 +113,14 @@ function parseBuildingBelt(building) {
   return {
     isBelt: building.NativeClass.includes('FGBuildableConveyorBelt'),
     speed: parseFloat(building.mSpeed) / 2.0, // Don't know why, but the speed is doubled
+  };
+}
+
+function parseBuildingsPipeline(building) {
+  if (!building.NativeClass.includes('FGBuildablePipeline')) return null;
+  return {
+    isPipeline: building.NativeClass.includes('FGBuildablePipeline'),
+    flowRate: parseFloat(building.mFlowLimit) * 60,
   };
 }
 
