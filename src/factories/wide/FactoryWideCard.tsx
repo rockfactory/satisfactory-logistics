@@ -1,3 +1,4 @@
+import { useGameFactoryIsCollapsed } from '@/games/gamesSlice';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   ActionIcon,
@@ -15,6 +16,7 @@ import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useFormOnChange } from '../../core/form/useFormOnChange';
 import { useStore } from '../../core/zustand';
+import { FactoryExpandActionIcon } from '../components/expand/FactoryExpandActionIcon';
 import {
   FactoryInputIcon,
   FactoryOutputIcon,
@@ -44,6 +46,7 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
   const onChangeHandler = useFormOnChange<Factory>(updater);
 
   const isVisible = useIsFactoryVisible(factory?.id ?? '', true);
+  const isCollapsed = useGameFactoryIsCollapsed(factory?.id ?? '');
   if (!isVisible) return null;
 
   if (!factory) return null;
@@ -51,17 +54,20 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
   return (
     <Card shadow="lg" withBorder>
       <Group gap="sm" justify="space-between">
-        <TextInput
-          variant="unstyled"
-          placeholder="Shenanigans..."
-          fw={'bold'}
-          fz={'h1'}
-          size="lg"
-          mb="xs"
-          w={380}
-          defaultValue={factory.name ?? ''}
-          onChange={onChangeHandler('name')}
-        />
+        <Group gap="xs" align="center">
+          <FactoryExpandActionIcon isCollapsed={isCollapsed} factoryId={id} />
+          <TextInput
+            variant="unstyled"
+            placeholder="Shenanigans..."
+            fw={'bold'}
+            fz={'h1'}
+            size="lg"
+            mb={4}
+            w={380}
+            defaultValue={factory.name ?? ''}
+            onChange={onChangeHandler('name')}
+          />
+        </Group>
         <Box>
           <Group gap="sm">
             <Button
@@ -105,7 +111,7 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
           </Group>
         </Box>
       </Group>
-      {factory.outputs && factory.outputs.length > 0 && (
+      {!isCollapsed && factory.outputs && factory.outputs.length > 0 && (
         <Card.Section title="Outputs" withBorder>
           <Paper radius="sm" p="sm">
             <Stack gap={'sm'}>
@@ -127,7 +133,7 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
           </Paper>
         </Card.Section>
       )}
-      {factory.inputs && factory.inputs.length > 0 && (
+      {!isCollapsed && factory.inputs && factory.inputs.length > 0 && (
         <Card.Section title="Inputs" withBorder>
           <Paper radius="sm" p="sm">
             <Stack gap={'sm'}>

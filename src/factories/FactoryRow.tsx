@@ -1,3 +1,4 @@
+import { useGameFactoryIsCollapsed } from '@/games/gamesSlice';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   ActionIcon,
@@ -14,6 +15,7 @@ import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useFormOnChange } from '../core/form/useFormOnChange';
 import { useStore } from '../core/zustand';
+import { FactoryExpandActionIcon } from './components/expand/FactoryExpandActionIcon';
 import {
   FactoryInputIcon,
   FactoryOutputIcon,
@@ -50,6 +52,7 @@ export function FactoryRow(props: IFactoryRowProps) {
   const onChangeHandler = useFormOnChange<Factory>(updater);
 
   const isVisible = useIsFactoryVisible(id, true);
+  const isCollapsed = useGameFactoryIsCollapsed(id);
   if (!isVisible) return null;
 
   if (!factory) {
@@ -59,22 +62,20 @@ export function FactoryRow(props: IFactoryRowProps) {
 
   return (
     <Card key={id} withBorder>
-      {/* <Text size="sm" fw="bold">
-            {factory.name}
-          </Text> */}
       <Group gap="sm" align="flex-start" justify="space-between">
         <Group gap="sm" align="flex-start">
-          {/* <Grid.Col span={6}> */}
-          <TextInput
-            variant="unstyled"
-            placeholder="Factory..."
-            fw={'bold'}
-            w={180}
-            defaultValue={factory.name ?? ''}
-            onChange={onChangeHandler('name')}
-          />
-          {/* </Grid.Col>
-            <Grid.Col span={9}> */}
+          <Group gap={2}>
+            <FactoryExpandActionIcon isCollapsed={isCollapsed} factoryId={id} />
+            <TextInput
+              variant="unstyled"
+              placeholder="Factory..."
+              fw={'bold'}
+              w={150}
+              defaultValue={factory.name ?? ''}
+              onChange={onChangeHandler('name')}
+            />
+          </Group>
+
           <Stack gap={'sm'}>
             {(factory.outputs ?? [{ resource: null, amount: null }]).map(
               (output, index) => (
@@ -133,7 +134,11 @@ export function FactoryRow(props: IFactoryRowProps) {
       </Group>
       {/* </Grid.Col> */}
 
-      <Collapse mt="sm" ml="-12px" in={!!factory.inputs?.length}>
+      <Collapse
+        mt="sm"
+        ml="-12px"
+        in={!!factory.inputs?.length && !isCollapsed}
+      >
         <Card bg="dark.7" p="sm" radius="sm" mb="-12">
           <Stack gap="xs">
             {factory.inputs?.map((input, index) => (

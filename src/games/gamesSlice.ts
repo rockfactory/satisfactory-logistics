@@ -75,6 +75,48 @@ export const gamesSlice = createSlice({
     removeGameShareToken: (gameId: string) => state => {
       state.games[gameId].shareToken = undefined;
     },
+    toggleGameFactoryExpanded:
+      (factoryId: string, expanded?: boolean) => state => {
+        const game = state.games[state.selected ?? ''];
+        if (!game) return;
+
+        if (!game.collapsedFactoriesIds) {
+          game.collapsedFactoriesIds = [];
+        }
+
+        const index = game.collapsedFactoriesIds.indexOf(factoryId);
+        if (expanded === undefined) {
+          if (index === -1) {
+            game.collapsedFactoriesIds.push(factoryId);
+          } else {
+            game.collapsedFactoriesIds.splice(index, 1);
+          }
+        } else if (expanded && index !== -1) {
+          game.collapsedFactoriesIds.splice(index, 1);
+        } else if (!expanded && index === -1) {
+          game.collapsedFactoriesIds.push(factoryId);
+        }
+      },
+    toggleAllFactoriesExpanded: (expanded?: boolean) => state => {
+      const game = state.games[state.selected ?? ''];
+      if (!game) return;
+
+      if (!game.collapsedFactoriesIds) {
+        game.collapsedFactoriesIds = [];
+      }
+
+      if (expanded === undefined) {
+        if (game.collapsedFactoriesIds.length > 0) {
+          game.collapsedFactoriesIds = [];
+        } else {
+          game.collapsedFactoriesIds = game.factoriesIds;
+        }
+      } else if (expanded) {
+        game.collapsedFactoriesIds = [];
+      } else {
+        game.collapsedFactoriesIds = game.factoriesIds;
+      }
+    },
   },
 });
 
@@ -114,5 +156,22 @@ export function useGameFactoriesIds(gameId: string | null | undefined) {
     useShallow(state =>
       gameId ? state.games.games[gameId]?.factoriesIds : [],
     ),
+  );
+}
+
+export function useGameFactoryIsCollapsed(factoryId: string): boolean {
+  return useStore(
+    state =>
+      state.games.games[
+        state.games.selected ?? ''
+      ]?.collapsedFactoriesIds?.includes(factoryId) ?? false,
+  );
+}
+
+export function useGameFactoriesHasAnyCollapsed(): boolean {
+  return useStore(
+    state =>
+      (state.games.games[state.games.selected ?? '']?.collapsedFactoriesIds
+        ?.length ?? 0) > 0,
   );
 }

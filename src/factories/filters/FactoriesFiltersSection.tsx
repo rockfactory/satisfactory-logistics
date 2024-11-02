@@ -13,6 +13,7 @@ import {
 } from '@tabler/icons-react';
 import { useStore } from '../../core/zustand';
 import { GameSettingsModal } from '../../games/settings/GameSettingsModal';
+import { GameFactoriesExpandActionIcon } from '../components/expand/GameFactoriesExpandActionIcon';
 import { FactoryItemInput } from '../inputs/FactoryItemInput';
 
 export interface IFactoriesFiltersSectionProps {}
@@ -86,6 +87,8 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
             })
           }
         />
+
+        <GameFactoriesExpandActionIcon />
       </Group>
       <Group>
         <GameSettingsModal />
