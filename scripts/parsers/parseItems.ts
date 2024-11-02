@@ -2,8 +2,6 @@ import fs from 'fs';
 import { ParsingContext } from './ParsingContext';
 import { convertImageName } from './images/convertImageName';
 
-const toolsJson = JSON.parse(fs.readFileSync('./data/docs-tools.json', 'utf8'));
-
 export function parseItems(docsJson: any) {
   const rawItems = docsJson.flatMap(nativeClass => {
     if (
