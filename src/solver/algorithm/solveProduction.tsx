@@ -101,9 +101,12 @@ export function solveProduction(
   request: SolverProductionRequest,
 ) {
   const ctx = new SolverContext(request);
-  for (const item of request.inputs ?? []) {
+
+  const inputs = request.inputs ?? [];
+  for (let i = 0; i < inputs.length; i++) {
+    const item = inputs[i];
     if (!item.amount || !item.resource) continue;
-    addInputResourceConstraints(ctx, item);
+    addInputResourceConstraints(ctx, item, i);
   }
   for (const item of request.outputs) {
     if (!item.resource) continue;
@@ -173,6 +176,7 @@ export function solveProduction(
               value: Number(value.Primal),
               resource: node.resource,
               isRaw: node.type === 'raw',
+              forceUsage: node.forceUsage,
             } as IResourceNodeData,
             position: { x: 0, y: 0 },
           });

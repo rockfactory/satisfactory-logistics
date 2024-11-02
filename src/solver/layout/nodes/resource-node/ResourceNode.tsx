@@ -5,7 +5,7 @@ import { Box, Group, Popover, Stack, Text, Tooltip } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconTransformFilled } from '@tabler/icons-react';
 import { NodeProps } from '@xyflow/react';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { useParams } from 'react-router-dom';
 import { InvisibleHandles } from '../../rendering/InvisibleHandles';
 import { useSolverSolution } from '../../solution-context/SolverSolutionContext';
@@ -15,6 +15,7 @@ export interface IResourceNodeData {
   resource: FactoryItem;
   value: number;
   isRaw: boolean;
+  forceUsage?: boolean;
   [key: string]: unknown;
 }
 
@@ -25,24 +26,24 @@ export type IResourceNodeProps = NodeProps & {
 
 export const ResourceNode = memo((props: IResourceNodeProps) => {
   const { id } = props;
-  const { resource, value, isRaw } = props.data;
+  const { resource, value, isRaw, forceUsage } = props.data;
 
   const { solution } = useSolverSolution();
 
   // Checks if the resource has forced usage from the graph
-  const hasForcedUsage = useMemo(() => {
-    if (!solution.graph.hasNode(resource.id)) return false;
+  // const hasForcedUsage = useMemo(() => {
+  //   if (!solution.graph.hasNode(resource.id)) return false;
 
-    const inbounds = Array.from(
-      solution.graph.inboundNeighborEntries(resource.id),
-    );
-    return (
-      inbounds.filter(
-        node =>
-          node.attributes.type === 'raw_input' && node.attributes.forceUsage,
-      ).length > 0
-    );
-  }, [resource.id, solution.graph]);
+  //   const inbounds = Array.from(
+  //     solution.graph.inboundNeighborEntries(resource.id),
+  //   );
+  //   return (
+  //     inbounds.filter(
+  //       node =>
+  //         node.attributes.type === 'raw_input' && node.attributes.forceUsage,
+  //     ).length > 0
+  //   );
+  // }, [resource.id, solution.graph]);
 
   const [isHovering, { close, open }] = useDisclosure(false);
 
@@ -68,7 +69,7 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
         >
           <Group gap="xs">
             <Box pos="relative">
-              {hasForcedUsage && (
+              {forceUsage && (
                 <div style={{ position: 'absolute', left: -6, bottom: -16 }}>
                   <Tooltip label="Forced usage. Recipes chosen can be less resource-efficient due do this choice.">
                     <IconTransformFilled size={16} />

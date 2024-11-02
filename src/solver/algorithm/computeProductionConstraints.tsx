@@ -37,6 +37,9 @@ export type SolverRawNode = {
   label: string;
   resource: FactoryItem;
   variable: string;
+  // TODO This doesn't work for raw resources, only for raw inputs.
+  forceUsage?: boolean;
+  inputIndex?: number;
 };
 
 export type SolverRawInputNode = {
@@ -45,6 +48,7 @@ export type SolverRawInputNode = {
   resource: FactoryItem;
   variable: string;
   forceUsage?: boolean;
+  inputIndex?: number;
 };
 
 export type SolverOutputNode = {
@@ -375,18 +379,20 @@ function setGraphByproduct(ctx: SolverContext, resource: string) {
 export function addInputResourceConstraints(
   ctx: SolverContext,
   { resource, amount, forceUsage }: FactoryInput,
+  inputIndex: number,
 ) {
   setGraphResource(ctx, resource!);
   const resourceItem = AllFactoryItemsMap[resource!];
   const rawVar = isWorldResource(resource!)
     ? `r${resourceItem.index}`
-    : `ri${resourceItem.index}`;
+    : `ri${resourceItem.index}i${inputIndex}`;
   ctx.graph.mergeNode(rawVar, {
     type: isWorldResource(resource!) ? 'raw' : 'raw_input',
     label: resource!,
     resource: resourceItem,
     variable: rawVar,
     forceUsage,
+    inputIndex,
   });
   ctx.graph.mergeEdge(rawVar, resource!);
 
@@ -394,7 +400,7 @@ export function addInputResourceConstraints(
   if (forceUsage) {
     ctx.constraints.push(`${rawVar} = ${amount ?? 0}`);
   } else if (!isWorldResource(resource!)) {
-    ctx.constraints.push(`ri${resourceItem.index} <= ${amount ?? 0}`);
+    ctx.constraints.push(`${rawVar} <= ${amount ?? 0}`);
   }
   // ctx.constraints.push(`${rawVar} - ${amount ?? 0} >= 0`);
 }
