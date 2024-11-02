@@ -20,6 +20,8 @@ import {
   IconDownload,
   IconHome,
   IconHomeOff,
+  IconRoute,
+  IconRouteOff,
   IconSearch,
   IconServer,
   IconServerOff,
@@ -162,10 +164,30 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
                 onClick={() => {
                   useStore
                     .getState()
-                    .toggleAlternateRecipes(instance!.id, true);
+                    .toggleAlternateRecipes(instance!.id, false);
                 }}
               >
                 Alternates: remove all
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconRoute size={16} />}
+                onClick={() => {
+                  useStore
+                    .getState()
+                    .toggleConverterRecipes(instance!.id, true);
+                }}
+              >
+                Converters: select all
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<IconRouteOff size={16} />}
+                onClick={() => {
+                  useStore
+                    .getState()
+                    .toggleConverterRecipes(instance!.id, false);
+                }}
+              >
+                Converters: remove all
               </Menu.Item>
 
               <Menu.Label>Game</Menu.Label>

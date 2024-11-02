@@ -3,6 +3,7 @@ import { FactoryBuildingsForRecipes } from '@/recipes/FactoryBuilding';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import {
   getAllAlternateRecipeIds,
+  getAllConverterRecipeIds,
   getAllDefaultRecipesIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
 import { WorldResourcesList } from '@/recipes/WorldResources';
@@ -127,6 +128,22 @@ export const solversSlice = createSlice({
         instance.request.allowedRecipes = without(
           instance.request.allowedRecipes,
           ...getAllAlternateRecipeIds(),
+        );
+      }
+    },
+    toggleConverterRecipes: (id: string, use: boolean) => state => {
+      const instance = state.instances[id];
+      if (!instance.request.allowedRecipes) {
+        instance.request.allowedRecipes = [];
+      }
+      if (use) {
+        instance.request.allowedRecipes = uniq(
+          instance.request.allowedRecipes.concat(getAllConverterRecipeIds()),
+        );
+      } else {
+        instance.request.allowedRecipes = without(
+          instance.request.allowedRecipes,
+          ...getAllConverterRecipeIds(),
         );
       }
     },
