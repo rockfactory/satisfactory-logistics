@@ -1,8 +1,10 @@
+import { FactoryBuildingsForRecipes } from '@/recipes/FactoryBuilding';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import {
   getAllAlternateRecipeIds,
   getAllDefaultRecipesIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
+import { WorldResourcesList } from '@/recipes/WorldResources';
 import { uniq, without } from 'lodash';
 import { createSlice } from '../../core/zustand-helpers/slices';
 import { SolverInstance, type SolverNodeState } from './Solver';
@@ -127,8 +129,40 @@ export const solversSlice = createSlice({
         );
       }
     },
+    // Limitations
+    toggleAllowedResource:
+      (id: string, resource: string, use: boolean) => state => {
+        const instance = state.instances[id];
+
+        instance.request.allowedResources = toggleAsSet(
+          instance.request.allowedResources ?? WorldResourcesList,
+          resource,
+          use,
+        );
+      },
+    toggleAllowedBuilding:
+      (id: string, building: string, use: boolean) => state => {
+        const instance = state.instances[id];
+
+        instance.request.allowedBuildings = toggleAsSet(
+          instance.request.allowedBuildings ??
+            FactoryBuildingsForRecipes.map(b => b.id),
+          building,
+          use,
+        );
+      },
     saveSolverSharedId: (id: string, sharedId: string) => state => {
       state.instances[id].sharedId = sharedId;
     },
   },
 });
+
+function toggleAsSet<T>(items: T[], value: T, use: boolean) {
+  const set = new Set(items ?? []);
+  if (set.has(value) && !use) {
+    set.delete(value);
+  } else if (!set.has(value) && use) {
+    set.add(value);
+  }
+  return Array.from(set);
+}

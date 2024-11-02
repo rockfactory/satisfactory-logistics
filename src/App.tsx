@@ -101,7 +101,7 @@ export default function App() {
       <ModalsProvider>
         <SyncManager />
         <Notifications position="top-right" zIndex={1000} />
-        <RouterProvider router={router} />ù
+        <RouterProvider router={router} />
       </ModalsProvider>
     </MantineProvider>
   );
