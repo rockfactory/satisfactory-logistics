@@ -216,7 +216,7 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
                     {recipe.name}
                   </RecipeTooltip>
                 }
-                checked={allowedRecipes?.includes(recipe.id)}
+                checked={allowedRecipes?.includes(recipe.id) ?? true}
                 onChange={e => {
                   useStore.getState().toggleRecipe(instance!.id, {
                     recipeId: recipe.id,

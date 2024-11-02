@@ -65,6 +65,9 @@ export const solverFactoriesActions = createActions({
       },
     ) =>
     state => {
+      if (!state.factories.factories[factoryId]?.inputs)
+        state.factories.factories[factoryId].inputs = [];
+
       state.factories.factories[factoryId]?.inputs?.push({
         resource: input?.resource ?? null,
         amount: input?.amount ?? 0,
@@ -126,6 +129,7 @@ export const solverFactoriesActions = createActions({
     (factoryId: string, solution: ISolverSolution) => state => {
       const factory = state.factories.factories[factoryId];
       if (!factory) return;
+      if (!factory.inputs) factory.inputs = [];
 
       const prevInputs = factory.inputs;
       const nextInputs = [] as FactoryInput[];

@@ -127,7 +127,7 @@ export class SolverContext {
   constructor(request: SolverProductionRequest) {
     this.request = request;
 
-    if (this.request.allowedRecipes) {
+    if (this.request.allowedRecipes != null) {
       this.allowedRecipes = new Set(this.request.allowedRecipes);
     }
   }
@@ -195,7 +195,7 @@ export class SolverContext {
   }
 
   isRecipeAllowed(recipe: string) {
-    if (this.allowedRecipes.size === 0) return true;
+    if (this.allowedRecipes == null) return true;
     return this.allowedRecipes.has(recipe);
   }
 
