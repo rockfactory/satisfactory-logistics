@@ -38,3 +38,7 @@ export const useFactorySimpleAttributes = (id: string | null | undefined) => {
     };
   });
 };
+
+export type FactorySimpleAttributes = ReturnType<
+  typeof useFactorySimpleAttributes
+>;

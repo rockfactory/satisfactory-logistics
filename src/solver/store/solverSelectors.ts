@@ -7,6 +7,11 @@ export const usePathSolverInstance = () => {
   return useStore(state => state.solvers.instances[id ?? '']);
 };
 
+export const usePathSolverRequest = () => {
+  const id = useParams<{ id: string }>().id;
+  return useStore(state => state.solvers.instances[id ?? '']?.request);
+};
+
 export const useSolverAllowedRecipes = (id: string | null | undefined) => {
   return useShallowStore(state =>
     id

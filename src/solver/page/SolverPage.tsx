@@ -3,6 +3,7 @@ import {
   useFactoryInputsOutputs,
   useFactorySimpleAttributes,
 } from '@/factories/store/factoriesSelectors';
+import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { AllFactoryRecipesMap } from '@/recipes/FactoryRecipe';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
@@ -13,17 +14,14 @@ import {
   Container,
   Group,
   LoadingOverlay,
-  Select,
   Stack,
   Text,
   TextInput,
   Title,
 } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import {
   IconArrowLeft,
   IconPlus,
-  IconTrash,
   IconZoomExclamation,
 } from '@tabler/icons-react';
 import { Edge, Panel, ReactFlowProvider } from '@xyflow/react';
@@ -56,8 +54,8 @@ import {
   usePathSolverInstance,
   useSolverGameId,
 } from '../store/solverSelectors';
-import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
-import { SolverRecipesDrawer } from './SolverRecipesDrawer';
+import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
+import { SolverResetButton } from './SolverResetButton';
 import {
   proposeSolverSolutionSuggestions,
   type ISolverSolutionSuggestion,
@@ -90,9 +88,6 @@ export function SolverPage(props: ISolverPageProps) {
   const currentSolverId = useCurrentSolverId();
   const solverGameId = useSolverGameId(id);
 
-  // TODO We want to have a "default" solver ID you can edit how
-  // many times you want, but if you don't save it, it will be
-  // overwritten by a new one.
   useEffect(() => {
     if (!params.id) return;
     if (instance && factory) return;
@@ -219,46 +214,15 @@ export function SolverPage(props: ISolverPageProps) {
                 Add to Game
               </Button>
             )}
+            <SolverResetButton id={id} factory={factory} />
           </Group>
           <Group gap="sm">
-            <SolverInputOutputsDrawer id={id} solution={solution} />
-            <Select
-              data={[
-                { value: 'minimize_resources', label: 'Minimize Resources' },
-                { value: 'minimize_power', label: 'Minimize Power' },
-                { value: 'minimize_area', label: 'Minimize Area' },
-                // TODO Centralize defs
-              ]}
-              placeholder="Objective"
-              value={instance?.request?.objective ?? 'minimize_resources'}
-              onChange={onChangeHandler('request.objective')}
+            <SolverRequestDrawer
+              solution={solution}
+              onSolverChangeHandler={onChangeHandler}
             />
-            <SolverRecipesDrawer />
 
-            <Button
-              // TODO Show this button only if the solver is not from a _saved_ factory (why ?)
-              color="red"
-              variant="light"
-              onClick={() => {
-                useStore.getState().removeSolver(id!);
-                if (factory) {
-                  navigate(`/factories`);
-                  notifications.show({
-                    title: 'Solver removed',
-                    message: `Solver for ${factory.name ?? 'factory'} removed`,
-                  });
-                } else {
-                  navigate(`/factories/calculator`);
-                  notifications.show({
-                    title: 'Solver removed',
-                    message: `Solver removed`,
-                  });
-                }
-              }}
-              leftSection={<IconTrash size={16} />}
-            >
-              Reset
-            </Button>
+            <GameSettingsModal />
           </Group>
         </Group>
       </AfterHeaderSticky>
