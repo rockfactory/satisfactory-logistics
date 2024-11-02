@@ -1,5 +1,6 @@
 import { Anchor, Button, Container, Divider, Group, Text } from '@mantine/core';
 import { IconBrandDiscord, IconBrandGithub } from '@tabler/icons-react';
+import clsx from 'clsx';
 import { FeedbackButton } from '../third-party/FeedbackButton';
 import { KofiSupportButton } from '../third-party/KofiSupportButton';
 import classes from './Footer.module.css';
@@ -19,7 +20,7 @@ const links = [
   { link: '/privacy-policy', label: 'Privacy Policy' },
 ];
 
-export function Footer() {
+export function Footer({ compact }: { compact?: boolean }) {
   const items = links.map(link => (
     <Anchor<'a'>
       c="dimmed"
@@ -35,7 +36,12 @@ export function Footer() {
 
   return (
     <div className={classes.footer}>
-      <Container className={classes.inner} size="lg">
+      <Container
+        className={clsx(classes.inner, {
+          [classes.compact]: compact,
+        })}
+        size="lg"
+      >
         {/* <MantineLogo size={28} /> */}
         <Group>
           <Text size="sm" c="dimmed">
@@ -56,22 +62,28 @@ export function Footer() {
           </Button>
         </Group>
       </Container>
-      <Divider
-        styles={{
-          root: {
-            borderTopColor: 'var(--mantine-color-dark-6)',
-          },
-        }}
-      />
-      <Container className={classes.inner} size="lg">
-        <Text size="sm" c="dimmed">
-          The assets comes from Satisfactory or from websites created and owned
-          by Coffee Stain Studios, who hold the copyright of Satisfactory.
-          <br />
-          All trademarks and registered trademarks present in the images are
-          proprietary to Coffee Stain Studios.
-        </Text>
-      </Container>
+
+      {!compact && (
+        <>
+          <Divider
+            styles={{
+              root: {
+                borderTopColor: 'var(--mantine-color-dark-6)',
+              },
+            }}
+          />
+          <Container className={classes.inner} size="lg">
+            <Text size="sm" c="dimmed">
+              The assets comes from Satisfactory or from websites created and
+              owned by Coffee Stain Studios, who hold the copyright of
+              Satisfactory.
+              <br />
+              All trademarks and registered trademarks present in the images are
+              proprietary to Coffee Stain Studios.
+            </Text>
+          </Container>
+        </>
+      )}
     </div>
   );
 }

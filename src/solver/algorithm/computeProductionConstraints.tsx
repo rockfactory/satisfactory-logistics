@@ -199,6 +199,20 @@ export class SolverContext {
     return this.allowedRecipes.has(recipe);
   }
 
+  isRecipeProducedInAllowedBuilding(recipe: FactoryRecipe) {
+    if (!this.request.allowedBuildings) return true;
+    return this.request.allowedBuildings.includes(recipe.producedIn);
+  }
+
+  getWorldResourceMaxIfAllowed(resource: string) {
+    if (!this.request.allowedResources) {
+      return getWorldResourceMax(resource);
+    }
+    return this.request.allowedResources.includes(resource)
+      ? getWorldResourceMax(resource)
+      : 0;
+  }
+
   formulateProblem() {
     if (!this.objective) {
       throw new Error('Objective not set');
@@ -212,7 +226,7 @@ export class SolverContext {
       `BOUNDS`,
       ...WorldResourcesList.map(
         r =>
-          `0 <= r${AllFactoryItemsMap[r].index} <= ${getWorldResourceMax(r)}`,
+          `0 <= r${AllFactoryItemsMap[r].index} <= ${this.getWorldResourceMaxIfAllowed(r)}`,
       ),
       ...this.bounds,
       // `GENERAL`,
@@ -447,6 +461,7 @@ export function computeProductionConstraints(
 
   for (const recipe of recipes) {
     if (!ctx.isRecipeAllowed(recipe.id)) continue;
+    if (!ctx.isRecipeProducedInAllowedBuilding(recipe)) continue;
     if (ctx.processedRecipes.has(recipe.id)) continue;
     ctx.processedRecipes.add(recipe.id);
     const mainProductItem = AllFactoryItemsMap[recipe.products[0].resource];

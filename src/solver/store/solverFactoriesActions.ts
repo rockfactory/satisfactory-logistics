@@ -186,6 +186,12 @@ export const solverFactoriesActions = createActions({
       });
 
       for (const [somersloopNodeId, somersloopNodeState] of somersloopNodes) {
+        if (!graph.hasNode(somersloopNodeId)) {
+          console.error('Node not found in graph', somersloopNodeId);
+          delete solvers[factoryId].nodes[somersloopNodeId];
+          continue;
+        }
+
         bfsFromNode(
           graph,
           somersloopNodeId,

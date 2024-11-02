@@ -4,7 +4,7 @@ import { Divider, Group, Stack, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconConfetti } from '@tabler/icons-react';
 import confetti from 'canvas-confetti';
-import { xor } from 'lodash';
+import { difference } from 'lodash';
 
 export function showConfettiWhenFactoryBuilt(
   solution: ISolverSolution,
@@ -23,7 +23,8 @@ export function showConfettiWhenFactoryBuilt(
   // Still some nodes to build
   if (
     builtNodeIds.length === 0 ||
-    xor(buildableNodeIds, builtNodeIds).length !== 0
+    buildableNodeIds.length === 0 ||
+    difference(buildableNodeIds, builtNodeIds).length > 0
   )
     return;
 
