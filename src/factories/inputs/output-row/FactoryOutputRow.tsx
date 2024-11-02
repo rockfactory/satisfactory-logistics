@@ -24,10 +24,11 @@ export interface IFactoryOutputRowProps {
   factoryId: string;
   output: FactoryOutput;
   index: number;
+  displayMode?: 'solver' | 'factory';
 }
 
 export function FactoryOutputRow(props: IFactoryOutputRowProps) {
-  const { factoryId, output, index } = props;
+  const { factoryId, output, index, displayMode = 'factory' } = props;
 
   const outputsCount = useStore(
     state => state.factories.factories[factoryId]?.outputs?.length ?? 0,
@@ -39,9 +40,8 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
   // are synced with solvers
   const onChangeHandler = useFactoryOnChangeHandler(factoryId);
 
-  // TODO IN Solver view, this should be false
   const isVisible = useIsFactoryVisible(factoryId, false, output.resource);
-  if (!isVisible) return null;
+  if (!isVisible && displayMode === 'factory') return null;
 
   const item = output.resource ? AllFactoryItemsMap[output.resource] : null;
 

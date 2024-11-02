@@ -38,7 +38,7 @@ export interface IFactoryInputRowProps {
 }
 
 export function FactoryInputRow(props: IFactoryInputRowProps) {
-  const { index, input, factoryId, displayMode } = props;
+  const { index, input, factoryId, displayMode = 'factory' } = props;
 
   const [focused, setFocused] = useState(false);
 
@@ -75,7 +75,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   const onChangeHandler = useFactoryOnChangeHandler(factoryId);
 
   const isVisible = useIsFactoryVisible(factoryId, false, input.resource);
-  if (!isVisible) return null;
+  if (!isVisible && displayMode === 'factory') return null;
 
   return (
     <Group key={index} align="flex-start" gap="sm">

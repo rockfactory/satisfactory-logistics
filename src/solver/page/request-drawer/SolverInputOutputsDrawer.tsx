@@ -113,6 +113,7 @@ export function SolverInputOutputsDrawer(
               index={i}
               output={output}
               factoryId={id!}
+              displayMode="solver"
             />
           ))}
           <Button
