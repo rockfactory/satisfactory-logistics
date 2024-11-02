@@ -1,4 +1,5 @@
 import { useGameSettingMaxBelt } from '@/games/gamesSlice';
+import { FactoryConveyorBelts } from '@/recipes/FactoryBuilding';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { alpha, Box, Group, Image, Text, Tooltip } from '@mantine/core';
 import {
@@ -10,6 +11,7 @@ import {
   useInternalNode,
   useStore,
 } from '@xyflow/react';
+import { last } from 'lodash';
 import { FC } from 'react';
 import { RepeatingNumber } from '../../core/intl/NumberFormatter';
 import { FactoryItem } from '../../recipes/FactoryItem';
@@ -73,9 +75,10 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
     : getBezierPath(edgePathParams);
 
   const duration = 60 / (data?.value ?? 0);
-  const neededBelts = maxBelt
-    ? Math.ceil((data?.value ?? 0) / maxBelt.conveyor!.speed)
-    : 1;
+
+  // If we don't have a max belt, use the last one (Mk6)
+  const usedBelt = maxBelt ?? last(FactoryConveyorBelts)!;
+  const neededBelts = Math.ceil((data?.value ?? 0) / usedBelt.conveyor!.speed);
 
   return (
     <>
@@ -108,24 +111,22 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
           }}
-          className="nodrag nopan"
+          className="nodrag"
         >
           <Tooltip
             color="dark.8"
             label={
-              maxBelt && (
-                <Group>
-                  <Image
-                    src={maxBelt.imagePath}
-                    alt={maxBelt.name}
-                    w={24}
-                    h={24}
-                  />
-                  <Text>
-                    {neededBelts}x {maxBelt?.name}
-                  </Text>
-                </Group>
-              )
+              <Group>
+                <Image
+                  src={usedBelt.imagePath}
+                  alt={usedBelt.name}
+                  w={24}
+                  h={24}
+                />
+                <Text>
+                  {neededBelts}x {usedBelt.name}
+                </Text>
+              </Group>
             }
           >
             <Group gap="4px">
