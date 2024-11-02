@@ -43,8 +43,10 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
   );
   const onChangeHandler = useFormOnChange<Factory>(updater);
 
-  const isVisible = useIsFactoryVisible(factory.id, true);
+  const isVisible = useIsFactoryVisible(factory?.id ?? '', true);
   if (!isVisible) return null;
+
+  if (!factory) return null;
 
   return (
     <Card shadow="lg" withBorder>
