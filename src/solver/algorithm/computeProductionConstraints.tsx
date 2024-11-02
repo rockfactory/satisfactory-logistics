@@ -114,7 +114,7 @@ export class SolverContext {
   // variables: SolverVariables;
   request: SolverProductionRequest;
   processedRecipes = new Set<string>();
-  allowedRecipes = new Set<string>();
+  allowedRecipes?: Set<string>;
   graph = new Graph<SolverNode, SolverEdge>();
   constraints: string[] = [];
   /**
