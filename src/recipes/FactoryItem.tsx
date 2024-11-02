@@ -30,6 +30,7 @@ export enum FactoryItemForm {
 import { IconBolt } from '@tabler/icons-react';
 import { last } from 'lodash';
 import type React from 'react';
+import type { FactoryItemId } from './FactoryItemId';
 import RawFactoryItems from './FactoryItems.json';
 
 export const AllFactoryItems: FactoryItem[] = RawFactoryItems as FactoryItem[];
@@ -64,3 +65,12 @@ export const AllFactoryItemsMap = AllFactoryItems.reduce(
   },
   {} as Record<string, FactoryItem>,
 );
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function getFactoryItem(id: FactoryItemId): FactoryItem {
+  const item = AllFactoryItemsMap[id];
+  if (!item) {
+    throw new Error(`Factory item with id "${id}" not found`);
+  }
+  return item;
+}
