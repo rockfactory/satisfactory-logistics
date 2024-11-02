@@ -15,6 +15,7 @@ export interface FactoryItem {
   imageComponent?: React.ComponentType<{ size: number | string | undefined }>;
   unit?: string;
   isFicsmas: boolean;
+  isVechicle?: boolean;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -22,6 +23,8 @@ export enum FactoryItemForm {
   Solid = 'Solid',
   Liquid = 'Liquid',
   Gas = 'Gas',
+  // Not valid
+  Invalid = 'Invalid',
 }
 
 import { IconBolt } from '@tabler/icons-react';
@@ -30,6 +33,10 @@ import type React from 'react';
 import RawFactoryItems from './FactoryItems.json';
 
 export const AllFactoryItems: FactoryItem[] = RawFactoryItems as FactoryItem[];
+
+export const AllProducibleFactoryItems = AllFactoryItems.filter(
+  item => item.form !== FactoryItemForm.Invalid,
+);
 
 AllFactoryItems.push({
   imagePath: '',

@@ -11,8 +11,8 @@ import {
 } from '@mantine/core';
 import { useMemo, useState } from 'react';
 import {
-  AllFactoryItems,
   AllFactoryItemsMap,
+  AllProducibleFactoryItems,
   FactoryItem,
 } from '../../recipes/FactoryItem';
 
@@ -80,7 +80,7 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
 
   const options = useMemo(
     () =>
-      AllFactoryItems.filter(
+      AllProducibleFactoryItems.filter(
         item =>
           item.displayName
             .toLowerCase()
