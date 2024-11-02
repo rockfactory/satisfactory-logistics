@@ -15,6 +15,7 @@ import { IconCalendar, IconPlayerPlay } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { ImportExportGameModal } from '../import/ImportFactoriesModal';
+import { ImportFromToolsModal } from '../import/ImportFromToolsModal';
 import { GameDeleteButton } from './detail/GameDeleteButton';
 import { GameDetailEditButton } from './detail/GameDetailEditButton';
 import { GamePlayers } from './detail/GamePlayers';
@@ -106,7 +107,16 @@ export function GamesPage(props: IGamesPageProps) {
               </Stack>
             </Paper>
           ))}
+          <Stack gap="sm" ml="sm">
+            <Text fz="h5" c="dark.2">
+              Import from other tools
+            </Text>
+            <Group gap="md" align="center">
+              <ImportFromToolsModal />
+            </Group>
+          </Stack>
         </Stack>
+
         <Space mt={100} />
       </Container>
     </div>
