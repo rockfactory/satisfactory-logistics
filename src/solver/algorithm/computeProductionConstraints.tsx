@@ -204,17 +204,17 @@ export class SolverContext {
   }
 
   isRecipeProducedInAllowedBuilding(recipe: FactoryRecipe) {
-    if (!this.request.allowedBuildings) return true;
-    return this.request.allowedBuildings.includes(recipe.producedIn);
+    if (!this.request.blockedBuildings) return true;
+    return !this.request.blockedBuildings.includes(recipe.producedIn);
   }
 
   getWorldResourceMaxIfAllowed(resource: string) {
-    if (!this.request.allowedResources) {
+    if (!this.request.blockedResources) {
       return getWorldResourceMax(resource);
     }
-    return this.request.allowedResources.includes(resource)
-      ? getWorldResourceMax(resource)
-      : 0;
+    return this.request.blockedResources.includes(resource)
+      ? 0
+      : getWorldResourceMax(resource);
   }
 
   formulateProblem() {

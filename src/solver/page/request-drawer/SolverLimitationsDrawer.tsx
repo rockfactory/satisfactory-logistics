@@ -35,16 +35,14 @@ export function SolverLimitationsDrawer(props: ISolverLimitationsDrawerProps) {
                       {item.name}
                     </Group>
                   }
-                  checked={
-                    request?.allowedResources?.includes(resource) ?? true
-                  }
+                  checked={!request?.blockedResources?.includes(resource)}
                   onChange={e =>
                     useStore
                       .getState()
-                      .toggleAllowedResource(
+                      .toggleBlockedResource(
                         id!,
                         resource,
-                        e.currentTarget.checked,
+                        !e.currentTarget.checked,
                       )
                   }
                 />
@@ -66,16 +64,14 @@ export function SolverLimitationsDrawer(props: ISolverLimitationsDrawerProps) {
                     {building.name}
                   </Group>
                 }
-                checked={
-                  request?.allowedBuildings?.includes(building.id) ?? true
-                }
+                checked={!request?.blockedBuildings?.includes(building.id)}
                 onChange={e =>
                   useStore
                     .getState()
-                    .toggleAllowedBuilding(
+                    .toggleBlockedBuilding(
                       id!,
                       building.id,
-                      e.currentTarget.checked,
+                      !e.currentTarget.checked,
                     )
                 }
               />

@@ -1,12 +1,10 @@
 import { toggleAsSet } from '@/core/state-utils/toggleAsSet';
-import { FactoryBuildingsForRecipes } from '@/recipes/FactoryBuilding';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import {
   getAllAlternateRecipeIds,
   getAllConverterRecipeIds,
   getAllDefaultRecipesIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
-import { WorldResourcesList } from '@/recipes/WorldResources';
 import { uniq, without } from 'lodash';
 import { createSlice } from '../../core/zustand-helpers/slices';
 import { SolverInstance, type SolverNodeState } from './Solver';
@@ -148,23 +146,22 @@ export const solversSlice = createSlice({
       }
     },
     // Limitations
-    toggleAllowedResource:
+    toggleBlockedResource:
       (id: string, resource: string, use: boolean) => state => {
         const instance = state.instances[id];
 
-        instance.request.allowedResources = toggleAsSet(
-          instance.request.allowedResources ?? WorldResourcesList,
+        instance.request.blockedResources = toggleAsSet(
+          instance.request.blockedResources ?? [],
           resource,
           use,
         );
       },
-    toggleAllowedBuilding:
+    toggleBlockedBuilding:
       (id: string, building: string, use: boolean) => state => {
         const instance = state.instances[id];
 
-        instance.request.allowedBuildings = toggleAsSet(
-          instance.request.allowedBuildings ??
-            FactoryBuildingsForRecipes.map(b => b.id),
+        instance.request.blockedBuildings = toggleAsSet(
+          instance.request.blockedBuildings ?? [],
           building,
           use,
         );
