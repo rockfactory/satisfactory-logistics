@@ -1,8 +1,71 @@
 [
   {
+    "id": "Build_PipelinePumpMk2_C",
+    "name": "Pipeline Pump Mk.2",
+    "index": 0,
+    "description": "Can be attached to a Pipeline to apply Head Lift.\r\nMaximum Head Lift: 50 m\r\n(Allows fluids to be transported 50 meters upwards.)\r\n\r\nNOTE: Arrows and holograms when building indicate Head Lift direction.\r\nNOTE: Head Lift does not stack, so space between Pumps is recommended.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 8,
+    "powerConsumption": 8,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 5,
+      "length": 1.2,
+      "height": 1.2
+    },
+    "imagePath": "/images/game/pipe-pump-mk-2_256.png",
+    "conveyor": null,
+    "extractor": null
+  },
+  {
+    "id": "Build_PipelinePump_C",
+    "name": "Pipeline Pump Mk.1",
+    "index": 1,
+    "description": "Attaches to a Pipeline to apply Head Lift.\r\nMaximum Head Lift: 20 m\r\n(Allows fluids to be transported 20 m upwards.)\r\n\r\nNOTE: Arrows and holograms when building indicate Head Lift direction.\r\nNOTE: Head Lift does not stack, so space between Pumps is recommended.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 4,
+    "powerConsumption": 4,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 3.8,
+      "length": 1.2,
+      "height": 1.2
+    },
+    "imagePath": "/images/game/pipe-pump_256.png",
+    "conveyor": null,
+    "extractor": null
+  },
+  {
+    "id": "Build_Valve_C",
+    "name": "Valve",
+    "index": 2,
+    "description": "Limits Pipeline flow rates.\r\nCan be attached to a Pipeline.\r\n\r\nNOTE: Has an in- and output direction.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 2,
+      "length": 1.2,
+      "height": 1.2
+    },
+    "imagePath": "/images/game/valve_256.png",
+    "conveyor": null,
+    "extractor": null
+  },
+  {
     "id": "Build_ConveyorBeltMk1_C",
     "name": "Conveyor Belt Mk.1",
-    "index": 0,
+    "index": 3,
     "description": "Transports up to 60 resources per minute. Used to move resources between buildings.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -26,7 +89,7 @@
   {
     "id": "Build_ConveyorBeltMk5_C",
     "name": "Conveyor Belt Mk.5",
-    "index": 1,
+    "index": 4,
     "description": "Transports up to 780 resources per minute. Used to move resources between buildings.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -50,7 +113,7 @@
   {
     "id": "Build_ConveyorBeltMk6_C",
     "name": "Conveyor Belt Mk.6",
-    "index": 2,
+    "index": 5,
     "description": "Transports up to 1200 resources per minute. Used to move resources between buildings.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -74,7 +137,7 @@
   {
     "id": "Build_ConveyorBeltMk4_C",
     "name": "Conveyor Belt Mk.4",
-    "index": 3,
+    "index": 6,
     "description": "Transports up to 480 resources per minute. Used to move resources between buildings.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -98,7 +161,7 @@
   {
     "id": "Build_ConveyorBeltMk3_C",
     "name": "Conveyor Belt Mk.3",
-    "index": 4,
+    "index": 7,
     "description": "Transports up to 270 resources per minute. Used to move resources between buildings.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -122,7 +185,7 @@
   {
     "id": "Build_ConveyorBeltMk2_C",
     "name": "Conveyor Belt Mk.2",
-    "index": 5,
+    "index": 8,
     "description": "Transports up to 120 resources per minute. Used to move resources between buildings.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -146,7 +209,7 @@
   {
     "id": "Build_GeneratorCoal_C",
     "name": "Coal-Powered Generator",
-    "index": 6,
+    "index": 9,
     "description": "Burns Coal to boil Water. The steam produced rotates turbines that generate electricity for the power grid.\r\nHas Conveyor Belt and Pipeline input ports that allow the Coal and Water supply to be automated.\r\n\r\nCaution: Always generates power at the set clock speed. Shuts down if fuel requirements are not met.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -184,7 +247,7 @@
   {
     "id": "Build_GeneratorFuel_C",
     "name": "Fuel-Powered Generator",
-    "index": 7,
+    "index": 10,
     "description": "Consumes Fuel to generate electricity for the power grid.\r\nHas a Pipeline input port that allows the Fuel supply to be automated.\r\n\r\nCaution: Always generates power at the set clock speed. Shuts down if fuel requirements are not met.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -228,7 +291,7 @@
   {
     "id": "Build_GeneratorBiomass_Automated_C",
     "name": "Biomass Burner",
-    "index": 8,
+    "index": 11,
     "description": "Burns various forms of Biomass to generate electricity for the power grid.\r\nHas a Conveyor Belt input port that allows the Biomass supply to be automated.\r\n\r\nResource consumption will automatically be lowered to meet power demands.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -273,9 +336,198 @@
     }
   },
   {
+    "id": "Build_PipelineSupport_C",
+    "name": "Pipeline Support",
+    "index": 12,
+    "description": "Connects Pipeline segments. Support height can be adjusted.\r\nUseful for routing Pipelines more precisely and across long distances.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/null",
+    "conveyor": null,
+    "extractor": null
+  },
+  {
+    "id": "Build_PipeSupportStackable_C",
+    "name": "Stackable Pipeline Support",
+    "index": 13,
+    "description": "Supports Pipelines. Can be stacked on other stackable supports.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 1,
+      "length": 2.4,
+      "height": 2
+    },
+    "imagePath": "/images/game/null",
+    "conveyor": null,
+    "extractor": null
+  },
+  {
+    "id": "Build_HyperPoleStackable_C",
+    "name": "Stackable Hypertube Support",
+    "index": 14,
+    "description": "Supports Hypertubes. Can be stacked on other stackable supports.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 1,
+      "length": 2.4,
+      "height": 2
+    },
+    "imagePath": "/images/game/null",
+    "conveyor": null,
+    "extractor": null
+  },
+  {
+    "id": "Build_PipeHyperSupport_C",
+    "name": "Hypertube Support",
+    "index": 15,
+    "description": "Supports Hypertubes, allowing them to stretch over longer distances.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/null",
+    "conveyor": null,
+    "extractor": null
+  },
+  {
+    "id": "Build_Pipeline_C",
+    "name": "Pipeline Mk.1",
+    "index": 16,
+    "description": "Transports fluids.\r\nExternal indicators show flow rate, direction, and volume.\r\nCapacity: 300 m³ of fluid per minute.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/pipe-mk-1-indicator_256.png",
+    "conveyor": null,
+    "extractor": null
+  },
+  {
+    "id": "Build_PipelineMK2_C",
+    "name": "Pipeline Mk.2",
+    "index": 17,
+    "description": "Transports fluids.\r\nExternal indicators show flow rate, direction, and volume.\r\nCapacity: 600 m³ of fluid per minute.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/pipe-mk-2-indicator_256.png",
+    "conveyor": null,
+    "extractor": null
+  },
+  {
+    "id": "Build_PipelineMK2_NoIndicator_C",
+    "name": "Clean Pipeline Mk.2",
+    "index": 18,
+    "description": "Transports fluids.\r\nCapacity: 600 m³ of fluid per minute.\r\n\r\nCaution: This version of the Pipeline does not feature an external indicator.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/pipe-mk-2_256.png",
+    "conveyor": null,
+    "extractor": null
+  },
+  {
+    "id": "Build_Pipeline_NoIndicator_C",
+    "name": "Clean Pipeline Mk.1",
+    "index": 19,
+    "description": "Transports fluids.\r\nCapacity: 300 m³ of fluid per minute.\r\n\r\nCaution: This version of the Pipeline does not feature an external indicator.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/pipes_256.png",
+    "conveyor": null,
+    "extractor": null
+  },
+  {
+    "id": "Build_PipelineJunction_Cross_C",
+    "name": "Pipeline Junction",
+    "index": 20,
+    "description": "Attaches to a Pipeline, allowing it to be split up to 4 ways.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 2.4,
+      "length": 1.5,
+      "height": 1.5
+    },
+    "imagePath": "/images/game/pipeline-junction_256.png",
+    "conveyor": null,
+    "extractor": null
+  },
+  {
     "id": "Build_WaterPump_C",
     "name": "Water Extractor",
-    "index": 9,
+    "index": 21,
     "description": "Extracts water from the body of water it is built on.\r\nNote: the water needs to be sufficiently deep, and rivers are generally not deep enough.\r\n\r\nDefault Extraction Rate: 120 m³ of water per minute.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -307,7 +559,7 @@
   {
     "id": "Build_QuantumEncoder_C",
     "name": "Quantum Encoder",
-    "index": 10,
+    "index": 22,
     "description": "The Quantum Encoder uses Excited Photonic Matter to produce the most complex of parts, controlling development up to the quantum level.\r\n\r\nWarning: Power usage is extremely high and unstable.",
     "minimumPowerConsumption": 0,
     "maximumPowerConsumption": 2000,
@@ -328,7 +580,7 @@
   {
     "id": "Build_Converter_C",
     "name": "Converter",
-    "index": 11,
+    "index": 23,
     "description": "The Converter harnesses Reanimated SAM to enable precise matter and energy transmutation.\r\n\r\nWarning: Power usage is very high and unstable.",
     "minimumPowerConsumption": 100,
     "maximumPowerConsumption": 400,
@@ -349,7 +601,7 @@
   {
     "id": "Build_HadronCollider_C",
     "name": "Particle Accelerator",
-    "index": 12,
+    "index": 24,
     "description": "Uses electromagnetic fields to propel particles to very high speeds and energies. The specific design allows for a variety of processes, including matter generation and conversion.\r\n\r\nWarning: Power usage is extremely high and unstable, and varies per recipe.",
     "minimumPowerConsumption": 250,
     "maximumPowerConsumption": 1500,
@@ -370,7 +622,7 @@
   {
     "id": "Build_OilPump_C",
     "name": "Oil Extractor",
-    "index": 13,
+    "index": 25,
     "description": "Extracts Crude Oil when built on an oil node. Extraction rates vary based on node purity.\r\n\r\nDefault Extraction Rate: 120 m³ of oil per minute.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -402,7 +654,7 @@
   {
     "id": "Build_MinerMk2_C",
     "name": "Miner Mk.2",
-    "index": 14,
+    "index": 26,
     "description": "Extracts solid resources from the resource node it is built on. \r\nDefault extraction rate is 120 resources per minute. \r\nExtraction rate varies based on resource node purity. Outputs all extracted resources onto connected Conveyor Belts.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -432,7 +684,7 @@
   {
     "id": "Build_MinerMk1_C",
     "name": "Miner Mk.1",
-    "index": 15,
+    "index": 27,
     "description": "Extracts solid resources from the resource node it is built on. \r\nDefault extraction rate is 60 resources per minute. \r\nExtraction rate varies based on resource node purity. Outputs all extracted resources onto connected Conveyor Belts.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -462,7 +714,7 @@
   {
     "id": "Build_MinerMk3_C",
     "name": "Miner Mk.3",
-    "index": 16,
+    "index": 28,
     "description": "Extracts solid resources from the resource node it is built on. \r\nDefault extraction rate is 240 resources per minute. \r\nExtraction rate varies based on resource node purity. Outputs all extracted resources onto connected Conveyor Belts.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -492,7 +744,7 @@
   {
     "id": "Build_OilRefinery_C",
     "name": "Refinery",
-    "index": 17,
+    "index": 29,
     "description": "Refines fluid and/or solid parts into other parts.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nContains both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -513,7 +765,7 @@
   {
     "id": "Build_FoundryMk1_C",
     "name": "Foundry",
-    "index": 18,
+    "index": 30,
     "description": "Smelts 2 resources into alloy ingots.\r\n\r\nCan be automated by feeding ore in via Conveyor Belts connected to the input ports. The resulting ingots can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -534,7 +786,7 @@
   {
     "id": "Build_Packager_C",
     "name": "Packager",
-    "index": 19,
+    "index": 31,
     "description": "Packages and unpackages fluids.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nContains both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -555,7 +807,7 @@
   {
     "id": "Build_ManufacturerMk1_C",
     "name": "Manufacturer",
-    "index": 20,
+    "index": 32,
     "description": "Crafts 3 or 4 parts into another part.\r\n\r\nCan be automated by feeding component parts in via Conveyor Belts connected to the input ports. The resulting parts can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -576,7 +828,7 @@
   {
     "id": "Build_AssemblerMk1_C",
     "name": "Assembler",
-    "index": 21,
+    "index": 33,
     "description": "Crafts 2 parts into another part.\r\n\r\nCan be automated by feeding component parts in via Conveyor Belts connected to the input ports. The resulting parts can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -597,7 +849,7 @@
   {
     "id": "Build_Blender_C",
     "name": "Blender",
-    "index": 22,
+    "index": 34,
     "description": "Blends fluids together or combines them with solid parts in a wide variety of processes.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nHas both Conveyor Belt and Pipeline input and output ports.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -618,7 +870,7 @@
   {
     "id": "Build_SmelterMk1_C",
     "name": "Smelter",
-    "index": 23,
+    "index": 35,
     "description": "Smelts ore into ingots.\r\n\r\nCan be automated by feeding ore in via a Conveyor Belt connected to the input port. The resulting ingots can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -639,7 +891,7 @@
   {
     "id": "Build_ConstructorMk1_C",
     "name": "Constructor",
-    "index": 24,
+    "index": 36,
     "description": "Crafts 1 part into another part.\r\n\r\nCan be automated by feeding component parts in via a Conveyor Belt connected to the input port. The resulting parts can be automatically extracted by connecting a Conveyor Belt to the output port.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -660,7 +912,7 @@
   {
     "id": "Build_GeneratorNuclear_C",
     "name": "Nuclear Power Plant",
-    "index": 25,
+    "index": 37,
     "description": "Consumes Nuclear Fuel Rods and Water to produce electricity for the power grid.\r\n\r\nProduces Nuclear Waste, which is extracted via the Conveyor Belt output.\r\n\r\nCaution: Always generates power at the set clock speed. Shuts down if fuel requirements are not met.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -700,7 +952,7 @@
   {
     "id": "Build_FrackingExtractor_C",
     "name": "Resource Well Extractor",
-    "index": 26,
+    "index": 38,
     "description": "Collects pressurized resources when placed on the activated sub-nodes of a Resource Well. Does not require power.\r\n\r\nDefault Extraction Rate: 60 m³ of fluid per minute.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
@@ -735,7 +987,7 @@
   {
     "id": "Build_GeneratorGeoThermal_C",
     "name": "Geothermal Generator",
-    "index": 27,
+    "index": 39,
     "description": "Harnesses geothermal energy to generate power. Must be built on a Geyser.\r\n\r\nCaution: Power production fluctuates.\r\n\r\nPower Production:\r\nImpure Geyser: 50-150 MW (100 MW average)\r\nNormal Geyser: 100-300 MW (200 MW average)\r\nPure Geyser: 200-600 MW (400 MW average)",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
