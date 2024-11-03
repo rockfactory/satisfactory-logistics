@@ -45,9 +45,11 @@ function parseRecipe(recipe, index) {
     throw new Error(`Missing building: "${producedIn}"`);
   }
 
+  const recipeId = recipe.ClassName;
+
   return {
-    index,
-    id: recipe.ClassName,
+    index: ParsingContext.getRecipeIndex(recipeId),
+    id: recipeId,
     name: recipe.mDisplayName,
     description: recipe.mDescription,
     ingredients: parseIngredients(recipe.mIngredients, building, 'in'),
@@ -61,11 +63,15 @@ function parseRecipe(recipe, index) {
 
 function parseBestProducedIn(producedIn) {
   const producedInArray = producedIn.split(',').map(s => parseProducedIn(s));
-  if (producedInArray.length === 1 && producedInArray[0] === 'BuildGun') {
-    return producedInArray[0];
+
+  const producedInMachine = producedInArray.find(
+    p => p !== 'BuildGun' && p !== 'WorkBench' && p !== 'None',
+  );
+  if (producedInMachine) {
+    return producedInMachine;
   }
 
-  return producedInArray.find(p => p !== 'BuildGun');
+  return producedInArray[0];
 }
 
 function parseProducedIn(producedIn) {

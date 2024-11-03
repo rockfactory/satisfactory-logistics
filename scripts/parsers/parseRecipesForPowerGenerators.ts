@@ -1,5 +1,4 @@
 import type { FactoryRecipe } from '@/recipes/FactoryRecipe';
-import _ from 'lodash';
 import { ParsingContext } from './ParsingContext';
 import { normalizeResourceAmount } from './parseIngredients';
 
@@ -51,9 +50,11 @@ function parseBuildingForPowerRecipes(building: RawGenerator) {
       originalFuelAmount,
     );
 
+    const recipeId = `RecipeCustom_${building.ClassName}_${fuel.mFuelClass}`;
+
     ParsingContext.recipes.push({
-      index: _.last(ParsingContext.recipes)!.index + 1,
-      id: `RecipeCustom_${building.ClassName}_${fuel.mFuelClass}`,
+      index: ParsingContext.getRecipeIndex(recipeId),
+      id: recipeId,
       name: `${building.mDisplayName}: ${fuelItem.displayName}`,
       powerConsumption: 0,
       powerConsumptionFactor: 0,

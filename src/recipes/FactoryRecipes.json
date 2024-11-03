@@ -8135,6 +8135,37 @@
     "powerConsumptionFactor": 1
   },
   {
+    "index": 847,
+    "id": "Recipe_NobeliskGas_C",
+    "name": "Gas Nobelisk",
+    "ingredients": [
+      {
+        "resource": "Desc_NobeliskExplosive_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
+      },
+      {
+        "resource": "Desc_GenericBiomass_C",
+        "amount": 10,
+        "displayAmount": 10,
+        "originalAmount": 10
+      }
+    ],
+    "products": [
+      {
+        "resource": "Desc_NobeliskGas_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
+      }
+    ],
+    "time": 12,
+    "producedIn": "Build_AssemblerMk1_C",
+    "powerConsumption": 0,
+    "powerConsumptionFactor": 1
+  },
+  {
     "index": 666,
     "id": "Recipe_Alternate_PolyesterFabric_C",
     "name": "Alternate: Polyester Fabric",
@@ -8296,6 +8327,37 @@
     "powerConsumptionFactor": 1
   },
   {
+    "index": 848,
+    "id": "Recipe_NobeliskShockwave_C",
+    "name": "Pulse Nobelisk",
+    "ingredients": [
+      {
+        "resource": "Desc_NobeliskExplosive_C",
+        "amount": 5,
+        "displayAmount": 5,
+        "originalAmount": 5
+      },
+      {
+        "resource": "Desc_CrystalOscillator_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
+      }
+    ],
+    "products": [
+      {
+        "resource": "Desc_NobeliskShockwave_C",
+        "amount": 5,
+        "displayAmount": 5,
+        "originalAmount": 5
+      }
+    ],
+    "time": 60,
+    "producedIn": "Build_AssemblerMk1_C",
+    "powerConsumption": 0,
+    "powerConsumptionFactor": 1
+  },
+  {
     "index": 675,
     "id": "Recipe_Rebar_Spreadshot_C",
     "name": "Shatter Rebar",
@@ -8401,6 +8463,49 @@
     "powerConsumptionFactor": 1
   },
   {
+    "index": 849,
+    "id": "Recipe_NobeliskNuke_C",
+    "name": "Nuke Nobelisk",
+    "ingredients": [
+      {
+        "resource": "Desc_NobeliskExplosive_C",
+        "amount": 5,
+        "displayAmount": 5,
+        "originalAmount": 5
+      },
+      {
+        "resource": "Desc_UraniumCell_C",
+        "amount": 20,
+        "displayAmount": 20,
+        "originalAmount": 20
+      },
+      {
+        "resource": "Desc_GunpowderMK2_C",
+        "amount": 10,
+        "displayAmount": 10,
+        "originalAmount": 10
+      },
+      {
+        "resource": "Desc_CircuitBoardHighSpeed_C",
+        "amount": 6,
+        "displayAmount": 6,
+        "originalAmount": 6
+      }
+    ],
+    "products": [
+      {
+        "resource": "Desc_NobeliskNuke_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
+      }
+    ],
+    "time": 120,
+    "producedIn": "Build_ManufacturerMk1_C",
+    "powerConsumption": 0,
+    "powerConsumptionFactor": 1
+  },
+  {
     "index": 679,
     "id": "Recipe_Cartridge_C",
     "name": "Rifle Ammo",
@@ -8465,6 +8570,68 @@
     ],
     "time": 12,
     "producedIn": "Build_ManufacturerMk1_C",
+    "powerConsumption": 0,
+    "powerConsumptionFactor": 1
+  },
+  {
+    "index": 850,
+    "id": "Recipe_NobeliskCluster_C",
+    "name": "Cluster Nobelisk",
+    "ingredients": [
+      {
+        "resource": "Desc_NobeliskExplosive_C",
+        "amount": 3,
+        "displayAmount": 3,
+        "originalAmount": 3
+      },
+      {
+        "resource": "Desc_GunpowderMK2_C",
+        "amount": 4,
+        "displayAmount": 4,
+        "originalAmount": 4
+      }
+    ],
+    "products": [
+      {
+        "resource": "Desc_NobeliskCluster_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
+      }
+    ],
+    "time": 24,
+    "producedIn": "Build_AssemblerMk1_C",
+    "powerConsumption": 0,
+    "powerConsumptionFactor": 1
+  },
+  {
+    "index": 851,
+    "id": "Recipe_Nobelisk_C",
+    "name": "Nobelisk",
+    "ingredients": [
+      {
+        "resource": "Desc_Gunpowder_C",
+        "amount": 2,
+        "displayAmount": 2,
+        "originalAmount": 2
+      },
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 2,
+        "displayAmount": 2,
+        "originalAmount": 2
+      }
+    ],
+    "products": [
+      {
+        "resource": "Desc_NobeliskExplosive_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
+      }
+    ],
+    "time": 6,
+    "producedIn": "Build_AssemblerMk1_C",
     "powerConsumption": 0,
     "powerConsumptionFactor": 1
   },
@@ -9032,6 +9199,99 @@
     ],
     "time": 2,
     "producedIn": "Build_SmelterMk1_C",
+    "powerConsumption": 0,
+    "powerConsumptionFactor": 1
+  },
+  {
+    "index": 852,
+    "id": "Recipe_Fireworks_01_C",
+    "name": "Sweet Fireworks",
+    "ingredients": [
+      {
+        "resource": "Desc_XmasBranch_C",
+        "amount": 6,
+        "displayAmount": 6,
+        "originalAmount": 6
+      },
+      {
+        "resource": "Desc_CandyCane_C",
+        "amount": 3,
+        "displayAmount": 3,
+        "originalAmount": 3
+      }
+    ],
+    "products": [
+      {
+        "resource": "Desc_Fireworks_Projectile_01_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
+      }
+    ],
+    "time": 24,
+    "producedIn": "Build_AssemblerMk1_C",
+    "powerConsumption": 0,
+    "powerConsumptionFactor": 1
+  },
+  {
+    "index": 853,
+    "id": "Recipe_Fireworks_02_C",
+    "name": "Fancy Fireworks",
+    "ingredients": [
+      {
+        "resource": "Desc_XmasBranch_C",
+        "amount": 4,
+        "displayAmount": 4,
+        "originalAmount": 4
+      },
+      {
+        "resource": "Desc_XmasBow_C",
+        "amount": 3,
+        "displayAmount": 3,
+        "originalAmount": 3
+      }
+    ],
+    "products": [
+      {
+        "resource": "Desc_Fireworks_Projectile_02_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
+      }
+    ],
+    "time": 24,
+    "producedIn": "Build_AssemblerMk1_C",
+    "powerConsumption": 0,
+    "powerConsumptionFactor": 1
+  },
+  {
+    "index": 854,
+    "id": "Recipe_Fireworks_03_C",
+    "name": "Sparkly Fireworks",
+    "ingredients": [
+      {
+        "resource": "Desc_XmasBranch_C",
+        "amount": 3,
+        "displayAmount": 3,
+        "originalAmount": 3
+      },
+      {
+        "resource": "Desc_Snow_C",
+        "amount": 2,
+        "displayAmount": 2,
+        "originalAmount": 2
+      }
+    ],
+    "products": [
+      {
+        "resource": "Desc_Fireworks_Projectile_03_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
+      }
+    ],
+    "time": 24,
+    "producedIn": "Build_AssemblerMk1_C",
     "powerConsumption": 0,
     "powerConsumptionFactor": 1
   },
