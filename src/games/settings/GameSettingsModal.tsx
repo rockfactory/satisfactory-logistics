@@ -107,7 +107,7 @@ export function GameSettingsModal(props: IGameSettingsModalProps) {
             description="Select the max pipeline level you have unlocked. Will be used to highlight pipelines in the calculator."
             value={settings?.maxPipeline}
             clearable
-            onChange={onChangeHandler('maxBelt')}
+            onChange={onChangeHandler('maxPipeline')}
             placeholder="No pipeliine selected"
           />
         </Stack>
