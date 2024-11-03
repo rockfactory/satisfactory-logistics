@@ -3,6 +3,7 @@ import {
   Badge,
   Box,
   CloseButton,
+  Flex,
   getGradient,
   Group,
   Image,
@@ -40,6 +41,7 @@ import {
   getRecipeProductPerBuilding,
 } from '../../../../recipes/FactoryRecipe';
 import { InvisibleHandles } from '../../rendering/InvisibleHandles';
+import classes from './MachineNode.module.css';
 import { MachineNodeActions } from './MachineNodeActions';
 import { RecipeIngredientRow } from './RecipeIngredientRow';
 
@@ -80,7 +82,6 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
   const overclock = nodeState?.overclock ?? 1;
   const buildingsAmount = originalValue / perBuilding / overclock;
   const amplifiedRate = (amplifiedValue + originalValue) / originalValue;
-
   return (
     <Popover
       opened={(isHovering || props.selected) && !props.dragging}
@@ -214,7 +215,14 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
         </Box>
       </Popover.Target>
       <Popover.Dropdown p={0}>
-        <Group align="flex-start" gap={0}>
+        <Flex
+          align="stretch"
+          gap={0}
+          direction={{
+            base: 'column',
+            sm: 'row',
+          }}
+        >
           <Stack gap={0}>
             <Box
               p="sm"
@@ -327,7 +335,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
               </Table.Tbody>
             </Table>
           </Stack>
-          <Box w="250px" p="xs">
+          <Box w="250px" className={classes.actions}>
             {props.selected ? (
               <MachineNodeActions
                 data={props.data}
@@ -343,7 +351,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
               </Stack>
             )}
           </Box>
-        </Group>
+        </Flex>
       </Popover.Dropdown>
     </Popover>
   );
