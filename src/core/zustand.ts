@@ -45,7 +45,7 @@ export const useStore = create(
   devtools(
     persist(slicesWithActions, {
       name: 'zustand:persist',
-      partialize: state => omit(state, ['gameSave', 'charts']),
+      partialize: state => omit(state, ['gameSave']),
       version: 1,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
