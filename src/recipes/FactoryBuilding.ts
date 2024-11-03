@@ -19,6 +19,10 @@ export interface FactoryBuilding {
     isBelt: boolean;
     speed: number;
   } | null;
+  pipeline: {
+    isPipeline: boolean;
+    flowRate: number;
+  } | null;
   imagePath: string;
   powerGenerator: PowerGenerator | null;
   extractor: Extractor | null;
@@ -66,6 +70,25 @@ export function getFactoryBuildingByName(name: string) {
 
 export const FactoryConveyorBelts = sortBy(
   AllFactoryBuildings.filter(building => building.conveyor?.isBelt),
+  'name',
+);
+
+export const FactoryPipelines = sortBy(
+  // Includes clean variant as well tbd.
+  AllFactoryBuildings.filter(
+    building =>
+      building.pipeline?.isPipeline && building.pipeline?.flowRate > 0,
+  ), // Only return buildable which actually have a flow rate
+  'name',
+);
+
+export const FactoryPipelinesExclAlternates = sortBy(
+  AllFactoryBuildings.filter(
+    building =>
+      building.pipeline?.isPipeline &&
+      building.pipeline?.flowRate > 0 &&
+      !building.name.includes('Clean'),
+  ), // Only return buildable which actually have a flow rate
   'name',
 );
 

@@ -1,4 +1,7 @@
-import { useGameSettingMaxBelt } from '@/games/gamesSlice';
+import {
+  useGameSettingMaxBelt,
+  useGameSettingMaxPipeline,
+} from '@/games/gamesSlice';
 import { FactoryConveyorBelts } from '@/recipes/FactoryBuilding';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { alpha, Box, Group, Image, Text, Tooltip } from '@mantine/core';

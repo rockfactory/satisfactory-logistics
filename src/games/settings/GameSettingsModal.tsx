@@ -1,5 +1,8 @@
 import { SelectIconInput } from '@/core/form/SelectIconInput';
-import { FactoryConveyorBelts } from '@/recipes/FactoryBuilding';
+import {
+  FactoryConveyorBelts,
+  FactoryPipelinesExclAlternates,
+} from '@/recipes/FactoryBuilding';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   Button,
@@ -34,6 +37,17 @@ const BeltsOptions = FactoryConveyorBelts.map(
       label: belt.name,
       value: belt.id,
       icon: <Image src={belt.imagePath} alt={belt.name} w={16} h={16} />,
+    }) as const,
+);
+
+const PipelinesOptions = FactoryPipelinesExclAlternates.map(
+  pipeline =>
+    ({
+      label: pipeline.name,
+      value: pipeline.id,
+      icon: (
+        <Image src={pipeline.imagePath} alt={pipeline.name} w={16} h={16} />
+      ),
     }) as const,
 );
 
@@ -86,6 +100,15 @@ export function GameSettingsModal(props: IGameSettingsModalProps) {
             clearable
             onChange={onChangeHandler('maxBelt')}
             placeholder="No belt selected"
+          />
+          <SelectIconInput
+            label="Max Pipeline Level"
+            data={PipelinesOptions}
+            description="Select the max pipeline level you have unlocked. Will be used to highlight pipelines in the calculator."
+            value={settings?.maxPipeline}
+            clearable
+            onChange={onChangeHandler('maxBelt')}
+            placeholder="No pipeliine selected"
           />
         </Stack>
         <Space h={50} />

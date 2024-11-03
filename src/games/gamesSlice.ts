@@ -1,9 +1,12 @@
-import { FactoryConveyorBelts } from '@/recipes/FactoryBuilding';
+import {
+  FactoryConveyorBelts,
+  FactoryPipelinesExclAlternates,
+} from '@/recipes/FactoryBuilding';
 import dayjs from 'dayjs';
 import { useShallow } from 'zustand/shallow';
 import { useStore } from '../core/zustand';
 import { createSlice } from '../core/zustand-helpers/slices';
-import { Game, GameSettings, type GameRemoteData } from './Game';
+import { Game, type GameRemoteData, GameSettings } from './Game';
 
 export interface GamesSlice {
   games: Record<string, Game>;
@@ -145,10 +148,16 @@ export function useGameSettingMaxBelt() {
   const maxBelt = useGameSetting('maxBelt');
   if (!maxBelt) return null;
 
-  const maxBeltBuilding = FactoryConveyorBelts.find(
-    belt => belt.id === maxBelt,
+  return FactoryConveyorBelts.find(belt => belt.id === maxBelt)!;
+}
+
+export function useGameSettingMaxPipeline() {
+  const maxPipeline = useGameSetting('maxPipeline');
+  if (!maxPipeline) return null;
+
+  return FactoryPipelinesExclAlternates.find(
+    pipeline => pipeline.id === maxPipeline,
   )!;
-  return maxBeltBuilding;
 }
 
 export function useGameFactoriesIds(gameId: string | null | undefined) {

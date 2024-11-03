@@ -24,4 +24,5 @@ export interface GameSettings {
   noHighlight100PercentUsage?: boolean;
   highlight100PercentColor?: string;
   maxBelt?: string;
+  maxPipeline?: string;
 }
