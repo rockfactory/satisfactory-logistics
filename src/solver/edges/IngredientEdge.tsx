@@ -59,6 +59,14 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
   const maxBelt = useGameSettingMaxBelt();
   const maxPipeline = useGameSettingMaxPipeline();
   const isOverMaxBelt = maxBelt && (data?.value ?? 0) > maxBelt.conveyor!.speed;
+  const isOverMaxPipeline =
+    maxPipeline && (data?.value ?? 0) > maxPipeline.pipeline!.flowRate;
+
+  const isOverMaxLogistic =
+    data?.resource?.form === FactoryItemForm.Gas ||
+    data?.resource?.form === FactoryItemForm.Liquid
+      ? isOverMaxPipeline
+      : isOverMaxBelt;
 
   if (!sourceNode || !targetNode) {
     return null;
@@ -129,7 +137,7 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
             pointerEvents: 'all',
             borderRadius: 4,
             backgroundColor: alpha(
-              isOverMaxBelt ? '#75341e' : 'var(--mantine-color-dark-6)',
+              isOverMaxLogistic ? '#75341e' : 'var(--mantine-color-dark-6)',
               0.8,
             ),
             position: 'absolute',
