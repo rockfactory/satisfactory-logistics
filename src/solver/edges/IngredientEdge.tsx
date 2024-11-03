@@ -1,6 +1,7 @@
 import { useGameSettingMaxBelt } from '@/games/gamesSlice';
+import { FactoryConveyorBelts } from '@/recipes/FactoryBuilding';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { alpha, Box, Group, Text } from '@mantine/core';
+import { alpha, Box, Group, Image, Text, Tooltip } from '@mantine/core';
 import {
   BaseEdge,
   Edge,
@@ -10,6 +11,7 @@ import {
   useInternalNode,
   useStore,
 } from '@xyflow/react';
+import { last } from 'lodash';
 import { FC } from 'react';
 import { RepeatingNumber } from '../../core/intl/NumberFormatter';
 import { FactoryItem } from '../../recipes/FactoryItem';
@@ -74,6 +76,10 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
 
   const duration = 60 / (data?.value ?? 0);
 
+  // If we don't have a max belt, use the last one (Mk6)
+  const usedBelt = maxBelt ?? last(FactoryConveyorBelts)!;
+  const neededBelts = Math.ceil((data?.value ?? 0) / usedBelt.conveyor!.speed);
+
   return (
     <>
       <BaseEdge
@@ -96,6 +102,7 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
         <Box
           p={'4px'}
           style={{
+            pointerEvents: 'all',
             borderRadius: 4,
             backgroundColor: alpha(
               isOverMaxBelt ? '#75341e' : 'var(--mantine-color-dark-6)',
@@ -104,15 +111,32 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
           }}
-          className="nodrag nopan"
+          className="nodrag"
         >
-          <Group gap="4px">
-            <FactoryItemImage size={16} id={data?.resource.id} />
-            <Text size="10px">
-              <RepeatingNumber value={data?.value} />
-              /min
-            </Text>
-          </Group>
+          <Tooltip
+            color="dark.8"
+            label={
+              <Group>
+                <Image
+                  src={usedBelt.imagePath}
+                  alt={usedBelt.name}
+                  w={24}
+                  h={24}
+                />
+                <Text>
+                  {neededBelts}x {usedBelt.name}
+                </Text>
+              </Group>
+            }
+          >
+            <Group gap="4px">
+              <FactoryItemImage size={16} id={data?.resource.id} />
+              <Text size="10px">
+                <RepeatingNumber value={data?.value} />
+                /min
+              </Text>
+            </Group>
+          </Tooltip>
         </Box>
       </EdgeLabelRenderer>
     </>

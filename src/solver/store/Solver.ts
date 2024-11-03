@@ -4,11 +4,16 @@ export interface SolverRequest {
   // inputs?: FactoryInput[];
   // outputs: FactoryOutput[];
   allowedRecipes?: string[] | null;
+  blockedResources?: string[] | null;
+  blockedBuildings?: string[] | null;
   objective?: 'minimize_power' | 'minimize_resources' | 'minimize_area';
 }
 
 export interface SolverNodeState {
   done?: boolean;
+  somersloops?: number;
+  amplification?: number;
+  overclock?: number;
 }
 
 export interface SolverInstance {

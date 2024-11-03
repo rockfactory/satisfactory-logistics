@@ -1,5 +1,12 @@
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { ActionIcon, Group, Image, NumberInput, Text } from '@mantine/core';
+import {
+  ActionIcon,
+  Group,
+  Image,
+  NumberInput,
+  Text,
+  Tooltip,
+} from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
@@ -17,13 +24,14 @@ export interface IFactoryOutputRowProps {
   factoryId: string;
   output: FactoryOutput;
   index: number;
+  displayMode?: 'solver' | 'factory';
 }
 
 export function FactoryOutputRow(props: IFactoryOutputRowProps) {
-  const { factoryId, output, index } = props;
+  const { factoryId, output, index, displayMode = 'factory' } = props;
 
-  const outputs = useStore(
-    state => state.factories.factories[factoryId]?.outputs,
+  const outputsCount = useStore(
+    state => state.factories.factories[factoryId]?.outputs?.length ?? 0,
   );
 
   const [amountFocused, setAmountFocused] = useState(false);
@@ -32,9 +40,8 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
   // are synced with solvers
   const onChangeHandler = useFactoryOnChangeHandler(factoryId);
 
-  // TODO IN Solver view, this should be false
   const isVisible = useIsFactoryVisible(factoryId, false, output.resource);
-  if (!isVisible) return null;
+  if (!isVisible && displayMode === 'factory') return null;
 
   const item = output.resource ? AllFactoryItemsMap[output.resource] : null;
 
@@ -75,44 +82,45 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
           });
         }}
       />
-      {/* <Tooltip
-        label="Somersloops number. It will double the output amount if set."
+      <Tooltip
+        label="Somersloops tracking for this output. Will automatically be set here if you add some somersloops in the calculator"
         position="top"
+        color="dark.8"
         withArrow
-      > */}
-      <NumberInput
-        value={output.somersloops ?? 0}
-        w={60}
-        min={0}
-        variant="filled"
-        fw={!output.somersloops ? 'normal' : 'bold'}
-        styles={{
-          input: {
-            color: !output.somersloops ? '' : 'white',
-            backgroundColor: !output.somersloops
-              ? ''
-              : 'var(--mantine-color-grape-5)',
-          },
-        }}
-        onChange={value => {
-          useStore.getState().updateFactoryOutput(factoryId, index, {
-            somersloops: Number(value),
-          });
-        }}
-        rightSection={
-          <Image
-            src="/images/game/wat-1_256.png"
-            alt="Somerloops"
-            width={20}
-            height={20}
-          />
-        }
-      />
-      {/* </Tooltip> */}
+      >
+        <NumberInput
+          value={output.somersloops ?? 0}
+          w={60}
+          min={0}
+          variant="filled"
+          fw={!output.somersloops ? 'normal' : 'bold'}
+          styles={{
+            input: {
+              color: !output.somersloops ? '' : 'white',
+              backgroundColor: !output.somersloops
+                ? ''
+                : 'var(--mantine-color-grape-5)',
+            },
+          }}
+          onChange={value => {
+            useStore.getState().updateFactoryOutput(factoryId, index, {
+              somersloops: Number(value),
+            });
+          }}
+          rightSection={
+            <Image
+              src="/images/game/wat-1_256.png"
+              alt="Somerloops"
+              width={20}
+              height={20}
+            />
+          }
+        />
+      </Tooltip>
       <ActionIcon
         variant="outline"
         color="red"
-        disabled={outputs?.length === 1}
+        disabled={outputsCount === 1}
         size="md"
         onClick={() =>
           useStore.getState().removeFactoryOutput(factoryId, index)

@@ -1,6 +1,6 @@
+import { ChartsTab } from '@/factories/charts/ChartsTab';
 import { GamesAtleastOneManager } from '@/games/manager/GamesAtleastOneManager';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { ChartsTab } from '../factories/charts/ChartsTab';
 import { FactoriesTab } from '../factories/FactoriesTab';
 import { Footer } from '../layout/Footer';
 import { Header } from '../layout/Header';
@@ -50,7 +50,7 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
           element={<SolverShareImporterPage />}
         />
       </Routes>
-      <Footer />
+      <Footer compact={activeTab === 'calculator'} />
     </>
   );
 }

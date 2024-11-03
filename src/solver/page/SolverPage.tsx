@@ -3,6 +3,7 @@ import {
   useFactoryInputsOutputs,
   useFactorySimpleAttributes,
 } from '@/factories/store/factoriesSelectors';
+import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { AllFactoryRecipesMap } from '@/recipes/FactoryRecipe';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
@@ -13,17 +14,14 @@ import {
   Container,
   Group,
   LoadingOverlay,
-  Select,
   Stack,
   Text,
   TextInput,
   Title,
 } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import {
   IconArrowLeft,
   IconPlus,
-  IconTrash,
   IconZoomExclamation,
 } from '@tabler/icons-react';
 import { Edge, Panel, ReactFlowProvider } from '@xyflow/react';
@@ -35,15 +33,20 @@ import { v4 } from 'uuid';
 import { useFormOnChange } from '../../core/form/useFormOnChange';
 import { useStore } from '../../core/zustand';
 import { AfterHeaderSticky } from '../../layout/AfterHeaderSticky';
-import { SolverEdge, SolverNode } from '../computeProductionConstraints';
-import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
-import { SolverShareButton } from '../share/SolverShareButton';
+import {
+  SolverEdge,
+  SolverNode,
+  type SolverContext,
+} from '../algorithm/computeProductionConstraints';
 import {
   solveProduction,
   useHighs,
   type SolutionNode,
-} from '../solveProduction';
-import { SolverLayout } from '../SolverLayout';
+} from '../algorithm/solveProduction';
+import { SolverInspectorDrawer } from '../inspector/SolverInspectorDrawer';
+import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
+import { SolverLayout } from '../layout/SolverLayout';
+import { SolverShareButton } from '../share/SolverShareButton';
 import { SolverInstance } from '../store/Solver';
 import {
   getSolverGame,
@@ -51,8 +54,8 @@ import {
   usePathSolverInstance,
   useSolverGameId,
 } from '../store/solverSelectors';
-import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
-import { SolverRecipesDrawer } from './SolverRecipesDrawer';
+import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
+import { SolverResetButton } from './SolverResetButton';
 import {
   proposeSolverSolutionSuggestions,
   type ISolverSolutionSuggestion,
@@ -68,6 +71,7 @@ export interface ISolverSolution {
   nodes: SolutionNode[];
   edges: Edge[];
   graph: Graph<SolverNode, SolverEdge, any>;
+  context: SolverContext;
 }
 
 export function SolverPage(props: ISolverPageProps) {
@@ -84,9 +88,6 @@ export function SolverPage(props: ISolverPageProps) {
   const currentSolverId = useCurrentSolverId();
   const solverGameId = useSolverGameId(id);
 
-  // TODO We want to have a "default" solver ID you can edit how
-  // many times you want, but if you don't save it, it will be
-  // overwritten by a new one.
   useEffect(() => {
     if (!params.id) return;
     if (instance && factory) return;
@@ -128,6 +129,7 @@ export function SolverPage(props: ISolverPageProps) {
     const solution = solveProduction(highsRef.current, {
       ...instance?.request,
       ...inputsOutputs,
+      nodes: instance.nodes,
     });
     logger.log(`Solved -> `, solution);
 
@@ -141,7 +143,7 @@ export function SolverPage(props: ISolverPageProps) {
 
     return { solution, suggestions };
     // We don't want to re-run computation if instance changes, only if its request changes
-  }, [highsRef, instance?.request, inputsOutputs, loading]);
+  }, [highsRef, instance?.request, instance?.nodes, inputsOutputs, loading]);
 
   if (params.id == null) {
     const hasCurrentSolverGame = getSolverGame(
@@ -178,7 +180,7 @@ export function SolverPage(props: ISolverPageProps) {
                 <Button
                   component={Link}
                   to="/factories"
-                  variant="outline"
+                  variant="light"
                   color="gray"
                   leftSection={<IconArrowLeft size={16} />}
                 >
@@ -203,7 +205,6 @@ export function SolverPage(props: ISolverPageProps) {
             {!solverGameId && id && (
               <Button
                 variant="filled"
-                color="blue"
                 onClick={() => {
                   useStore.getState().addFactoryIdToGame(undefined, id);
                 }}
@@ -212,46 +213,15 @@ export function SolverPage(props: ISolverPageProps) {
                 Add to Game
               </Button>
             )}
+            <SolverResetButton id={id} factory={factory} />
           </Group>
           <Group gap="sm">
-            <SolverInputOutputsDrawer id={id} solution={solution} />
-            <Select
-              data={[
-                { value: 'minimize_resources', label: 'Minimize Resources' },
-                { value: 'minimize_power', label: 'Minimize Power' },
-                { value: 'minimize_area', label: 'Minimize Area' },
-                // TODO Centralize defs
-              ]}
-              placeholder="Objective"
-              value={instance?.request?.objective ?? 'minimize_resources'}
-              onChange={onChangeHandler('request.objective')}
+            <SolverRequestDrawer
+              solution={solution}
+              onSolverChangeHandler={onChangeHandler}
             />
-            <SolverRecipesDrawer />
 
-            <Button
-              // TODO Show this button only if the solver is not from a _saved_ factory (why ?)
-              color="red"
-              variant="light"
-              onClick={() => {
-                useStore.getState().removeSolver(id!);
-                if (factory) {
-                  navigate(`/factories`);
-                  notifications.show({
-                    title: 'Solver removed',
-                    message: `Solver for ${factory.name ?? 'factory'} removed`,
-                  });
-                } else {
-                  navigate(`/factories/calculator`);
-                  notifications.show({
-                    title: 'Solver removed',
-                    message: `Solver removed`,
-                  });
-                }
-              }}
-              leftSection={<IconTrash size={16} />}
-            >
-              Reset
-            </Button>
+            <GameSettingsModal />
           </Group>
         </Group>
       </AfterHeaderSticky>
@@ -264,6 +234,9 @@ export function SolverPage(props: ISolverPageProps) {
                   <Group gap="xs">
                     <SolverSummaryDrawer solution={solution} />
                     <SolverShareButton />
+                    {import.meta.env.DEV && (
+                      <SolverInspectorDrawer solution={solution} />
+                    )}
                   </Group>
                 </Panel>
               </SolverLayout>

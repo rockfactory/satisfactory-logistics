@@ -1,4 +1,5 @@
 import { AllFactoryRecipes } from '../FactoryRecipe';
+import { isWorldResource } from '../WorldResources';
 import { isDefaultRecipe, isMAMRecipe } from './SchematicGraph';
 
 export function getAllDefaultRecipesIds() {
@@ -22,4 +23,18 @@ export function getAllMAMRecipeIds() {
 
 export function getAllAlternateRecipeIds() {
   return AllFactoryRecipes.filter(r => !isDefaultRecipe(r.id)).map(r => r.id);
+}
+
+export const AllConvertRecipes = AllFactoryRecipes.filter(
+  r =>
+    r.products.length === 1 &&
+    isWorldResource(r.products[0].resource) &&
+    r.ingredients.length === 2 &&
+    r.ingredients.every(
+      i => isWorldResource(i.resource) || i.resource === 'Desc_SAMIngot_C',
+    ),
+);
+
+export function getAllConverterRecipeIds() {
+  return AllConvertRecipes.map(r => r.id);
 }

@@ -11,6 +11,11 @@
   padding-top: var(--mantine-spacing-xl);
   padding-bottom: var(--mantine-spacing-xl);
 
+  &.compact {
+    padding-top: var(--mantine-spacing-xs);
+    padding-bottom: var(--mantine-spacing-xs);
+  }
+
   @media (max-width: $mantine-breakpoint-xs) {
     flex-direction: column;
   }

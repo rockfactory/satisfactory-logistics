@@ -1,8 +1,7 @@
 import fs from 'fs';
+import sortBy from 'lodash/sortBy';
 import { ParsingContext } from './ParsingContext';
 import { convertImageName } from './images/convertImageName';
-
-const toolsJson = JSON.parse(fs.readFileSync('./data/docs-tools.json', 'utf8'));
 
 export function parseItems(docsJson: any) {
   const rawItems = docsJson.flatMap(nativeClass => {
@@ -11,7 +10,8 @@ export function parseItems(docsJson: any) {
       nativeClass.NativeClass?.includes('FGResourceDescriptor') ||
       nativeClass.NativeClass?.includes('FGAmmoType') ||
       nativeClass.NativeClass?.includes('FGPowerShardDescriptor') ||
-      nativeClass.NativeClass?.includes('FGEquipmentDescriptor')
+      nativeClass.NativeClass?.includes('FGEquipmentDescriptor') ||
+      nativeClass.NativeClass?.includes('FGVehicleDescriptor')
     ) {
       console.log(`Importing -> `, nativeClass.NativeClass);
       if (nativeClass.NativeClass?.includes('FGEquipmentDescriptor')) {
@@ -19,15 +19,46 @@ export function parseItems(docsJson: any) {
           c => c.ClassName === 'BP_ItemDescriptorPortableMiner_C',
         );
       }
-      return nativeClass.Classes;
+      return nativeClass.Classes.filter(
+        c => !c.ClassName.includes('Desc_CyberWagon_C'),
+      ).map(c => ({
+        ...c,
+        NativeClass: nativeClass.NativeClass,
+      }));
     }
 
     return [];
   });
 
-  const items = rawItems
-    .map((item, index) => parseFactoryItem(item, index))
-    .filter(item => item !== null);
+  const previousItems = JSON.parse(
+    fs.readFileSync('./src/recipes/FactoryItems.json').toString(),
+  );
+  const previousItemsIndexes = previousItems.reduce((acc, item) => {
+    acc[item.id] = item.index;
+    return acc;
+  }, {});
+
+  // We want to keep the same index for items that are already in the list.
+  // They are used in solver state (`SolverNodeState`) and we can't just use the ID
+  // since the solver has a hard limit on variable names, and we don't want
+  // to use a mapping table (it's really hard to debug and maintain).
+  for (const item of rawItems) {
+    if (previousItemsIndexes[item.ClassName] != null) {
+      item.PreviousIndex = previousItemsIndexes[item.ClassName];
+    }
+  }
+
+  let nextIndex = previousItems.length;
+
+  const items = sortBy(
+    rawItems.map((item, index) =>
+      parseFactoryItem(
+        item,
+        item.PreviousIndex != null ? item.PreviousIndex : nextIndex++,
+      ),
+    ),
+    'index',
+  );
 
   fs.writeFileSync(
     './src/recipes/FactoryItems.json',
@@ -48,11 +79,6 @@ export function parseItems(docsJson: any) {
 }
 
 function parseFactoryItem(json, index) {
-  // if (!toolsJson.items[json.ClassName]) {
-  //   console.log(`Missing item: ${json.ClassName}`);
-  //   // return null;
-  // }
-
   return {
     id: json.ClassName,
     index,
@@ -69,6 +95,9 @@ function parseFactoryItem(json, index) {
     // es. from `Desc_NuclearWaste_C` to `nuclear-waste.png`
     imagePath: '/images/game/' + convertImageName(json.mPersistentBigIcon),
     isFicsmas: json.mSmallIcon.includes('Christmas'),
+    ...(json.NativeClass?.includes('FGVehicleDescriptor')
+      ? { isVehicle: true }
+      : {}),
   };
 }
 
@@ -80,6 +109,8 @@ function parseFactoryItemForm(form) {
       return 'Liquid';
     case 'RF_GAS':
       return 'Gas';
+    case 'RF_INVALID':
+      return 'Invalid';
     default:
       throw new Error(`Unknown form: ${form}`);
   }

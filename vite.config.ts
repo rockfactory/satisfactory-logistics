@@ -27,6 +27,7 @@ export default defineConfig({
     },
   },
   define: {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     APP_VERSION: JSON.stringify(require('./package.json').version),
     SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN),
   },

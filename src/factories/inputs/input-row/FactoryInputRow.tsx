@@ -1,3 +1,4 @@
+import { LogisticTypeSelect } from '@/recipes/logistics/LogisticTypeSelect';
 import {
   ActionIcon,
   Group,
@@ -38,7 +39,7 @@ export interface IFactoryInputRowProps {
 }
 
 export function FactoryInputRow(props: IFactoryInputRowProps) {
-  const { index, input, factoryId, displayMode } = props;
+  const { index, input, factoryId, displayMode = 'factory' } = props;
 
   const [focused, setFocused] = useState(false);
 
@@ -75,7 +76,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   const onChangeHandler = useFactoryOnChangeHandler(factoryId);
 
   const isVisible = useIsFactoryVisible(factoryId, false, input.resource);
-  if (!isVisible) return null;
+  if (!isVisible && displayMode === 'factory') return null;
 
   return (
     <Group key={index} align="flex-start" gap="sm">
@@ -118,6 +119,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         onChange={onChangeHandler(`inputs.${index}.resource`)}
       />
       <Tooltip
+        color="dark.8"
         label={
           <Group gap="sm">
             Usage
@@ -162,6 +164,14 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           onChange={onChangeHandler(`inputs.${index}.amount`)}
         />
       </Tooltip>
+      {displayMode === 'factory' && (
+        <LogisticTypeSelect
+          allowDeselect
+          value={input.transport}
+          onChange={onChangeHandler(`inputs.${index}.transport`)}
+          w={120}
+        />
+      )}
       {displayMode === 'solver' && (
         <Tooltip label="Force usage in calculator. Eventual surplus will be converted in byproducts">
           <ActionIcon

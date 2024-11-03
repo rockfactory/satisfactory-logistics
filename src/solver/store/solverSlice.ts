@@ -1,6 +1,8 @@
+import { toggleAsSet } from '@/core/state-utils/toggleAsSet';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import {
   getAllAlternateRecipeIds,
+  getAllConverterRecipeIds,
   getAllDefaultRecipesIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
 import { uniq, without } from 'lodash';
@@ -127,6 +129,43 @@ export const solversSlice = createSlice({
         );
       }
     },
+    toggleConverterRecipes: (id: string, use: boolean) => state => {
+      const instance = state.instances[id];
+      if (!instance.request.allowedRecipes) {
+        instance.request.allowedRecipes = [];
+      }
+      if (use) {
+        instance.request.allowedRecipes = uniq(
+          instance.request.allowedRecipes.concat(getAllConverterRecipeIds()),
+        );
+      } else {
+        instance.request.allowedRecipes = without(
+          instance.request.allowedRecipes,
+          ...getAllConverterRecipeIds(),
+        );
+      }
+    },
+    // Limitations
+    toggleBlockedResource:
+      (id: string, resource: string, use: boolean) => state => {
+        const instance = state.instances[id];
+
+        instance.request.blockedResources = toggleAsSet(
+          instance.request.blockedResources ?? [],
+          resource,
+          use,
+        );
+      },
+    toggleBlockedBuilding:
+      (id: string, building: string, use: boolean) => state => {
+        const instance = state.instances[id];
+
+        instance.request.blockedBuildings = toggleAsSet(
+          instance.request.blockedBuildings ?? [],
+          building,
+          use,
+        );
+      },
     saveSolverSharedId: (id: string, sharedId: string) => state => {
       state.instances[id].sharedId = sharedId;
     },

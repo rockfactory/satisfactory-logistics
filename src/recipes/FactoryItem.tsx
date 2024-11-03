@@ -15,6 +15,7 @@ export interface FactoryItem {
   imageComponent?: React.ComponentType<{ size: number | string | undefined }>;
   unit?: string;
   isFicsmas: boolean;
+  isVechicle?: boolean;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -22,14 +23,21 @@ export enum FactoryItemForm {
   Solid = 'Solid',
   Liquid = 'Liquid',
   Gas = 'Gas',
+  // Not valid
+  Invalid = 'Invalid',
 }
 
 import { IconBolt } from '@tabler/icons-react';
 import { last } from 'lodash';
 import type React from 'react';
+import type { FactoryItemId } from './FactoryItemId';
 import RawFactoryItems from './FactoryItems.json';
 
 export const AllFactoryItems: FactoryItem[] = RawFactoryItems as FactoryItem[];
+
+export const AllProducibleFactoryItems = AllFactoryItems.filter(
+  item => item.form !== FactoryItemForm.Invalid,
+);
 
 AllFactoryItems.push({
   imagePath: '',
@@ -57,3 +65,12 @@ export const AllFactoryItemsMap = AllFactoryItems.reduce(
   },
   {} as Record<string, FactoryItem>,
 );
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function getFactoryItem(id: FactoryItemId): FactoryItem {
+  const item = AllFactoryItemsMap[id];
+  if (!item) {
+    throw new Error(`Factory item with id "${id}" not found`);
+  }
+  return item;
+}
