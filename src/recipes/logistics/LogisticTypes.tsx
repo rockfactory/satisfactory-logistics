@@ -26,3 +26,11 @@ export const LogisticTypes = [
 ] as const;
 
 export type LogisticType = (typeof LogisticTypes)[number]['id'];
+
+export const AllLogisticTypesMap = LogisticTypes.reduce(
+  (acc, logisticType) => {
+    acc[logisticType.id] = logisticType;
+    return acc;
+  },
+  {} as Record<LogisticType, (typeof LogisticTypes)[number]>,
+);

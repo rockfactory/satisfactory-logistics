@@ -23,12 +23,12 @@ export function useFormOnChange<Obj>(updater: Updater<Obj>) {
     return (path: Path<Obj>) => {
       if (!handlers.current[path as string]) {
         handlers.current[path as string] = (value: Value) => {
-          // console.log(
-          //   'useFormOnChange',
-          //   path,
-          //   value,
-          //   "type: + '" + typeof value + "'",
-          // );
+          console.log(
+            'useFormOnChange',
+            path,
+            value,
+            "type: + '" + typeof value + "'",
+          );
           if (typeof value === 'object' && value?.target) {
             value =
               value?.target?.type === 'checkbox'

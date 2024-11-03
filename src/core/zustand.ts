@@ -1,3 +1,4 @@
+import { chartsSlice } from '@/factories/charts/store/chartsSlice';
 import { factoryViewSortActions } from '@/factories/store/factoryViewSortActions';
 import { gameSaveSlice } from '@/games/save/gameSaveSlice';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
@@ -28,6 +29,7 @@ const slices = withSlices(
   factoriesSlice,
   factoryViewSlice,
   solversSlice,
+  chartsSlice,
 );
 
 export type RootState = ReturnType<typeof slices>;
@@ -43,7 +45,7 @@ export const useStore = create(
   devtools(
     persist(slicesWithActions, {
       name: 'zustand:persist',
-      partialize: state => omit(state, ['gameSave']),
+      partialize: state => omit(state, ['gameSave', 'charts']),
       version: 1,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
