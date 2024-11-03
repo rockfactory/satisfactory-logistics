@@ -1,3 +1,5 @@
+import type { LogisticType } from '@/recipes/logistics/LogisticTypes';
+
 export interface Factory {
   id: string;
   name?: string | null;
@@ -12,6 +14,7 @@ export interface FactoryInput {
   resource?: string | null;
   amount?: number | null;
   note?: string | null;
+  transport?: LogisticType | null;
   /** Force usage in calculator. Eventual surplus will be converted in byproduct */
   forceUsage?: boolean;
 }

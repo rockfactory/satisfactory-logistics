@@ -1,3 +1,4 @@
+import { LogisticTypeSelect } from '@/recipes/logistics/LogisticTypeSelect';
 import {
   ActionIcon,
   Group,
@@ -163,6 +164,14 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           onChange={onChangeHandler(`inputs.${index}.amount`)}
         />
       </Tooltip>
+      {displayMode === 'factory' && (
+        <LogisticTypeSelect
+          allowDeselect
+          value={input.transport}
+          onChange={onChangeHandler(`inputs.${index}.transport`)}
+          w={120}
+        />
+      )}
       {displayMode === 'solver' && (
         <Tooltip label="Force usage in calculator. Eventual surplus will be converted in byproducts">
           <ActionIcon

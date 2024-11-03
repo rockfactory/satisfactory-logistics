@@ -10,8 +10,10 @@ import {
   Stack,
   Text,
   TextInput,
+  Tooltip,
 } from '@mantine/core';
-import { IconCalculator, IconTrash } from '@tabler/icons-react';
+import { notifications } from '@mantine/notifications';
+import { IconCalculator, IconCopy, IconTrash } from '@tabler/icons-react';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useFormOnChange } from '../../core/form/useFormOnChange';
@@ -100,14 +102,40 @@ export function FactoryWideCard(props: IFactoryWideCardProps) {
               Calculator
             </Button>
 
-            <ActionIcon
-              variant="filled"
-              color="red"
-              size="lg"
-              onClick={() => useStore.getState().removeGameFactory(id)}
-            >
-              <IconTrash stroke={2} size={16} />
-            </ActionIcon>
+            <Tooltip color="dark.8" label="Clone Factory">
+              <ActionIcon
+                variant="filled"
+                color="gray"
+                size="lg"
+                onClick={() => {
+                  useStore.getState().cloneGameFactory(id);
+                  notifications.show({
+                    title: 'Factory Cloned',
+                    message: 'Factory has been duplicated',
+                    color: 'green',
+                  });
+                  window.scrollTo({
+                    behavior: 'smooth',
+                    top: document.body.scrollHeight,
+                  });
+                }}
+              >
+                <IconCopy stroke={2} size={16} />
+              </ActionIcon>
+            </Tooltip>
+
+            <Tooltip color="dark.8" label="Delete Factory">
+              <ActionIcon
+                variant="filled"
+                color="red"
+                size="lg"
+                onClick={() => {
+                  useStore.getState().removeGameFactory(id);
+                }}
+              >
+                <IconTrash stroke={2} size={16} />
+              </ActionIcon>
+            </Tooltip>
           </Group>
         </Box>
       </Group>
