@@ -98,7 +98,7 @@ export const FactoryPipelinesExclAlternates = sortBy(
  */
 export const FactoryBuildingsForRecipes = sortBy(
   AllFactoryBuildings.filter(
-    building => !building.extractor && !building.conveyor,
+    building => !building.extractor && !building.conveyor && !building.pipeline,
   ),
   'name',
 );

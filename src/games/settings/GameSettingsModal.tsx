@@ -108,7 +108,7 @@ export function GameSettingsModal(props: IGameSettingsModalProps) {
             value={settings?.maxPipeline}
             clearable
             onChange={onChangeHandler('maxPipeline')}
-            placeholder="No pipeliine selected"
+            placeholder="No pipeline selected"
           />
         </Stack>
         <Space h={50} />
