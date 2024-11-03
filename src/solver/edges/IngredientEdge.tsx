@@ -1,5 +1,11 @@
-import { useGameSettingMaxBelt } from '@/games/gamesSlice';
-import { FactoryConveyorBelts } from '@/recipes/FactoryBuilding';
+import {
+  useGameSettingMaxBelt,
+  useGameSettingMaxPipeline,
+} from '@/games/gamesSlice';
+import {
+  FactoryConveyorBelts,
+  FactoryPipelinesExclAlternates,
+} from '@/recipes/FactoryBuilding';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { alpha, Box, Group, Image, Text, Tooltip } from '@mantine/core';
 import {
@@ -14,7 +20,7 @@ import {
 import { last } from 'lodash';
 import { FC } from 'react';
 import { RepeatingNumber } from '../../core/intl/NumberFormatter';
-import { FactoryItem } from '../../recipes/FactoryItem';
+import { FactoryItem, FactoryItemForm } from '../../recipes/FactoryItem';
 import { getEdgeParams, getSpecialPath } from './utils';
 
 export interface IIngredientEdgeData {
@@ -51,7 +57,16 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
   });
 
   const maxBelt = useGameSettingMaxBelt();
+  const maxPipeline = useGameSettingMaxPipeline();
   const isOverMaxBelt = maxBelt && (data?.value ?? 0) > maxBelt.conveyor!.speed;
+  const isOverMaxPipeline =
+    maxPipeline && (data?.value ?? 0) > maxPipeline.pipeline!.flowRate;
+
+  const isOverMaxLogistic =
+    data?.resource?.form === FactoryItemForm.Gas ||
+    data?.resource?.form === FactoryItemForm.Liquid
+      ? isOverMaxPipeline
+      : isOverMaxBelt;
 
   if (!sourceNode || !targetNode) {
     return null;
@@ -78,7 +93,24 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
 
   // If we don't have a max belt, use the last one (Mk6)
   const usedBelt = maxBelt ?? last(FactoryConveyorBelts)!;
-  const neededBelts = Math.ceil((data?.value ?? 0) / usedBelt.conveyor!.speed);
+  // If we don't have a max pipeline, use the last one (Mk2)
+  const usedPipeline = maxPipeline ?? last(FactoryPipelinesExclAlternates)!;
+
+  const neededBelts =
+    Math.ceil((data?.value ?? 0) / usedBelt.conveyor!.speed) ?? null;
+  const neededPipelines =
+    Math.ceil((data?.value ?? 0) / usedPipeline.pipeline!.flowRate) ?? null;
+
+  const usedLogistic =
+    data?.resource?.form === FactoryItemForm.Gas ||
+    data?.resource?.form === FactoryItemForm.Liquid
+      ? usedPipeline
+      : usedBelt;
+  const usedLogisticMax =
+    data?.resource?.form === FactoryItemForm.Gas ||
+    data?.resource?.form === FactoryItemForm.Liquid
+      ? neededPipelines
+      : neededBelts;
 
   return (
     <>
@@ -105,7 +137,7 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
             pointerEvents: 'all',
             borderRadius: 4,
             backgroundColor: alpha(
-              isOverMaxBelt ? '#75341e' : 'var(--mantine-color-dark-6)',
+              isOverMaxLogistic ? '#75341e' : 'var(--mantine-color-dark-6)',
               0.8,
             ),
             position: 'absolute',
@@ -118,13 +150,13 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
             label={
               <Group>
                 <Image
-                  src={usedBelt.imagePath}
-                  alt={usedBelt.name}
+                  src={usedLogistic.imagePath}
+                  alt={usedLogistic.name}
                   w={24}
                   h={24}
                 />
                 <Text>
-                  {neededBelts}x {usedBelt.name}
+                  {usedLogisticMax}x {usedLogistic.name}
                 </Text>
               </Group>
             }

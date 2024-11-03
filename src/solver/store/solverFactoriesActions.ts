@@ -185,24 +185,32 @@ export const solverFactoriesActions = createActions({
 
       for (const [somersloopNodeId, somersloopNodeState] of somersloopNodes) {
         if (!graph.hasNode(somersloopNodeId)) {
-          console.error('Node not found in graph', somersloopNodeId);
+          logger.error('Node not found in graph', somersloopNodeId);
           delete solvers[factoryId].nodes[somersloopNodeId];
           continue;
         }
+
+        let isOutputUpdated = false;
 
         bfsFromNode(
           graph,
           somersloopNodeId,
           (id, attrs) => {
+            // We store the somersloops amount only on the _first_ output node,
+            // to avoid displaying the same value multiple times.
+            if (isOutputUpdated) return true;
+
             if (attrs.type !== 'byproduct') return;
             const output = state.factories.factories[factoryId]?.outputs?.find(
               o => o.resource === attrs.resource.id,
             );
             if (output) {
-              console.log('Adding somersloops', somersloopNodeState.somersloops, 'to output', output.resource); // prettier-ignore
+              logger.info('Adding somersloops', somersloopNodeState.somersloops, 'to output', output.resource, 'from node', somersloopNodeId); // prettier-ignore
               output.somersloops =
                 (output.somersloops ?? 0) +
                 (somersloopNodeState.somersloops ?? 0);
+
+              isOutputUpdated = true;
             }
           },
           { mode: 'outbound' },
