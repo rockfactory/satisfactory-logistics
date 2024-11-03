@@ -34,11 +34,6 @@ import type { FactoryItemId } from './FactoryItemId';
 import RawFactoryItems from './FactoryItems.json';
 
 export const AllFactoryItems: FactoryItem[] = RawFactoryItems as FactoryItem[];
-
-export const AllProducibleFactoryItems = AllFactoryItems.filter(
-  item => item.form !== FactoryItemForm.Invalid,
-);
-
 AllFactoryItems.push({
   imagePath: '',
   id: 'Desc_Power_CX',
@@ -46,6 +41,7 @@ AllFactoryItems.push({
   name: 'Power',
   displayName: 'Power',
   description: 'Power',
+  // If it's invalid, it _cannot_ be produced.
   form: FactoryItemForm.Solid,
   sinkPoints: 0,
   sinkable: false,
@@ -57,6 +53,12 @@ AllFactoryItems.push({
   unit: 'MW',
   imageComponent: IconBolt,
 });
+
+// Post-processing
+
+export const AllProducibleFactoryItems = AllFactoryItems.filter(
+  item => item.form !== FactoryItemForm.Invalid,
+);
 
 export const AllFactoryItemsMap = AllFactoryItems.reduce(
   (acc, item) => {
