@@ -1,6 +1,6 @@
 import type { SolverInstance } from '@/solver/store/Solver';
 import dayjs from 'dayjs';
-import { omit } from 'lodash';
+import { cloneDeep, omit } from 'lodash';
 import { v4 } from 'uuid';
 import { useStore } from '../../core/zustand';
 import { createActions } from '../../core/zustand-helpers/actions';
@@ -42,6 +42,27 @@ export const gameFactoriesActions = createActions({
       get().createFactory(factoryId, factory);
       get().addFactoryIdToGame(targetId, factoryId);
     },
+  cloneGameFactory: (factoryId: string) => state => {
+    const factory = state.factories.factories[factoryId];
+    if (!factory) {
+      throw new Error('No factory found');
+    }
+
+    const newFactoryId = v4();
+    state.factories.factories[newFactoryId] = {
+      ...cloneDeep(factory),
+      name: `${factory.name ?? ''} (Copy)`,
+      id: newFactoryId,
+    };
+    if (state.solvers.instances[factoryId]) {
+      state.solvers.instances[newFactoryId] = {
+        ...cloneDeep(state.solvers.instances[factoryId]),
+        id: newFactoryId,
+      };
+    }
+
+    state.games.games[state.games.selected!].factoriesIds.push(newFactoryId);
+  },
   // TODO For now only for selected game
   removeGameFactory: (factoryId: string) => state => {
     const index =
