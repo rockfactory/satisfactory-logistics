@@ -1,6 +1,7 @@
 import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
 import type { SolverInstance } from '@/solver/store/Solver';
-import { Button, Center, Drawer, Stack, Tabs } from '@mantine/core';
+import { Button, Center, Drawer, em, Stack, Tabs } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import {
   IconArrowsDiff,
   IconBarrierBlock,
@@ -46,9 +47,11 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
   >(null);
   const close = useCallback(() => setTab(null), [setTab]);
 
+  const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+
   return (
     <>
-      <Button.Group>
+      <Button.Group orientation={isMobile ? 'vertical' : 'horizontal'}>
         {SolverRequestTabs.map(({ value, label, icon }) => (
           <Button
             key={value}
