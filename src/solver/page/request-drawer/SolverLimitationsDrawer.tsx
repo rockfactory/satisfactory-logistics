@@ -1,12 +1,20 @@
-import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
+import { FormOnChangeHandler, useFormOnChange } from '@/core/form/useFormOnChange';
 import { useStore } from '@/core/zustand';
-import { FactoryBuildingsForRecipes } from '@/recipes/FactoryBuilding';
+import {
+  FactoryBuildingsForRecipes,
+  FactoryConveyorBelts,
+  FactoryPipelines,
+  FactoryPipelinesExclAlternates,
+} from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { WorldResourcesList } from '@/recipes/WorldResources';
 import type { SolverInstance } from '@/solver/store/Solver';
 import { usePathSolverRequest } from '@/solver/store/solverSelectors';
-import { Checkbox, Group, Image, SimpleGrid, Stack, Text } from '@mantine/core';
+import { Checkbox, Group, Image, Radio, SimpleGrid, Stack, Text } from '@mantine/core';
+import { useGameSetting } from '@/games/gamesSlice.ts';
+import { GameSettings } from '@/games/Game.ts';
+import { Path, setByPath } from '@clickbar/dot-diver';
 
 export interface ISolverLimitationsDrawerProps {
   id?: string | null | undefined;
@@ -19,6 +27,8 @@ export function SolverLimitationsDrawer(
   const { id } = props;
 
   const request = usePathSolverRequest();
+  const maxPipeline = useGameSetting('maxPipeline');
+  const maxBelt = useGameSetting('maxBelt');
 
   return (
     <Stack gap="md">
@@ -74,6 +84,54 @@ export function SolverLimitationsDrawer(
                     building.id,
                     !e.currentTarget.checked,
                   )
+              }
+            />
+          ))}
+        </Stack>
+        <Stack gap="xs">
+          <Text size="lg">Belt Logistic</Text>
+          {FactoryConveyorBelts.map((building, index) => (
+            <Radio
+              key={building.id}
+              label={
+                <Group gap="xs">
+                  <Image
+                    src={building.imagePath.replace('_256', '_64')}
+                    width={24}
+                    height={24}
+                  />
+                  {building.name}
+                </Group>
+              }
+              checked={maxBelt === building.id || (!maxBelt && index === FactoryConveyorBelts.length - 1)}
+              onChange={e =>
+                useStore.getState().updateGameSettings(state => {
+                  setByPath(state, "maxBelt", building.id);
+                })
+              }
+            />
+          ))}
+        </Stack>
+        <Stack gap="xs">
+          <Text size="lg">Pipeline Logistic</Text>
+          {FactoryPipelinesExclAlternates.map((building, index) => (
+            <Radio
+              key={building.id}
+              label={
+                <Group gap="xs">
+                  <Image
+                    src={building.imagePath.replace('_256', '_64')}
+                    width={24}
+                    height={24}
+                  />
+                  {building.name}
+                </Group>
+              }
+              checked={maxPipeline === building.id || (!maxPipeline && index === FactoryPipelinesExclAlternates.length - 1)}
+              onChange={e =>
+                useStore.getState().updateGameSettings(state => {
+                  setByPath(state, "maxPipeline", building.id);
+                })
               }
             />
           ))}
