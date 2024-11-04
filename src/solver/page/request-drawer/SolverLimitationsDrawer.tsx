@@ -16,7 +16,7 @@ export interface ISolverLimitationsDrawerProps {
 export function SolverLimitationsDrawer(
   props: Readonly<ISolverLimitationsDrawerProps>,
 ) {
-  const { id, onSolverChangeHandler } = props;
+  const { id } = props;
 
   const request = usePathSolverRequest();
 
