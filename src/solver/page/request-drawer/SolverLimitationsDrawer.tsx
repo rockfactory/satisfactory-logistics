@@ -1,4 +1,7 @@
-import { FormOnChangeHandler, useFormOnChange } from '@/core/form/useFormOnChange';
+import {
+  FormOnChangeHandler,
+  useFormOnChange,
+} from '@/core/form/useFormOnChange';
 import { useStore } from '@/core/zustand';
 import {
   FactoryBuildingsForRecipes,
@@ -11,7 +14,15 @@ import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { WorldResourcesList } from '@/recipes/WorldResources';
 import type { SolverInstance } from '@/solver/store/Solver';
 import { usePathSolverRequest } from '@/solver/store/solverSelectors';
-import { Checkbox, Group, Image, Radio, SimpleGrid, Stack, Text } from '@mantine/core';
+import {
+  Checkbox,
+  Group,
+  Image,
+  Radio,
+  SimpleGrid,
+  Stack,
+  Text,
+} from '@mantine/core';
 import { useGameSetting } from '@/games/gamesSlice.ts';
 import { GameSettings } from '@/games/Game.ts';
 import { Path, setByPath } from '@clickbar/dot-diver';
@@ -103,10 +114,13 @@ export function SolverLimitationsDrawer(
                   {building.name}
                 </Group>
               }
-              checked={maxBelt === building.id || (!maxBelt && index === FactoryConveyorBelts.length - 1)}
+              checked={
+                maxBelt === building.id ||
+                (!maxBelt && index === FactoryConveyorBelts.length - 1)
+              }
               onChange={e =>
                 useStore.getState().updateGameSettings(state => {
-                  setByPath(state, "maxBelt", building.id);
+                  setByPath(state, 'maxBelt', building.id);
                 })
               }
             />
@@ -127,10 +141,14 @@ export function SolverLimitationsDrawer(
                   {building.name}
                 </Group>
               }
-              checked={maxPipeline === building.id || (!maxPipeline && index === FactoryPipelinesExclAlternates.length - 1)}
+              checked={
+                maxPipeline === building.id ||
+                (!maxPipeline &&
+                  index === FactoryPipelinesExclAlternates.length - 1)
+              }
               onChange={e =>
                 useStore.getState().updateGameSettings(state => {
-                  setByPath(state, "maxPipeline", building.id);
+                  setByPath(state, 'maxPipeline', building.id);
                 })
               }
             />
