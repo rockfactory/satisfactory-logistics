@@ -20,12 +20,12 @@ import {
   Image,
   Radio,
   SimpleGrid,
+  Space,
   Stack,
   Text,
 } from '@mantine/core';
 import { useGameSetting } from '@/games/gamesSlice.ts';
-import { GameSettings } from '@/games/Game.ts';
-import { Path, setByPath } from '@clickbar/dot-diver';
+import { setByPath } from '@clickbar/dot-diver';
 
 export interface ISolverLimitationsDrawerProps {
   id?: string | null | undefined;
@@ -98,6 +98,13 @@ export function SolverLimitationsDrawer(
               }
             />
           ))}
+        </Stack>
+        <Stack gap="sm" style={{ gridColumn: 'span 2' }}>
+          <Text size="lg">Logistics</Text>
+          <Text size="sm">
+            Selecting a belt or a pipeline will highlight in the calculator all
+            the ingredients which are exceeding the belt / pipeline amount.
+          </Text>
         </Stack>
         <Stack gap="xs">
           <Text size="lg">Belt Logistic</Text>
