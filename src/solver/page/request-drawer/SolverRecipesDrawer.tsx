@@ -1,4 +1,6 @@
 import { useStore } from '@/core/zustand';
+import { ImportSavegameRecipesModal } from '@/recipes/savegame/ImportSavegameRecipesModal';
+import type { ParsedSatisfactorySave } from '@/recipes/savegame/ParseSavegameMessages';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
 import {
@@ -74,6 +76,25 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
   const areAllSelected = useMemo(() => {
     return allowedRecipes?.length === AllFactoryRecipes.length;
   }, [allowedRecipes]);
+
+  const handleSetRecipesFromImport = (
+    save: ParsedSatisfactorySave,
+    asDefault: boolean,
+  ) => {
+    const availableRecipes = new Set(save.availableRecipes);
+    const saveRecipes = AllFactoryRecipes.filter(
+      // We should only import recipes that are available in the savegame,
+      // but custom recipes are not directly present in it.
+      // For now, we just import all custom recipes.
+      recipe => availableRecipes.has(recipe.id) || recipe.customType != null,
+    ).map(recipe => recipe.id);
+
+    useStore.getState().setAllowedRecipes(instance!.id, () => saveRecipes);
+
+    if (asDefault) {
+      useStore.getState().setGameAllowedRecipes(undefined, saveRecipes);
+    }
+  };
 
   return (
     <>
@@ -219,6 +240,8 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
+
+          <ImportSavegameRecipesModal onImported={handleSetRecipesFromImport} />
         </Group>
       </Portal>
       <Stack gap="sm">
