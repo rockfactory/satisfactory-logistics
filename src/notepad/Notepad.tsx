@@ -38,7 +38,6 @@ export function Notepad(props: INotepadProps = { adaQuotes: false }) {
   });
 
   return (
-    <div>
       <RichTextEditor editor={editor} style={{ minHeight: rem(300) }}>
         <RichTextEditor.Toolbar>
           <RichTextEditor.ControlsGroup>
@@ -56,6 +55,5 @@ export function Notepad(props: INotepadProps = { adaQuotes: false }) {
 
         <RichTextEditor.Content />
       </RichTextEditor>
-    </div>
   );
 }
