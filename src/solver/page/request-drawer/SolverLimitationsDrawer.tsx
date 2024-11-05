@@ -126,9 +126,7 @@ export function SolverLimitationsDrawer(
                 (!maxBelt && index === FactoryConveyorBelts.length - 1)
               }
               onChange={e =>
-                useStore.getState().updateGameSettings(state => {
-                  setByPath(state, 'maxBelt', building.id);
-                })
+                useStore.getState().updateGameSettings(settings => settings.maxBelt = building.id)
               }
             />
           ))}
@@ -154,9 +152,7 @@ export function SolverLimitationsDrawer(
                   index === FactoryPipelinesExclAlternates.length - 1)
               }
               onChange={e =>
-                useStore.getState().updateGameSettings(state => {
-                  setByPath(state, 'maxPipeline', building.id);
-                })
+                useStore.getState().updateGameSettings(settings => settings.maxPipeline = building.id)
               }
             />
           ))}
