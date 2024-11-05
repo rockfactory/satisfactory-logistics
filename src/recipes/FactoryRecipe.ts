@@ -9,6 +9,7 @@ export interface FactoryRecipe {
   ingredients: RecipeIngredient[];
   products: RecipeIngredient[];
   time: number;
+  customType?: 'Power';
   powerConsumption: number;
   powerConsumptionFactor: number;
   producedIn: string;

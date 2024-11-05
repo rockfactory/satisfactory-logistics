@@ -9303,6 +9303,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorCoal_C",
     "time": 4,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_Coal_C",
@@ -9334,6 +9335,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorCoal_C",
     "time": 8.4,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_CompactedCoal_C",
@@ -9365,6 +9367,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorCoal_C",
     "time": 2.4,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_PetroleumCoke_C",
@@ -9396,6 +9399,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorFuel_C",
     "time": 3,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_LiquidFuel_C",
@@ -9421,6 +9425,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorFuel_C",
     "time": 8,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_LiquidTurboFuel_C",
@@ -9446,6 +9451,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorFuel_C",
     "time": 3,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_LiquidBiofuel_C",
@@ -9471,6 +9477,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorFuel_C",
     "time": 14.4,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_RocketFuel_C",
@@ -9496,6 +9503,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorFuel_C",
     "time": 20,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_IonizedFuel_C",
@@ -9521,6 +9529,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorBiomass_Automated_C",
     "time": 0.5,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_Leaves_C",
@@ -9546,6 +9555,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorBiomass_Automated_C",
     "time": 3.3333333333333335,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_Wood_C",
@@ -9571,6 +9581,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorBiomass_Automated_C",
     "time": 0.6666666666666666,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_Mycelia_C",
@@ -9596,6 +9607,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorBiomass_Automated_C",
     "time": 6,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_GenericBiomass_C",
@@ -9621,6 +9633,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorBiomass_Automated_C",
     "time": 15,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_Biofuel_C",
@@ -9646,6 +9659,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorBiomass_Automated_C",
     "time": 25,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_PackagedBiofuel_C",
@@ -9671,6 +9685,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorNuclear_C",
     "time": 300,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_NuclearFuelRod_C",
@@ -9708,6 +9723,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorNuclear_C",
     "time": 600,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_PlutoniumFuelRod_C",
@@ -9745,6 +9761,7 @@
     "powerConsumptionFactor": 0,
     "producedIn": "Build_GeneratorNuclear_C",
     "time": 60,
+    "customType": "Power",
     "ingredients": [
       {
         "resource": "Desc_FicsoniumFuelRod_C",
