@@ -30,7 +30,7 @@ export function useOutputUsage(
   );
 
   let percentage = usedAmount / producedAmount;
-  if (producedAmount === 0) {
+  if (producedAmount === 0 && usedAmount !== 0) {
     percentage = Number.POSITIVE_INFINITY;
   }
   if (Number.isNaN(percentage)) {

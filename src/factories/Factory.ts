@@ -17,7 +17,13 @@ export interface FactoryInput {
   transport?: LogisticType | null;
   /** Force usage in calculator. Eventual surplus will be converted in byproduct */
   forceUsage?: boolean;
+  constraint?: FactoryInputConstraint;
 }
+
+export type FactoryInputConstraint =
+  | 'none' // Used only to represent a link between factories
+  | 'exact' // Force solver to use this input in exact amount (ex "force usage")
+  | 'max'; // Limit solver to use at most this amount
 
 export interface FactoryOutput {
   resource: string | null;

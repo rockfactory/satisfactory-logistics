@@ -2,14 +2,8 @@ import type {
   FactoryOutput,
   FactoryOutputObjective,
 } from '@/factories/Factory';
-import {
-  ActionIcon,
-  Group,
-  Menu,
-  type ComboboxItem,
-  type ComboboxLikeRenderOptionInput,
-} from '@mantine/core';
-import { IconCheck, IconEqual, IconMaximize } from '@tabler/icons-react';
+import { ActionIcon, Menu, Tooltip } from '@mantine/core';
+import { IconArrowBarToUp, IconCheck, IconEqual } from '@tabler/icons-react';
 import { useCallback } from 'react';
 
 export interface IFactoryOutputObjectiveSelectProps {
@@ -17,34 +11,16 @@ export interface IFactoryOutputObjectiveSelectProps {
   onChange: (value: FactoryOutputObjective) => void;
 }
 
-const renderOption = (item: ComboboxLikeRenderOptionInput<ComboboxItem>) => {
-  switch (item.option.value as FactoryOutputObjective | null) {
-    case 'max':
-      return (
-        <Group gap="xs">
-          <IconMaximize size={16} />
-          Maximize
-        </Group>
-      );
-    case 'default':
-    default:
-      return (
-        <Group gap="xs">
-          <IconEqual size={16} />
-          Exact
-        </Group>
-      );
-  }
-};
-
 const FactoryOutputObjectives = {
   default: {
     label: 'Exact',
+    tooltip: 'Objective: produce exactly this amount',
     icon: <IconEqual size={16} />,
   },
   max: {
     label: 'Maximize',
-    icon: <IconMaximize size={16} />,
+    tooltip: 'Objective: maximize production',
+    icon: <IconArrowBarToUp size={16} />,
   },
 };
 
@@ -65,9 +41,11 @@ export function FactoryOutputObjectiveSelect(
   return (
     <Menu withinPortal loop returnFocus>
       <Menu.Target>
-        <ActionIcon variant="default" title="Objective">
-          {current.icon}
-        </ActionIcon>
+        <Tooltip label={current.tooltip} position="top" color="dark.8">
+          <ActionIcon variant="default" title="Objective">
+            {current.icon}
+          </ActionIcon>
+        </Tooltip>
       </Menu.Target>
       <Menu.Dropdown>
         {Object.entries(FactoryOutputObjectives).map(([value, attributes]) => (

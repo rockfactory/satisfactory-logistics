@@ -62,14 +62,14 @@ function applyObjective(ctx: SolverContext, request: SolverProductionRequest) {
       /** MINIMIZE */
       ctx.objective = `${Array.from(ctx.getEnergyVars())
         .map(v => v.variable)
-        .join(' + ')}\n`;
+        .join(' + ')}`;
       break;
 
     case 'minimize_area':
       /** MINIMIZE */
       ctx.objective = `${Array.from(ctx.getAreaVars())
         .map(v => v.variable)
-        .join(' + ')}\n`;
+        .join(' + ')}`;
       break;
 
     case 'minimize_resources':
@@ -82,13 +82,22 @@ function applyObjective(ctx: SolverContext, request: SolverProductionRequest) {
         )
         .join(' + ')}`;
 
-      // const inputs = ctx.getWorldInputVars();
-      // if (inputs.some(v => v.resource.id === 'Desc_SAMIngot_C')) {
-      //   ctx.objective += ` + 0.0001 r${inputs.find(v => v.resource.id === 'Desc_SAMIngot_C')?.resource.index}`;
-      // }
-
-      ctx.objective += '\n';
+    // const inputs = ctx.getWorldInputVars();
+    // if (inputs.some(v => v.resource.id === 'Desc_SAMIngot_C')) {
+    //   ctx.objective += ` + 0.0001 r${inputs.find(v => v.resource.id === 'Desc_SAMIngot_C')?.resource.index}`;
+    // }
   }
+
+  // Maximize the output
+  const maximizedOutputs = ctx.getMaximizedOutputs();
+  if (maximizedOutputs.length > 0) {
+    logger.log('Maximized outputs:', maximizedOutputs);
+    ctx.objective += ` - ${maximizedOutputs
+      .map(v => `${v.variable}`)
+      .join(' - ')}`;
+  }
+
+  ctx.objective += '\n';
 }
 
 export type SolutionNode =
@@ -105,7 +114,7 @@ export function solveProduction(
   const inputs = request.inputs ?? [];
   for (let i = 0; i < inputs.length; i++) {
     const item = inputs[i];
-    if (!item.amount || !item.resource) continue;
+    if (item.amount == null || !item.resource) continue;
     addInputResourceConstraints(ctx, item, i);
   }
   for (const item of request.outputs) {
@@ -176,7 +185,7 @@ export function solveProduction(
               value: Number(value.Primal),
               resource: node.resource,
               isRaw: node.type === 'raw',
-              forceUsage: node.forceUsage,
+              constraint: node.constraint,
             } as IResourceNodeData,
             position: { x: 0, y: 0 },
           });

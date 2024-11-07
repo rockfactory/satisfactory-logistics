@@ -2,6 +2,7 @@ import { chartsSlice } from '@/factories/charts/store/chartsSlice';
 import { factoryViewSortActions } from '@/factories/store/factoryViewSortActions';
 import { gameSaveSlice } from '@/games/save/gameSaveSlice';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
+import { produce } from 'immer';
 import { omit } from 'lodash';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
@@ -46,7 +47,7 @@ export const useStore = create(
     persist(slicesWithActions, {
       name: 'zustand:persist',
       partialize: state => omit(state, ['gameSave']),
-      version: 1,
+      version: 2,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
       ),
@@ -77,6 +78,18 @@ export const useStore = create(
             }
           }
         }
+
+        if (version === 1) {
+          logger.log('Migrating from version 1 to 2');
+          return produce(state as RootState, draft => {
+            Object.values(draft.factories.factories ?? {}).forEach(factory => {
+              factory.inputs?.forEach(input => {
+                if (input.forceUsage) input.constraint = 'exact';
+              });
+            });
+          });
+        }
+
         return state;
       },
     }),

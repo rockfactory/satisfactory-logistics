@@ -1,4 +1,8 @@
-import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
+import type {
+  FactoryInput,
+  FactoryInputConstraint,
+  FactoryOutput,
+} from '@/factories/Factory';
 import Graph from 'graphology';
 import { last } from 'lodash';
 import voca from 'voca';
@@ -38,7 +42,7 @@ export type SolverRawNode = {
   resource: FactoryItem;
   variable: string;
   // TODO This doesn't work for raw resources, only for raw inputs.
-  forceUsage?: boolean;
+  constraint?: FactoryInputConstraint;
   inputIndex?: number;
 };
 
@@ -47,7 +51,7 @@ export type SolverRawInputNode = {
   label: string;
   resource: FactoryItem;
   variable: string;
-  forceUsage?: boolean;
+  constraint?: FactoryInputConstraint;
   inputIndex?: number;
 };
 
@@ -68,6 +72,11 @@ export type SolverByproductNode = {
   label: string;
   resource: FactoryItem;
   variable: string;
+  /**
+   * If the byproduct is required by the user, we store it here.
+   * This is further used to set maximization objectives.
+   */
+  output?: FactoryOutput;
 };
 
 export type SolverInputNode = {
@@ -162,6 +171,21 @@ export class SolverContext {
     return this.graph
       .filterNodes((node, attributes) => attributes.type === 'area')
       .map(node => this.graph.getNodeAttributes(node) as SolverAreaNode);
+  }
+
+  getMaximizedOutputs() {
+    return this.graph
+      .filterNodes(
+        (node, attributes) =>
+          attributes.type === 'byproduct' &&
+          attributes.output?.objective === 'max',
+      )
+      .map(
+        node =>
+          this.graph.getNodeAttributes(node) as SolverByproductNode & {
+            output: FactoryOutput;
+          },
+      );
   }
 
   encodeVar(name: string) {
@@ -363,13 +387,18 @@ function setGraphResource(ctx: SolverContext, resource: string) {
   });
 }
 
-function setGraphByproduct(ctx: SolverContext, resource: string) {
+function setGraphByproduct(
+  ctx: SolverContext,
+  resource: string,
+  attributes?: Partial<SolverByproductNode>,
+) {
   const item = AllFactoryItemsMap[resource];
   ctx.graph.mergeNode(`b${item.index}`, {
     type: 'byproduct',
     label: `Byproduct: ${item.displayName}`,
     resource: item,
     variable: `b${item.index}`,
+    ...attributes,
   });
 }
 
@@ -378,7 +407,7 @@ function setGraphByproduct(ctx: SolverContext, resource: string) {
  */
 export function addInputResourceConstraints(
   ctx: SolverContext,
-  { resource, amount, forceUsage }: FactoryInput,
+  { resource, amount, constraint }: FactoryInput,
   inputIndex: number,
 ) {
   setGraphResource(ctx, resource!);
@@ -391,17 +420,45 @@ export function addInputResourceConstraints(
     label: resource!,
     resource: resourceItem,
     variable: rawVar,
-    forceUsage,
+    constraint,
     inputIndex,
   });
   ctx.graph.mergeEdge(rawVar, resource!);
 
+  const normalizedConstraint = constraint ?? 'none';
+
+  // TODO: Gestire input = null che non si resetta a 0
+  // TODO: Migliorare il fatto che i factory input sono sempre < amount (e non free input)
+
   // If the resource is forced, we need to add a constraint to be _exactly_ the amount
-  if (forceUsage) {
-    ctx.constraints.push(`${rawVar} = ${amount ?? 0}`);
-  } else if (!isWorldResource(resource!)) {
-    ctx.constraints.push(`${rawVar} <= ${amount ?? 0}`);
+  switch (normalizedConstraint) {
+    case 'max':
+      ctx.constraints.push(`${rawVar} <= ${amount || 0}`);
+      break;
+    case 'exact':
+      ctx.constraints.push(`${rawVar} = ${amount || 0}`);
+      break;
+
+    case 'none':
+    default:
+      // If the resource is a factory input, we need to add a constraint to be
+      // _max_ the amount. This is because else the `rawVar` will not have
+      // an Upper Bound and the solver will not be able to solve the problem.
+      if (!isWorldResource(resource!)) {
+        ctx.constraints.push(`${rawVar} <= ${amount || 0}`);
+      }
   }
+
+  // If the resource is a factory input, we need to add a constraint to be
+  //  _exactly_ the amount
+  // if (normalizedConstraint === 'none' && !isWorldResource(resource!)) {
+  //   ctx.constraints.push(`${rawVar} <= ${amount ?? 0}`);
+  // }
+  // if () {
+  //   ctx.constraints.push(`${rawVar} = ${amount ?? 0}`);
+  // } else if (!isWorldResource(resource!)) {
+  //   ctx.constraints.push(`${rawVar} <= ${amount ?? 0}`);
+  // }
   // ctx.constraints.push(`${rawVar} - ${amount ?? 0} >= 0`);
 }
 
@@ -420,20 +477,22 @@ export function addOutputProductionConstraints(
 
   const resourceItem = AllFactoryItemsMap[resource];
 
-  // If we are requesting a specific amount, we need to add a constraint
-  // (this means we are in a user-configured output and not in recursive mode)
+  setGraphResource(ctx, resource);
+  setGraphByproduct(ctx, resource, { output });
+
+  const byproductVar = `b${resourceItem.index}`;
+
   // Depending on the objective, we can set the amount as a minimum
   // or as a fixed value.
-  if (amount) {
-    setGraphResource(ctx, resource);
-    switch (objective) {
-      case 'max':
-        ctx.constraints.push(`b${resourceItem.index} >= ${amount}`);
-        break;
-      case 'default':
-      default:
-        ctx.constraints.push(`b${resourceItem.index} = ${amount}`);
-    }
+  switch (objective) {
+    case 'max':
+      // Here we just add a lower bound, maximization is handled by the objective
+      // function.
+      ctx.constraints.push(`${byproductVar} >= ${amount || 0}`);
+      break;
+    case 'default':
+    default:
+      ctx.constraints.push(`${byproductVar} = ${amount || 0}`);
   }
 
   computeProductionConstraints(ctx, resource);
@@ -474,15 +533,6 @@ export function computeProductionConstraints(
     const mainProductVar = `p${mainProductItem.index}r${recipe.index}`;
     const mainProductAmount = (recipe.products[0].amount * 60) / recipe.time;
     logger.debug(' Processing recipe:', recipe.name, { mainProductItem, recipe }); // prettier-ignore
-
-    // TODO We need to check that this amplification is correct given
-    // the _result_ of the solver, since it's considered based on the source
-    // let amplification = 1.0;
-    // const amplificationVar = `amp${recipe.index}`;
-    // ctx.constraints.push(`${amplificationVar} = ${amplification}`);
-    // if (ctx.request.nodes?.[mainProductVar]?.amplification) {
-    //   amplification = ctx.request.nodes[mainProductVar].amplification;
-    // }
 
     // const buildingsVar = `c${recipe.index}`;
     const building = AllFactoryBuildingsMap[recipe.producedIn];

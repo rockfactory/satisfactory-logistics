@@ -18,6 +18,7 @@ import { FactoryOutput } from '../../Factory';
 import { useFactoryOnChangeHandler } from '../../store/factoriesSelectors';
 import { useIsFactoryVisible } from '../../useIsFactoryVisible';
 import { FactoryItemInput } from '../FactoryItemInput';
+import { FactoryOutputObjectiveSelect } from './FactoryOutputObjectiveSelect';
 import classes from './FactoryOutputRow.module.css';
 
 export interface IFactoryOutputRowProps {
@@ -117,6 +118,14 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
           }
         />
       </Tooltip>
+
+      {displayMode === 'solver' && (
+        <FactoryOutputObjectiveSelect
+          output={output}
+          onChange={onChangeHandler(`outputs.${index}.objective`)}
+        />
+      )}
+
       <ActionIcon
         variant="outline"
         color="red"
@@ -128,14 +137,6 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       >
         <IconTrash size={16} stroke={1.5} />
       </ActionIcon>
-
-      {/*
-      Currently disabled, we need to implement a better way to compute it
-       */}
-      {/* <FactoryOutputObjectiveSelect
-        output={output}
-        onChange={onChangeHandler(`outputs.${index}.objective`)}
-      /> */}
 
       <OutputDependenciesPeekModal factoryId={factoryId} output={output} />
 

@@ -1,4 +1,5 @@
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
+import type { FactoryInputConstraint } from '@/factories/Factory';
 import type { FactoryItem } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { Box, Group, Popover, Stack, Text, Tooltip } from '@mantine/core';
@@ -15,7 +16,7 @@ export interface IResourceNodeData {
   resource: FactoryItem;
   value: number;
   isRaw: boolean;
-  forceUsage?: boolean;
+  constraint?: FactoryInputConstraint;
   [key: string]: unknown;
 }
 
@@ -26,7 +27,7 @@ export type IResourceNodeProps = NodeProps & {
 
 export const ResourceNode = memo((props: IResourceNodeProps) => {
   const { id } = props;
-  const { resource, value, isRaw, forceUsage } = props.data;
+  const { resource, value, isRaw, constraint } = props.data;
 
   const { solution } = useSolverSolution();
 
@@ -69,7 +70,7 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
         >
           <Group gap="xs">
             <Box pos="relative">
-              {forceUsage && (
+              {constraint === 'exact' && (
                 <div style={{ position: 'absolute', left: -6, bottom: -16 }}>
                   <Tooltip label="Forced usage. Recipes chosen can be less resource-efficient due do this choice.">
                     <IconTransformFilled size={16} />
