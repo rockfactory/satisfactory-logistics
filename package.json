@@ -30,7 +30,7 @@
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/sentry-js-integration": "^0.3.0",
     "@supabase/supabase-js": "^2.45.4",
-    "@tabler/icons-react": "^3.17.0",
+    "@tabler/icons-react": "^3.21.0",
     "@xyflow/react": "^12.3.1",
     "base-64": "^1.0.0",
     "canvas-confetti": "^1.9.3",
@@ -58,7 +58,7 @@
     "short-uuid": "^5.2.0",
     "uuid": "^10.0.0",
     "voca": "^1.4.1",
-    "zustand": "^5.0.0-rc.2"
+    "zustand": "^5.0.1"
   },
   "devDependencies": {
     "@types/base-64": "^1.0.2",
