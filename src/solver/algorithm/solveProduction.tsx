@@ -186,6 +186,7 @@ export function solveProduction(
               resource: node.resource,
               isRaw: node.type === 'raw',
               constraint: node.constraint,
+              state: request.nodes?.[varName],
             } as IResourceNodeData,
             position: { x: 0, y: 0 },
           });

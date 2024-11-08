@@ -14,6 +14,7 @@ export interface SolverNodeState {
   somersloops?: number;
   amplification?: number;
   overclock?: number;
+  layoutIgnoreEdges?: boolean;
 }
 
 export interface SolverInstance {
