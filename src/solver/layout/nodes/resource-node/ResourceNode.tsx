@@ -106,13 +106,15 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
             sm: 'row',
           }}
         >
-          {isRaw && (
-            <ResourceNodeExtractorDetail
-              id={props.id}
-              solverId={solverId!}
-              data={props.data}
-            />
-          )}
+          <Stack gap={0}>
+            {isRaw && (
+              <ResourceNodeExtractorDetail
+                id={props.id}
+                solverId={solverId!}
+                data={props.data}
+              />
+            )}
+          </Stack>
           <NodeActionsBox>
             {props.selected ? (
               <ResourceNodeActions data={props.data} id={props.id} />
