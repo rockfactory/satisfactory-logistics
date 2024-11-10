@@ -34,15 +34,12 @@ import { useFormOnChange } from '../../core/form/useFormOnChange';
 import { useStore } from '../../core/zustand';
 import { AfterHeaderSticky } from '../../layout/AfterHeaderSticky';
 import {
-  SolverEdge,
-  SolverNode,
-  type SolverContext,
-} from '../algorithm/computeProductionConstraints';
-import {
   solveProduction,
   useHighs,
   type SolutionNode,
 } from '../algorithm/solveProduction';
+import type { SolverContext } from '../algorithm/SolverContext';
+import type { SolverEdge, SolverNode } from '../algorithm/SolverNode';
 import { SolverInspectorDrawer } from '../inspector/SolverInspectorDrawer';
 import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
 import { SolverLayout } from '../layout/SolverLayout';
