@@ -1,13 +1,10 @@
-import type {
-  FactoryOutput,
-  FactoryOutputObjective,
-} from '@/factories/Factory';
+import type { FactoryOutputObjective } from '@/factories/Factory';
 import { ActionIcon, Menu, Tooltip } from '@mantine/core';
 import { IconArrowBarToUp, IconCheck, IconEqual } from '@tabler/icons-react';
 import { useCallback } from 'react';
 
 export interface IFactoryOutputObjectiveSelectProps {
-  output: FactoryOutput;
+  objective: FactoryOutputObjective | null | undefined;
   onChange: (value: FactoryOutputObjective) => void;
 }
 
@@ -27,7 +24,7 @@ const FactoryOutputObjectives = {
 export function FactoryOutputObjectiveSelect(
   props: IFactoryOutputObjectiveSelectProps,
 ) {
-  const { output, onChange } = props;
+  const { objective, onChange } = props;
 
   const handleChange = useCallback(
     (value: string | null) => {
@@ -36,7 +33,7 @@ export function FactoryOutputObjectiveSelect(
     [onChange],
   );
 
-  const current = FactoryOutputObjectives[output.objective ?? 'default'];
+  const current = FactoryOutputObjectives[objective ?? 'default'];
 
   return (
     <Menu withinPortal loop returnFocus>
@@ -53,7 +50,7 @@ export function FactoryOutputObjectiveSelect(
             key={value}
             onClick={() => handleChange(value)}
             leftSection={attributes.icon}
-            rightSection={output.objective === value && <IconCheck size={16} />}
+            rightSection={objective === value && <IconCheck size={16} />}
           >
             {attributes.label}
           </Menu.Item>

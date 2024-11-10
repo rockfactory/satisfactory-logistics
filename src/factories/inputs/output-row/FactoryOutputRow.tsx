@@ -131,7 +131,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
 
       {displayMode === 'solver' && (
         <FactoryOutputObjectiveSelect
-          output={output}
+          objective={output.objective}
           onChange={onChangeHandler(`outputs.${index}.objective`)}
         />
       )}

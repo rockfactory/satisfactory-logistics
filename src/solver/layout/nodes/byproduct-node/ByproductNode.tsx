@@ -3,10 +3,13 @@ import type { FactoryOutput } from '@/factories/Factory';
 import type { FactoryItem } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import type { SolverNodeState } from '@/solver/store/Solver';
-import { alpha, Box, Group, Stack, Text } from '@mantine/core';
+import { alpha, Box, Flex, Group, Popover, Stack, Text } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { NodeProps } from '@xyflow/react';
 import { memo } from 'react';
 import { InvisibleHandles } from '../../rendering/InvisibleHandles';
+import { NodeActionsBox } from '../utils/NodeActionsBox';
+import { ByproductNodeActions } from './ByproductNodeActions';
 
 export type IByproductNodeData = {
   label: string;
@@ -25,39 +28,78 @@ export type IByproductNodeProps = NodeProps & {
 };
 
 export const ByproductNode = memo((props: IByproductNodeProps) => {
-  const { resource, value, output } = props.data;
+  const { resource, value, output, outputIndex } = props.data;
 
   const isByproduct = output == null;
 
-  // #975000
+  const [isHovering, { close, open }] = useDisclosure(false);
+
   return (
-    <Box p="sm" style={{ borderRadius: 4 }} bg="teal.9">
-      <Group gap="xs">
+    <Popover
+      disabled={isByproduct}
+      opened={(isHovering || props.selected) && !props.dragging}
+      transitionProps={{}}
+    >
+      <Popover.Target>
         <Box
-          p="2"
-          style={{ borderRadius: 32 }}
-          bg={
-            !isByproduct
-              ? 'transparent'
-              : alpha('var(--mantine-color-orange-4)', 0.5)
-          }
+          p="sm"
+          style={{ borderRadius: 4 }}
+          bg="teal.9"
+          onMouseEnter={open}
+          onMouseLeave={close}
         >
-          <FactoryItemImage id={resource.id} size={32} highRes />
-        </Box>
-        <Stack gap={2} align="center">
           <Group gap="xs">
-            <Text size="sm">
-              {isByproduct ? 'Byproduct: ' : ''}
-              {resource.displayName}
-            </Text>
+            <Box
+              p="2"
+              style={{ borderRadius: 32 }}
+              bg={
+                !isByproduct
+                  ? 'transparent'
+                  : alpha('var(--mantine-color-orange-4)', 0.5)
+              }
+            >
+              <FactoryItemImage id={resource.id} size={32} highRes />
+            </Box>
+            <Stack gap={2} align="center">
+              <Group gap="xs">
+                <Text size="sm">
+                  {isByproduct ? 'Byproduct: ' : ''}
+                  {resource.displayName}
+                </Text>
+              </Group>
+              <Text size="xs">
+                <RepeatingNumber value={value} />
+                /min
+              </Text>
+            </Stack>
           </Group>
-          <Text size="xs">
-            <RepeatingNumber value={value} />
-            /min
-          </Text>
-        </Stack>
-      </Group>
-      <InvisibleHandles />
-    </Box>
+          <InvisibleHandles />
+        </Box>
+      </Popover.Target>
+      <Popover.Dropdown p={0}>
+        <Flex
+          align="stretch"
+          gap={0}
+          direction={{
+            base: 'column',
+            sm: 'row',
+          }}
+        >
+          <Stack gap={0}></Stack>
+          <NodeActionsBox>
+            {props.selected ? (
+              <ByproductNodeActions id={props.id} data={props.data} />
+            ) : (
+              <Stack>
+                <Text fs="italic" size="sm">
+                  Click on the node to see available actions, like editing
+                  amount.
+                </Text>
+              </Stack>
+            )}
+          </NodeActionsBox>
+        </Flex>
+      </Popover.Dropdown>
+    </Popover>
   );
 });

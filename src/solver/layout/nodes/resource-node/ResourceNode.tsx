@@ -5,6 +5,7 @@ import { WORLD_SOURCE_ID, type FactoryInput } from '@/factories/Factory';
 import type { FactoryItem } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { isWorldResource } from '@/recipes/WorldResources';
+import type { SolverNodeState } from '@/solver/store/Solver';
 import { Box, Flex, Group, Popover, Stack, Text, Tooltip } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconTransformFilled } from '@tabler/icons-react';
@@ -18,7 +19,7 @@ import { ResourceNodeActions } from './ResourceNodeActions';
 import { ResourceNodeExtractorDetail } from './ResourceNodeExtractorDetail';
 import { ResourceNodeInput } from './ResourceNodeInput';
 
-export interface IResourceNodeData {
+export type IResourceNodeData = {
   resource: FactoryItem;
   value: number;
   /**
@@ -27,8 +28,10 @@ export interface IResourceNodeData {
    */
   isRaw: boolean;
   input?: FactoryInput;
-  [key: string]: unknown;
-}
+  inputIndex?: number;
+
+  state?: SolverNodeState;
+};
 
 export type IResourceNodeProps = NodeProps & {
   data: IResourceNodeData;
@@ -111,8 +114,6 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
           </Group>
 
           <InvisibleHandles />
-          {/* <Handle type="source" position={Position.Right} id="source-right" />
-      <Handle type="target" position={Position.Left} id="target-left" /> */}
         </Box>
       </Popover.Target>
       <Popover.Dropdown p={0}>
@@ -145,7 +146,8 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
             ) : (
               <Stack>
                 <Text fs="italic" size="sm">
-                  Click on the node to see available actions.
+                  Click on the node to see available actions, like editing
+                  amount.
                 </Text>
               </Stack>
             )}

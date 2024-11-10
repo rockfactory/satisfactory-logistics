@@ -151,6 +151,8 @@ export function solveProduction(
               resource: node.resource,
               isRaw: node.type === 'raw',
               input: node.type === 'raw_input' ? node.input : undefined,
+              inputIndex:
+                node.type === 'raw_input' ? node.inputIndex : undefined,
               state: request.nodes?.[varName],
             } as IResourceNodeData,
             position: { x: 0, y: 0 },

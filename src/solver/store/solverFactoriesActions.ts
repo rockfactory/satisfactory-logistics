@@ -111,6 +111,10 @@ export const solverFactoriesActions = createActions({
       if (output.somersloops !== undefined) {
         factoryOutput.somersloops = output.somersloops;
       }
+
+      if (output.objective !== undefined) {
+        factoryOutput.objective = output.objective;
+      }
     },
   /**
    * Automatically set the inputs from the solver solution.
