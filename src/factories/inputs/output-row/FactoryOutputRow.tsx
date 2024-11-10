@@ -56,33 +56,43 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
         onChange={onChangeHandler(`outputs.${index}.resource`)}
       />
 
-      <NumberInput
-        className={cx(classes.factoryOutputAmount, {
-          [classes.factoryOutputAmountSomersloops]: !!output.somersloops,
-        })}
-        value={output.amount ?? 0}
-        w={100}
-        min={0}
-        rightSection={
-          item?.unit ? (
-            <Text c="dimmed" size={'10'} pr={4}>
-              {item.unit}
-            </Text>
-          ) : (
-            <FactoryOutputIcon size={16} />
-          )
+      <Tooltip
+        disabled={output.objective !== 'max'}
+        label={
+          output.objective === 'max'
+            ? 'In this mode, the amount will be used as a minimum amount to produce'
+            : null
         }
-        classNames={{
-          input: classes.factoryOutputAmountInput,
-        }}
-        onBlur={() => setAmountFocused(false)}
-        onFocus={() => setAmountFocused(true)}
-        onChange={value => {
-          useStore.getState().updateFactoryOutput(factoryId, index, {
-            amount: Number(value),
-          });
-        }}
-      />
+      >
+        <NumberInput
+          className={cx(classes.factoryOutputAmount, {
+            [classes.factoryOutputAmountSomersloops]: !!output.somersloops,
+          })}
+          value={output.amount ?? 0}
+          w={100}
+          min={0}
+          rightSection={
+            item?.unit ? (
+              <Text c="dimmed" size={'10'} pr={4}>
+                {item.unit}
+              </Text>
+            ) : (
+              <FactoryOutputIcon size={16} />
+            )
+          }
+          classNames={{
+            input: classes.factoryOutputAmountInput,
+          }}
+          onBlur={() => setAmountFocused(false)}
+          onFocus={() => setAmountFocused(true)}
+          onChange={value => {
+            useStore.getState().updateFactoryOutput(factoryId, index, {
+              amount: Number(value),
+            });
+          }}
+        />
+      </Tooltip>
+
       <Tooltip
         label="Somersloops tracking for this output. Will automatically be set here if you add some somersloops in the calculator"
         position="top"

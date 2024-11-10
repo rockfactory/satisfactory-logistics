@@ -11,18 +11,8 @@ import type { Highs } from 'highs';
 
 export interface ISolverSolutionSuggestion {
   addRecipes?: string[];
+  resetOutputMinimum?: { index: number; resource: string }[];
 }
-
-// TODO BUg. Inputs influences outputs, so much that if they can't be used, the solver is Infeasible
-// We should atleast:
-// 1) Add an option to "ignore" the inputs (or to "force" their usage).
-// 2) Add a solver fallback which tries to remove the inputs and solve again.
-// const usedBatterRecipe = withMamRecipes.nodes.filter(
-//   node =>
-//     node.type === 'Machine' &&
-//     (node.data as IMachineNodeData).recipe.id.includes('Batter'),
-// );
-// console.log('usedBatterRecipe', usedBatterRecipe);
 
 export function proposeSolverSolutionSuggestions(
   highs: Highs,
@@ -31,6 +21,36 @@ export function proposeSolverSolutionSuggestions(
 ) {
   console.log('No solution found, trying MAM recipes');
   const suggestions: ISolverSolutionSuggestion = {};
+
+  // 1. Try to unbound the output minimums (when maximization is in place)
+  if (inputsOutputs.outputs.some(o => o.objective === 'max')) {
+    const unboundedOutputs = inputsOutputs.outputs.map(output => ({
+      ...output,
+      amount: output.objective === 'max' ? 0 : output.amount,
+    }));
+
+    const withUnboundedOutputMinimums = solveProduction(highs, {
+      ...request,
+      ...inputsOutputs,
+      outputs: unboundedOutputs,
+    });
+    if (withUnboundedOutputMinimums?.result.Status === 'Optimal') {
+      suggestions.resetOutputMinimum = inputsOutputs.outputs
+        .filter(
+          (o, i) =>
+            o.resource != null &&
+            o.objective === 'max' &&
+            unboundedOutputs[i].amount !== o.amount,
+        )
+        .map((output, index) => ({
+          index,
+          resource: output.resource!,
+        }));
+
+      console.log('Solution found with unbounded output minimums');
+      return suggestions;
+    }
+  }
 
   //  1. Try to solve with MAM recipes
   const withMamRecipes = solveProduction(highs, {

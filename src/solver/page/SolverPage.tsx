@@ -14,6 +14,7 @@ import {
   Container,
   Group,
   LoadingOverlay,
+  Space,
   Stack,
   Text,
   TextInput,
@@ -250,6 +251,7 @@ export function SolverPage(props: ISolverPageProps) {
               No solution found for the given parameters. Try adjusting the
               inputs, outputs and available recipes.
             </Text>
+            <Space />
             {suggestions?.addRecipes && (
               <>
                 <Text size="sm" c="dark.2">
@@ -276,6 +278,39 @@ export function SolverPage(props: ISolverPageProps) {
                         }
                       >
                         {recipe.name}
+                      </Button>
+                    );
+                  })}
+                </Group>
+              </>
+            )}
+            {suggestions?.resetOutputMinimum && (
+              <>
+                <Text size="sm" c="dark.2">
+                  Try removing the <b>output minimums</b>. When maximizing, the
+                  output amount is used as a minimum.
+                </Text>
+                <Group gap="xs">
+                  {suggestions.resetOutputMinimum.map(({ index, resource }) => {
+                    const item = AllFactoryItemsMap[resource];
+                    return (
+                      <Button
+                        key={resource}
+                        variant="default"
+                        size="sm"
+                        onClick={() => {
+                          useStore
+                            .getState()
+                            .updateFactoryOutput(instance.id!, index, {
+                              amount: 0,
+                            });
+                        }}
+                        leftSection={<IconPlus size={16} />}
+                        rightSection={
+                          <FactoryItemImage size={16} id={item.id} />
+                        }
+                      >
+                        Reset for {item.displayName}
                       </Button>
                     );
                   })}
