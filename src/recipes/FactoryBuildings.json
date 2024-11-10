@@ -949,7 +949,7 @@
     "powerConsumption": 4,
     "powerConsumptionExponent": 1.321929,
     "somersloopPowerConsumptionExponent": 2,
-    "somersloopSlots": 0,
+    "somersloopSlots": 1,
     "clearance": {
       "width": 5,
       "length": 10,

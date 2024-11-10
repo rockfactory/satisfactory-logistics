@@ -1,4 +1,6 @@
 import { loglev } from '@/core/logger/log';
+import { migrateSerializedGameWithPlan } from '@/core/migrations/planner/StoreMigrationPlan';
+import { storeMigrationV2 } from '@/core/migrations/v2';
 import type { RootState } from '@/core/zustand';
 import { createActions } from '@/core/zustand-helpers/actions';
 import type { GameRemoteData } from '../Game';
@@ -54,6 +56,9 @@ function loadSerializedGameIntoState(
     return;
   }
 
+  // Migrations
+  serialized = applyGameMigrations(serialized);
+
   logger.info(`Fully loaded game "${serialized.game.name}" (id=${serialized.game.id})`, serialized); // prettier-ignore
   state.games.games[serialized.game.id] = { ...serialized.game };
   state.games.games[serialized.game.id].authorId = data.author_id;
@@ -67,4 +72,13 @@ function loadSerializedGameIntoState(
   serialized.solvers.forEach(solver => {
     state.solvers.instances[solver.id] = solver;
   });
+}
+
+function applyGameMigrations(serializedGame: SerializedGame) {
+  let game: SerializedGame = { ...serializedGame };
+  if ((game.game.version ?? 1) === 1) {
+    logger.info('Migrating game from version 1 to 2');
+    game = migrateSerializedGameWithPlan(storeMigrationV2, game);
+  }
+  return game;
 }

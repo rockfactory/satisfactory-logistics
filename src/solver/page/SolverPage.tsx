@@ -4,9 +4,6 @@ import {
   useFactorySimpleAttributes,
 } from '@/factories/store/factoriesSelectors';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { AllFactoryRecipesMap } from '@/recipes/FactoryRecipe';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   Box,
@@ -14,6 +11,7 @@ import {
   Container,
   Group,
   LoadingOverlay,
+  Space,
   Stack,
   Text,
   TextInput,
@@ -33,16 +31,14 @@ import { v4 } from 'uuid';
 import { useFormOnChange } from '../../core/form/useFormOnChange';
 import { useStore } from '../../core/zustand';
 import { AfterHeaderSticky } from '../../layout/AfterHeaderSticky';
-import {
-  SolverEdge,
-  SolverNode,
-  type SolverContext,
-} from '../algorithm/computeProductionConstraints';
+import { isSolutionFound } from '../algorithm/solve/isSolutionFound';
 import {
   solveProduction,
   useHighs,
   type SolutionNode,
 } from '../algorithm/solveProduction';
+import type { SolverContext } from '../algorithm/SolverContext';
+import type { SolverEdge, SolverNode } from '../algorithm/SolverNode';
 import { SolverInspectorDrawer } from '../inspector/SolverInspectorDrawer';
 import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
 import { SolverLayout } from '../layout/SolverLayout';
@@ -60,12 +56,14 @@ import {
   proposeSolverSolutionSuggestions,
   type ISolverSolutionSuggestion,
 } from './suggestions/proposeSolverSolutionSuggestions';
+import { SolverSuggestions } from './suggestions/SolverSuggestions';
 import { SolverSummaryDrawer } from './summary/SolverSummaryDrawer';
 
 const logger = loglev.getLogger('solver:page');
 
 export interface ISolverPageProps {}
 
+// TODO Move in dedicated file
 export interface ISolverSolution {
   result: HighsSolution;
   nodes: SolutionNode[];
@@ -133,7 +131,7 @@ export function SolverPage(props: ISolverPageProps) {
     });
     logger.log(`Solved -> `, solution);
 
-    if (solution && solution.result.Status !== 'Optimal') {
+    if (solution && !isSolutionFound(solution)) {
       suggestions = proposeSolverSolutionSuggestions(
         highsRef.current,
         instance.request,
@@ -161,10 +159,7 @@ export function SolverPage(props: ISolverPageProps) {
     }
   }
 
-  const hasSolution =
-    solution &&
-    solution.result.Status === 'Optimal' &&
-    solution?.nodes.length > 0;
+  const hasSolution = isSolutionFound(solution);
 
   logger.log('hasSolution =', hasSolution);
 
@@ -253,38 +248,8 @@ export function SolverPage(props: ISolverPageProps) {
               No solution found for the given parameters. Try adjusting the
               inputs, outputs and available recipes.
             </Text>
-            {suggestions?.addRecipes && (
-              <>
-                <Text size="sm" c="dark.2">
-                  Try adding the following recipes:
-                </Text>
-                <Group gap="xs">
-                  {suggestions.addRecipes.map(recipeId => {
-                    const recipe = AllFactoryRecipesMap[recipeId];
-                    const mainProduct =
-                      AllFactoryItemsMap[recipe.products[0].resource];
-                    return (
-                      <Button
-                        key={recipeId}
-                        variant="default"
-                        size="sm"
-                        onClick={() => {
-                          useStore
-                            .getState()
-                            .toggleRecipe(instance.id!, { recipeId });
-                        }}
-                        leftSection={<IconPlus size={16} />}
-                        rightSection={
-                          <FactoryItemImage size={16} id={mainProduct.id} />
-                        }
-                      >
-                        {recipe.name}
-                      </Button>
-                    );
-                  })}
-                </Group>
-              </>
-            )}
+            <Space />
+            <SolverSuggestions suggestions={suggestions} instance={instance} />
           </Stack>
         </Container>
       )}

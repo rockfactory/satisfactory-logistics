@@ -41,7 +41,7 @@ import {
   getRecipeProductPerBuilding,
 } from '../../../../recipes/FactoryRecipe';
 import { InvisibleHandles } from '../../rendering/InvisibleHandles';
-import classes from './MachineNode.module.css';
+import { NodeActionsBox } from '../utils/NodeActionsBox';
 import { MachineNodeActions } from './MachineNodeActions';
 import { RecipeIngredientRow } from './RecipeIngredientRow';
 
@@ -335,7 +335,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
               </Table.Tbody>
             </Table>
           </Stack>
-          <Box w="250px" className={classes.actions}>
+          <NodeActionsBox>
             {props.selected ? (
               <MachineNodeActions
                 data={props.data}
@@ -350,7 +350,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                 </Text>
               </Stack>
             )}
-          </Box>
+          </NodeActionsBox>
         </Flex>
       </Popover.Dropdown>
     </Popover>

@@ -22,8 +22,10 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import React, { useEffect, useRef, useState } from 'react';
+import type { SolutionNode } from '../algorithm/solveProduction';
 import { FloatingEdge } from '../edges/FloatingEdge';
 import { IngredientEdge } from '../edges/IngredientEdge';
+import type { SolverNodeState } from '../store/Solver';
 import { ByproductNode } from './nodes/byproduct-node/ByproductNode';
 import { MachineNode } from './nodes/machine-node/MachineNode';
 import { ResourceNode } from './nodes/resource-node/ResourceNode';
@@ -78,7 +80,7 @@ const GraphLayoutOptions = {
 // });
 
 const getLayoutedElements = (
-  nodes: Node[],
+  nodes: SolutionNode[],
   edges: Edge[],
   // graphOptions: dagre.configUnion,
 ) => {
@@ -95,38 +97,50 @@ const getLayoutedElements = (
       height: snapSizeToGrid(node.measured?.height ?? 0),
     });
   });
-  edges.forEach(edge => {
+  const filteredEdges = edges.filter(
+    edge =>
+      !(
+        (nodes.find(n => n.id === edge.source)?.data?.state as SolverNodeState)
+          ?.layoutIgnoreEdges ||
+        (nodes.find(n => n.id === edge.target)?.data?.state as SolverNodeState)
+          ?.layoutIgnoreEdges
+      ),
+  );
+
+  filteredEdges.forEach(edge => {
     dagreGraph.setEdge(edge.source, edge.target);
   });
 
   dagre.layout(dagreGraph, GraphLayoutOptions);
 
-  const newNodes: Node[] = (nodes as InternalNode[]).map(node => {
-    const nodeWithPosition = dagreGraph.node(node.id);
-    const newNode = {
-      ...node,
-      targetPosition: isHorizontal ? Position.Left : Position.Top,
-      sourcePosition: isHorizontal ? Position.Right : Position.Bottom,
-      // We are shifting the dagre node position (anchor=center center) to the top left
-      // so it matches the React Flow node anchor point (top left).
-      position: {
-        x: snapValueToGrid(
-          nodeWithPosition.x - (node.measured?.width ?? 0) / 2,
-        ),
-        y: snapValueToGrid(
-          nodeWithPosition.y - (node.measured?.height ?? 0) / 2,
-        ),
-      },
-    };
+  const newNodes: SolutionNode[] = (nodes as unknown as InternalNode[]).map(
+    node => {
+      const nodeWithPosition = dagreGraph.node(node.id);
+      const newNode = {
+        ...node,
+        targetPosition: isHorizontal ? Position.Left : Position.Top,
+        sourcePosition: isHorizontal ? Position.Right : Position.Bottom,
+        // We are shifting the dagre node position (anchor=center center) to the top left
+        // so it matches the React Flow node anchor point (top left).
+        position: {
+          x: snapValueToGrid(
+            nodeWithPosition.x - (node.measured?.width ?? 0) / 2,
+          ),
+          y: snapValueToGrid(
+            nodeWithPosition.y - (node.measured?.height ?? 0) / 2,
+          ),
+        },
+      };
 
-    return newNode;
-  });
+      return newNode as unknown as SolutionNode;
+    },
+  );
 
-  return { nodes: newNodes, edges };
+  return { nodes: newNodes, edges: filteredEdges };
 };
 
 interface SolverLayoutProps {
-  nodes: Node[];
+  nodes: SolutionNode[];
   edges: Edge[];
   children?: React.ReactNode;
 }
@@ -143,7 +157,7 @@ const edgeTypes = {
 };
 
 export const SolverLayout = (props: SolverLayoutProps) => {
-  const { fitView, getNodes, getEdges } = useReactFlow();
+  const { fitView, getNodes, getEdges } = useReactFlow<SolutionNode, Edge>();
 
   const [nodes, setNodes, onNodesChange] = useNodesState(props.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(props.edges);

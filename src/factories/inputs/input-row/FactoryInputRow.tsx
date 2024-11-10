@@ -8,12 +8,7 @@ import {
   TextInput,
   Tooltip,
 } from '@mantine/core';
-import {
-  IconTransform,
-  IconTransformFilled,
-  IconTrash,
-  IconWorld,
-} from '@tabler/icons-react';
+import { IconTrash, IconWorld } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { FormOnChangeHandler } from '../../../core/form/useFormOnChange';
 import { useShallowStore, useStore } from '../../../core/zustand';
@@ -29,6 +24,7 @@ import { useFactoryOnChangeHandler } from '../../store/factoriesSelectors';
 import { useIsFactoryVisible } from '../../useIsFactoryVisible';
 import { FactoryItemInput } from '../FactoryItemInput';
 import { FactorySelectInput } from '../FactorySelectInput';
+import { FactoryInputConstraintSelect } from './FactoryInputConstraintSelect';
 
 export interface IFactoryInputRowProps {
   factoryId: string;
@@ -172,24 +168,12 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           w={120}
         />
       )}
+
       {displayMode === 'solver' && (
-        <Tooltip label="Force usage in calculator. Eventual surplus will be converted in byproducts">
-          <ActionIcon
-            size="md"
-            mt={3}
-            color="blue"
-            variant={input.forceUsage ? 'filled' : 'outline'}
-            onClick={() => {
-              useStore.getState().toggleInputForceUsage(factoryId, index);
-            }}
-          >
-            {input.forceUsage ? (
-              <IconTransformFilled size={16} stroke={1.5} />
-            ) : (
-              <IconTransform size={16} stroke={1.5} />
-            )}
-          </ActionIcon>
-        </Tooltip>
+        <FactoryInputConstraintSelect
+          input={input}
+          onChange={onChangeHandler(`inputs.${index}.constraint`)}
+        />
       )}
 
       <ActionIcon

@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from 'react';
 
 import { Path, PathValue } from '@clickbar/dot-diver';
 
-type Updater<Obj, P extends Path<Obj> = Path<Obj>> = (
+export type Updater<Obj, P extends Path<Obj> = Path<Obj>> = (
   path: P,
   value: any,
 ) => void;

@@ -15,9 +15,14 @@ export interface FactoryInput {
   amount?: number | null;
   note?: string | null;
   transport?: LogisticType | null;
-  /** Force usage in calculator. Eventual surplus will be converted in byproduct */
+  /** @deprecated See constraint = 'exact' */
   forceUsage?: boolean;
+  constraint?: FactoryInputConstraint;
 }
+
+export type FactoryInputConstraint =
+  | 'exact' // Force solver to use this input in exact amount (ex "force usage")
+  | 'max'; // Limit solver to use at most this amount
 
 export interface FactoryOutput {
   resource: string | null;

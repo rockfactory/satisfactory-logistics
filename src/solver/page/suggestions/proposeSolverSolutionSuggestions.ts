@@ -4,25 +4,18 @@ import {
   getAllDefaultRecipesIds,
   getAllMAMRecipeIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
+import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
 import { solveProduction } from '@/solver/algorithm/solveProduction';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
+import type { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
 import type { SolverRequest } from '@/solver/store/Solver';
 import type { Highs } from 'highs';
 
 export interface ISolverSolutionSuggestion {
   addRecipes?: string[];
+  resetOutputMinimum?: { index: number; resource: string }[];
+  unblockResources?: string[];
 }
-
-// TODO BUg. Inputs influences outputs, so much that if they can't be used, the solver is Infeasible
-// We should atleast:
-// 1) Add an option to "ignore" the inputs (or to "force" their usage).
-// 2) Add a solver fallback which tries to remove the inputs and solve again.
-// const usedBatterRecipe = withMamRecipes.nodes.filter(
-//   node =>
-//     node.type === 'Machine' &&
-//     (node.data as IMachineNodeData).recipe.id.includes('Batter'),
-// );
-// console.log('usedBatterRecipe', usedBatterRecipe);
 
 export function proposeSolverSolutionSuggestions(
   highs: Highs,
@@ -31,6 +24,56 @@ export function proposeSolverSolutionSuggestions(
 ) {
   console.log('No solution found, trying MAM recipes');
   const suggestions: ISolverSolutionSuggestion = {};
+
+  // 0A. Try to unblock resources
+  if (request.blockedResources?.length) {
+    const withUnblockedResources = solveProduction(highs, {
+      ...request,
+      blockedResources: [],
+      ...inputsOutputs,
+    });
+    if (isSolutionFound(withUnblockedResources)) {
+      suggestions.unblockResources = withUnblockedResources.nodes
+        .filter(
+          node =>
+            node.type === 'Resource' &&
+            node.data.isRaw &&
+            request.blockedResources?.includes(node.data.resource.id),
+        )
+        .map(node => (node.data as IResourceNodeData).resource.id);
+      console.log('Solution found with unblocked resources', suggestions);
+    }
+  }
+
+  // 1. Try to unbound the output minimums (when maximization is in place)
+  if (inputsOutputs.outputs.some(o => o.objective === 'max')) {
+    const unboundedOutputs = inputsOutputs.outputs.map(output => ({
+      ...output,
+      amount: output.objective === 'max' ? 0 : output.amount,
+    }));
+
+    const withUnboundedOutputMinimums = solveProduction(highs, {
+      ...request,
+      ...inputsOutputs,
+      outputs: unboundedOutputs,
+    });
+    if (isSolutionFound(withUnboundedOutputMinimums)) {
+      suggestions.resetOutputMinimum = inputsOutputs.outputs
+        .filter(
+          (o, i) =>
+            o.resource != null &&
+            o.objective === 'max' &&
+            unboundedOutputs[i].amount !== o.amount,
+        )
+        .map((output, index) => ({
+          index,
+          resource: output.resource!,
+        }));
+
+      console.log('Solution found with unbounded output minimums');
+      return suggestions;
+    }
+  }
 
   //  1. Try to solve with MAM recipes
   const withMamRecipes = solveProduction(highs, {
@@ -44,7 +87,7 @@ export function proposeSolverSolutionSuggestions(
     ...inputsOutputs,
   });
 
-  if (withMamRecipes?.result.Status === 'Optimal') {
+  if (isSolutionFound(withMamRecipes)) {
     console.log('Solution found with MAM recipes');
     console.log('Solution found with MAM recipes', withMamRecipes);
     suggestions.addRecipes = withMamRecipes.nodes
@@ -61,7 +104,7 @@ export function proposeSolverSolutionSuggestions(
     allowedRecipes: AllFactoryRecipes.map(recipe => recipe.id),
     ...inputsOutputs,
   });
-  if (withAllRecipes?.result.Status === 'Optimal') {
+  if (isSolutionFound(withAllRecipes)) {
     suggestions.addRecipes = withAllRecipes.nodes
       .filter(node => node.type === 'Machine')
       .map(node => (node.data as IMachineNodeData).recipe.id)

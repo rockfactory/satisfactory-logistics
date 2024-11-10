@@ -18,6 +18,7 @@ import { FactoryOutput } from '../../Factory';
 import { useFactoryOnChangeHandler } from '../../store/factoriesSelectors';
 import { useIsFactoryVisible } from '../../useIsFactoryVisible';
 import { FactoryItemInput } from '../FactoryItemInput';
+import { FactoryOutputObjectiveSelect } from './FactoryOutputObjectiveSelect';
 import classes from './FactoryOutputRow.module.css';
 
 export interface IFactoryOutputRowProps {
@@ -55,33 +56,43 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
         onChange={onChangeHandler(`outputs.${index}.resource`)}
       />
 
-      <NumberInput
-        className={cx(classes.factoryOutputAmount, {
-          [classes.factoryOutputAmountSomersloops]: !!output.somersloops,
-        })}
-        value={output.amount ?? 0}
-        w={100}
-        min={0}
-        rightSection={
-          item?.unit ? (
-            <Text c="dimmed" size={'10'} pr={4}>
-              {item.unit}
-            </Text>
-          ) : (
-            <FactoryOutputIcon size={16} />
-          )
+      <Tooltip
+        disabled={output.objective !== 'max'}
+        label={
+          output.objective === 'max'
+            ? 'In this mode, the amount will be used as a minimum amount to produce'
+            : null
         }
-        classNames={{
-          input: classes.factoryOutputAmountInput,
-        }}
-        onBlur={() => setAmountFocused(false)}
-        onFocus={() => setAmountFocused(true)}
-        onChange={value => {
-          useStore.getState().updateFactoryOutput(factoryId, index, {
-            amount: Number(value),
-          });
-        }}
-      />
+      >
+        <NumberInput
+          className={cx(classes.factoryOutputAmount, {
+            [classes.factoryOutputAmountSomersloops]: !!output.somersloops,
+          })}
+          value={output.amount ?? 0}
+          w={100}
+          min={0}
+          rightSection={
+            item?.unit ? (
+              <Text c="dimmed" size={'10'} pr={4}>
+                {item.unit}
+              </Text>
+            ) : (
+              <FactoryOutputIcon size={16} />
+            )
+          }
+          classNames={{
+            input: classes.factoryOutputAmountInput,
+          }}
+          onBlur={() => setAmountFocused(false)}
+          onFocus={() => setAmountFocused(true)}
+          onChange={value => {
+            useStore.getState().updateFactoryOutput(factoryId, index, {
+              amount: Number(value),
+            });
+          }}
+        />
+      </Tooltip>
+
       <Tooltip
         label="Somersloops tracking for this output. Will automatically be set here if you add some somersloops in the calculator"
         position="top"
@@ -117,6 +128,14 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
           }
         />
       </Tooltip>
+
+      {displayMode === 'solver' && (
+        <FactoryOutputObjectiveSelect
+          objective={output.objective}
+          onChange={onChangeHandler(`outputs.${index}.objective`)}
+        />
+      )}
+
       <ActionIcon
         variant="outline"
         color="red"
@@ -128,14 +147,6 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       >
         <IconTrash size={16} stroke={1.5} />
       </ActionIcon>
-
-      {/*
-      Currently disabled, we need to implement a better way to compute it
-       */}
-      {/* <FactoryOutputObjectiveSelect
-        output={output}
-        onChange={onChangeHandler(`outputs.${index}.objective`)}
-      /> */}
 
       <OutputDependenciesPeekModal factoryId={factoryId} output={output} />
 

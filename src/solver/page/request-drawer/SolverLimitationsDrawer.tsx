@@ -1,12 +1,9 @@
-import {
-  FormOnChangeHandler,
-  useFormOnChange,
-} from '@/core/form/useFormOnChange';
+import { FormOnChangeHandler } from '@/core/form/useFormOnChange';
 import { useStore } from '@/core/zustand';
+import { useGameSetting } from '@/games/gamesSlice.ts';
 import {
   FactoryBuildingsForRecipes,
   FactoryConveyorBelts,
-  FactoryPipelines,
   FactoryPipelinesExclAlternates,
 } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
@@ -15,17 +12,20 @@ import { WorldResourcesList } from '@/recipes/WorldResources';
 import type { SolverInstance } from '@/solver/store/Solver';
 import { usePathSolverRequest } from '@/solver/store/solverSelectors';
 import {
+  Alert,
   Checkbox,
   Group,
   Image,
+  List,
   Radio,
   SimpleGrid,
-  Space,
   Stack,
+  Switch,
   Text,
 } from '@mantine/core';
-import { useGameSetting } from '@/games/gamesSlice.ts';
-import { setByPath } from '@clickbar/dot-diver';
+import { IconInfoCircleFilled } from '@tabler/icons-react';
+import { useState } from 'react';
+import { LimitationResourceAmountInput } from './limitations/LimitationResourceAmountInput';
 
 export interface ISolverLimitationsDrawerProps {
   id?: string | null | undefined;
@@ -41,33 +41,75 @@ export function SolverLimitationsDrawer(
   const maxPipeline = useGameSetting('maxPipeline');
   const maxBelt = useGameSetting('maxBelt');
 
+  const [advanced, setAdvanced] = useState(false);
+
+  const showAdvanced =
+    advanced ||
+    Object.values(request.resourcesAmount ?? {}).some(
+      amount => amount !== undefined,
+    );
+
+  const setShowAdvanced = (value: boolean) => {
+    setAdvanced(value);
+    if (!value) {
+      useStore.getState().resetSolverResourcesAmount(id!);
+    }
+  };
+
   return (
     <Stack gap="md">
       <SimpleGrid cols={2} spacing="md">
         <Stack gap="xs">
-          <Text size="lg">World Resources</Text>
+          <Group gap="xs" justify="space-between">
+            <Text size="lg">World Resources</Text>
+            <Switch
+              label="Custom Amounts"
+              checked={showAdvanced}
+              onChange={() => setShowAdvanced(!showAdvanced)}
+            />
+          </Group>
+          {showAdvanced && (
+            <Alert color="orange" icon={<IconInfoCircleFilled size={16} />}>
+              If you just just want to limit a resource consumption to a
+              specific amount, you can:
+              <List type="ordered" size="sm" mt="xs" mb="xs">
+                <List.Item>Disable the World resource here</List.Item>
+                <List.Item>
+                  Add an input of the desired amount in the{' '}
+                  <em>Inputs/Outputs</em> tab.
+                </List.Item>
+              </List>
+              Inputs will always be used even if the resource is disabled here.
+            </Alert>
+          )}
           {WorldResourcesList.map((resource, index) => {
             const item = AllFactoryItemsMap[resource];
             return (
-              <Checkbox
-                key={resource}
-                label={
-                  <Group gap="xs">
-                    <FactoryItemImage size={24} id={resource} />
-                    {item.name}
-                  </Group>
-                }
-                checked={!request?.blockedResources?.includes(resource)}
-                onChange={e =>
-                  useStore
-                    .getState()
-                    .toggleBlockedResource(
-                      id!,
-                      resource,
-                      !e.currentTarget.checked,
-                    )
-                }
-              />
+              <Group key={resource} justify="space-between">
+                <Checkbox
+                  key={resource}
+                  label={
+                    <Group gap="xs">
+                      <FactoryItemImage size={24} id={resource} />
+                      {item.name}
+                    </Group>
+                  }
+                  checked={!request?.blockedResources?.includes(resource)}
+                  onChange={e =>
+                    useStore
+                      .getState()
+                      .toggleBlockedResource(
+                        id!,
+                        resource,
+                        !e.currentTarget.checked,
+                      )
+                  }
+                />
+
+                {showAdvanced && (
+                  <LimitationResourceAmountInput resource={resource} />
+                )}
+              </Group>
             );
           })}
         </Stack>
@@ -126,7 +168,11 @@ export function SolverLimitationsDrawer(
                 (!maxBelt && index === FactoryConveyorBelts.length - 1)
               }
               onChange={e =>
-                useStore.getState().updateGameSettings(settings => settings.maxBelt = building.id)
+                useStore
+                  .getState()
+                  .updateGameSettings(
+                    settings => (settings.maxBelt = building.id),
+                  )
               }
             />
           ))}
@@ -152,7 +198,11 @@ export function SolverLimitationsDrawer(
                   index === FactoryPipelinesExclAlternates.length - 1)
               }
               onChange={e =>
-                useStore.getState().updateGameSettings(settings => settings.maxPipeline = building.id)
+                useStore
+                  .getState()
+                  .updateGameSettings(
+                    settings => (settings.maxPipeline = building.id),
+                  )
               }
             />
           ))}
