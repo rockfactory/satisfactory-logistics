@@ -134,9 +134,16 @@ export class SolverContext {
     if (!this.request.blockedResources) {
       return getWorldResourceMax(resource);
     }
-    return this.request.blockedResources.includes(resource)
-      ? 0
-      : getWorldResourceMax(resource);
+
+    if (this.request.blockedResources.includes(resource)) {
+      return 0;
+    }
+
+    if (this.request.resourcesAmount?.[resource] != null) {
+      return this.request.resourcesAmount[resource];
+    }
+
+    return getWorldResourceMax(resource);
   }
 
   formulateProblem() {

@@ -4,7 +4,7 @@ export interface SolverRequest {
   allowedRecipes?: string[] | null;
   blockedResources?: string[] | null;
   /** Limits how many raw resources can be used */
-  resourcesAmount?: Record<string, number>;
+  resourcesAmount?: Record<string, number | undefined>;
   blockedBuildings?: string[] | null;
   objective?: 'minimize_power' | 'minimize_resources' | 'minimize_area';
 }

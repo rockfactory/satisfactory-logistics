@@ -21,6 +21,12 @@ export const useSolverAllowedRecipes = (id: string | null | undefined) => {
   );
 };
 
+export const useSolverResourcesAmount = (id: string | null | undefined) => {
+  return useShallowStore(state =>
+    id ? state.solvers.instances[id]?.request.resourcesAmount : null,
+  );
+};
+
 export const getSolverGame = (state: RootState, id: string) => {
   return Object.values(state.games.games).find(game =>
     game.factoriesIds.includes(id),
