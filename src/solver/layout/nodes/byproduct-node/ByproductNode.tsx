@@ -2,6 +2,7 @@ import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import type { FactoryOutput } from '@/factories/Factory';
 import type { FactoryItem } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import type { SolverNodeState } from '@/solver/store/Solver';
 import { Box, Group, Stack, Text } from '@mantine/core';
 import { NodeProps } from '@xyflow/react';
 import { memo } from 'react';
@@ -14,6 +15,8 @@ export type IByproductNodeData = {
   // Only set if the byproduct is required by the user
   output?: FactoryOutput;
   outputIndex?: number;
+
+  state?: SolverNodeState;
 };
 
 export type IByproductNodeProps = NodeProps & {
@@ -37,10 +40,7 @@ export const ByproductNode = memo((props: IByproductNodeProps) => {
           </Text>
         </Stack>
       </Group>
-
       <InvisibleHandles />
-      {/* <Handle type="source" position={Position.Right} id="source-right" />
-      <Handle type="target" position={Position.Left} id="target-left" /> */}
     </Box>
   );
 });
