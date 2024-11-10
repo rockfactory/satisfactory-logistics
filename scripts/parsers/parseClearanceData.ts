@@ -35,13 +35,13 @@ export function parseClearanceData(raw) {
   // Step 8: Parse the string into a JavaScript object
   //   console.log('trying to parse', raw, '<---');
   const parsedData = JSON.parse(data);
-  console.log(
-    `Clearances:`,
-    parsedData.map(
-      c =>
-        `x=${c.ClearanceBox.Min.X}, y=${c.ClearanceBox.Min.Y}, z=${c.ClearanceBox.Min.Z} -> x=${c.ClearanceBox.Max.X}, y=${c.ClearanceBox.Max.Y}, z=${c.ClearanceBox.Max.Z} ${c.Type} (w=${c.ClearanceBox.Max.X - c.ClearanceBox.Min.X}, l=${c.ClearanceBox.Max.Y - c.ClearanceBox.Min.Y}, h=${c.ClearanceBox.Max.Z - c.ClearanceBox.Min.Z}, ${c.Type},${c.ExcludeForSnapping ? 'EX' : ''})`,
-    ),
-  );
+  // console.log(
+  //   `Clearances:`,
+  //   parsedData.map(
+  //     c =>
+  //       `x=${c.ClearanceBox.Min.X}, y=${c.ClearanceBox.Min.Y}, z=${c.ClearanceBox.Min.Z} -> x=${c.ClearanceBox.Max.X}, y=${c.ClearanceBox.Max.Y}, z=${c.ClearanceBox.Max.Z} ${c.Type} (w=${c.ClearanceBox.Max.X - c.ClearanceBox.Min.X}, l=${c.ClearanceBox.Max.Y - c.ClearanceBox.Min.Y}, h=${c.ClearanceBox.Max.Z - c.ClearanceBox.Min.Z}, ${c.Type},${c.ExcludeForSnapping ? 'EX' : ''})`,
+  //   ),
+  // );
   //   console.log(JSON.stringify(parsedData, null, 2));
   //   console.log('parsedData', parsedData);
 

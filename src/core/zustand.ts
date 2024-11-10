@@ -15,6 +15,8 @@ import { solverFactoriesActions } from '../solver/store/solverFactoriesActions';
 import { solversSlice } from '../solver/store/solverSlice';
 import { loglev } from './logger/log';
 import { migratePersistedStoreFromRedux } from './migrations/migratePersistedStoreFromRedux';
+import { migrateStoreWithPlan } from './migrations/planner/StoreMigrationPlan';
+import { storeMigrationV2 } from './migrations/v2';
 import { withActions } from './zustand-helpers/actions';
 import { forceMigrationOnInitialPersist } from './zustand-helpers/forceMigrationOnInitialPersist';
 import { indexedDbStorage } from './zustand-helpers/indexedDbStorage';
@@ -46,7 +48,7 @@ export const useStore = create(
     persist(slicesWithActions, {
       name: 'zustand:persist',
       partialize: state => omit(state, ['gameSave']),
-      version: 1,
+      version: 2,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
       ),
@@ -77,6 +79,12 @@ export const useStore = create(
             }
           }
         }
+
+        if (version === 1) {
+          logger.log('Migrating from version 1 to 2');
+          return migrateStoreWithPlan(storeMigrationV2, state as any);
+        }
+
         return state;
       },
     }),

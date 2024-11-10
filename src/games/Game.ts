@@ -4,6 +4,7 @@ export interface Game {
   id: string;
   name: string;
   factoriesIds: string[];
+  version?: number;
   // factories: Factory[];
   settings: GameSettings;
   allowedRecipes?: string[];

@@ -60,6 +60,7 @@ function parseBuildingForPowerRecipes(building: RawGenerator) {
       powerConsumptionFactor: 0,
       producedIn: building.ClassName,
       time: burnTime,
+      customType: 'Power',
       ingredients: [
         {
           resource: fuel.mFuelClass,

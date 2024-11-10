@@ -166,6 +166,18 @@ export const solversSlice = createSlice({
           use,
         );
       },
+    setSolverResourcesAmount:
+      (id: string, resource: string, amount: number | undefined) => state => {
+        const instance = state.instances[id];
+        if (!instance.request.resourcesAmount) {
+          instance.request.resourcesAmount = {};
+        }
+        instance.request.resourcesAmount[resource] = amount;
+      },
+    resetSolverResourcesAmount: (id: string) => state => {
+      state.instances[id].request.resourcesAmount = {};
+    },
+
     saveSolverSharedId: (id: string, sharedId: string) => state => {
       state.instances[id].sharedId = sharedId;
     },

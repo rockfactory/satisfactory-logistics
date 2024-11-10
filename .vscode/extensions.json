@@ -3,6 +3,7 @@
     "vunguyentuan.vscode-css-variables",
     "vunguyentuan.vscode-postcss",
     "gruntfuggly.todo-tree",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "pflannery.vscode-versionlens"
   ]
 }

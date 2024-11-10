@@ -19,7 +19,7 @@ export function ResourceNodeExtractorDetail(
   const {
     id,
     solverId,
-    data: { resource, isRaw, value },
+    data: { resource, isRaw: isRaw, value },
   } = props;
 
   const machines = useMemo(() => {
@@ -30,15 +30,12 @@ export function ResourceNodeExtractorDetail(
   //   state => state.solvers.instances[solverId ?? '']?.nodes?.[id],
   // );
 
-  // Double check. Should already be handled by parent component
-  if (!isRaw) return null;
-
   return (
     <Table
       withColumnBorders
-      //   style={{
-      //     borderRight: '1px solid var(--mantine-color-dark-4)',
-      //   }}
+      style={{
+        borderRight: '1px solid var(--mantine-color-dark-4)',
+      }}
     >
       <Table.Tbody>
         <Table.Tr>
@@ -66,8 +63,8 @@ export function ResourceNodeExtractorDetail(
               <Image
                 src={machine.imagePath.replace('_256', '_64')}
                 alt={machine.name}
-                w={32}
-                h={32}
+                w={24}
+                h={24}
               />
             </Table.Td>
             <Table.Td>
@@ -80,7 +77,7 @@ export function ResourceNodeExtractorDetail(
               </Text>
             </Table.Td>
             <Table.Td>
-              <Text size="sm" fw="bold">
+              <Text size="sm" fw="bold" inline>
                 x
                 <RepeatingNumber
                   value={value / machine.extractor!.itemsPerMinute}
