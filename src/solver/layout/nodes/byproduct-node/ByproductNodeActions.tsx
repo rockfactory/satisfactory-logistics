@@ -4,7 +4,7 @@ import type { FactoryOutput } from '@/factories/Factory';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { setByPath } from '@clickbar/dot-diver';
 import { ActionIcon, Button, Group, Stack, Tooltip } from '@mantine/core';
-import { IconTrash } from '@tabler/icons-react';
+import { IconDeviceFloppy, IconTrash } from '@tabler/icons-react';
 import { produce, type WritableDraft } from 'immer';
 import { isEqual } from 'lodash';
 import { useState } from 'react';
@@ -65,6 +65,24 @@ export function ByproductNodeActions(props: IByproductNodeActionsProps) {
                 }
               >
                 <IconTrash size={16} />
+              </ActionIcon>
+            </Tooltip>
+          )}
+
+          {output?.objective === 'max' && (
+            <Tooltip label="Save maximized amount">
+              <ActionIcon
+                color="blue"
+                variant="outline"
+                onClick={() =>
+                  useStore
+                    .getState()
+                    .updateFactoryOutput(solverId!, outputIndex!, {
+                      amount: value,
+                    })
+                }
+              >
+                <IconDeviceFloppy size={16} />
               </ActionIcon>
             </Tooltip>
           )}
