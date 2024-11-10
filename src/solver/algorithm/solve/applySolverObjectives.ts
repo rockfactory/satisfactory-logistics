@@ -46,7 +46,7 @@ export function applySolverObjective(
             // than world resources. This way, the solver will try to
             // use inputs first.
             const inputResourceWeight =
-              getWorldResourceMax(v.resource.id, 'weight') + 1;
+              getWorldResourceMax(v.resource.id, 'weight') + 100;
 
             return `${1 / inputResourceWeight} ${v.variable}`;
           })
