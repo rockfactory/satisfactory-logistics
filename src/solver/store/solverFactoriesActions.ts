@@ -1,18 +1,11 @@
 import { loglev } from '@/core/logger/log';
-import { isWorldResource } from '@/recipes/WorldResources';
-import type { Node } from '@xyflow/react';
 import { bfsFromNode } from 'graphology-traversal';
 import { v4 } from 'uuid';
 import { createActions } from '../../core/zustand-helpers/actions';
-import {
-  Factory,
-  FactoryOutput,
-  WORLD_SOURCE_ID,
-  type FactoryInput,
-} from '../../factories/Factory';
-import type { IResourceNodeData } from '../layout/nodes/resource-node/ResourceNode';
+import { Factory, FactoryOutput } from '../../factories/Factory';
 import type { ISolverSolution } from '../page/SolverPage';
 import { SolverRequest, type SolverInstance } from './Solver';
+import { computeAutoSetInputs } from './auto-set/computeAutoSetInputs';
 
 const logger = loglev.getLogger('store:solver-factories');
 
@@ -119,36 +112,16 @@ export const solverFactoriesActions = createActions({
         factoryOutput.somersloops = output.somersloops;
       }
     },
+  /**
+   * Automatically set the inputs from the solver solution.
+   */
   autoSetInputsFromSolver:
     (factoryId: string, solution: ISolverSolution) => state => {
       const factory = state.factories.factories[factoryId];
       if (!factory) return;
       if (!factory.inputs) factory.inputs = [];
 
-      const prevInputs = factory.inputs;
-      const nextInputs = [] as FactoryInput[];
-
-      const inputNodes = solution.nodes.filter(
-        (n): n is Node<IResourceNodeData, 'Resource'> => n.type === 'Resource',
-      );
-      for (const node of inputNodes) {
-        const input = prevInputs.find(
-          i => i.resource === node.data.resource.id,
-        );
-        if (input) {
-          input.amount = node.data.value;
-          nextInputs.push(input);
-        } else {
-          nextInputs.push({
-            resource: node.data.resource.id,
-            amount: node.data.value,
-            factoryId: isWorldResource(node.data.resource.id)
-              ? WORLD_SOURCE_ID
-              : undefined,
-          });
-        }
-      }
-      factory.inputs = nextInputs;
+      factory.inputs = computeAutoSetInputs(solution, factory);
     },
   /**
    * Update the solver instance with the new somersloops value.
