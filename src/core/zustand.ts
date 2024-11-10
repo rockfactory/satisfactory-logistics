@@ -2,7 +2,6 @@ import { chartsSlice } from '@/factories/charts/store/chartsSlice';
 import { factoryViewSortActions } from '@/factories/store/factoryViewSortActions';
 import { gameSaveSlice } from '@/games/save/gameSaveSlice';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
-import { produce } from 'immer';
 import { omit } from 'lodash';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
@@ -16,6 +15,8 @@ import { solverFactoriesActions } from '../solver/store/solverFactoriesActions';
 import { solversSlice } from '../solver/store/solverSlice';
 import { loglev } from './logger/log';
 import { migratePersistedStoreFromRedux } from './migrations/migratePersistedStoreFromRedux';
+import { migrateStoreWithPlan } from './migrations/planner/StoreMigrationPlan';
+import { storeMigrationV2 } from './migrations/v2';
 import { withActions } from './zustand-helpers/actions';
 import { forceMigrationOnInitialPersist } from './zustand-helpers/forceMigrationOnInitialPersist';
 import { indexedDbStorage } from './zustand-helpers/indexedDbStorage';
@@ -81,13 +82,7 @@ export const useStore = create(
 
         if (version === 1) {
           logger.log('Migrating from version 1 to 2');
-          return produce(state as RootState, draft => {
-            Object.values(draft.factories.factories ?? {}).forEach(factory => {
-              factory.inputs?.forEach(input => {
-                if (input.forceUsage) input.constraint = 'exact';
-              });
-            });
-          });
+          return migrateStoreWithPlan(storeMigrationV2, state as any);
         }
 
         return state;
