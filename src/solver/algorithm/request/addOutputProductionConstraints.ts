@@ -17,6 +17,7 @@ logger.setLevel('info');
 export function addOutputProductionConstraints(
   ctx: SolverContext,
   output: FactoryOutput,
+  outputIndex: number,
 ) {
   const { resource, amount, objective } = output;
   if (!resource) {
@@ -27,7 +28,7 @@ export function addOutputProductionConstraints(
   const resourceItem = AllFactoryItemsMap[resource];
 
   setGraphResource(ctx, resource);
-  setGraphByproduct(ctx, resource, { output });
+  setGraphByproduct(ctx, resource, { output, outputIndex });
 
   const byproductVar = `b${resourceItem.index}`;
 
@@ -36,7 +37,7 @@ export function addOutputProductionConstraints(
   switch (objective) {
     case 'max':
       // Here we just add a lower bound, maximization is handled by the objective
-      // function.
+      // function
       ctx.constraints.push(`${byproductVar} >= ${amount || 0}`);
       break;
     case 'default':

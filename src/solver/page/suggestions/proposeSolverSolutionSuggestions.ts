@@ -4,14 +4,17 @@ import {
   getAllDefaultRecipesIds,
   getAllMAMRecipeIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
+import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
 import { solveProduction } from '@/solver/algorithm/solveProduction';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
+import type { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
 import type { SolverRequest } from '@/solver/store/Solver';
 import type { Highs } from 'highs';
 
 export interface ISolverSolutionSuggestion {
   addRecipes?: string[];
   resetOutputMinimum?: { index: number; resource: string }[];
+  unblockResources?: string[];
 }
 
 export function proposeSolverSolutionSuggestions(
@@ -21,6 +24,26 @@ export function proposeSolverSolutionSuggestions(
 ) {
   console.log('No solution found, trying MAM recipes');
   const suggestions: ISolverSolutionSuggestion = {};
+
+  // 0A. Try to unblock resources
+  if (request.blockedResources?.length) {
+    const withUnblockedResources = solveProduction(highs, {
+      ...request,
+      blockedResources: [],
+      ...inputsOutputs,
+    });
+    if (isSolutionFound(withUnblockedResources)) {
+      suggestions.unblockResources = withUnblockedResources.nodes
+        .filter(
+          node =>
+            node.type === 'Resource' &&
+            node.data.isRaw &&
+            request.blockedResources?.includes(node.data.resource.id),
+        )
+        .map(node => (node.data as IResourceNodeData).resource.id);
+      console.log('Solution found with unblocked resources', suggestions);
+    }
+  }
 
   // 1. Try to unbound the output minimums (when maximization is in place)
   if (inputsOutputs.outputs.some(o => o.objective === 'max')) {
@@ -34,7 +57,7 @@ export function proposeSolverSolutionSuggestions(
       ...inputsOutputs,
       outputs: unboundedOutputs,
     });
-    if (withUnboundedOutputMinimums?.result.Status === 'Optimal') {
+    if (isSolutionFound(withUnboundedOutputMinimums)) {
       suggestions.resetOutputMinimum = inputsOutputs.outputs
         .filter(
           (o, i) =>
@@ -64,7 +87,7 @@ export function proposeSolverSolutionSuggestions(
     ...inputsOutputs,
   });
 
-  if (withMamRecipes?.result.Status === 'Optimal') {
+  if (isSolutionFound(withMamRecipes)) {
     console.log('Solution found with MAM recipes');
     console.log('Solution found with MAM recipes', withMamRecipes);
     suggestions.addRecipes = withMamRecipes.nodes
@@ -81,7 +104,7 @@ export function proposeSolverSolutionSuggestions(
     allowedRecipes: AllFactoryRecipes.map(recipe => recipe.id),
     ...inputsOutputs,
   });
-  if (withAllRecipes?.result.Status === 'Optimal') {
+  if (isSolutionFound(withAllRecipes)) {
     suggestions.addRecipes = withAllRecipes.nodes
       .filter(node => node.type === 'Machine')
       .map(node => (node.data as IMachineNodeData).recipe.id)

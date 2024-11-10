@@ -1,4 +1,5 @@
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
+import type { FactoryOutput } from '@/factories/Factory';
 import type { FactoryItem } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { Box, Group, Stack, Text } from '@mantine/core';
@@ -6,11 +7,14 @@ import { NodeProps } from '@xyflow/react';
 import { memo } from 'react';
 import { InvisibleHandles } from '../../rendering/InvisibleHandles';
 
-export interface IByproductNodeData {
+export type IByproductNodeData = {
+  label: string;
   resource: FactoryItem;
   value: number;
-  [key: string]: unknown;
-}
+  // Only set if the byproduct is required by the user
+  output?: FactoryOutput;
+  outputIndex?: number;
+};
 
 export type IByproductNodeProps = NodeProps & {
   data: IByproductNodeData;

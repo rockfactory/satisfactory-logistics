@@ -19,7 +19,7 @@ export function ResourceNodeExtractorDetail(
   const {
     id,
     solverId,
-    data: { resource, isRaw, value },
+    data: { resource, isRaw: isRaw, value },
   } = props;
 
   const machines = useMemo(() => {
@@ -29,9 +29,6 @@ export function ResourceNodeExtractorDetail(
   // const powershards = useStore(
   //   state => state.solvers.instances[solverId ?? '']?.nodes?.[id],
   // );
-
-  // Double check. Should already be handled by parent component
-  if (!isRaw) return null;
 
   return (
     <Table

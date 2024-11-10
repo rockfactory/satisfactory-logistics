@@ -1,7 +1,4 @@
-import type {
-  FactoryInputConstraint,
-  FactoryOutput,
-} from '@/factories/Factory';
+import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
 import type { FactoryItem } from '@/recipes/FactoryItem';
 import type { FactoryRecipe } from '@/recipes/FactoryRecipe';
 
@@ -12,14 +9,16 @@ export type SolverResourceNode = {
   variable: string;
 };
 
+/**
+ * A World resource, like water, coal, etc.
+ * Factory inputs (even for world resources) are represented
+ * as `raw_input` nodes instead.
+ */
 export type SolverRawNode = {
   type: 'raw';
   label: string;
   resource: FactoryItem;
   variable: string;
-  // TODO This doesn't work for raw resources, only for raw inputs.
-  constraint?: FactoryInputConstraint;
-  inputIndex?: number;
 };
 
 export type SolverRawInputNode = {
@@ -27,7 +26,7 @@ export type SolverRawInputNode = {
   label: string;
   resource: FactoryItem;
   variable: string;
-  constraint?: FactoryInputConstraint;
+  input?: FactoryInput;
   inputIndex?: number;
 };
 
@@ -53,6 +52,7 @@ export type SolverByproductNode = {
    * This is further used to set maximization objectives.
    */
   output?: FactoryOutput;
+  outputIndex?: number;
 };
 
 export type SolverInputNode = {

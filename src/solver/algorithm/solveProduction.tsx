@@ -8,12 +8,12 @@ import type { IByproductNodeData } from '../layout/nodes/byproduct-node/Byproduc
 import { IMachineNodeData } from '../layout/nodes/machine-node/MachineNode';
 import { IResourceNodeData } from '../layout/nodes/resource-node/ResourceNode';
 import { SolverRequest, type SolverNodeState } from '../store/Solver';
-import { SolverContext } from './SolverContext';
 import { avoidUnproducibleResources } from './consolidate/avoidUnproducibleResources';
 import { consolidateProductionConstraints } from './consolidate/consolidateProductionConstraints';
 import { addInputResourceConstraints } from './request/addInputProductionConstraints';
 import { addOutputProductionConstraints } from './request/addOutputProductionConstraints';
 import { applySolverObjective } from './solve/applySolverObjectives';
+import { SolverContext } from './SolverContext';
 
 const logger = log.getLogger('solver:production');
 logger.setLevel('info');
@@ -58,7 +58,6 @@ export type SolutionNode =
   | Node<IMachineNodeData, 'Machine'>
   | Node<IResourceNodeData, 'Resource'>
   | Node<IByproductNodeData, 'Byproduct'>;
-
 /**
  * Translates a production request into a linear programming problem and solves it,
  * returning the solution and the corresponding graph.
@@ -76,10 +75,13 @@ export function solveProduction(
     if (item.amount == null || !item.resource) continue;
     addInputResourceConstraints(ctx, item, i);
   }
-  for (const item of request.outputs) {
-    if (!item.resource) continue;
+
+  const outputs = request.outputs ?? [];
+  for (let i = 0; i < outputs.length; i++) {
+    const item = outputs[i];
+    if (item.amount == null || !item.resource) continue;
     // 2. Compute constraints
-    addOutputProductionConstraints(ctx, item);
+    addOutputProductionConstraints(ctx, item, i);
   }
 
   // 3. Consolidate
@@ -148,7 +150,7 @@ export function solveProduction(
               value: Number(value.Primal),
               resource: node.resource,
               isRaw: node.type === 'raw',
-              constraint: node.constraint,
+              input: node.type === 'raw_input' ? node.input : undefined,
               state: request.nodes?.[varName],
             } as IResourceNodeData,
             position: { x: 0, y: 0 },
@@ -164,6 +166,8 @@ export function solveProduction(
               label: `${node.resource.name}`,
               value: Number(value.Primal),
               resource: node.resource,
+              output: node.output,
+              outputIndex: node.outputIndex,
             },
             position: { x: 0, y: 0 },
           });

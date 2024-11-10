@@ -1,5 +1,5 @@
 import { log } from '@/core/logger/log';
-import { getWorldResourceMax } from '@/recipes/WorldResources';
+import { getWorldResourceMax, isWorldResource } from '@/recipes/WorldResources';
 import type { SolverProductionRequest } from '../solveProduction';
 import type { SolverContext } from '../SolverContext';
 
@@ -26,7 +26,7 @@ export function applySolverObjective(
       break;
 
     case 'minimize_resources':
-    default:
+    default: {
       /** MINIMIZE */
       ctx.objective = `${Array.from(ctx.getWorldVars())
         .map(
@@ -35,10 +35,24 @@ export function applySolverObjective(
         )
         .join(' + ')}`;
 
-    // const inputs = ctx.getWorldInputVars();
-    // if (inputs.some(v => v.resource.id === 'Desc_SAMIngot_C')) {
-    //   ctx.objective += ` + 0.0001 r${inputs.find(v => v.resource.id === 'Desc_SAMIngot_C')?.resource.index}`;
-    // }
+      // World inputs should be minimized too.
+      // For now, we are only considering _WORLD_ resources
+      const inputs = ctx.getWorldInputVars();
+      const worldInputs = inputs.filter(v => isWorldResource(v.resource.id));
+      if (worldInputs.length > 0) {
+        ctx.objective += ` + ${worldInputs
+          .map(v => {
+            // We make it _slightly_ more favorable to use Inputs
+            // than world resources. This way, the solver will try to
+            // use inputs first.
+            const inputResourceWeight =
+              getWorldResourceMax(v.resource.id, 'weight') + 1;
+
+            return `${1 / inputResourceWeight} ${v.variable}`;
+          })
+          .join(' + ')}`;
+      }
+    }
   }
 
   // Maximize the output
