@@ -15,7 +15,7 @@ export interface FactoryInput {
   amount?: number | null;
   note?: string | null;
   transport?: LogisticType | null;
-  /** Force usage in calculator. Eventual surplus will be converted in byproduct */
+  /** @deprecated See constraint = 'exact' */
   forceUsage?: boolean;
   constraint?: FactoryInputConstraint;
 }

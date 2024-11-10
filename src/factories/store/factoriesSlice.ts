@@ -34,13 +34,6 @@ export const factoriesSlice = createSlice({
       (factoryId: string, outputIndex: number, amount: number) => state => {
         state.factories[factoryId].outputs[outputIndex].amount = amount;
       },
-    /**
-     * @deprecated
-     */
-    toggleInputForceUsage: (factoryId: string, inputIndex: number) => state => {
-      state.factories[factoryId].inputs[inputIndex].forceUsage =
-        !state.factories[factoryId].inputs[inputIndex].forceUsage;
-    },
   },
 });
 
