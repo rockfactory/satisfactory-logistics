@@ -1,10 +1,10 @@
 import short from 'short-uuid';
 
 export interface SolverRequest {
-  // inputs?: FactoryInput[];
-  // outputs: FactoryOutput[];
   allowedRecipes?: string[] | null;
   blockedResources?: string[] | null;
+  /** Limits how many raw resources can be used */
+  resourcesAmount?: Record<string, number>;
   blockedBuildings?: string[] | null;
   objective?: 'minimize_power' | 'minimize_resources' | 'minimize_area';
 }

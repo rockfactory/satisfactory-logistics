@@ -21,7 +21,6 @@ export interface FactoryInput {
 }
 
 export type FactoryInputConstraint =
-  | 'none' // Used only to represent a link between factories
   | 'exact' // Force solver to use this input in exact amount (ex "force usage")
   | 'max'; // Limit solver to use at most this amount
 

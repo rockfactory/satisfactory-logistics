@@ -425,21 +425,17 @@ export function addInputResourceConstraints(
   });
   ctx.graph.mergeEdge(rawVar, resource!);
 
-  const normalizedConstraint = constraint ?? 'none';
+  const normalizedConstraint = constraint ?? 'max';
 
   // TODO: Gestire input = null che non si resetta a 0
-  // TODO: Migliorare il fatto che i factory input sono sempre < amount (e non free input)
 
   // If the resource is forced, we need to add a constraint to be _exactly_ the amount
   switch (normalizedConstraint) {
-    case 'max':
-      ctx.constraints.push(`${rawVar} <= ${amount || 0}`);
-      break;
     case 'exact':
       ctx.constraints.push(`${rawVar} = ${amount || 0}`);
       break;
 
-    case 'none':
+    case 'max':
     default:
       // If the resource is a factory input, we need to add a constraint to be
       // _max_ the amount. This is because else the `rawVar` will not have

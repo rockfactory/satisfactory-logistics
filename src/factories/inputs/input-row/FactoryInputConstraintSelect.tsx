@@ -1,14 +1,7 @@
 import type { FactoryInput, FactoryInputConstraint } from '@/factories/Factory';
-import { isWorldResource } from '@/recipes/WorldResources';
 import { ActionIcon, Menu, Stack, Text, Tooltip } from '@mantine/core';
-import {
-  IconArrowNarrowRightDashed,
-  IconCheck,
-  IconEqual,
-  IconMathLower,
-} from '@tabler/icons-react';
-import { pick } from 'lodash';
-import { useCallback, useMemo } from 'react';
+import { IconCheck, IconEqual, IconMathLower } from '@tabler/icons-react';
+import { useCallback } from 'react';
 
 export interface IFactoryInputConstraintSelectProps {
   input: FactoryInput;
@@ -16,10 +9,14 @@ export interface IFactoryInputConstraintSelectProps {
 }
 
 const FactoryInputConstraints = {
-  none: {
-    label: 'None',
-    description: 'No constraint, just a link between factories',
-    icon: <IconArrowNarrowRightDashed size={16} />,
+  max: {
+    label: 'Less than',
+    description: (
+      <span>
+        Use <em>at most</em> amount from this input
+      </span>
+    ),
+    icon: <IconMathLower size={16} />,
   },
   exact: {
     label: 'Exact',
@@ -29,15 +26,6 @@ const FactoryInputConstraints = {
       </span>
     ),
     icon: <IconEqual size={16} />,
-  },
-  max: {
-    label: 'Less than',
-    description: (
-      <span>
-        Limit calculator to use <em>at most</em> this amount
-      </span>
-    ),
-    icon: <IconMathLower size={16} />,
   },
 } satisfies Record<FactoryInputConstraint, any>;
 
@@ -53,16 +41,7 @@ export function FactoryInputConstraintSelect(
     [onChange],
   );
 
-  const allowedOptions = useMemo(() => {
-    const constraints =
-      input.resource && isWorldResource(input.resource)
-        ? pick(FactoryInputConstraints, ['none', 'exact', 'max'])
-        : pick(FactoryInputConstraints, ['max', 'exact']);
-
-    return Object.entries(constraints);
-  }, [input.resource]);
-
-  const constraint = input.constraint ?? 'none';
+  const constraint = input.constraint ?? 'max';
   const current = FactoryInputConstraints[constraint];
 
   return (
@@ -70,12 +49,16 @@ export function FactoryInputConstraintSelect(
       <Menu.Target>
         <Tooltip
           color="dark.8"
-          label="Usage: limit this input amount or force usage"
+          label={
+            constraint === 'max'
+              ? 'Use at most this amount'
+              : 'Force usage of full input amount'
+          }
           position="top"
         >
           <ActionIcon
             mt={3}
-            variant={constraint === 'none' ? 'outline' : 'filled'}
+            variant={constraint === 'max' ? 'default' : 'filled'}
             aria-label="Usage"
             color="blue"
           >
@@ -84,7 +67,7 @@ export function FactoryInputConstraintSelect(
         </Tooltip>
       </Menu.Target>
       <Menu.Dropdown>
-        {allowedOptions.map(([value, attributes]) => (
+        {Object.entries(FactoryInputConstraints).map(([value, attributes]) => (
           <Menu.Item
             key={value}
             onClick={() => handleChange(value)}
