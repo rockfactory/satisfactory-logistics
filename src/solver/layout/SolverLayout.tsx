@@ -19,17 +19,21 @@ import {
   useNodesInitialized,
   useNodesState,
   useReactFlow,
+  type XYPosition,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import React, { useEffect, useRef, useState } from 'react';
 import type { SolutionNode } from '../algorithm/solveProduction';
 import { FloatingEdge } from '../edges/FloatingEdge';
 import { IngredientEdge } from '../edges/IngredientEdge';
-import type { SolverNodeState } from '../store/Solver';
+import type { SolverLayoutState, SolverNodeState } from '../store/Solver';
+import { usePathSolverLayout } from '../store/solverSelectors';
 import { ByproductNode } from './nodes/byproduct-node/ByproductNode';
 import { MachineNode } from './nodes/machine-node/MachineNode';
 import { ResourceNode } from './nodes/resource-node/ResourceNode';
 import classes from './SolverLayout.module.css';
+import { isSavedLayoutValid } from './state/isSavedLayoutValid';
+import { updateNodesWithLayoutState } from './state/updateNodesWithLayoutState';
 
 // const dagreGraph = new dagre.graphlib.Graph();
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -79,11 +83,34 @@ const GraphLayoutOptions = {
 //   },
 // });
 
+function getNodeComputedPosition(
+  dagreNode: dagre.Node,
+  node: SolutionNode,
+  nodeSavedPosition: XYPosition | undefined,
+): XYPosition {
+  if (nodeSavedPosition) {
+    return {
+      x: nodeSavedPosition.x,
+      y: nodeSavedPosition.y,
+    };
+  }
+
+  // We are shifting the dagre node position (anchor=center center) to the top left
+  // so it matches the React Flow node anchor point (top left).
+  return {
+    x: snapValueToGrid(dagreNode.x - (node.measured?.width ?? 0) / 2),
+    y: snapValueToGrid(dagreNode.y - (node.measured?.height ?? 0) / 2),
+  };
+}
+
 const getLayoutedElements = (
   nodes: SolutionNode[],
   edges: Edge[],
+  savedLayout: SolverLayoutState | null | undefined,
   // graphOptions: dagre.configUnion,
 ) => {
+  const useSavedLayout = isSavedLayoutValid(nodes, savedLayout);
+
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
 
@@ -111,25 +138,29 @@ const getLayoutedElements = (
     dagreGraph.setEdge(edge.source, edge.target);
   });
 
-  dagre.layout(dagreGraph, GraphLayoutOptions);
+  // We want to perform layout only if the saved layout is not valid
+  if (!useSavedLayout) {
+    dagre.layout(dagreGraph, GraphLayoutOptions);
+  }
 
-  const newNodes: SolutionNode[] = (nodes as unknown as InternalNode[]).map(
+  const newNodes: SolutionNode[] = (nodes as InternalNode<SolutionNode>[]).map(
     node => {
-      const nodeWithPosition = dagreGraph.node(node.id);
+      // Position is calculated based on the dagre node position or, if available,
+      // the saved position.
+      const nodePosition = getNodeComputedPosition(
+        dagreGraph.node(node.id),
+        node,
+        // We _could_ use the save layout always, but we want to restore to
+        // computed layout if atleast one node changes.
+        useSavedLayout ? savedLayout[node.id] : undefined,
+      );
+
       const newNode = {
         ...node,
         targetPosition: isHorizontal ? Position.Left : Position.Top,
         sourcePosition: isHorizontal ? Position.Right : Position.Bottom,
-        // We are shifting the dagre node position (anchor=center center) to the top left
-        // so it matches the React Flow node anchor point (top left).
-        position: {
-          x: snapValueToGrid(
-            nodeWithPosition.x - (node.measured?.width ?? 0) / 2,
-          ),
-          y: snapValueToGrid(
-            nodeWithPosition.y - (node.measured?.height ?? 0) / 2,
-          ),
-        },
+
+        position: nodePosition,
       };
 
       return newNode as unknown as SolutionNode;
@@ -157,6 +188,7 @@ const edgeTypes = {
 };
 
 export const SolverLayout = (props: SolverLayoutProps) => {
+  const savedLayout = usePathSolverLayout();
   const { fitView, getNodes, getEdges } = useReactFlow<SolutionNode, Edge>();
 
   const [nodes, setNodes, onNodesChange] = useNodesState(props.nodes);
@@ -188,19 +220,26 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   // When nodes change, we need to re-layout them.
   useEffect(() => {
     logger.debug('Initializing nodes...');
-    setOpacity(0);
+
+    if (!isSavedLayoutValid(props.nodes, savedLayout)) {
+      setOpacity(0);
+    }
 
     // Force re-fit view if nodes change
+    // TODO better to do a xor-ing of nodes
     if (props.nodes.length !== getNodes().length) {
       previousFittedWithNodes.current = false;
     }
 
-    setNodes([...props.nodes]);
+    // We don't want `savedLayout` to be a dependency, just to use
+    // the latest value when the nodes change.
+    setNodes([...updateNodesWithLayoutState(props.nodes, savedLayout)]);
     setEdges([...props.edges]);
     setInitialLayoutFinished(false);
     setInitialFitViewFinished(false);
 
-    setTimeout(() => {}, 1);
+    // setTimeout(() => {}, 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.edges, props.nodes, setEdges, setNodes]);
 
   useEffect(() => {
@@ -214,7 +253,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     if (nodesInitialized && hasRealMeasurements && !initialLayoutFinished) {
       logger.info(`-> Layouting (initial layout in progress)`); // prettier-ignore
       logger.debug('Layouting...');
-      const layouted = getLayoutedElements(getNodes(), getEdges());
+      const layouted = getLayoutedElements(getNodes(), getEdges(), savedLayout);
 
       setNodes([...layouted.nodes]);
       setEdges([...layouted.edges]);
@@ -236,7 +275,12 @@ export const SolverLayout = (props: SolverLayoutProps) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [nodesInitialized, initialLayoutFinished, initialFitViewFinished]);
+  }, [
+    nodesInitialized,
+    savedLayout,
+    initialLayoutFinished,
+    initialFitViewFinished,
+  ]);
 
   const ref = useRef<HTMLDivElement>(null);
 

@@ -42,6 +42,7 @@ import type { SolverEdge, SolverNode } from '../algorithm/SolverNode';
 import { SolverInspectorDrawer } from '../inspector/SolverInspectorDrawer';
 import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
 import { SolverLayout } from '../layout/SolverLayout';
+import { SolverLayoutSaveButton } from '../layout/state/SolverLayoutSaveButton';
 import { SolverShareButton } from '../share/SolverShareButton';
 import { SolverInstance } from '../store/Solver';
 import {
@@ -102,8 +103,6 @@ export function SolverPage(props: ISolverPageProps) {
     });
   }, [instance, factory, id, params.id, navigate]);
 
-  logger.log('SolverPage', instance, id);
-
   const updater = useMemo(
     () => (path: Path<SolverInstance>, value: string | null | number) => {
       useStore.getState().updateSolver(id!, state => {
@@ -139,6 +138,8 @@ export function SolverPage(props: ISolverPageProps) {
       );
     }
 
+    logger.log('hasSolution =', isSolutionFound(solution));
+
     return { solution, suggestions };
     // We don't want to re-run computation if instance changes, only if its request changes
   }, [highsRef, instance?.request, instance?.nodes, inputsOutputs, loading]);
@@ -160,8 +161,6 @@ export function SolverPage(props: ISolverPageProps) {
   }
 
   const hasSolution = isSolutionFound(solution);
-
-  logger.log('hasSolution =', hasSolution);
 
   return (
     <Box w="100%" pos="relative">
@@ -229,6 +228,7 @@ export function SolverPage(props: ISolverPageProps) {
                   <Group gap="xs">
                     <SolverSummaryDrawer solution={solution} />
                     <SolverShareButton />
+                    <SolverLayoutSaveButton solution={solution} />
                     {import.meta.env.DEV && (
                       <SolverInspectorDrawer solution={solution} />
                     )}

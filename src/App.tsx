@@ -18,7 +18,6 @@ import { SyncManager } from './auth/sync/SyncManager';
 import { useStore } from './core/zustand';
 import { GamesRoutes } from './games/page/GamesRoutes';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
-import { RecipeSolverDemo } from './solver/RecipeSolverDemo';
 import { theme } from './theme';
 
 const router = createBrowserRouter([
@@ -43,10 +42,6 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <LoginPage />,
-  },
-  {
-    path: '/solver',
-    element: <RecipeSolverDemo />,
   },
   {
     path: '*',

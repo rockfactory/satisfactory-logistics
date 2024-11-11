@@ -51,6 +51,7 @@
     "loglevel": "^1.9.2",
     "loglevel-plugin-prefix": "^0.8.4",
     "mantine-contextmenu": "^7.12.2",
+    "microdiff": "^1.4.0",
     "moize": "^6.1.6",
     "pako": "^2.1.0",
     "react": "^18.3.1",
