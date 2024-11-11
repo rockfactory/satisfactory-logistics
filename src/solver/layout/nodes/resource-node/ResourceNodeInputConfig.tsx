@@ -1,8 +1,9 @@
 import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
 import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
 import type { FactoryInput } from '@/factories/Factory';
+import { FactoryNumberInput } from '@/factories/inputs/FactoryNumberInput';
 import { type FactoryItem } from '@/recipes/FactoryItem';
-import { NumberInput, Stack, Text } from '@mantine/core';
+import { Stack, Text } from '@mantine/core';
 
 export interface IResourceNodeInputConfigProps {
   resource: FactoryItem;
@@ -17,7 +18,7 @@ export function ResourceNodeInputConfig(props: IResourceNodeInputConfigProps) {
 
   return (
     <Stack gap="sm" w="100%">
-      <NumberInput
+      <FactoryNumberInput
         value={inputAmount ?? 0}
         inputWrapperOrder={['label', 'input', 'description', 'error']}
         placeholder="Amount"
@@ -28,7 +29,7 @@ export function ResourceNodeInputConfig(props: IResourceNodeInputConfigProps) {
           </span>
         }
         min={0}
-        rightSection={
+        leftSection={
           resource?.unit ? (
             <Text c="dimmed" size={'10'} pr={4}>
               {resource.unit}

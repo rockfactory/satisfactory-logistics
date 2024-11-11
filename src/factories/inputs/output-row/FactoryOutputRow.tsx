@@ -18,6 +18,7 @@ import { FactoryOutput } from '../../Factory';
 import { useFactoryOnChangeHandler } from '../../store/factoriesSelectors';
 import { useIsFactoryVisible } from '../../useIsFactoryVisible';
 import { FactoryItemInput } from '../FactoryItemInput';
+import { FactoryNumberInput } from '../FactoryNumberInput';
 import { FactoryOutputObjectiveSelect } from './FactoryOutputObjectiveSelect';
 import classes from './FactoryOutputRow.module.css';
 
@@ -64,7 +65,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
             : null
         }
       >
-        <NumberInput
+        <FactoryNumberInput
           className={cx(classes.factoryOutputAmount, {
             [classes.factoryOutputAmountSomersloops]: !!output.somersloops,
           })}
