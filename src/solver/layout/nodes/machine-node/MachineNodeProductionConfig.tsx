@@ -52,6 +52,8 @@ export function MachineNodeProductionConfig(
         onChange={setSomersloopsValue}
         min={0}
         max={maxSlots}
+        allowNegative={false}
+        allowDecimal={false}
         error={
           Number(somersloopsValue) > maxSlots
             ? `Max slots: ${maxSlots}`
@@ -59,12 +61,12 @@ export function MachineNodeProductionConfig(
               ? 'Cannot be negative'
               : null
         }
-        rightSection={
+        leftSection={
           <FactoryItemImage size={16} id={'Desc_WAT1_C' as FactoryItemId} />
         }
       />
       <NumberInput
-        placeholder="Overlock"
+        placeholder="Overclock"
         suffix="%"
         value={overclockValue ? Number(overclockValue) * 100 : 100}
         onValueChange={({ floatValue }) =>
@@ -73,6 +75,7 @@ export function MachineNodeProductionConfig(
         onChange={setOverclockValue}
         min={0}
         max={250}
+        allowNegative={false}
         error={
           Number(overclockValue) > 2.5
             ? 'Max overclock: 250%'
@@ -80,7 +83,7 @@ export function MachineNodeProductionConfig(
               ? 'Cannot be negative'
               : null
         }
-        rightSection={
+        leftSection={
           <FactoryItemImage
             size={16}
             id={'Desc_CrystalShard_C' as FactoryItemId}

@@ -142,9 +142,10 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
       >
         <NumberInput
           value={input.amount ?? 0}
-          w={100}
+          w={110}
           min={0}
-          rightSection={
+          allowNegative={false}
+          leftSection={
             <FactoryInputIcon
               size={16}
               color={usage.percentage > 1 ? 'red' : undefined}
