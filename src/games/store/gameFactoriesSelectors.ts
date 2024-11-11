@@ -1,4 +1,4 @@
-import { useShallowStore } from '../../core/zustand';
+import { useShallowStore } from '@/core/zustand';
 
 export function useGameFactories(gameId?: string | null | undefined) {
   return useShallowStore(

@@ -1,6 +1,6 @@
 import type { RootState } from '@/core/zustand';
 import { describe, expect, test } from 'vitest';
-import { storeMigrationV2 } from '../v2';
+import { storeMigrationV2 } from '@/core/migrations/v2';
 import { migrateStoreWithPlan } from './StoreMigrationPlan';
 
 describe('StoreMigrationPlan', () => {

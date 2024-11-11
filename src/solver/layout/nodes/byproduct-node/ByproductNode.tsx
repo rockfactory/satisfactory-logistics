@@ -7,8 +7,8 @@ import { alpha, Box, Flex, Group, Popover, Stack, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { NodeProps } from '@xyflow/react';
 import { memo } from 'react';
-import { InvisibleHandles } from '../../rendering/InvisibleHandles';
-import { NodeActionsBox } from '../utils/NodeActionsBox';
+import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
+import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { ByproductNodeActions } from './ByproductNodeActions';
 
 export type IByproductNodeData = {

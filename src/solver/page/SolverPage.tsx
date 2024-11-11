@@ -28,28 +28,28 @@ import { HighsSolution } from 'highs';
 import { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { v4 } from 'uuid';
-import { useFormOnChange } from '../../core/form/useFormOnChange';
-import { useStore } from '../../core/zustand';
-import { AfterHeaderSticky } from '../../layout/AfterHeaderSticky';
-import { isSolutionFound } from '../algorithm/solve/isSolutionFound';
+import { useFormOnChange } from '@/core/form/useFormOnChange';
+import { useStore } from '@/core/zustand';
+import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
+import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
 import {
   solveProduction,
   useHighs,
   type SolutionNode,
-} from '../algorithm/solveProduction';
-import type { SolverContext } from '../algorithm/SolverContext';
-import type { SolverEdge, SolverNode } from '../algorithm/SolverNode';
-import { SolverInspectorDrawer } from '../inspector/SolverInspectorDrawer';
-import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
-import { SolverLayout } from '../layout/SolverLayout';
-import { SolverShareButton } from '../share/SolverShareButton';
-import { SolverInstance } from '../store/Solver';
+} from '@/solver/algorithm/solveProduction';
+import type { SolverContext } from '@/solver/algorithm/SolverContext';
+import type { SolverEdge, SolverNode } from '@/solver/algorithm/SolverNode';
+import { SolverInspectorDrawer } from '@/solver/inspector/SolverInspectorDrawer';
+import { SolverSolutionProvider } from '@/solver/layout/solution-context/SolverSolutionContext';
+import { SolverLayout } from '@/solver/layout/SolverLayout';
+import { SolverShareButton } from '@/solver/share/SolverShareButton';
+import { SolverInstance } from '@/solver/store/Solver';
 import {
   getSolverGame,
   useCurrentSolverId,
   usePathSolverInstance,
   useSolverGameId,
-} from '../store/solverSelectors';
+} from '@/solver/store/solverSelectors';
 import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
 import { SolverResetButton } from './SolverResetButton';
 import {

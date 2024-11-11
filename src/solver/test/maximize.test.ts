@@ -1,6 +1,6 @@
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { expect, test } from 'vitest';
-import { loadHighs, solveProduction } from '../algorithm/solveProduction';
+import { loadHighs, solveProduction } from '@/solver/algorithm/solveProduction';
 
 test('should compute maximization with free inputs (unconstrained)', async () => {
   const highs = await loadHighs();

@@ -12,12 +12,12 @@ import {
 } from '@tabler/icons-react';
 import { Node } from '@xyflow/react';
 import { useMemo } from 'react';
-import { RepeatingNumber } from '../../../core/intl/NumberFormatter';
-import { AllFactoryItemsMap } from '../../../recipes/FactoryItem';
-import { IMachineNodeData } from '../../layout/nodes/machine-node/MachineNode';
-import { IResourceNodeData } from '../../layout/nodes/resource-node/ResourceNode';
-import { usePathSolverInstance } from '../../store/solverSelectors';
-import { ISolverSolution } from '../SolverPage';
+import { RepeatingNumber } from '@/core/intl/NumberFormatter';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
+import { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
+import { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
+import { usePathSolverInstance } from '@/solver/store/solverSelectors';
+import { ISolverSolution } from '@/solver/page/SolverPage';
 import { SummaryBuildings } from './SummaryBuildings';
 
 export interface ISolverSummaryDrawerProps {

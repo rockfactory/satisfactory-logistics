@@ -13,8 +13,8 @@ import { useEffect } from 'react';
 
 import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
-import { log } from '../../core/logger/log';
-import type { ISolverSolution } from '../page/SolverPage';
+import { log } from '@/core/logger/log';
+import type { ISolverSolution } from '@/solver/page/SolverPage';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));

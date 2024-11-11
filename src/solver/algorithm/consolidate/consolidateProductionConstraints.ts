@@ -1,6 +1,6 @@
 import { log } from '@/core/logger/log';
-import type { SolverContext } from '../SolverContext';
-import type { SolverResourceNode } from '../SolverNode';
+import type { SolverContext } from '@/solver/algorithm/SolverContext';
+import type { SolverResourceNode } from '@/solver/algorithm/SolverNode';
 
 const logger = log.getLogger('recipes:solver');
 logger.setLevel('info');

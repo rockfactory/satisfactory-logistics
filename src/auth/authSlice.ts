@@ -1,5 +1,5 @@
 import { Session } from '@supabase/supabase-js';
-import { createSlice } from '../core/zustand-helpers/slices';
+import { createSlice } from '@/core/zustand-helpers/slices';
 
 export const authSlice = createSlice({
   name: 'auth',

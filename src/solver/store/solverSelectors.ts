@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
-import { useShallowStore, useStore, type RootState } from '../../core/zustand';
-import { AllFactoryRecipes } from '../../recipes/FactoryRecipe';
+import { useShallowStore, useStore, type RootState } from '@/core/zustand';
+import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 
 export const usePathSolverInstance = () => {
   const id = useParams<{ id: string }>().id;

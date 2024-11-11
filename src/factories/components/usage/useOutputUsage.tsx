@@ -1,6 +1,6 @@
-import { useStore } from '../../../core/zustand';
-import { getWorldResourceMax } from '../../../recipes/WorldResources';
-import { WORLD_SOURCE_ID } from '../../Factory';
+import { useStore } from '@/core/zustand';
+import { getWorldResourceMax } from '@/recipes/WorldResources';
+import { WORLD_SOURCE_ID } from '@/factories/Factory';
 import { IFactoryUsageProps } from './FactoryUsage';
 
 export function useOutputUsage(

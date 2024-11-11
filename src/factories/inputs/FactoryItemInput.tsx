@@ -14,7 +14,7 @@ import {
   AllFactoryItemsMap,
   AllProducibleFactoryItems,
   FactoryItem,
-} from '../../recipes/FactoryItem';
+} from '@/recipes/FactoryItem';
 
 export interface IFactoryItemInputProps
   extends Omit<InputWrapperProps, 'value' | 'onChange'> {

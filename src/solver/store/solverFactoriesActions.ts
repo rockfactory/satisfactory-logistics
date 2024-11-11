@@ -1,9 +1,9 @@
 import { loglev } from '@/core/logger/log';
 import { bfsFromNode } from 'graphology-traversal';
 import { v4 } from 'uuid';
-import { createActions } from '../../core/zustand-helpers/actions';
-import { Factory, FactoryOutput } from '../../factories/Factory';
-import type { ISolverSolution } from '../page/SolverPage';
+import { createActions } from '@/core/zustand-helpers/actions';
+import { Factory, FactoryOutput } from '@/factories/Factory';
+import type { ISolverSolution } from '@/solver/page/SolverPage';
 import { SolverRequest, type SolverInstance } from './Solver';
 import { computeAutoSetInputs } from './auto-set/computeAutoSetInputs';
 

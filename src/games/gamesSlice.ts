@@ -4,8 +4,8 @@ import {
 } from '@/recipes/FactoryBuilding';
 import dayjs from 'dayjs';
 import { useShallow } from 'zustand/shallow';
-import { useStore } from '../core/zustand';
-import { createSlice } from '../core/zustand-helpers/slices';
+import { useStore } from '@/core/zustand';
+import { createSlice } from '@/core/zustand-helpers/slices';
 import { Game, type GameRemoteData, GameSettings } from './Game';
 
 export interface GamesSlice {

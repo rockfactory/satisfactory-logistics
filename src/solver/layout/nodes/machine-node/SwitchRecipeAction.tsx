@@ -8,8 +8,8 @@ import {
   AllFactoryRecipes,
   AllFactoryRecipesMap,
   type FactoryRecipe,
-} from '../../../../recipes/FactoryRecipe';
-import { useSolverAllowedRecipes } from '../../../store/solverSelectors';
+} from '@/recipes/FactoryRecipe';
+import { useSolverAllowedRecipes } from '@/solver/store/solverSelectors';
 
 export interface ISwitchRecipeActionProps {
   recipeId: string;

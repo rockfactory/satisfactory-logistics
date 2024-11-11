@@ -2,8 +2,8 @@ import { Box, Group, LoadingOverlay, NumberInput, Stack } from '@mantine/core';
 import { ReactFlowProvider } from '@xyflow/react';
 import { Highs } from 'highs';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { log } from '../core/logger/log';
-import { FactoryItemInput } from '../factories/inputs/FactoryItemInput';
+import { log } from '@/core/logger/log';
+import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
 import { loadHighs, solveProduction } from './algorithm/solveProduction';
 import { SolverLayout } from './layout/SolverLayout';
 

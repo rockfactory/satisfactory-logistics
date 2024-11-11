@@ -22,10 +22,10 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import React, { useEffect, useRef, useState } from 'react';
-import type { SolutionNode } from '../algorithm/solveProduction';
-import { FloatingEdge } from '../edges/FloatingEdge';
-import { IngredientEdge } from '../edges/IngredientEdge';
-import type { SolverNodeState } from '../store/Solver';
+import type { SolutionNode } from '@/solver/algorithm/solveProduction';
+import { FloatingEdge } from '@/solver/edges/FloatingEdge';
+import { IngredientEdge } from '@/solver/edges/IngredientEdge';
+import type { SolverNodeState } from '@/solver/store/Solver';
 import { ByproductNode } from './nodes/byproduct-node/ByproductNode';
 import { MachineNode } from './nodes/machine-node/MachineNode';
 import { ResourceNode } from './nodes/resource-node/ResourceNode';

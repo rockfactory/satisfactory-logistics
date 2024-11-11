@@ -1,7 +1,7 @@
 import { Anchor, Button, Container } from '@mantine/core';
 import { IconArrowLeft } from '@tabler/icons-react';
-import { Footer } from '../../layout/Footer';
-import { Header } from '../../layout/Header';
+import { Footer } from '@/layout/Footer';
+import { Header } from '@/layout/Header';
 
 export const PrivacyPolicy = () => {
   return (

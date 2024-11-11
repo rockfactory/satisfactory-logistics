@@ -6,7 +6,7 @@ import {
   getAllDefaultRecipesIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
 import { uniq, without } from 'lodash';
-import { createSlice } from '../../core/zustand-helpers/slices';
+import { createSlice } from '@/core/zustand-helpers/slices';
 import { SolverInstance, type SolverNodeState } from './Solver';
 
 export interface SolversSlice {

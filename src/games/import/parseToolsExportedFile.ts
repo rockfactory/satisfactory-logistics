@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import without from 'lodash/without';
 import pako from 'pako';
 import { v4 } from 'uuid';
-import type { SerializedGame } from '../store/gameFactoriesActions';
+import type { SerializedGame } from '@/games/store/gameFactoriesActions';
 import type {
   ToolsSerializedData,
   ToolsSerializedTab,

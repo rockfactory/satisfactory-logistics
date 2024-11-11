@@ -29,15 +29,15 @@ import {
   IconServerOff,
 } from '@tabler/icons-react';
 import { Fragment, useMemo, useState } from 'react';
-import { AllFactoryItemsMap } from '../../../recipes/FactoryItem';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import {
   AllFactoryRecipes,
   FactoryRecipe,
-} from '../../../recipes/FactoryRecipe';
+} from '@/recipes/FactoryRecipe';
 import {
   usePathSolverInstance,
   useSolverAllowedRecipes,
-} from '../../store/solverSelectors';
+} from '@/solver/store/solverSelectors';
 
 const AllRecipesGroupedByProduct = AllFactoryRecipes.reduce(
   (acc, recipe) => {

@@ -1,7 +1,7 @@
 import { log } from '@/core/logger/log';
 import { getWorldResourceMax, isWorldResource } from '@/recipes/WorldResources';
-import type { SolverProductionRequest } from '../solveProduction';
-import type { SolverContext } from '../SolverContext';
+import type { SolverProductionRequest } from '@/solver/algorithm/solveProduction';
+import type { SolverContext } from '@/solver/algorithm/SolverContext';
 
 const logger = log.getLogger('solver:production');
 logger.setLevel('info');
