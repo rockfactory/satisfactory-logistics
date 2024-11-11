@@ -9,7 +9,6 @@
     "build": "tsc && vite build",
     "check-types": "tsc --noEmit",
     "format": "prettier --write .",
-    "fix": "eslint src --fix",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "supabase:types": "npx supabase gen types typescript --project-id nymrtujjmzbhxcimjsci > ./src/core/database.types.ts",
