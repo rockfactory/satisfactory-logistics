@@ -18,6 +18,7 @@ import { FactoryOutput } from '../../Factory';
 import { useFactoryOnChangeHandler } from '../../store/factoriesSelectors';
 import { useIsFactoryVisible } from '../../useIsFactoryVisible';
 import { FactoryItemInput } from '../FactoryItemInput';
+import { FactoryNumberInput } from '../FactoryNumberInput';
 import { FactoryOutputObjectiveSelect } from './FactoryOutputObjectiveSelect';
 import classes from './FactoryOutputRow.module.css';
 
@@ -64,14 +65,15 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
             : null
         }
       >
-        <NumberInput
+        <FactoryNumberInput
           className={cx(classes.factoryOutputAmount, {
             [classes.factoryOutputAmountSomersloops]: !!output.somersloops,
           })}
           value={output.amount ?? 0}
-          w={100}
+          w={110}
           min={0}
-          rightSection={
+          allowNegative={false}
+          leftSection={
             item?.unit ? (
               <Text c="dimmed" size={'10'} pr={4}>
                 {item.unit}
@@ -101,8 +103,9 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       >
         <NumberInput
           value={output.somersloops ?? 0}
-          w={60}
+          w={80}
           min={0}
+          allowNegative={false}
           variant="filled"
           fw={!output.somersloops ? 'normal' : 'bold'}
           styles={{
@@ -118,7 +121,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
               somersloops: Number(value),
             });
           }}
-          rightSection={
+          leftSection={
             <Image
               src="/images/game/wat-1_256.png"
               alt="Somerloops"

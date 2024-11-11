@@ -2,7 +2,6 @@ import { LogisticTypeSelect } from '@/recipes/logistics/LogisticTypeSelect';
 import {
   ActionIcon,
   Group,
-  NumberInput,
   Popover,
   Text,
   TextInput,
@@ -23,6 +22,7 @@ import { Factory, FactoryInput, WORLD_SOURCE_ID } from '../../Factory';
 import { useFactoryOnChangeHandler } from '../../store/factoriesSelectors';
 import { useIsFactoryVisible } from '../../useIsFactoryVisible';
 import { FactoryItemInput } from '../FactoryItemInput';
+import { FactoryNumberInput } from '../FactoryNumberInput';
 import { FactorySelectInput } from '../FactorySelectInput';
 import { FactoryInputConstraintSelect } from './FactoryInputConstraintSelect';
 
@@ -140,11 +140,12 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         position="top-start"
         opened={focused}
       >
-        <NumberInput
+        <FactoryNumberInput
           value={input.amount ?? 0}
-          w={100}
+          w={110}
           min={0}
-          rightSection={
+          allowNegative={false}
+          leftSection={
             <FactoryInputIcon
               size={16}
               color={usage.percentage > 1 ? 'red' : undefined}
