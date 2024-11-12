@@ -85,27 +85,6 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
             description="If checked, imported recipes will be set as default for this game: new factories will have these recipes selected by default"
           />
 
-          {/* <FileButton
-            onChange={file => {
-              if (!file) {
-                return;
-              }
-
-              handleImport(file);
-            }}
-            accept=".sav"
-          >
-            {props => (
-              <Button
-                {...props}
-                leftSection={<IconCloudUpload size={16} />}
-                loading={importing}
-              >
-                Select Savegame
-              </Button>
-            )}
-          </FileButton> */}
-
           <Dropzone
             onDrop={files => {
               if (!files[0]) return;
@@ -118,7 +97,6 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
             style={{
               borderColor: 'var(--mantine-color-satisfactory-orange-5)',
             }}
-            bd="satisfactory-orange"
           >
             <Group justify="center" gap="md">
               <Dropzone.Idle>
