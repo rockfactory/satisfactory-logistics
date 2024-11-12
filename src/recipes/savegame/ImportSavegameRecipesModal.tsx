@@ -2,13 +2,15 @@ import {
   Button,
   Checkbox,
   Divider,
-  FileButton,
+  Group,
   Modal,
   Progress,
   Stack,
   Text,
+  ThemeIcon,
   Tooltip,
 } from '@mantine/core';
+import { Dropzone } from '@mantine/dropzone';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconCloudUpload } from '@tabler/icons-react';
@@ -83,7 +85,7 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
             description="If checked, imported recipes will be set as default for this game: new factories will have these recipes selected by default"
           />
 
-          <FileButton
+          {/* <FileButton
             onChange={file => {
               if (!file) {
                 return;
@@ -102,7 +104,33 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
                 Select Savegame
               </Button>
             )}
-          </FileButton>
+          </FileButton> */}
+
+          <Dropzone
+            onDrop={files => {
+              if (!files[0]) return;
+
+              handleImport(files[0]);
+            }}
+            accept={['.sav']}
+            multiple={false}
+            loading={importing}
+            style={{
+              borderColor: 'var(--mantine-color-satisfactory-orange-5)',
+            }}
+            bd="satisfactory-orange"
+          >
+            <Group justify="center" gap="md">
+              <Dropzone.Idle>
+                <ThemeIcon variant="transparent" c="satisfactory-orange">
+                  <IconCloudUpload size={20} />
+                </ThemeIcon>
+              </Dropzone.Idle>
+              <Text size="md" c="satisfactory-orange">
+                Click to upload or drag a save file here
+              </Text>
+            </Group>
+          </Dropzone>
 
           {importing && (
             <>
