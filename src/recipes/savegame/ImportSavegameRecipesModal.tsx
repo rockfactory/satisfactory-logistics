@@ -91,11 +91,19 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
 
               handleImport(files[0]);
             }}
-            accept={['.sav']}
             multiple={false}
             loading={importing}
             style={{
               borderColor: 'var(--mantine-color-satisfactory-orange-5)',
+            }}
+            validator={file => {
+              if (file.name && file.name.split('.').pop() === 'sav') {
+                return null;
+              }
+              return {
+                code: 'invalid-file-type',
+                message: 'Only accepts Satisfactory .sav files',
+              };
             }}
           >
             <Group justify="center" gap="md">
