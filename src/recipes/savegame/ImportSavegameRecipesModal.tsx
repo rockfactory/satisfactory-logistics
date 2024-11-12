@@ -99,11 +99,9 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
             }}
           >
             <Group justify="center" gap="md">
-              <Dropzone.Idle>
-                <ThemeIcon variant="transparent" c="satisfactory-orange">
-                  <IconCloudUpload size={20} />
-                </ThemeIcon>
-              </Dropzone.Idle>
+              <ThemeIcon variant="transparent" c="satisfactory-orange">
+                <IconCloudUpload size={20} />
+              </ThemeIcon>
               <Text size="md" c="satisfactory-orange">
                 Click to upload or drag a save file here
               </Text>
