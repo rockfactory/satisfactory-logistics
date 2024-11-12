@@ -48,7 +48,11 @@ export function SolverLayoutSaveButton(props: ISolverLayoutSaveButtonProps) {
     if (!isEqual(computeLayout, layout)) {
       logger.log('Layout has changed');
 
-      if (areSavedLayoutsCompatible(computedLayout, layout)) {
+      if (
+        // We want to save the layout if it's empty, since there is nothing to lose
+        Object.keys(layout ?? {}).length === 0 ||
+        areSavedLayoutsCompatible(computedLayout, layout)
+      ) {
         logger.log('Updating layout (compatible)');
         useStore.getState().setSolverLayout(solverId, computedLayout);
       } else {

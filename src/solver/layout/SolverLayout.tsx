@@ -317,6 +317,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         connectionLineType={ConnectionLineType.SmoothStep}
+        selectNodesOnDrag={false}
         // onNodeContextMenu={onNodeContextMenu}
         fitView
         snapToGrid
