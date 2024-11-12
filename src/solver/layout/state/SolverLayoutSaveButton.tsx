@@ -45,18 +45,12 @@ export function SolverLayoutSaveButton(props: ISolverLayoutSaveButtonProps) {
 
   useEffect(() => {
     const computedLayout = computeLayout(nodes);
-    if (!isEqual(computeLayout, layout)) {
-      logger.log('Layout has changed');
-
-      if (
-        // We want to save the layout if it's empty, since there is nothing to lose
-        Object.keys(layout ?? {}).length === 0 ||
-        areSavedLayoutsCompatible(computedLayout, layout)
-      ) {
-        logger.log('Updating layout (compatible)');
+    if (!isEqual(computedLayout, layout)) {
+      if (areSavedLayoutsCompatible(computedLayout, layout)) {
+        logger.log('Layout has changed: Updating layout (compatible)');
         useStore.getState().setSolverLayout(solverId, computedLayout);
       } else {
-        logger.log('Layout is not compatible with saved layout');
+        logger.log('Layout has changed: Not compatible with saved layout');
       }
     }
   }, [nodes, solverId]);

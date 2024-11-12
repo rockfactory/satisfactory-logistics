@@ -41,6 +41,7 @@ export function Header(props: HeaderProps) {
             <Link to="/factories">
               <Image
                 h={32}
+                miw={200}
                 w="auto"
                 src="/images/logo/satisfactory-logistics-logo.png"
                 alt="Satisfactory Logistics Planner"

@@ -1,4 +1,5 @@
 import { log } from '@/core/logger/log';
+import { useStore } from '@/core/zustand';
 import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
 import dagre from '@dagrejs/dagre';
 import { Box } from '@mantine/core';
@@ -23,6 +24,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import React, { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import type { SolutionNode } from '../algorithm/solveProduction';
 import { FloatingEdge } from '../edges/FloatingEdge';
 import { IngredientEdge } from '../edges/IngredientEdge';
@@ -32,14 +34,18 @@ import { ByproductNode } from './nodes/byproduct-node/ByproductNode';
 import { MachineNode } from './nodes/machine-node/MachineNode';
 import { ResourceNode } from './nodes/resource-node/ResourceNode';
 import classes from './SolverLayout.module.css';
-import { isSavedLayoutValid } from './state/isSavedLayoutValid';
+import {
+  areSolverLayoutsEqual,
+  computeSolverLayout,
+  isSavedLayoutValid,
+} from './state/isSavedLayoutValid';
 import { updateNodesWithLayoutState } from './state/updateNodesWithLayoutState';
 
 // const dagreGraph = new dagre.graphlib.Graph();
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const logger = log.getLogger('solver:layout');
-logger.setLevel('info');
+logger.setLevel('debug');
 
 const snapValueToGrid = (value: number) => Math.round(value / 10) * 10;
 const snapSizeToGrid = (value: number) => Math.round(value / 20) * 20;
@@ -110,6 +116,7 @@ const getLayoutedElements = (
   // graphOptions: dagre.configUnion,
 ) => {
   const useSavedLayout = isSavedLayoutValid(nodes, savedLayout);
+  logger.debug(`getLayouted: useSavedLayout=${useSavedLayout}`);
 
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -188,6 +195,7 @@ const edgeTypes = {
 };
 
 export const SolverLayout = (props: SolverLayoutProps) => {
+  const solverId = useParams<{ id: string }>().id;
   const savedLayout = usePathSolverLayout();
   const { fitView, getNodes, getEdges } = useReactFlow<SolutionNode, Edge>();
 
@@ -258,6 +266,12 @@ export const SolverLayout = (props: SolverLayoutProps) => {
       setNodes([...layouted.nodes]);
       setEdges([...layouted.edges]);
       setInitialLayoutFinished(true);
+
+      const computedLayout = computeSolverLayout(layouted.nodes);
+      if (!areSolverLayoutsEqual(savedLayout, computedLayout)) {
+        logger.debug('-> Updating saved layout');
+        useStore.getState().setSolverLayout(solverId!, computedLayout);
+      }
     }
 
     // 2. Nodes are initialized and layouted, so we can fit the view.
