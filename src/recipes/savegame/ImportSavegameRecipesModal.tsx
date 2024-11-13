@@ -30,6 +30,7 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
     value: 0,
     message: undefined as string | undefined,
   });
+  const [importError, setImportError] = useState<string | null>(null);
 
   const handleImport = (file: File) => {
     setImporting(true);
@@ -89,20 +90,39 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
             onDrop={files => {
               if (!files[0]) return;
 
+              // If we're here then files were valid types and accepted
+              setImportError(null);
+
               handleImport(files[0]);
             }}
+            onReject={fileRejections =>
+              fileRejections[0].errors[0].code === 'file-invalid-type'
+                ? setImportError(
+                    'Uploaded file is not a Satisfactory save file',
+                  )
+                : setImportError(fileRejections[0].errors[0].message)
+            }
+            accept={['.sav']}
             multiple={false}
             loading={importing}
             style={{
               borderColor: 'var(--mantine-color-satisfactory-orange-5)',
             }}
+            // This fixes the OS native file picker not filtering by the "accept" file type on click
+            // The underlying react-dropzone seems to be using a new File System Access API by default
+            // where this filtering doesn't work properly. This flag triggers the file picker
+            // using a programmatic click event on the file input
+            // The things we have to do for non-standard file types... :/
+            // https://github.com/react-dropzone/react-dropzone/issues/1265
+            useFsAccessApi={false}
             validator={file => {
+              // Checks if file type is a .sav file, the extension used by Satisfactory
               if (file.name && file.name.split('.').pop() === 'sav') {
                 return null;
               }
               return {
-                code: 'invalid-file-type',
-                message: 'Only accepts Satisfactory .sav files',
+                code: 'file-invalid-type',
+                message: 'Uploaded file is not a Satisfactory save file',
               };
             }}
           >
@@ -115,6 +135,11 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
               </Text>
             </Group>
           </Dropzone>
+          {importError ? (
+            <Text c={'red'} size="sm">
+              {importError}
+            </Text>
+          ) : null}
 
           {importing && (
             <>
