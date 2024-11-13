@@ -1,6 +1,7 @@
 import { log } from '@/core/logger/log';
 import type { SolverContext } from '@/solver/algorithm/SolverContext';
 import type { SolverResourceNode } from '@/solver/algorithm/SolverNode';
+import { isLinkBetweenPackagerAndUnpackager } from './isLinkBetweenPackagerAndUnpackager';
 
 const logger = log.getLogger('recipes:solver');
 logger.setLevel('info');
@@ -49,6 +50,12 @@ export function consolidateProductionConstraints(ctx: SolverContext) {
           logger.error('Invalid outbound node type', outbound, node);
           throw new Error('Invalid outbound node type');
         }
+
+        if (isLinkBetweenPackagerAndUnpackager(inbound, outbound)) {
+          logger.debug('Avoiding packager link', inbound, outbound);
+          continue;
+        }
+
         const [edge, inserted] = ctx.graph.mergeEdgeWithKey(
           ctx.encodeVar(`l_${inboundVar}_${outboundVar}`),
           inboundVar,
@@ -72,21 +79,29 @@ export function consolidateProductionConstraints(ctx: SolverContext) {
       const byproductVar =
         producer.type === 'output' ? producer.byproductVariable : null;
 
+      const allowedConsumers = consumers.filter(c => {
+        return ctx.graph.hasEdge(producerVar, c);
+      });
+
       ctx.constraints.push(
-        `${producerVar} ${consumers.length === 0 ? '' : ' - ' + consumers.map(consumerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} ${byproductVar ? `- ${byproductVar}` : ''} = 0`,
+        `${producerVar} ${allowedConsumers.length === 0 ? '' : ' - ' + allowedConsumers.map(consumerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} ${byproductVar ? `- ${byproductVar}` : ''} = 0`,
       );
     }
 
     // From producers P1, P2, P3 to consumer C
     for (const consumerVar of consumers) {
-      if (producers.length === 0) {
+      const allowedProducers = producers.filter(p => {
+        return ctx.graph.hasEdge(p, consumerVar);
+      });
+
+      if (allowedProducers.length === 0) {
         ctx.constraints.push(`${consumerVar} = 0`);
         continue;
       }
 
       const consumer = ctx.graph.getNodeAttributes(consumerVar);
       ctx.constraints.push(
-        `${consumerVar} - ${producers.map(producerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} = 0`,
+        `PROD_CONS_${consumerVar}: ${consumerVar} - ${allowedProducers.map(producerVar => ctx.encodeVar(`l_${producerVar}_${consumerVar}`)).join(' - ')} = 0`,
       );
     }
   }
