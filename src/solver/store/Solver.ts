@@ -17,6 +17,8 @@ export interface SolverNodeState {
   layoutIgnoreEdges?: boolean;
 }
 
+export type SolverLayoutState = Record<string, { x: number; y: number }>;
+
 export interface SolverInstance {
   /**
    * Equals to the factory ID if it's a factory
@@ -28,6 +30,7 @@ export interface SolverInstance {
   isFactory?: boolean;
   request: SolverRequest;
   nodes?: Record<string, SolverNodeState>;
+  layout?: SolverLayoutState;
   solution?: any; // TODO type this
 }
 

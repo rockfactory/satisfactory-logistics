@@ -1,9 +1,32 @@
+import { useFormOnChange } from '@/core/form/useFormOnChange';
 import { loglev } from '@/core/logger/log';
+import { useStore } from '@/core/zustand';
 import {
   useFactoryInputsOutputs,
   useFactorySimpleAttributes,
 } from '@/factories/store/factoriesSelectors';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
+import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
+import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
+import {
+  solveProduction,
+  useHighs,
+  type SolutionNode,
+} from '@/solver/algorithm/solveProduction';
+import type { SolverContext } from '@/solver/algorithm/SolverContext';
+import type { SolverEdge, SolverNode } from '@/solver/algorithm/SolverNode';
+import { SolverInspectorDrawer } from '@/solver/inspector/SolverInspectorDrawer';
+import { SolverSolutionProvider } from '@/solver/layout/solution-context/SolverSolutionContext';
+import { SolverLayout } from '@/solver/layout/SolverLayout';
+import { SolverLayoutButtons } from '@/solver/layout/state/SolverLayoutButtons';
+import { SolverShareButton } from '@/solver/share/SolverShareButton';
+import { SolverInstance } from '@/solver/store/Solver';
+import {
+  getSolverGame,
+  useCurrentSolverId,
+  usePathSolverInstance,
+  useSolverGameId,
+} from '@/solver/store/solverSelectors';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   Box,
@@ -28,28 +51,6 @@ import { HighsSolution } from 'highs';
 import { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { v4 } from 'uuid';
-import { useFormOnChange } from '@/core/form/useFormOnChange';
-import { useStore } from '@/core/zustand';
-import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
-import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
-import {
-  solveProduction,
-  useHighs,
-  type SolutionNode,
-} from '@/solver/algorithm/solveProduction';
-import type { SolverContext } from '@/solver/algorithm/SolverContext';
-import type { SolverEdge, SolverNode } from '@/solver/algorithm/SolverNode';
-import { SolverInspectorDrawer } from '@/solver/inspector/SolverInspectorDrawer';
-import { SolverSolutionProvider } from '@/solver/layout/solution-context/SolverSolutionContext';
-import { SolverLayout } from '@/solver/layout/SolverLayout';
-import { SolverShareButton } from '@/solver/share/SolverShareButton';
-import { SolverInstance } from '@/solver/store/Solver';
-import {
-  getSolverGame,
-  useCurrentSolverId,
-  usePathSolverInstance,
-  useSolverGameId,
-} from '@/solver/store/solverSelectors';
 import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
 import { SolverResetButton } from './SolverResetButton';
 import {
@@ -102,8 +103,6 @@ export function SolverPage(props: ISolverPageProps) {
     });
   }, [instance, factory, id, params.id, navigate]);
 
-  logger.log('SolverPage', instance, id);
-
   const updater = useMemo(
     () => (path: Path<SolverInstance>, value: string | null | number) => {
       useStore.getState().updateSolver(id!, state => {
@@ -115,6 +114,11 @@ export function SolverPage(props: ISolverPageProps) {
 
   const onChangeHandler = useFormOnChange<SolverInstance>(updater);
 
+  /**
+   * This is the main entry point for the solver algorithm.
+   * It will compute the solution and suggestions based on the current
+   * instance and inputs/outputs.
+   */
   const { solution, suggestions } = useMemo(() => {
     let suggestions: ISolverSolutionSuggestion = {};
     if (!instance?.request || !highsRef.current || loading) {
@@ -139,6 +143,8 @@ export function SolverPage(props: ISolverPageProps) {
       );
     }
 
+    logger.log('hasSolution =', isSolutionFound(solution));
+
     return { solution, suggestions };
     // We don't want to re-run computation if instance changes, only if its request changes
   }, [highsRef, instance?.request, instance?.nodes, inputsOutputs, loading]);
@@ -160,8 +166,6 @@ export function SolverPage(props: ISolverPageProps) {
   }
 
   const hasSolution = isSolutionFound(solution);
-
-  logger.log('hasSolution =', hasSolution);
 
   return (
     <Box w="100%" pos="relative">
@@ -229,6 +233,7 @@ export function SolverPage(props: ISolverPageProps) {
                   <Group gap="xs">
                     <SolverSummaryDrawer solution={solution} />
                     <SolverShareButton />
+                    <SolverLayoutButtons solution={solution} />
                     {import.meta.env.DEV && (
                       <SolverInspectorDrawer solution={solution} />
                     )}

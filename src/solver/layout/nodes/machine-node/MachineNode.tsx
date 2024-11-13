@@ -244,7 +244,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                   />
                 )}
               </Group>
-              <Text size="sm">
+              <Text component="div" size="sm">
                 <Group gap="xl">
                   <Group gap={4} align="center">
                     <IconClockBolt size={16} /> {recipe.time}s
