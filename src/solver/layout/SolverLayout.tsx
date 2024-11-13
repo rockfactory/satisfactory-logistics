@@ -48,7 +48,7 @@ import { updateNodesWithLayoutState } from './state/updateNodesWithLayoutState';
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
 
 const logger = log.getLogger('solver:layout');
-logger.setLevel('debug');
+logger.setLevel('info');
 
 const snapValueToGrid = (value: number) => Math.round(value / 10) * 10;
 const snapSizeToGrid = (value: number) => Math.round(value / 20) * 20;
