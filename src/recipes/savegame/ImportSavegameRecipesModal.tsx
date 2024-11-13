@@ -96,6 +96,8 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
               handleImport(files[0]);
             }}
             onReject={fileRejections =>
+              // This check is because the default error message is "File type must be .sav"
+              // which is a bit too vague IMO
               fileRejections[0].errors[0].code === 'file-invalid-type'
                 ? setImportError(
                     'Uploaded file is not a Satisfactory save file',
