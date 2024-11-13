@@ -43,6 +43,7 @@ import {
   isSavedLayoutValid,
 } from './state/savedSolverLayoutUtils';
 import { updateNodesWithLayoutState } from './state/updateNodesWithLayoutState';
+import { usePreviousSolverLayoutStates } from './state/usePreviousSolverLayoutStates';
 
 // const dagreGraph = new dagre.graphlib.Graph();
 // dagreGraph.setDefaultEdgeLabel(() => ({}));
@@ -112,13 +113,17 @@ function getNodeComputedPosition(
   };
 }
 
+/**
+ * @prop activeLayout - The layout state to use. If null, the layout will be computed. Could be
+ *  used to restore a previous layout.
+ */
 const getLayoutedElements = (
   nodes: SolutionNode[],
   edges: Edge[],
-  savedLayout: SolverLayoutState | null | undefined,
+  activeLayout: SolverLayoutState | null | undefined,
   // graphOptions: dagre.configUnion,
 ) => {
-  const useSavedLayout = isSavedLayoutValid(nodes, savedLayout);
+  const useSavedLayout = activeLayout != null;
   logger.debug(`getLayouted: useSavedLayout=${useSavedLayout}`);
 
   const dagreGraph = new dagre.graphlib.Graph();
@@ -162,7 +167,7 @@ const getLayoutedElements = (
         node,
         // We _could_ use the save layout always, but we want to restore to
         // computed layout if atleast one node changes.
-        useSavedLayout ? savedLayout[node.id] : undefined,
+        useSavedLayout ? activeLayout[node.id] : undefined,
       );
 
       const newNode = {
@@ -253,6 +258,9 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.edges, props.nodes, setEdges, setNodes]);
 
+  const { getCompatiblePreviousLayout, cachePreviousLayout } =
+    usePreviousSolverLayoutStates();
+
   useEffect(() => {
     // We can't trust `nodesInitialized` to be true, because it's updated later in the loop.
     // We need to check if the nodes have real measurements.
@@ -270,7 +278,22 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     // 1B. Nodes are initialized, but the layout has been reset.
     if (shouldRelayout) {
       logger.info(`-> Layouting (initial layout in progress)`); // prettier-ignore
-      const layouted = getLayoutedElements(getNodes(), getEdges(), savedLayout);
+
+      // Find the layout to use. If the saved layout is not valid, we use the
+      // previous layout that is compatible with the current nodes.
+      // If no previous layout is compatible, we use the computed layout.
+      const activeLayout =
+        savedLayout == null
+          ? null
+          : isSavedLayoutValid(nodes, savedLayout)
+            ? savedLayout
+            : getCompatiblePreviousLayout(nodes);
+
+      const layouted = getLayoutedElements(
+        getNodes(),
+        getEdges(),
+        activeLayout,
+      );
 
       setNodes([...layouted.nodes]);
       setEdges([...layouted.edges]);
@@ -308,6 +331,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     savedLayout,
     initialLayoutFinished,
     initialFitViewFinished,
+    getCompatiblePreviousLayout,
   ]);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -326,15 +350,15 @@ export const SolverLayout = (props: SolverLayoutProps) => {
 
       if (Object.values(updatedLayout).every(p => p.x == 0 && p.y == 0)) return;
 
-      if (
-        !isEqual(updatedLayout, savedLayout) &&
-        areSavedLayoutsCompatible(updatedLayout, savedLayout)
-      ) {
-        // logger.log('Layout has changed: Updating layout (compatible)');
-        useStore.getState().setSolverLayout(solverId!, updatedLayout);
+      if (!isEqual(updatedLayout, savedLayout)) {
+        if (areSavedLayoutsCompatible(updatedLayout, savedLayout)) {
+          useStore.getState().setSolverLayout(solverId!, updatedLayout);
+        } else if (savedLayout != null) {
+          cachePreviousLayout(savedLayout);
+        }
       }
     },
-    [getNodes, onNodesChange, savedLayout, solverId],
+    [cachePreviousLayout, getNodes, onNodesChange, savedLayout, solverId],
   );
 
   // Context menu
