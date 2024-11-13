@@ -42,6 +42,7 @@ import type { SolverEdge, SolverNode } from '../algorithm/SolverNode';
 import { SolverInspectorDrawer } from '../inspector/SolverInspectorDrawer';
 import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
 import { SolverLayout } from '../layout/SolverLayout';
+import { SolverLayoutButtons } from '../layout/state/SolverLayoutButtons';
 import { SolverShareButton } from '../share/SolverShareButton';
 import { SolverInstance } from '../store/Solver';
 import {
@@ -102,8 +103,6 @@ export function SolverPage(props: ISolverPageProps) {
     });
   }, [instance, factory, id, params.id, navigate]);
 
-  logger.log('SolverPage', instance, id);
-
   const updater = useMemo(
     () => (path: Path<SolverInstance>, value: string | null | number) => {
       useStore.getState().updateSolver(id!, state => {
@@ -115,6 +114,11 @@ export function SolverPage(props: ISolverPageProps) {
 
   const onChangeHandler = useFormOnChange<SolverInstance>(updater);
 
+  /**
+   * This is the main entry point for the solver algorithm.
+   * It will compute the solution and suggestions based on the current
+   * instance and inputs/outputs.
+   */
   const { solution, suggestions } = useMemo(() => {
     let suggestions: ISolverSolutionSuggestion = {};
     if (!instance?.request || !highsRef.current || loading) {
@@ -139,6 +143,8 @@ export function SolverPage(props: ISolverPageProps) {
       );
     }
 
+    logger.log('hasSolution =', isSolutionFound(solution));
+
     return { solution, suggestions };
     // We don't want to re-run computation if instance changes, only if its request changes
   }, [highsRef, instance?.request, instance?.nodes, inputsOutputs, loading]);
@@ -160,8 +166,6 @@ export function SolverPage(props: ISolverPageProps) {
   }
 
   const hasSolution = isSolutionFound(solution);
-
-  logger.log('hasSolution =', hasSolution);
 
   return (
     <Box w="100%" pos="relative">
@@ -229,6 +233,7 @@ export function SolverPage(props: ISolverPageProps) {
                   <Group gap="xs">
                     <SolverSummaryDrawer solution={solution} />
                     <SolverShareButton />
+                    <SolverLayoutButtons solution={solution} />
                     {import.meta.env.DEV && (
                       <SolverInspectorDrawer solution={solution} />
                     )}
