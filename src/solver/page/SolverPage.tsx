@@ -42,7 +42,7 @@ import type { SolverEdge, SolverNode } from '../algorithm/SolverNode';
 import { SolverInspectorDrawer } from '../inspector/SolverInspectorDrawer';
 import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
 import { SolverLayout } from '../layout/SolverLayout';
-import { SolverLayoutSaveButton } from '../layout/state/SolverLayoutSaveButton';
+import { SolverLayoutButtons } from '../layout/state/SolverLayoutButtons';
 import { SolverShareButton } from '../share/SolverShareButton';
 import { SolverInstance } from '../store/Solver';
 import {
@@ -114,6 +114,11 @@ export function SolverPage(props: ISolverPageProps) {
 
   const onChangeHandler = useFormOnChange<SolverInstance>(updater);
 
+  /**
+   * This is the main entry point for the solver algorithm.
+   * It will compute the solution and suggestions based on the current
+   * instance and inputs/outputs.
+   */
   const { solution, suggestions } = useMemo(() => {
     let suggestions: ISolverSolutionSuggestion = {};
     if (!instance?.request || !highsRef.current || loading) {
@@ -228,7 +233,7 @@ export function SolverPage(props: ISolverPageProps) {
                   <Group gap="xs">
                     <SolverSummaryDrawer solution={solution} />
                     <SolverShareButton />
-                    <SolverLayoutSaveButton solution={solution} />
+                    <SolverLayoutButtons solution={solution} />
                     {import.meta.env.DEV && (
                       <SolverInspectorDrawer solution={solution} />
                     )}

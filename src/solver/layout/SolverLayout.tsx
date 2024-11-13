@@ -20,10 +20,12 @@ import {
   useNodesInitialized,
   useNodesState,
   useReactFlow,
+  type OnNodesChange,
   type XYPosition,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import React, { useEffect, useRef, useState } from 'react';
+import { isEqual } from 'lodash';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import type { SolutionNode } from '../algorithm/solveProduction';
 import { FloatingEdge } from '../edges/FloatingEdge';
@@ -35,10 +37,11 @@ import { MachineNode } from './nodes/machine-node/MachineNode';
 import { ResourceNode } from './nodes/resource-node/ResourceNode';
 import classes from './SolverLayout.module.css';
 import {
+  areSavedLayoutsCompatible,
   areSolverLayoutsEqual,
   computeSolverLayout,
   isSavedLayoutValid,
-} from './state/isSavedLayoutValid';
+} from './state/savedSolverLayoutUtils';
 import { updateNodesWithLayoutState } from './state/updateNodesWithLayoutState';
 
 // const dagreGraph = new dagre.graphlib.Graph();
@@ -253,19 +256,30 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   useEffect(() => {
     // We can't trust `nodesInitialized` to be true, because it's updated later in the loop.
     // We need to check if the nodes have real measurements.
-    const hasRealMeasurements =
-      nodes[0]?.measured?.width && nodes[0]?.measured?.height;
-    logger.debug(`Check for re-layout: nodesInitialized=${nodesInitialized}, initialLayoutFinished=${initialLayoutFinished} hasRealMeasurements=${hasRealMeasurements}`); // prettier-ignore
+    const isMeasured =
+      nodesInitialized &&
+      nodes[0]?.measured?.width &&
+      nodes[0]?.measured?.height;
 
-    // 1. Nodes are initialized, so we can layout them.
-    if (nodesInitialized && hasRealMeasurements && !initialLayoutFinished) {
+    // logger.debug(`Check for re-layout: nodesInitialized=${nodesInitialized}, initialLayoutFinished=${initialLayoutFinished} hasRealMeasurements=${isMeasured}`); // prettier-ignore
+
+    const shouldRelayout =
+      isMeasured && (!initialLayoutFinished || savedLayout == null);
+
+    // 1. Nodes are initialized, so we can layout them. or
+    // 1B. Nodes are initialized, but the layout has been reset.
+    if (shouldRelayout) {
       logger.info(`-> Layouting (initial layout in progress)`); // prettier-ignore
-      logger.debug('Layouting...');
       const layouted = getLayoutedElements(getNodes(), getEdges(), savedLayout);
 
       setNodes([...layouted.nodes]);
       setEdges([...layouted.edges]);
       setInitialLayoutFinished(true);
+
+      // Re-fit view if the layout has been reset
+      if (savedLayout == null) {
+        setInitialFitViewFinished(false);
+      }
 
       const computedLayout = computeSolverLayout(layouted.nodes);
       if (!areSolverLayoutsEqual(savedLayout, computedLayout)) {
@@ -275,7 +289,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     }
 
     // 2. Nodes are initialized and layouted, so we can fit the view.
-    if (nodesInitialized && initialLayoutFinished && !initialFitViewFinished) {
+    if (isMeasured && initialLayoutFinished && !initialFitViewFinished) {
       logger.debug('-> Fitting view...');
       setInitialFitViewFinished(true);
       if (nodes.length > 0 && !previousFittedWithNodes.current) {
@@ -297,6 +311,31 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   ]);
 
   const ref = useRef<HTMLDivElement>(null);
+
+  /**
+   * On nodes change, we need to update the layout state and
+   * save it.
+   * If the layout is not valid (all zeros), we don't save it since
+   * this means the layout is not initialized yet.
+   */
+  const handleNodesChange: OnNodesChange<SolutionNode> = useCallback(
+    changes => {
+      onNodesChange(changes);
+
+      const updatedLayout = computeSolverLayout(getNodes());
+
+      if (Object.values(updatedLayout).every(p => p.x == 0 && p.y == 0)) return;
+
+      if (
+        !isEqual(updatedLayout, savedLayout) &&
+        areSavedLayoutsCompatible(updatedLayout, savedLayout)
+      ) {
+        // logger.log('Layout has changed: Updating layout (compatible)');
+        useStore.getState().setSolverLayout(solverId!, updatedLayout);
+      }
+    },
+    [getNodes, onNodesChange, savedLayout, solverId],
+  );
 
   // Context menu
   // const onNodeContextMenu = useCallback(
@@ -328,7 +367,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         edges={edges}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        onNodesChange={onNodesChange}
+        onNodesChange={handleNodesChange}
         onEdgesChange={onEdgesChange}
         connectionLineType={ConnectionLineType.SmoothStep}
         selectNodesOnDrag={false}

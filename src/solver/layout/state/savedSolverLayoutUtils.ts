@@ -30,16 +30,6 @@ export function areSolverLayoutsEqual(
   );
 }
 
-export function isFirstLayoutInProgress(nodes: SolutionNode[]) {
-  return (
-    layout != null &&
-    xor(
-      nodes.map(node => node.id),
-      Object.keys(layout),
-    ).length === 0
-  );
-}
-
 export function areSavedLayoutsCompatible(
   previousLayout: SolverLayoutState | null | undefined,
   savedLayout: SolverLayoutState | null | undefined,
