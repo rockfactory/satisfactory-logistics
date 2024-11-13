@@ -20,6 +20,7 @@
     "@etothepii/satisfactory-file-parser": "^2.0.1",
     "@mantine/colors-generator": "^7.13.4",
     "@mantine/core": "7.13.4",
+    "@mantine/dropzone": "^7.13.4",
     "@mantine/hooks": "7.13.4",
     "@mantine/modals": "^7.13.4",
     "@mantine/notifications": "^7.13.4",

@@ -2,13 +2,15 @@ import {
   Button,
   Checkbox,
   Divider,
-  FileButton,
+  Group,
   Modal,
   Progress,
   Stack,
   Text,
+  ThemeIcon,
   Tooltip,
 } from '@mantine/core';
+import { Dropzone } from '@mantine/dropzone';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconCloudUpload } from '@tabler/icons-react';
@@ -28,6 +30,7 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
     value: 0,
     message: undefined as string | undefined,
   });
+  const [importError, setImportError] = useState<string | null>(null);
 
   const handleImport = (file: File) => {
     setImporting(true);
@@ -83,26 +86,62 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
             description="If checked, imported recipes will be set as default for this game: new factories will have these recipes selected by default"
           />
 
-          <FileButton
-            onChange={file => {
-              if (!file) {
-                return;
-              }
+          <Dropzone
+            onDrop={files => {
+              if (!files[0]) return;
 
-              handleImport(file);
+              // If we're here then files were valid types and accepted
+              setImportError(null);
+
+              handleImport(files[0]);
             }}
-            accept=".sav"
+            onReject={fileRejections =>
+              // This check is because the default error message is "File type must be .sav"
+              // which is a bit too vague IMO
+              fileRejections[0].errors[0].code === 'file-invalid-type'
+                ? setImportError(
+                    'Uploaded file is not a Satisfactory save file',
+                  )
+                : setImportError(fileRejections[0].errors[0].message)
+            }
+            accept={['.sav']}
+            multiple={false}
+            loading={importing}
+            style={{
+              borderColor: 'var(--mantine-color-satisfactory-orange-5)',
+            }}
+            // This fixes the OS native file picker not filtering by the "accept" file type on click
+            // The underlying react-dropzone seems to be using a new File System Access API by default
+            // where this filtering doesn't work properly. This flag triggers the file picker
+            // using a programmatic click event on the file input
+            // The things we have to do for non-standard file types... :/
+            // https://github.com/react-dropzone/react-dropzone/issues/1265
+            useFsAccessApi={false}
+            validator={file => {
+              // Checks if file type is a .sav file, the extension used by Satisfactory
+              if (file.name && file.name.split('.').pop() === 'sav') {
+                return null;
+              }
+              return {
+                code: 'file-invalid-type',
+                message: 'Uploaded file is not a Satisfactory save file',
+              };
+            }}
           >
-            {props => (
-              <Button
-                {...props}
-                leftSection={<IconCloudUpload size={16} />}
-                loading={importing}
-              >
-                Select Savegame
-              </Button>
-            )}
-          </FileButton>
+            <Group justify="center" gap="md">
+              <ThemeIcon variant="transparent" c="satisfactory-orange">
+                <IconCloudUpload size={20} />
+              </ThemeIcon>
+              <Text size="md" c="satisfactory-orange">
+                Click to upload or drag a save file here
+              </Text>
+            </Group>
+          </Dropzone>
+          {importError ? (
+            <Text c={'red'} size="sm">
+              {importError}
+            </Text>
+          ) : null}
 
           {importing && (
             <>
