@@ -45,7 +45,7 @@ export function ResourceNodeExtractorDetail(
             </Text>
           </Table.Td>
           <Table.Td colSpan={2}>
-            <Text size="sm" fw="bold">
+            <Text component="div" size="sm" fw="bold">
               <Group align="center" gap={2}>
                 <FactoryItemImage
                   id={'Desc_CrystalShard_C' as FactoryItemId}

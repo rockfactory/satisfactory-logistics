@@ -64,7 +64,7 @@ export function ResourceNodeInput(props: IResourceNodeInputProps) {
         )}
       </Group>
 
-      <Text size="sm">
+      <Text component="div" size="sm">
         <Group gap="md">
           <Group gap={4} align="center">
             <FactoryInputIcon size={16} />
