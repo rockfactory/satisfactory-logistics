@@ -1,5 +1,5 @@
-import { useStore } from '../../core/zustand';
-import { AfterHeaderSticky } from '../../layout/AfterHeaderSticky';
+import { useStore } from '@/core/zustand';
+import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import { FactoriesFiltersSection } from './FactoriesFiltersSection';
 
 export interface IFactoriesFiltersMenuProps {}

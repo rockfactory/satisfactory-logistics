@@ -1,15 +1,15 @@
 import { last } from 'lodash';
-import { log } from '../../../core/logger/log';
-import { AllFactoryBuildingsMap } from '../../../recipes/FactoryBuilding';
-import { AllFactoryItemsMap } from '../../../recipes/FactoryItem';
-import { getAllRecipesForItem } from '../../../recipes/FactoryRecipe';
-import { isWorldResource } from '../../../recipes/WorldResources';
+import { log } from '@/core/logger/log';
+import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
+import { getAllRecipesForItem } from '@/recipes/FactoryRecipe';
+import { isWorldResource } from '@/recipes/WorldResources';
 import {
   type SolverContext,
   setGraphByproduct,
   setGraphResource,
-} from '../SolverContext';
-import type { SolverOutputNode } from '../SolverNode';
+} from '@/solver/algorithm/SolverContext';
+import type { SolverOutputNode } from '@/solver/algorithm/SolverNode';
 
 const logger = log.getLogger('recipes:solver');
 logger.setLevel('info');

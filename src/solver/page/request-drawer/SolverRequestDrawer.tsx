@@ -10,7 +10,7 @@ import {
 } from '@tabler/icons-react';
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import type { ISolverSolution } from '../SolverPage';
+import type { ISolverSolution } from '@/solver/page/SolverPage';
 import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
 import { SolverLimitationsDrawer } from './SolverLimitationsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';

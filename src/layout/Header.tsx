@@ -11,7 +11,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { capitalize } from 'lodash';
 import { Link } from 'react-router-dom';
-import { UserMenu } from '../auth/UserMenu';
+import { UserMenu } from '@/auth/UserMenu';
 import classes from './Header.module.css';
 
 interface HeaderProps {

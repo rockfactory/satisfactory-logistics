@@ -11,10 +11,10 @@ import {
   IconSearch,
   IconTextGrammar,
 } from '@tabler/icons-react';
-import { useStore } from '../../core/zustand';
-import { GameSettingsModal } from '../../games/settings/GameSettingsModal';
-import { GameFactoriesExpandActionIcon } from '../components/expand/GameFactoriesExpandActionIcon';
-import { FactoryItemInput } from '../inputs/FactoryItemInput';
+import { useStore } from '@/core/zustand';
+import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
+import { GameFactoriesExpandActionIcon } from '@/factories/components/expand/GameFactoriesExpandActionIcon';
+import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
 
 export interface IFactoriesFiltersSectionProps {}
 

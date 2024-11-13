@@ -1,7 +1,7 @@
 import { ActionIcon, Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconEye } from '@tabler/icons-react';
-import { FactoryOutput } from '../../Factory';
+import { FactoryOutput } from '@/factories/Factory';
 import { OutputDependenciesTable } from './OutputDependenciesTable';
 
 export interface IOutputDependenciesPeekModalProps {

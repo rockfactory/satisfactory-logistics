@@ -1,8 +1,8 @@
 import { Anchor, Button, Container, Divider, Group, Text } from '@mantine/core';
 import { IconBrandDiscord, IconBrandGithub } from '@tabler/icons-react';
 import clsx from 'clsx';
-import { FeedbackButton } from '../third-party/FeedbackButton';
-import { KofiSupportButton } from '../third-party/KofiSupportButton';
+import { FeedbackButton } from '@/third-party/FeedbackButton';
+import { KofiSupportButton } from '@/third-party/KofiSupportButton';
 import classes from './Footer.module.css';
 
 const links = [

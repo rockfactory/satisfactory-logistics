@@ -19,8 +19,8 @@ import {
 } from '@xyflow/react';
 import { last } from 'lodash';
 import { FC } from 'react';
-import { RepeatingNumber } from '../../core/intl/NumberFormatter';
-import { FactoryItem, FactoryItemForm } from '../../recipes/FactoryItem';
+import { RepeatingNumber } from '@/core/intl/NumberFormatter';
+import { FactoryItem, FactoryItemForm } from '@/recipes/FactoryItem';
 import { getEdgeParams, getSpecialPath } from './utils';
 
 export interface IIngredientEdgeData {

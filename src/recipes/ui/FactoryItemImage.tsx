@@ -1,5 +1,5 @@
 import { Image } from '@mantine/core';
-import { AllFactoryItemsMap } from '../FactoryItem';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 
 export interface IFactoryItemImageProps {
   id: string | null | undefined;

@@ -1,5 +1,5 @@
-import { AllFactoryRecipes } from '../FactoryRecipe';
-import { isWorldResource } from '../WorldResources';
+import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
+import { isWorldResource } from '@/recipes/WorldResources';
 import { isDefaultRecipe, isMAMRecipe } from './SchematicGraph';
 
 export function getAllDefaultRecipesIds() {

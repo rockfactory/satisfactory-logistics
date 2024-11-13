@@ -15,13 +15,13 @@ import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconCheck, IconCopy, IconShare } from '@tabler/icons-react';
 import { useCallback, useState } from 'react';
-import { useSession } from '../../auth/authSelectors';
-import { LoginModal } from '../../auth/LoginModal';
-import { Json } from '../../core/database.types';
-import { supabaseClient } from '../../core/supabase';
-import { useStore } from '../../core/zustand';
-import { sharedSolverUUIDTranslator, SolverInstance } from '../store/Solver';
-import { usePathSolverInstance } from '../store/solverSelectors';
+import { useSession } from '@/auth/authSelectors';
+import { LoginModal } from '@/auth/LoginModal';
+import { Json } from '@/core/database.types';
+import { supabaseClient } from '@/core/supabase';
+import { useStore } from '@/core/zustand';
+import { sharedSolverUUIDTranslator, SolverInstance } from '@/solver/store/Solver';
+import { usePathSolverInstance } from '@/solver/store/solverSelectors';
 
 export interface ISharedSolverData {
   instance: SolverInstance;

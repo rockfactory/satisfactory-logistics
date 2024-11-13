@@ -9,8 +9,8 @@ import {
 import { IconWorld } from '@tabler/icons-react';
 import React, { useCallback, useMemo } from 'react';
 import { useShallow } from 'zustand/shallow';
-import { useStore } from '../../core/zustand';
-import { WORLD_SOURCE_ID } from '../Factory';
+import { useStore } from '@/core/zustand';
+import { WORLD_SOURCE_ID } from '@/factories/Factory';
 
 export interface IFactorySelectInputProps extends SelectProps {
   exceptId?: string;

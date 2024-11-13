@@ -10,14 +10,14 @@ import {
 import { IconTrash } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
-import { useStore } from '../../../core/zustand';
-import { FactoryOutputIcon } from '../../components/peek/icons/OutputInputIcons';
-import { OutputDependenciesPeekModal } from '../../components/peek/OutputDependenciesPeekModal';
-import { FactoryUsage } from '../../components/usage/FactoryUsage';
-import { FactoryOutput } from '../../Factory';
-import { useFactoryOnChangeHandler } from '../../store/factoriesSelectors';
-import { useIsFactoryVisible } from '../../useIsFactoryVisible';
-import { FactoryItemInput } from '../FactoryItemInput';
+import { useStore } from '@/core/zustand';
+import { FactoryOutputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
+import { OutputDependenciesPeekModal } from '@/factories/components/peek/OutputDependenciesPeekModal';
+import { FactoryUsage } from '@/factories/components/usage/FactoryUsage';
+import { FactoryOutput } from '@/factories/Factory';
+import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
+import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
+import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
 import { FactoryOutputObjectiveSelect } from './FactoryOutputObjectiveSelect';
 import classes from './FactoryOutputRow.module.css';
 

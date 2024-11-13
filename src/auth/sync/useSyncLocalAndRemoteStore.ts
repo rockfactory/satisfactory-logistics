@@ -1,11 +1,11 @@
 import { serializeGame } from '@/games/store/gameFactoriesActions';
 import { notifications } from '@mantine/notifications';
-import { Json } from '../../core/database.types';
-import { supabaseClient } from '../../core/supabase';
-import { useStore } from '../../core/zustand';
-import { Factory } from '../../factories/Factory';
-import { Game } from '../../games/Game';
-import { SolverInstance } from '../../solver/store/Solver';
+import { Json } from '@/core/database.types';
+import { supabaseClient } from '@/core/supabase';
+import { useStore } from '@/core/zustand';
+import { Factory } from '@/factories/Factory';
+import { Game } from '@/games/Game';
+import { SolverInstance } from '@/solver/store/Solver';
 
 export interface ISerializedState {
   // We serialize only the _current_ state, not the whole state with undo history

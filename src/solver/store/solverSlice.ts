@@ -1,4 +1,5 @@
 import { toggleAsSet } from '@/core/state-utils/toggleAsSet';
+import { createSlice } from '@/core/zustand-helpers/slices';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import {
   getAllAlternateRecipeIds,
@@ -6,7 +7,6 @@ import {
   getAllDefaultRecipesIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
 import { uniq, without } from 'lodash';
-import { createSlice } from '../../core/zustand-helpers/slices';
 import {
   SolverInstance,
   type SolverLayoutState,

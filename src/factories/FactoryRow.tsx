@@ -13,8 +13,8 @@ import { IconCalculator, IconTrash } from '@tabler/icons-react';
 import * as React from 'react';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { useFormOnChange } from '../core/form/useFormOnChange';
-import { useStore } from '../core/zustand';
+import { useFormOnChange } from '@/core/form/useFormOnChange';
+import { useStore } from '@/core/zustand';
 import { FactoryExpandActionIcon } from './components/expand/FactoryExpandActionIcon';
 import {
   FactoryInputIcon,

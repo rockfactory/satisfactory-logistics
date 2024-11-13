@@ -3,8 +3,8 @@ import { migrateSerializedGameWithPlan } from '@/core/migrations/planner/StoreMi
 import { storeMigrationV2 } from '@/core/migrations/v2';
 import type { RootState } from '@/core/zustand';
 import { createActions } from '@/core/zustand-helpers/actions';
-import type { GameRemoteData } from '../Game';
-import type { RemoteLoadedGamesList } from '../save/loadRemoteGamesList';
+import type { GameRemoteData } from '@/games/Game';
+import type { RemoteLoadedGamesList } from '@/games/save/loadRemoteGamesList';
 import type { SerializedGame } from './gameFactoriesActions';
 
 const logger = loglev.getLogger('games:remote');

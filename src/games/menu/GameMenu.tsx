@@ -17,9 +17,9 @@ import cx from 'clsx';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
-import { loadRemoteGame } from '../save/loadRemoteGame';
-import { loadRemoteGamesList } from '../save/loadRemoteGamesList';
-import { saveRemoteGame } from '../save/saveRemoteGame';
+import { loadRemoteGame } from '@/games/save/loadRemoteGame';
+import { loadRemoteGamesList } from '@/games/save/loadRemoteGamesList';
+import { saveRemoteGame } from '@/games/save/saveRemoteGame';
 import { GameDetailModal } from './GameDetailModal';
 import classes from './GameMenu.module.css';
 

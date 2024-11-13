@@ -15,13 +15,13 @@ import {
   IconPlus,
 } from '@tabler/icons-react';
 import { useState } from 'react';
-import { useSession } from '../auth/authSelectors';
+import { useSession } from '@/auth/authSelectors';
 // import { loadFromRemote } from '../auth/sync/loadFromRemote';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
-import { useStore } from '../core/zustand';
-import { useGameFactoriesIds } from '../games/gamesSlice';
-import { GameSettingsModal } from '../games/settings/GameSettingsModal';
+import { useStore } from '@/core/zustand';
+import { useGameFactoriesIds } from '@/games/gamesSlice';
+import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import classes from './FactoriesTab.module.css';
 import { FactoryRow } from './FactoryRow';
 import { FactoriesFiltersMenu } from './filters/FactoriesFiltersMenu';

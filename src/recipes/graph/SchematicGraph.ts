@@ -1,10 +1,10 @@
 import Graph from 'graphology';
 import { bfsFromNode } from 'graphology-traversal';
-import { AllFactoryRecipesMap, type FactoryRecipe } from '../FactoryRecipe';
+import { AllFactoryRecipesMap, type FactoryRecipe } from '@/recipes/FactoryRecipe';
 import {
   AllFactorySchematics,
   type FactorySchematic,
-} from '../FactorySchematic';
+} from '@/recipes/FactorySchematic';
 
 type SchematicNode =
   | {
