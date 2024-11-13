@@ -1,11 +1,11 @@
-import type { SolverInstance } from '@/solver/store/Solver';
-import dayjs from 'dayjs';
-import { cloneDeep, omit } from 'lodash';
-import { v4 } from 'uuid';
 import { useStore } from '@/core/zustand';
 import { createActions } from '@/core/zustand-helpers/actions';
 import { Factory } from '@/factories/Factory';
 import { Game } from '@/games/Game';
+import type { SolverInstance } from '@/solver/store/Solver';
+import dayjs from 'dayjs';
+import { cloneDeep, omit } from 'lodash';
+import { v4 } from 'uuid';
 
 export const gameFactoriesActions = createActions({
   initGame: (game: Partial<Game>) => state => {
@@ -69,6 +69,9 @@ export const gameFactoriesActions = createActions({
       state.games.games[state.games.selected!].factoriesIds.indexOf(factoryId);
     state.games.games[state.games.selected!].factoriesIds.splice(index, 1);
     delete state.factories.factories[factoryId];
+    if (state.solvers.instances[factoryId]) {
+      delete state.solvers.instances[factoryId];
+    }
   },
   removeGame: (gameId: string) => state => {
     const game = state.games.games[gameId ?? ''];

@@ -89,9 +89,10 @@ export function SolverPage(props: ISolverPageProps) {
 
   useEffect(() => {
     if (!params.id) return;
-    if (instance && factory) return;
+    logger.info('SolverPage: params.id changed', params.id, instance, factory);
+    if (instance && factory?.id) return;
 
-    logger.log('SolverPage: No instance or factory, creating', id);
+    logger.info('SolverPage: No instance or factory, creating', id);
     useStore.getState().upsertFactorySolver(id, {
       inputs: [],
       outputs: [

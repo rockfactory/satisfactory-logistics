@@ -1,9 +1,9 @@
 import { loglev } from '@/core/logger/log';
-import { bfsFromNode } from 'graphology-traversal';
-import { v4 } from 'uuid';
 import { createActions } from '@/core/zustand-helpers/actions';
 import { Factory, FactoryOutput } from '@/factories/Factory';
 import type { ISolverSolution } from '@/solver/page/SolverPage';
+import { bfsFromNode } from 'graphology-traversal';
+import { v4 } from 'uuid';
 import { SolverRequest, type SolverInstance } from './Solver';
 import { computeAutoSetInputs } from './auto-set/computeAutoSetInputs';
 
@@ -17,8 +17,12 @@ export const solverFactoriesActions = createActions({
     (factoryId: string | undefined, factory?: Partial<Factory>) =>
     (state, get) => {
       if (!factoryId) factoryId = v4();
-      if (!state.factories.factories[factoryId]) {
-        logger.log('Creating factory', factoryId);
+      if (
+        !state.factories.factories[factoryId] ||
+        // Fix for currently saved factories without an ID
+        state.factories.factories[factoryId].id !== factoryId
+      ) {
+        logger.info('Creating factory', factoryId);
         get().createFactory(factoryId, factory);
 
         // If we are creating a new solver without a factory,
@@ -28,7 +32,7 @@ export const solverFactoriesActions = createActions({
       }
 
       if (!state.solvers.instances[factoryId]) {
-        logger.log('Creating solver', factoryId);
+        logger.info('Creating solver', factoryId);
         const gameAllowedRecipes =
           state.games.games[state.games.selected ?? '']?.allowedRecipes;
         get().createSolver(factoryId, { allowedRecipes: gameAllowedRecipes });
