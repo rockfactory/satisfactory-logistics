@@ -1,3 +1,5 @@
+import { WORLD_SOURCE_ID } from '@/factories/Factory';
+import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
 import {
   ComboboxItem,
   ComboboxLikeRenderOptionInput,
@@ -8,9 +10,6 @@ import {
 } from '@mantine/core';
 import { IconWorld } from '@tabler/icons-react';
 import React, { useCallback, useMemo } from 'react';
-import { useShallow } from 'zustand/shallow';
-import { useStore } from '@/core/zustand';
-import { WORLD_SOURCE_ID } from '@/factories/Factory';
 
 export interface IFactorySelectInputProps extends SelectProps {
   exceptId?: string;
@@ -22,13 +21,7 @@ export interface IFactorySelectInputProps extends SelectProps {
 export function FactorySelectInput(props: IFactorySelectInputProps) {
   const { exceptId, showOnlyIds, worldSection, ...inputProps } = props;
 
-  const factories = useStore(
-    useShallow(state =>
-      state.games.games[state.games.selected ?? '']?.factoriesIds.map(
-        id => state.factories.factories[id],
-      ),
-    ),
-  );
+  const factories = useGameFactories();
 
   const data = useMemo(
     () => [
