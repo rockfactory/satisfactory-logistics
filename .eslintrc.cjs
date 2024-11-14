@@ -8,7 +8,7 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
-  plugins: ['react-refresh'],
+  plugins: ['react-refresh', 'react-google-translate'],
   rules: {
     'react-refresh/only-export-components': 'warn',
     '@typescript-eslint/no-unused-vars': 'off',

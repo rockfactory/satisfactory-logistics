@@ -25,9 +25,11 @@ export function ByproductNodeOutputConfig(
           inputWrapperOrder={['label', 'input', 'description', 'error']}
           placeholder="Amount"
           description={
-            temporaryOutput.objective === 'max'
-              ? 'Minimum amount to produce in maximization mode'
-              : 'Amount to produce'
+            temporaryOutput.objective === 'max' ? (
+              <span>Minimum amount to produce in maximization mode</span>
+            ) : (
+              <span>Amount to produce</span>
+            )
           }
           w="180"
           // description={

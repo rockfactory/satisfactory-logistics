@@ -118,11 +118,11 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         color="dark.8"
         label={
           <Group gap="sm">
-            Usage
+            <span>Usage</span>
             {input.factoryId && input.resource ? (
               <BaseFactoryUsage percentage={usage.percentage} />
             ) : (
-              'N/A (Choose factory & resource)'
+              <span>N/A (Choose factory & resource)</span>
             )}
             <Group gap="sm" align="center">
               {usage.percentage > 1 && (
@@ -153,9 +153,9 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           error={
-            usage.percentage > 1
-              ? `Missing ${usage.usedAmount - usage.producedAmount}`
-              : undefined
+            usage.percentage > 1 ? (
+              <span>Missing {usage.usedAmount - usage.producedAmount}</span>
+            ) : undefined
           }
           onChange={onChangeHandler(`inputs.${index}.amount`)}
         />

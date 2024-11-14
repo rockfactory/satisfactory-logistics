@@ -82,7 +82,13 @@ export function ResourceNodeActions(props: IResourceNodeActionsProps) {
 
           {/* Ignore edges */}
           <Tooltip
-            label={nodeState?.layoutIgnoreEdges ? 'Show edges' : 'Hide edges'}
+            label={
+              nodeState?.layoutIgnoreEdges ? (
+                <span>Show edges</span>
+              ) : (
+                <span>Hide edges</span>
+              )
+            }
           >
             <ActionIcon
               color="gray"
