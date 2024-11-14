@@ -12,9 +12,11 @@ export function usePreviousSolverLayoutStates() {
     };
 
     const getCompatiblePreviousLayout = (nodes: SolutionNode[]) => {
-      return previousLayouts.current
-        .values()
-        .find(layout => isSavedLayoutValid(nodes, layout));
+      for (const layout of previousLayouts.current.values()) {
+        if (isSavedLayoutValid(nodes, layout)) {
+          return layout;
+        }
+      }
     };
 
     const cachePreviousLayout = (layout: SolverLayoutState) => {
