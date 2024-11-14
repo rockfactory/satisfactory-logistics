@@ -1,4 +1,3 @@
-import { last } from 'lodash';
 import { log } from '@/core/logger/log';
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
@@ -10,6 +9,7 @@ import {
   setGraphResource,
 } from '@/solver/algorithm/SolverContext';
 import type { SolverOutputNode } from '@/solver/algorithm/SolverNode';
+import { last } from 'lodash';
 
 const logger = log.getLogger('recipes:solver');
 logger.setLevel('info');
@@ -166,9 +166,14 @@ export function computeProductionConstraints(
 
         const factor = mainProductAmount / productAmount;
         ctx.constraints.push(
-          // TODO Enhance variable name.
+          // TODO Enhance main variable name.
           `${factor} ${recipeOriginalProductVar} - ${mainProductVar}o = 0`,
         );
+        if (somersloops > 0) {
+          ctx.constraints.push(
+            `${factor} ${recipeAmplifiedProductVar} - ${mainProductVar}a = 0`,
+          );
+        }
         // logger.debug(
         //   '  Adding constraint:',
         //   `${factor} ${recipeProductVar} - ${mainProductVar} = 0`,
