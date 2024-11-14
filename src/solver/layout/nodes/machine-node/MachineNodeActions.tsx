@@ -1,10 +1,10 @@
 import { useStore } from '@/core/zustand';
 import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
+import { useSolverSolution } from '@/solver/layout/solution-context/SolverSolutionContext';
 import { ActionIcon, Button, Group, Stack, Tooltip } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { IconCircleCheckFilled, IconTrash } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
-import { useSolverSolution } from '../../solution-context/SolverSolutionContext';
 import type { IMachineNodeData } from './MachineNode';
 import { MachineNodeProductionConfig } from './MachineNodeProductionConfig';
 import {
@@ -113,7 +113,13 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
           </Tooltip>
 
           <Tooltip
-            label={nodeState?.done ? 'Remove built marker' : 'Mark as built'}
+            label={
+              nodeState?.done ? (
+                <span>Remove built marker</span>
+              ) : (
+                <span>Mark as built</span>
+              )
+            }
           >
             <ActionIcon
               color="green"

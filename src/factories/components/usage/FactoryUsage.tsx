@@ -1,7 +1,7 @@
 import { Group, RingProgress, Text } from '@mantine/core';
 import chroma from 'chroma-js';
-import { PercentageFormatter } from '../../../core/intl/PercentageFormatter';
-import { useGameSettings } from '../../../games/gamesSlice';
+import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
+import { useGameSettings } from '@/games/gamesSlice';
 import { useOutputUsage } from './useOutputUsage';
 
 export interface IFactoryUsageProps {

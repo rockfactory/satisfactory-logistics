@@ -4,8 +4,8 @@ import { notifications } from '@mantine/notifications';
 import { IconFileImport } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { camelCase } from 'lodash';
-import { useStore } from '../../core/zustand';
-import { serializeGame } from '../store/gameFactoriesActions';
+import { useStore } from '@/core/zustand';
+import { serializeGame } from '@/games/store/gameFactoriesActions';
 
 export interface IImportExportGameModalProps {
   gameId: string;

@@ -1,21 +1,22 @@
+import { authSlice } from '@/auth/authSlice';
 import { chartsSlice } from '@/factories/charts/store/chartsSlice';
+import { factoriesSlice } from '@/factories/store/factoriesSlice';
+import { factoryViewSlice } from '@/factories/store/factoryViewSlice';
 import { factoryViewSortActions } from '@/factories/store/factoryViewSortActions';
+import { gamesSlice } from '@/games/gamesSlice';
 import { gameSaveSlice } from '@/games/save/gameSaveSlice';
+import { gameFactoriesActions } from '@/games/store/gameFactoriesActions';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
+import { solverFactoriesActions } from '@/solver/store/solverFactoriesActions';
+import { solversSlice } from '@/solver/store/solverSlice';
 import { omit } from 'lodash';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { useShallow } from 'zustand/shallow';
-import { authSlice } from '../auth/authSlice';
-import { factoriesSlice } from '../factories/store/factoriesSlice';
-import { factoryViewSlice } from '../factories/store/factoryViewSlice';
-import { gamesSlice } from '../games/gamesSlice';
-import { gameFactoriesActions } from '../games/store/gameFactoriesActions';
-import { solverFactoriesActions } from '../solver/store/solverFactoriesActions';
-import { solversSlice } from '../solver/store/solverSlice';
 import { loglev } from './logger/log';
 import { migratePersistedStoreFromRedux } from './migrations/migratePersistedStoreFromRedux';
 import { migrateStoreWithPlan } from './migrations/planner/StoreMigrationPlan';
+import { removeMissingFactoriesInGames } from './migrations/removeMissingFactoriesInGames';
 import { storeMigrationV2 } from './migrations/v2';
 import { withActions } from './zustand-helpers/actions';
 import { forceMigrationOnInitialPersist } from './zustand-helpers/forceMigrationOnInitialPersist';
@@ -48,7 +49,7 @@ export const useStore = create(
     persist(slicesWithActions, {
       name: 'zustand:persist',
       partialize: state => omit(state, ['gameSave']),
-      version: 2,
+      version: 3,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
       ),
@@ -83,6 +84,12 @@ export const useStore = create(
         if (version === 1) {
           logger.log('Migrating from version 1 to 2');
           return migrateStoreWithPlan(storeMigrationV2, state as any);
+        }
+
+        if (version === 2) {
+          // Fix for missing factories in games
+          logger.log('Migrating from version 2 to 3');
+          return removeMissingFactoriesInGames(state as any);
         }
 
         return state;

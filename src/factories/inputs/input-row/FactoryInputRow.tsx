@@ -1,4 +1,18 @@
+import { FormOnChangeHandler } from '@/core/form/useFormOnChange';
+import { useShallowStore, useStore } from '@/core/zustand';
+import {
+  FactoryInputIcon,
+  FactoryOutputIcon,
+} from '@/factories/components/peek/icons/OutputInputIcons';
+import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
+import { useOutputUsage } from '@/factories/components/usage/useOutputUsage';
+import { Factory, FactoryInput, WORLD_SOURCE_ID } from '@/factories/Factory';
+import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
+import { FactorySelectInput } from '@/factories/inputs/FactorySelectInput';
+import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
+import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
 import { LogisticTypeSelect } from '@/recipes/logistics/LogisticTypeSelect';
+import { WorldResourcesList } from '@/recipes/WorldResources';
 import {
   ActionIcon,
   Group,
@@ -10,20 +24,6 @@ import {
 } from '@mantine/core';
 import { IconTrash, IconWorld } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
-import { FormOnChangeHandler } from '../../../core/form/useFormOnChange';
-import { useShallowStore, useStore } from '../../../core/zustand';
-import { WorldResourcesList } from '../../../recipes/WorldResources';
-import {
-  FactoryInputIcon,
-  FactoryOutputIcon,
-} from '../../components/peek/icons/OutputInputIcons';
-import { BaseFactoryUsage } from '../../components/usage/FactoryUsage';
-import { useOutputUsage } from '../../components/usage/useOutputUsage';
-import { Factory, FactoryInput, WORLD_SOURCE_ID } from '../../Factory';
-import { useFactoryOnChangeHandler } from '../../store/factoriesSelectors';
-import { useIsFactoryVisible } from '../../useIsFactoryVisible';
-import { FactoryItemInput } from '../FactoryItemInput';
-import { FactorySelectInput } from '../FactorySelectInput';
 import { FactoryInputConstraintSelect } from './FactoryInputConstraintSelect';
 
 export interface IFactoryInputRowProps {
@@ -48,7 +48,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   const factoriesIdsProducingInputResource = useShallowStore(state =>
     input.resource && !input.factoryId
       ? state.games.games[state.games.selected ?? '']?.factoriesIds.filter(id =>
-          state.factories.factories[id]?.outputs.some(
+          state.factories.factories[id]?.outputs?.some(
             o => o.resource === input.resource,
           ),
         )
@@ -118,11 +118,11 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         color="dark.8"
         label={
           <Group gap="sm">
-            Usage
+            <span>Usage</span>
             {input.factoryId && input.resource ? (
               <BaseFactoryUsage percentage={usage.percentage} />
             ) : (
-              'N/A (Choose factory & resource)'
+              <span>N/A (Choose factory & resource)</span>
             )}
             <Group gap="sm" align="center">
               {usage.percentage > 1 && (
@@ -153,9 +153,9 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           error={
-            usage.percentage > 1
-              ? `Missing ${usage.usedAmount - usage.producedAmount}`
-              : undefined
+            usage.percentage > 1 ? (
+              <span>Missing {usage.usedAmount - usage.producedAmount}</span>
+            ) : undefined
           }
           onChange={onChangeHandler(`inputs.${index}.amount`)}
         />

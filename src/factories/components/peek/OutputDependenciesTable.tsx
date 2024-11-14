@@ -1,8 +1,8 @@
+import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
+import { useShallowStore } from '@/core/zustand';
+import { FactoryOutput } from '@/factories/Factory';
 import { Stack, Table, Text } from '@mantine/core';
 import { useMemo } from 'react';
-import { PercentageFormatter } from '../../../core/intl/PercentageFormatter';
-import { useShallowStore } from '../../../core/zustand';
-import { FactoryOutput } from '../../Factory';
 
 export interface IOutputDependenciesTableProps {
   factoryId: string;
@@ -16,7 +16,7 @@ export function OutputDependenciesTable(props: IOutputDependenciesTableProps) {
     state.games.games[state.games.selected ?? '']?.factoriesIds
       .map(id => state.factories.factories[id])
       .filter(factory =>
-        factory.inputs?.some(
+        factory?.inputs?.some(
           i => i.resource === output.resource && i.factoryId === factoryId,
         ),
       ),

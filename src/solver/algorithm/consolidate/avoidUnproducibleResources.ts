@@ -1,6 +1,6 @@
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { NotProducibleItems } from '@/recipes/FactoryRecipe';
-import type { SolverContext } from '../SolverContext';
+import type { SolverContext } from '@/solver/algorithm/SolverContext';
 
 export function avoidUnproducibleResources(ctx: SolverContext) {
   NotProducibleItems.forEach(resource => {

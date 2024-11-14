@@ -1,12 +1,12 @@
 import { log } from '@/core/logger/log';
 import type { FactoryOutput } from '@/factories/Factory';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { computeProductionConstraints } from '../compute/computeProductionConstraints';
+import { computeProductionConstraints } from '@/solver/algorithm/compute/computeProductionConstraints';
 import {
   type SolverContext,
   setGraphByproduct,
   setGraphResource,
-} from '../SolverContext';
+} from '@/solver/algorithm/SolverContext';
 
 const logger = log.getLogger('recipes:solver');
 logger.setLevel('info');

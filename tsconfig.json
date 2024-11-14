@@ -34,7 +34,7 @@
         // Move `dist` down in the suggestions, by deafult it's `[]`
         "moveDownPatterns": ["^zustand"]
       }
-    ]
+    ],
   },
   "include": ["src", "scripts"],
   "references": [{ "path": "./tsconfig.node.json" }]

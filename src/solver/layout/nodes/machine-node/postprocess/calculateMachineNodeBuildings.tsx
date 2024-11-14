@@ -2,7 +2,7 @@ import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { getRecipeProductPerBuilding } from '@/recipes/FactoryRecipe';
 import type { SolverNodeState } from '@/solver/store/Solver';
-import type { IMachineNodeData } from '../MachineNode';
+import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
 
 export function calculateMachineNodeBuildings(
   data: IMachineNodeData,

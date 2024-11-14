@@ -50,9 +50,11 @@ export function FactoryInputConstraintSelect(
         <Tooltip
           color="dark.8"
           label={
-            constraint === 'max'
-              ? 'Use at most this amount'
-              : 'Force usage of full input amount'
+            constraint === 'max' ? (
+              <span>Use at most this amount</span>
+            ) : (
+              <span>Force usage of full input amount</span>
+            )
           }
           position="top"
         >

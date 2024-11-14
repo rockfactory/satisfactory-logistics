@@ -11,7 +11,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { capitalize } from 'lodash';
 import { Link } from 'react-router-dom';
-import { UserMenu } from '../auth/UserMenu';
+import { UserMenu } from '@/auth/UserMenu';
 import classes from './Header.module.css';
 
 interface HeaderProps {
@@ -41,6 +41,7 @@ export function Header(props: HeaderProps) {
             <Link to="/factories">
               <Image
                 h={32}
+                miw={200}
                 w="auto"
                 src="/images/logo/satisfactory-logistics-logo.png"
                 alt="Satisfactory Logistics Planner"

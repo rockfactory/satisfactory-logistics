@@ -1,6 +1,6 @@
 import type { FactoryInput } from '@/factories/Factory';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { type SolverContext, setGraphResource } from '../SolverContext';
+import { type SolverContext, setGraphResource } from '@/solver/algorithm/SolverContext';
 
 /**
  * Compute the constraints for a given input resource.

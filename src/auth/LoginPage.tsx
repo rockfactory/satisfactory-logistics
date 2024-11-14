@@ -1,7 +1,7 @@
 import { Button, Container } from '@mantine/core';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
-import { supabaseClient } from '../core/supabase';
+import { supabaseClient } from '@/core/supabase';
 import { useSession } from './authSelectors';
 
 export interface ILoginPageProps {}

@@ -1,4 +1,5 @@
 import { toggleAsSet } from '@/core/state-utils/toggleAsSet';
+import { createSlice } from '@/core/zustand-helpers/slices';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import {
   getAllAlternateRecipeIds,
@@ -6,8 +7,11 @@ import {
   getAllDefaultRecipesIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
 import { uniq, without } from 'lodash';
-import { createSlice } from '../../core/zustand-helpers/slices';
-import { SolverInstance, type SolverNodeState } from './Solver';
+import {
+  SolverInstance,
+  type SolverLayoutState,
+  type SolverNodeState,
+} from './Solver';
 
 export interface SolversSlice {
   /**
@@ -176,6 +180,13 @@ export const solversSlice = createSlice({
       },
     resetSolverResourcesAmount: (id: string) => state => {
       state.instances[id].request.resourcesAmount = {};
+    },
+    // Layout
+    setSolverLayout: (id: string, layout: SolverLayoutState) => state => {
+      state.instances[id].layout = layout;
+    },
+    resetSolverLayout: (id: string) => state => {
+      state.instances[id].layout = undefined;
     },
 
     saveSolverSharedId: (id: string, sharedId: string) => state => {

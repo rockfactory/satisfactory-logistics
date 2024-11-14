@@ -1,7 +1,7 @@
 import { getAllDefaultRecipesIds } from '@/recipes/graph/getAllDefaultRecipes';
 import { itemId } from '@/recipes/itemId';
 import { describe, expect, test } from 'vitest';
-import { loadHighs, solveProduction } from '../algorithm/solveProduction';
+import { loadHighs, solveProduction } from '@/solver/algorithm/solveProduction';
 
 describe('worldInputs', () => {
   test('should prefer world inputs instead of adding world var', async () => {

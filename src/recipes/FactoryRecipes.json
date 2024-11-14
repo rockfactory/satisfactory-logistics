@@ -167,13 +167,13 @@
     "ingredients": [
       {
         "resource": "Desc_RocketFuel_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 1.001,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -181,7 +181,7 @@
     "products": [
       {
         "resource": "Desc_PackagedRocketFuel_C",
-        "amount": 0.999,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -198,7 +198,7 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedRocketFuel_C",
-        "amount": 1.001,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -206,13 +206,13 @@
     "products": [
       {
         "resource": "Desc_RocketFuel_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 0.999,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -524,13 +524,13 @@
     "ingredients": [
       {
         "resource": "Desc_IonizedFuel_C",
-        "amount": 4.001,
+        "amount": 4,
         "displayAmount": 4,
         "originalAmount": 4000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -538,7 +538,7 @@
     "products": [
       {
         "resource": "Desc_PackagedIonizedFuel_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -555,7 +555,7 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedIonizedFuel_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -563,13 +563,13 @@
     "products": [
       {
         "resource": "Desc_IonizedFuel_C",
-        "amount": 3.999,
+        "amount": 4,
         "displayAmount": 4,
         "originalAmount": 4000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -1442,13 +1442,13 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidTurboFuel_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -1456,7 +1456,7 @@
     "products": [
       {
         "resource": "Desc_TurboFuel_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -1473,7 +1473,7 @@
     "ingredients": [
       {
         "resource": "Desc_TurboFuel_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -1481,13 +1481,13 @@
     "products": [
       {
         "resource": "Desc_LiquidTurboFuel_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2238,13 +2238,13 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2252,7 +2252,7 @@
     "products": [
       {
         "resource": "Desc_Fuel_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2300,13 +2300,13 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidBiofuel_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2314,7 +2314,7 @@
     "products": [
       {
         "resource": "Desc_PackagedBiofuel_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2331,13 +2331,13 @@
     "ingredients": [
       {
         "resource": "Desc_LiquidOil_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2345,7 +2345,7 @@
     "products": [
       {
         "resource": "Desc_PackagedOil_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2362,13 +2362,13 @@
     "ingredients": [
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2376,7 +2376,7 @@
     "products": [
       {
         "resource": "Desc_PackagedOilResidue_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2393,13 +2393,13 @@
     "ingredients": [
       {
         "resource": "Desc_Water_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2407,7 +2407,7 @@
     "products": [
       {
         "resource": "Desc_PackagedWater_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2424,7 +2424,7 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedBiofuel_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2432,13 +2432,13 @@
     "products": [
       {
         "resource": "Desc_LiquidBiofuel_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2455,7 +2455,7 @@
     "ingredients": [
       {
         "resource": "Desc_Fuel_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2463,13 +2463,13 @@
     "products": [
       {
         "resource": "Desc_LiquidFuel_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2486,7 +2486,7 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedOil_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2494,13 +2494,13 @@
     "products": [
       {
         "resource": "Desc_LiquidOil_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2517,7 +2517,7 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedOilResidue_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2525,13 +2525,13 @@
     "products": [
       {
         "resource": "Desc_HeavyOilResidue_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2548,7 +2548,7 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedWater_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2556,13 +2556,13 @@
     "products": [
       {
         "resource": "Desc_Water_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2976,13 +2976,13 @@
     "ingredients": [
       {
         "resource": "Desc_AluminaSolution_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -2990,7 +2990,7 @@
     "products": [
       {
         "resource": "Desc_PackagedAlumina_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -3100,7 +3100,7 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedAlumina_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -3108,13 +3108,13 @@
     "products": [
       {
         "resource": "Desc_AluminaSolution_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -4448,13 +4448,13 @@
     "ingredients": [
       {
         "resource": "Desc_NitricAcid_C",
-        "amount": 1.001,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 1.001,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -4462,7 +4462,7 @@
     "products": [
       {
         "resource": "Desc_PackagedNitricAcid_C",
-        "amount": 0.999,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -4510,7 +4510,7 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedNitricAcid_C",
-        "amount": 1.001,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -4518,13 +4518,13 @@
     "products": [
       {
         "resource": "Desc_NitricAcid_C",
-        "amount": 0.999,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 0.999,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -4824,13 +4824,13 @@
     "ingredients": [
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 2.001,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -4838,7 +4838,7 @@
     "products": [
       {
         "resource": "Desc_PackagedSulfuricAcid_C",
-        "amount": 1.999,
+        "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
@@ -4923,7 +4923,7 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedSulfuricAcid_C",
-        "amount": 1.001,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -4931,13 +4931,13 @@
     "products": [
       {
         "resource": "Desc_SulfuricAcid_C",
-        "amount": 0.999,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1000
       },
       {
         "resource": "Desc_FluidCanister_C",
-        "amount": 0.999,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -5325,13 +5325,13 @@
     "ingredients": [
       {
         "resource": "Desc_NitrogenGas_C",
-        "amount": 4.001,
+        "amount": 4,
         "displayAmount": 4,
         "originalAmount": 4000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 1.001,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -5339,7 +5339,7 @@
     "products": [
       {
         "resource": "Desc_PackagedNitrogenGas_C",
-        "amount": 0.999,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -5356,7 +5356,7 @@
     "ingredients": [
       {
         "resource": "Desc_PackagedNitrogenGas_C",
-        "amount": 1.001,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }
@@ -5364,13 +5364,13 @@
     "products": [
       {
         "resource": "Desc_NitrogenGas_C",
-        "amount": 3.999,
+        "amount": 4,
         "displayAmount": 4,
         "originalAmount": 4000
       },
       {
         "resource": "Desc_GasTank_C",
-        "amount": 0.999,
+        "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       }

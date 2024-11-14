@@ -2,7 +2,7 @@ import type { Json } from '@/core/database.types';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
 import { notifications } from '@mantine/notifications';
-import { serializeGame } from '../store/gameFactoriesActions';
+import { serializeGame } from '@/games/store/gameFactoriesActions';
 
 export async function saveRemoteGame(gameId?: string | null) {
   const { auth } = useStore.getState();

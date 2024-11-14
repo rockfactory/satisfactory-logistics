@@ -1,5 +1,5 @@
-import { AllFactoryBuildings } from '../FactoryBuilding';
-import type { FactoryItem } from '../FactoryItem';
+import { AllFactoryBuildings } from '@/recipes/FactoryBuilding';
+import type { FactoryItem } from '@/recipes/FactoryItem';
 
 export function getWorldResourceMachines(resource: FactoryItem) {
   const machines = AllFactoryBuildings.filter(building => {

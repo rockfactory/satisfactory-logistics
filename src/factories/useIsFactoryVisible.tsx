@@ -1,4 +1,4 @@
-import { useShallowStore, useStore } from '../core/zustand';
+import { useShallowStore, useStore } from '@/core/zustand';
 
 export function useIsFactoryVisible(
   factoryId: string,

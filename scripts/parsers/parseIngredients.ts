@@ -13,16 +13,16 @@ export function parseIngredients(ingredients: string, building, dir) {
     }
     const parsedAmount = parseFloat(amount);
 
-    let normalizedAmount = normalizeResourceAmount(resource, parsedAmount);
+    const normalizedAmount = normalizeResourceAmount(resource, parsedAmount);
 
     // Pre-LP fixes
     const displayAmount = normalizedAmount;
 
     // Fix for LP: we make sure that Pakcagers are a little bit _LESS_ efficient than raw resources
-    if (building?.id === 'Build_Packager_C') {
-      normalizedAmount =
-        dir === 'in' ? normalizedAmount + 0.001 : normalizedAmount - 0.001;
-    }
+    // if (building?.id === 'Build_Packager_C') {
+    //   normalizedAmount =
+    //     dir === 'in' ? normalizedAmount + 0.001 : normalizedAmount - 0.001;
+    // }
 
     return {
       resource,

@@ -1,7 +1,7 @@
 import { itemId } from '@/recipes/itemId';
 import { describe, expect, test } from 'vitest';
-import { loadHighs, solveProduction } from '../algorithm/solveProduction';
-import { computeAutoSetInputs } from '../store/auto-set/computeAutoSetInputs';
+import { loadHighs, solveProduction } from '@/solver/algorithm/solveProduction';
+import { computeAutoSetInputs } from '@/solver/store/auto-set/computeAutoSetInputs';
 
 describe('auto set from inputs', () => {
   test('auto-set should not variate solution', async () => {

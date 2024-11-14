@@ -7,7 +7,7 @@ import { calculateMachineNodeBuildings } from '@/solver/layout/nodes/machine-nod
 import { Group, Image, Stack, Table } from '@mantine/core';
 import { groupBy, sum } from 'lodash';
 import { useMemo } from 'react';
-import type { ISolverSolution } from '../SolverPage';
+import type { ISolverSolution } from '@/solver/page/SolverPage';
 import classes from './SummaryBuildings.module.css';
 
 export interface ISummaryBuildingsProps {
