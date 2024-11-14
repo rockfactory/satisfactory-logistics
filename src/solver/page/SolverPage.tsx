@@ -89,7 +89,6 @@ export function SolverPage(props: ISolverPageProps) {
 
   useEffect(() => {
     if (!params.id) return;
-    logger.info('SolverPage: params.id changed', params.id, instance, factory);
     if (instance && factory?.id) return;
 
     logger.info('SolverPage: No instance or factory, creating', id);
