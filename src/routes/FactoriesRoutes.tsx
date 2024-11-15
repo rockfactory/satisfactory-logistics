@@ -1,11 +1,11 @@
 import { ChartsTab } from '@/factories/charts/ChartsTab';
 import { GamesAtleastOneManager } from '@/games/manager/GamesAtleastOneManager';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { FactoriesTab } from '../factories/FactoriesTab';
-import { Footer } from '../layout/Footer';
-import { Header } from '../layout/Header';
-import { SolverPage } from '../solver/page/SolverPage';
-import { SolverShareImporterPage } from '../solver/share/SolverShareImporter';
+import { FactoriesTab } from '@/factories/FactoriesTab';
+import { Footer } from '@/layout/Footer';
+import { Header } from '@/layout/Header';
+import { SolverPage } from '@/solver/page/SolverPage';
+import { SolverShareImporterPage } from '@/solver/share/SolverShareImporter';
 export interface IFactoryRoutesProps {}
 
 function useActiveTab() {

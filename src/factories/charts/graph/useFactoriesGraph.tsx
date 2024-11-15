@@ -15,11 +15,13 @@ export function useFactoriesGraph() {
     const maxInputAmount =
       max(
         factories.flatMap(
-          factory => factory.inputs?.map(input => input.amount ?? 0) ?? [],
+          factory => factory?.inputs?.map(input => input.amount ?? 0) ?? [],
         ),
       ) ?? 1;
 
     for (const factory of factories) {
+      if (!factory) continue;
+
       nodes.push({
         id: factory.id,
         type: 'Factory',

@@ -1,3 +1,4 @@
+import 'core-js/stable/object/has-own';
 import 'core-js/stable/set/difference';
 
 import * as Sentry from '@sentry/react';

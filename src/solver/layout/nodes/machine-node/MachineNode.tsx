@@ -28,20 +28,20 @@ import { useParams } from 'react-router-dom';
 import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { RepeatingNumber } from '../../../../core/intl/NumberFormatter';
-import { useStore } from '../../../../core/zustand';
-import { AllFactoryBuildingsMap } from '../../../../recipes/FactoryBuilding';
+import { RepeatingNumber } from '@/core/intl/NumberFormatter';
+import { useStore } from '@/core/zustand';
+import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import {
   AllFactoryItemsMap,
   type FactoryItem,
-} from '../../../../recipes/FactoryItem';
+} from '@/recipes/FactoryItem';
 import {
   FactoryRecipe,
   getRecipeDisplayName,
   getRecipeProductPerBuilding,
-} from '../../../../recipes/FactoryRecipe';
-import { InvisibleHandles } from '../../rendering/InvisibleHandles';
-import classes from './MachineNode.module.css';
+} from '@/recipes/FactoryRecipe';
+import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
+import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { MachineNodeActions } from './MachineNodeActions';
 import { RecipeIngredientRow } from './RecipeIngredientRow';
 
@@ -244,7 +244,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                   />
                 )}
               </Group>
-              <Text size="sm">
+              <Text component="div" size="sm">
                 <Group gap="xl">
                   <Group gap={4} align="center">
                     <IconClockBolt size={16} /> {recipe.time}s
@@ -335,7 +335,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
               </Table.Tbody>
             </Table>
           </Stack>
-          <Box w="250px" className={classes.actions}>
+          <NodeActionsBox>
             {props.selected ? (
               <MachineNodeActions
                 data={props.data}
@@ -350,7 +350,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                 </Text>
               </Stack>
             )}
-          </Box>
+          </NodeActionsBox>
         </Flex>
       </Popover.Dropdown>
     </Popover>

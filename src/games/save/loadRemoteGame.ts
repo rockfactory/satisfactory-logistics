@@ -2,8 +2,8 @@ import { loglev } from '@/core/logger/log';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
 import { notifications } from '@mantine/notifications';
-import type { SerializedGame } from '../store/gameFactoriesActions';
-import type { ILoadRemoteGameOptions } from '../store/gameRemoteActions';
+import type { SerializedGame } from '@/games/store/gameFactoriesActions';
+import type { ILoadRemoteGameOptions } from '@/games/store/gameRemoteActions';
 
 const logger = loglev.getLogger('games:loader');
 

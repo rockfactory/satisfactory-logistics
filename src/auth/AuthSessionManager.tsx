@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { loglev } from '../core/logger/log';
-import { supabaseClient } from '../core/supabase';
-import { useStore } from '../core/zustand';
+import { loglev } from '@/core/logger/log';
+import { supabaseClient } from '@/core/supabase';
+import { useStore } from '@/core/zustand';
 
 const logger = loglev.getLogger('auth');
 

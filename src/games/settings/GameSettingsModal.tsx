@@ -16,10 +16,10 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSettings } from '@tabler/icons-react';
-import { useFormOnChange } from '../../core/form/useFormOnChange';
-import { useStore } from '../../core/zustand';
-import { GameSettings } from '../Game';
-import { useGameSettings } from '../gamesSlice';
+import { useFormOnChange } from '@/core/form/useFormOnChange';
+import { useStore } from '@/core/zustand';
+import { GameSettings } from '@/games/Game';
+import { useGameSettings } from '@/games/gamesSlice';
 
 export interface IGameSettingsModalProps {
   withLabel?: boolean;

@@ -4,9 +4,9 @@ import { notifications } from '@mantine/notifications';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { v4 } from 'uuid';
-import { supabaseClient } from '../../core/supabase';
-import { useStore } from '../../core/zustand';
-import { sharedSolverUUIDTranslator } from '../store/Solver';
+import { supabaseClient } from '@/core/supabase';
+import { useStore } from '@/core/zustand';
+import { sharedSolverUUIDTranslator } from '@/solver/store/Solver';
 import { ISharedSolverData } from './SolverShareButton';
 
 const logger = loglev.getLogger('solver:importer');

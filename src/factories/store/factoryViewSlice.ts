@@ -1,5 +1,5 @@
 import { Draft } from 'immer';
-import { createSlice } from '../../core/zustand-helpers/slices';
+import { createSlice } from '@/core/zustand-helpers/slices';
 
 interface FactoryViewSlice {
   filterName: string | null;

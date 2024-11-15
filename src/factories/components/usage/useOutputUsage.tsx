@@ -1,6 +1,6 @@
-import { useStore } from '../../../core/zustand';
-import { getWorldResourceMax } from '../../../recipes/WorldResources';
-import { WORLD_SOURCE_ID } from '../../Factory';
+import { useStore } from '@/core/zustand';
+import { getWorldResourceMax } from '@/recipes/WorldResources';
+import { WORLD_SOURCE_ID } from '@/factories/Factory';
 import { IFactoryUsageProps } from './FactoryUsage';
 
 export function useOutputUsage(
@@ -30,7 +30,7 @@ export function useOutputUsage(
   );
 
   let percentage = usedAmount / producedAmount;
-  if (producedAmount === 0) {
+  if (producedAmount === 0 && usedAmount !== 0) {
     percentage = Number.POSITIVE_INFINITY;
   }
   if (Number.isNaN(percentage)) {

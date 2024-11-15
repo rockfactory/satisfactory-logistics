@@ -44,7 +44,7 @@ export const RepeatingNumber = ({
 
           return (
             <React.Fragment key={repetend.index}>
-              {value.substring(0, repetend.index)}
+              <span>{value.substring(0, repetend.index)}</span>
               <span style={{ textDecoration: 'overline' }}>
                 {repeat(
                   repetend.pattern.toString(),

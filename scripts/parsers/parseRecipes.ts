@@ -26,6 +26,13 @@ export function parseRecipes(docsJson: any) {
     './src/recipes/FactoryRecipes.json',
     JSON.stringify(ParsingContext.recipes, null, 2),
   );
+
+  fs.writeFileSync(
+    './src/recipes/FactoryRecipeId.ts',
+    `/** Automatically generated */\nexport type FactoryRecipeId = ${ParsingContext.recipes
+      .map(recipe => `'${recipe.id}'`)
+      .join(' | ')};`,
+  );
 }
 
 function parseRecipe(recipe, index) {

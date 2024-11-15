@@ -14,7 +14,7 @@ import {
   AllFactoryItemsMap,
   AllProducibleFactoryItems,
   FactoryItem,
-} from '../../recipes/FactoryItem';
+} from '@/recipes/FactoryItem';
 
 export interface IFactoryItemInputProps
   extends Omit<InputWrapperProps, 'value' | 'onChange'> {
@@ -30,15 +30,16 @@ export interface IFactoryItemInputProps
 interface FactoryItemOptionProps {
   item: FactoryItem | null;
   size: 'md' | 'lg' | 'sm';
+  width?: number;
 }
 
-function FactoryItemOption({ item, size }: FactoryItemOptionProps) {
+function FactoryItemOption({ item, size, width }: FactoryItemOptionProps) {
   const imageSize = size === 'sm' ? 22 : size === 'md' ? 24 : 32;
   return (
-    <Group gap="sm">
+    <Group gap="sm" wrap="nowrap">
       <FactoryItemImage id={item?.id} size={imageSize} />
       <div>
-        <Text size="sm" truncate="end" maw="300px">
+        <Text size="sm" truncate="end" maw={`${width ?? 300}px`}>
           {item?.displayName ?? 'Unknown item'}
         </Text>
         {size === 'lg' && (
@@ -163,6 +164,7 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
                 <FactoryItemOption
                   item={AllFactoryItemsMap[selectedItem]}
                   size={size}
+                  width={width - 80}
                 />
               ) : (
                 <Text c="dimmed" size="sm">

@@ -14,8 +14,8 @@ import {
 import { IconCalendar, IconPlayerPlay } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
-import { ImportExportGameModal } from '../import/ImportFactoriesModal';
-import { ImportFromToolsModal } from '../import/ImportFromToolsModal';
+import { ImportExportGameModal } from '@/games/import/ImportFactoriesModal';
+import { ImportFromToolsModal } from '@/games/import/ImportFromToolsModal';
 import { GameDeleteButton } from './detail/GameDeleteButton';
 import { GameDetailEditButton } from './detail/GameDetailEditButton';
 import { GamePlayers } from './detail/GamePlayers';

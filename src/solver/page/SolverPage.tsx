@@ -1,12 +1,32 @@
+import { useFormOnChange } from '@/core/form/useFormOnChange';
 import { loglev } from '@/core/logger/log';
+import { useStore } from '@/core/zustand';
 import {
   useFactoryInputsOutputs,
   useFactorySimpleAttributes,
 } from '@/factories/store/factoriesSelectors';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { AllFactoryRecipesMap } from '@/recipes/FactoryRecipe';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
+import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
+import {
+  solveProduction,
+  useHighs,
+  type SolutionNode,
+} from '@/solver/algorithm/solveProduction';
+import type { SolverContext } from '@/solver/algorithm/SolverContext';
+import type { SolverEdge, SolverNode } from '@/solver/algorithm/SolverNode';
+import { SolverInspectorDrawer } from '@/solver/inspector/SolverInspectorDrawer';
+import { SolverSolutionProvider } from '@/solver/layout/solution-context/SolverSolutionContext';
+import { SolverLayout } from '@/solver/layout/SolverLayout';
+import { SolverLayoutButtons } from '@/solver/layout/state/SolverLayoutButtons';
+import { SolverShareButton } from '@/solver/share/SolverShareButton';
+import { SolverInstance } from '@/solver/store/Solver';
+import {
+  getSolverGame,
+  useCurrentSolverId,
+  usePathSolverInstance,
+  useSolverGameId,
+} from '@/solver/store/solverSelectors';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   Box,
@@ -14,6 +34,7 @@ import {
   Container,
   Group,
   LoadingOverlay,
+  Space,
   Stack,
   Text,
   TextInput,
@@ -30,42 +51,20 @@ import { HighsSolution } from 'highs';
 import { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { v4 } from 'uuid';
-import { useFormOnChange } from '../../core/form/useFormOnChange';
-import { useStore } from '../../core/zustand';
-import { AfterHeaderSticky } from '../../layout/AfterHeaderSticky';
-import {
-  SolverEdge,
-  SolverNode,
-  type SolverContext,
-} from '../algorithm/computeProductionConstraints';
-import {
-  solveProduction,
-  useHighs,
-  type SolutionNode,
-} from '../algorithm/solveProduction';
-import { SolverInspectorDrawer } from '../inspector/SolverInspectorDrawer';
-import { SolverSolutionProvider } from '../layout/solution-context/SolverSolutionContext';
-import { SolverLayout } from '../layout/SolverLayout';
-import { SolverShareButton } from '../share/SolverShareButton';
-import { SolverInstance } from '../store/Solver';
-import {
-  getSolverGame,
-  useCurrentSolverId,
-  usePathSolverInstance,
-  useSolverGameId,
-} from '../store/solverSelectors';
 import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
 import { SolverResetButton } from './SolverResetButton';
 import {
   proposeSolverSolutionSuggestions,
   type ISolverSolutionSuggestion,
 } from './suggestions/proposeSolverSolutionSuggestions';
+import { SolverSuggestions } from './suggestions/SolverSuggestions';
 import { SolverSummaryDrawer } from './summary/SolverSummaryDrawer';
 
 const logger = loglev.getLogger('solver:page');
 
 export interface ISolverPageProps {}
 
+// TODO Move in dedicated file
 export interface ISolverSolution {
   result: HighsSolution;
   nodes: SolutionNode[];
@@ -90,9 +89,9 @@ export function SolverPage(props: ISolverPageProps) {
 
   useEffect(() => {
     if (!params.id) return;
-    if (instance && factory) return;
+    if (instance && factory?.id) return;
 
-    logger.log('SolverPage: No instance or factory, creating', id);
+    logger.info('SolverPage: No instance or factory, creating', id);
     useStore.getState().upsertFactorySolver(id, {
       inputs: [],
       outputs: [
@@ -103,8 +102,6 @@ export function SolverPage(props: ISolverPageProps) {
       ],
     });
   }, [instance, factory, id, params.id, navigate]);
-
-  logger.log('SolverPage', instance, id);
 
   const updater = useMemo(
     () => (path: Path<SolverInstance>, value: string | null | number) => {
@@ -117,6 +114,11 @@ export function SolverPage(props: ISolverPageProps) {
 
   const onChangeHandler = useFormOnChange<SolverInstance>(updater);
 
+  /**
+   * This is the main entry point for the solver algorithm.
+   * It will compute the solution and suggestions based on the current
+   * instance and inputs/outputs.
+   */
   const { solution, suggestions } = useMemo(() => {
     let suggestions: ISolverSolutionSuggestion = {};
     if (!instance?.request || !highsRef.current || loading) {
@@ -133,13 +135,15 @@ export function SolverPage(props: ISolverPageProps) {
     });
     logger.log(`Solved -> `, solution);
 
-    if (solution && solution.result.Status !== 'Optimal') {
+    if (solution && !isSolutionFound(solution)) {
       suggestions = proposeSolverSolutionSuggestions(
         highsRef.current,
         instance.request,
         inputsOutputs,
       );
     }
+
+    logger.log('hasSolution =', isSolutionFound(solution));
 
     return { solution, suggestions };
     // We don't want to re-run computation if instance changes, only if its request changes
@@ -161,12 +165,7 @@ export function SolverPage(props: ISolverPageProps) {
     }
   }
 
-  const hasSolution =
-    solution &&
-    solution.result.Status === 'Optimal' &&
-    solution?.nodes.length > 0;
-
-  logger.log('hasSolution =', hasSolution);
+  const hasSolution = isSolutionFound(solution);
 
   return (
     <Box w="100%" pos="relative">
@@ -234,6 +233,7 @@ export function SolverPage(props: ISolverPageProps) {
                   <Group gap="xs">
                     <SolverSummaryDrawer solution={solution} />
                     <SolverShareButton />
+                    <SolverLayoutButtons solution={solution} />
                     {import.meta.env.DEV && (
                       <SolverInspectorDrawer solution={solution} />
                     )}
@@ -253,38 +253,8 @@ export function SolverPage(props: ISolverPageProps) {
               No solution found for the given parameters. Try adjusting the
               inputs, outputs and available recipes.
             </Text>
-            {suggestions?.addRecipes && (
-              <>
-                <Text size="sm" c="dark.2">
-                  Try adding the following recipes:
-                </Text>
-                <Group gap="xs">
-                  {suggestions.addRecipes.map(recipeId => {
-                    const recipe = AllFactoryRecipesMap[recipeId];
-                    const mainProduct =
-                      AllFactoryItemsMap[recipe.products[0].resource];
-                    return (
-                      <Button
-                        key={recipeId}
-                        variant="default"
-                        size="sm"
-                        onClick={() => {
-                          useStore
-                            .getState()
-                            .toggleRecipe(instance.id!, { recipeId });
-                        }}
-                        leftSection={<IconPlus size={16} />}
-                        rightSection={
-                          <FactoryItemImage size={16} id={mainProduct.id} />
-                        }
-                      >
-                        {recipe.name}
-                      </Button>
-                    );
-                  })}
-                </Group>
-              </>
-            )}
+            <Space />
+            <SolverSuggestions suggestions={suggestions} instance={instance} />
           </Stack>
         </Container>
       )}

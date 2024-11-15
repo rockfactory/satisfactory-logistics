@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": ["DOM", "DOM.Iterable", "ES2020", "ESNext.Collection"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -34,7 +34,7 @@
         // Move `dist` down in the suggestions, by deafult it's `[]`
         "moveDownPatterns": ["^zustand"]
       }
-    ]
+    ],
   },
   "include": ["src", "scripts"],
   "references": [{ "path": "./tsconfig.node.json" }]

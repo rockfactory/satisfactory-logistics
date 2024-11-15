@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import type { RootState } from '../zustand';
+import type { RootState } from '@/core/zustand';
 import { ImmerActions } from './immer';
 import { Action } from './slices';
 

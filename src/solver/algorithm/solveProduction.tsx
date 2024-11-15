@@ -1,21 +1,20 @@
+import { log } from '@/core/logger/log';
 import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
+import { IIngredientEdgeData } from '@/solver/edges/IngredientEdge';
+import type { IByproductNodeData } from '@/solver/layout/nodes/byproduct-node/ByproductNode';
+import { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
+import { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
+import { SolverRequest, type SolverNodeState } from '@/solver/store/Solver';
 import { Edge, MarkerType, Node } from '@xyflow/react';
 import highloader, { Highs, type HighsSolution } from 'highs';
 import { useEffect, useRef, useState } from 'react';
-import { log } from '../../core/logger/log';
-import { getWorldResourceMax } from '../../recipes/WorldResources';
-import { IIngredientEdgeData } from '../edges/IngredientEdge';
-import type { IByproductNodeData } from '../layout/nodes/byproduct-node/ByproductNode';
-import { IMachineNodeData } from '../layout/nodes/machine-node/MachineNode';
-import { IResourceNodeData } from '../layout/nodes/resource-node/ResourceNode';
-import { SolverRequest, type SolverNodeState } from '../store/Solver';
-import {
-  addInputResourceConstraints,
-  addOutputProductionConstraints,
-  avoidUnproducibleResources,
-  consolidateProductionConstraints,
-  SolverContext,
-} from './computeProductionConstraints';
+import { avoidPackagedFuelIfPossible } from './consolidate/avoidPackagedFuelIfPossible';
+import { avoidUnproducibleResources } from './consolidate/avoidUnproducibleResources';
+import { consolidateProductionConstraints } from './consolidate/consolidateProductionConstraints';
+import { addInputResourceConstraints } from './request/addInputProductionConstraints';
+import { addOutputProductionConstraints } from './request/addOutputProductionConstraints';
+import { applySolverObjective } from './solve/applySolverObjectives';
+import { SolverContext } from './SolverContext';
 
 const logger = log.getLogger('solver:production');
 logger.setLevel('info');
@@ -56,66 +55,43 @@ export function useHighs() {
   return { highsRef, loading };
 }
 
-function applyObjective(ctx: SolverContext, request: SolverProductionRequest) {
-  switch (request.objective) {
-    case 'minimize_power':
-      /** MINIMIZE */
-      ctx.objective = `${Array.from(ctx.getEnergyVars())
-        .map(v => v.variable)
-        .join(' + ')}\n`;
-      break;
-
-    case 'minimize_area':
-      /** MINIMIZE */
-      ctx.objective = `${Array.from(ctx.getAreaVars())
-        .map(v => v.variable)
-        .join(' + ')}\n`;
-      break;
-
-    case 'minimize_resources':
-    default:
-      /** MINIMIZE */
-      ctx.objective = `${Array.from(ctx.getWorldVars())
-        .map(
-          v =>
-            `${1 / getWorldResourceMax(v.resource.id, 'weight')} r${v.resource.index}`,
-        )
-        .join(' + ')}`;
-
-      // const inputs = ctx.getWorldInputVars();
-      // if (inputs.some(v => v.resource.id === 'Desc_SAMIngot_C')) {
-      //   ctx.objective += ` + 0.0001 r${inputs.find(v => v.resource.id === 'Desc_SAMIngot_C')?.resource.index}`;
-      // }
-
-      ctx.objective += '\n';
-  }
-}
-
 export type SolutionNode =
   | Node<IMachineNodeData, 'Machine'>
   | Node<IResourceNodeData, 'Resource'>
   | Node<IByproductNodeData, 'Byproduct'>;
-
+/**
+ * Translates a production request into a linear programming problem and solves it,
+ * returning the solution and the corresponding graph.
+ */
 export function solveProduction(
   highs: Highs,
   request: SolverProductionRequest,
 ) {
   const ctx = new SolverContext(request);
 
+  // 1. Request
   const inputs = request.inputs ?? [];
   for (let i = 0; i < inputs.length; i++) {
     const item = inputs[i];
-    if (!item.amount || !item.resource) continue;
+    if (item.amount == null || !item.resource) continue;
     addInputResourceConstraints(ctx, item, i);
   }
-  for (const item of request.outputs) {
-    if (!item.resource) continue;
-    addOutputProductionConstraints(ctx, item);
+
+  const outputs = request.outputs ?? [];
+  for (let i = 0; i < outputs.length; i++) {
+    const item = outputs[i];
+    if (item.amount == null || !item.resource) continue;
+    // 2. Compute constraints
+    addOutputProductionConstraints(ctx, item, i);
   }
+
+  // 3. Consolidate
   consolidateProductionConstraints(ctx);
   avoidUnproducibleResources(ctx);
+  avoidPackagedFuelIfPossible(ctx);
 
-  applyObjective(ctx, request);
+  // 4. Solve
+  applySolverObjective(ctx, request);
 
   const problem = ctx.formulateProblem();
   let result: HighsSolution;
@@ -176,7 +152,10 @@ export function solveProduction(
               value: Number(value.Primal),
               resource: node.resource,
               isRaw: node.type === 'raw',
-              forceUsage: node.forceUsage,
+              input: node.type === 'raw_input' ? node.input : undefined,
+              inputIndex:
+                node.type === 'raw_input' ? node.inputIndex : undefined,
+              state: request.nodes?.[varName],
             } as IResourceNodeData,
             position: { x: 0, y: 0 },
           });
@@ -191,6 +170,8 @@ export function solveProduction(
               label: `${node.resource.name}`,
               value: Number(value.Primal),
               resource: node.resource,
+              output: node.output,
+              outputIndex: node.outputIndex,
             },
             position: { x: 0, y: 0 },
           });

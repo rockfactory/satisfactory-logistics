@@ -74,7 +74,11 @@ function parseBuilding(building, index, buildingDescriptorsImages) {
     somersloopPowerConsumptionExponent: parseFloat(
       building.mProductionBoostPowerConsumptionExponent,
     ),
-    somersloopSlots: parseFloat(building.mProductionShardSlotSize),
+    // Fix for smelters
+    somersloopSlots:
+      building.ClassName === 'Build_SmelterMk1_C'
+        ? 1.0
+        : parseFloat(building.mProductionShardSlotSize),
     clearance: parseClearanceData(building.mClearanceData),
     imagePath:
       '/images/game/' +

@@ -1,14 +1,16 @@
 import { useStore } from '@/core/zustand';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
+import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
+import { ImportSavegameRecipesModal } from '@/recipes/savegame/ImportSavegameRecipesModal';
+import type { ParsedSatisfactorySave } from '@/recipes/savegame/ParseSavegameMessages';
+import {
+  usePathSolverInstance,
+  useSolverAllowedRecipes,
+} from '@/solver/store/solverSelectors';
 import {
   ActionIcon,
-  Checkbox,
   Group,
   Menu,
   Portal,
-  Stack,
-  Text,
   TextInput,
   Tooltip,
 } from '@mantine/core';
@@ -26,28 +28,8 @@ import {
   IconServer,
   IconServerOff,
 } from '@tabler/icons-react';
-import { Fragment, useMemo, useState } from 'react';
-import { AllFactoryItemsMap } from '../../../recipes/FactoryItem';
-import {
-  AllFactoryRecipes,
-  FactoryRecipe,
-} from '../../../recipes/FactoryRecipe';
-import {
-  usePathSolverInstance,
-  useSolverAllowedRecipes,
-} from '../../store/solverSelectors';
-
-const AllRecipesGroupedByProduct = AllFactoryRecipes.reduce(
-  (acc, recipe) => {
-    const product = recipe.products[0].resource;
-    if (!acc[product]) {
-      acc[product] = [];
-    }
-    acc[product].push(recipe);
-    return acc;
-  },
-  {} as Record<string, FactoryRecipe[]>,
-);
+import { useMemo, useState } from 'react';
+import { SolverRecipesList } from './recipes/SolverRecipesList';
 
 export interface ISolverRecipesDrawerProps {}
 
@@ -57,23 +39,28 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
   const allowedRecipes = useSolverAllowedRecipes(instance?.id);
   const [search, setSearch] = useState('');
 
-  const displayedProducts = useMemo(() => {
-    return Object.entries(AllRecipesGroupedByProduct).filter(
-      ([product, recipes]) =>
-        search
-          ? AllFactoryItemsMap[product].name
-              .toLowerCase()
-              .includes(search.toLowerCase()) ||
-            recipes.some(recipe =>
-              recipe.name.toLowerCase().includes(search.toLowerCase()),
-            )
-          : true,
-    );
-  }, [search]);
-
   const areAllSelected = useMemo(() => {
     return allowedRecipes?.length === AllFactoryRecipes.length;
   }, [allowedRecipes]);
+
+  const handleSetRecipesFromImport = (
+    save: ParsedSatisfactorySave,
+    asDefault: boolean,
+  ) => {
+    const availableRecipes = new Set(save.availableRecipes);
+    const saveRecipes = AllFactoryRecipes.filter(
+      // We should only import recipes that are available in the savegame,
+      // but custom recipes are not directly present in it.
+      // For now, we just import all custom recipes.
+      recipe => availableRecipes.has(recipe.id) || recipe.customType != null,
+    ).map(recipe => recipe.id);
+
+    useStore.getState().setAllowedRecipes(instance!.id, () => saveRecipes);
+
+    if (asDefault) {
+      useStore.getState().setGameAllowedRecipes(undefined, saveRecipes);
+    }
+  };
 
   return (
     <>
@@ -219,37 +206,11 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
+
+          <ImportSavegameRecipesModal onImported={handleSetRecipesFromImport} />
         </Group>
       </Portal>
-      <Stack gap="sm">
-        {displayedProducts.map(([product, recipes]) => (
-          <Fragment key={product}>
-            <Group gap="xs">
-              <Text key={product} size="md">
-                {AllFactoryItemsMap[product].displayName}
-              </Text>
-              <FactoryItemImage id={product} size={20} />
-            </Group>
-            {recipes.map(recipe => (
-              <Checkbox
-                key={recipe.id}
-                label={
-                  <RecipeTooltip recipeId={recipe.id}>
-                    {recipe.name}
-                  </RecipeTooltip>
-                }
-                checked={allowedRecipes?.includes(recipe.id) ?? true}
-                onChange={e => {
-                  useStore.getState().toggleRecipe(instance!.id, {
-                    recipeId: recipe.id,
-                    use: e.currentTarget.checked,
-                  });
-                }}
-              />
-            ))}
-          </Fragment>
-        ))}
-      </Stack>
+      <SolverRecipesList search={search} solverId={instance?.id} />
     </>
   );
 }

@@ -1,4 +1,4 @@
-import type { FactoryItemId } from '../FactoryItemId';
+import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import {
   FactoryItemImage,
   type IFactoryItemImageProps,

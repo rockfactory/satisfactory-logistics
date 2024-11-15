@@ -1,6 +1,6 @@
 import { Button, Group, Text } from '@mantine/core';
 import { IconCheck, IconUpload } from '@tabler/icons-react';
-import { useSession } from '../authSelectors';
+import { useSession } from '@/auth/authSelectors';
 import { saveLocalState } from './useSyncLocalAndRemoteStore';
 
 export interface ISyncButtonProps {}

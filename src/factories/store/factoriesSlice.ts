@@ -1,6 +1,6 @@
-import { useStore } from '../../core/zustand';
-import { createSlice } from '../../core/zustand-helpers/slices';
-import { Factory } from '../Factory';
+import { useStore } from '@/core/zustand';
+import { createSlice } from '@/core/zustand-helpers/slices';
+import { Factory } from '@/factories/Factory';
 interface FactoriesSlice {
   factories: Record<string, Factory>;
 }
@@ -26,10 +26,14 @@ export const factoriesSlice = createSlice({
           id,
         };
       },
-    toggleInputForceUsage: (factoryId: string, inputIndex: number) => state => {
-      state.factories[factoryId].inputs[inputIndex].forceUsage =
-        !state.factories[factoryId].inputs[inputIndex].forceUsage;
-    },
+    updateFactoryInputAmount:
+      (factoryId: string, inputIndex: number, amount: number) => state => {
+        state.factories[factoryId].inputs[inputIndex].amount = amount;
+      },
+    updateFactoryOutputAmount:
+      (factoryId: string, outputIndex: number, amount: number) => state => {
+        state.factories[factoryId].outputs[outputIndex].amount = amount;
+      },
   },
 });
 
