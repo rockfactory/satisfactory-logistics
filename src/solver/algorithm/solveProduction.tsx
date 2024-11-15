@@ -1,13 +1,14 @@
-import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
-import { Edge, MarkerType, Node } from '@xyflow/react';
-import highloader, { Highs, type HighsSolution } from 'highs';
-import { useEffect, useRef, useState } from 'react';
 import { log } from '@/core/logger/log';
+import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
 import { IIngredientEdgeData } from '@/solver/edges/IngredientEdge';
 import type { IByproductNodeData } from '@/solver/layout/nodes/byproduct-node/ByproductNode';
 import { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
 import { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
 import { SolverRequest, type SolverNodeState } from '@/solver/store/Solver';
+import { Edge, MarkerType, Node } from '@xyflow/react';
+import highloader, { Highs, type HighsSolution } from 'highs';
+import { useEffect, useRef, useState } from 'react';
+import { avoidPackagedFuelIfPossible } from './consolidate/avoidPackagedFuelIfPossible';
 import { avoidUnproducibleResources } from './consolidate/avoidUnproducibleResources';
 import { consolidateProductionConstraints } from './consolidate/consolidateProductionConstraints';
 import { addInputResourceConstraints } from './request/addInputProductionConstraints';
@@ -87,6 +88,7 @@ export function solveProduction(
   // 3. Consolidate
   consolidateProductionConstraints(ctx);
   avoidUnproducibleResources(ctx);
+  avoidPackagedFuelIfPossible(ctx);
 
   // 4. Solve
   applySolverObjective(ctx, request);

@@ -64,5 +64,8 @@ export function applySolverObjective(
       .join(' - ')}`;
   }
 
+  // Add custom minimization vars
+  ctx.objective += ctx.getMinimizeExpressionsObjective();
+
   ctx.objective += '\n';
 }
