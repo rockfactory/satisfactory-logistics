@@ -67,7 +67,7 @@ export function parseItems(docsJson: any) {
 
   fs.writeFileSync(
     './src/recipes/FactoryItemId.ts',
-    `export type FactoryItemId = ${items
+    `/** Automatically generated */\nexport type FactoryItemId = ${items
       .map(item => `'${item.id}'`)
       .join(' | ')};`,
   );
