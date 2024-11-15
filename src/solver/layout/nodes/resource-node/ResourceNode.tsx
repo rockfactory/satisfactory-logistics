@@ -56,6 +56,7 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
     if (input.factoryId === WORLD_SOURCE_ID) return WORLD_SOURCE_ID;
     const factory = state.factories.factories[input.factoryId ?? ''];
     return {
+      id: factory?.id,
       name: factory?.name,
       // TODO Support multiple outputs
       outputAmount: factory?.outputs.find(o => o.resource === resource.id)
@@ -101,7 +102,10 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
               </Group>
               <Group gap={4} align="center">
                 {sourceFactory != null && (
-                  <Tooltip label="Input from another factory">
+                  <Tooltip
+                    label="Input from another factory"
+                    disabled={sourceFactory === WORLD_SOURCE_ID}
+                  >
                     <FactoryInputIcon size={16} stroke={2} />
                   </Tooltip>
                 )}
