@@ -13,6 +13,7 @@ import { avoidUnproducibleResources } from './consolidate/avoidUnproducibleResou
 import { consolidateProductionConstraints } from './consolidate/consolidateProductionConstraints';
 import { addInputResourceConstraints } from './request/addInputProductionConstraints';
 import { addOutputProductionConstraints } from './request/addOutputProductionConstraints';
+import { blockWorldResourcesForInputs } from './request/blockWorldResourcesForInputs';
 import { applySolverObjective } from './solve/applySolverObjectives';
 import { SolverContext } from './SolverContext';
 
@@ -76,6 +77,7 @@ export function solveProduction(
     if (item.amount == null || !item.resource) continue;
     addInputResourceConstraints(ctx, item, i);
   }
+  blockWorldResourcesForInputs(ctx, inputs);
 
   const outputs = request.outputs ?? [];
   for (let i = 0; i < outputs.length; i++) {
