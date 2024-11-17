@@ -1,6 +1,9 @@
 import type { FactoryInput } from '@/factories/Factory';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { type SolverContext, setGraphResource } from '@/solver/algorithm/SolverContext';
+import {
+  type SolverContext,
+  setGraphResource,
+} from '@/solver/algorithm/SolverContext';
 
 /**
  * Compute the constraints for a given input resource.
@@ -33,6 +36,7 @@ export function addInputResourceConstraints(
       break;
 
     case 'max':
+    case 'input':
     default:
       // If the resource is a factory input, we need to add a constraint to be
       // _max_ the amount. This is because else the `rawVar` will not have

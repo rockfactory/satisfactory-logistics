@@ -21,6 +21,7 @@ export interface FactoryInput {
 }
 
 export type FactoryInputConstraint =
+  | 'input' // Limit solver to use at least this amount + allow solver to allocate extra world resources
   | 'exact' // Force solver to use this input in exact amount (ex "force usage")
   | 'max'; // Limit solver to use at most this amount
 
