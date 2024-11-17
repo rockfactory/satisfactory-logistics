@@ -4,16 +4,18 @@ import {
   getAllDefaultRecipesIds,
   getAllMAMRecipeIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
+import { isResourceNode } from '@/solver/algorithm/getSolutionNodes';
 import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
 import { solveProduction } from '@/solver/algorithm/solveProduction';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
-import type { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
+import { fixSolverRoundingError } from '@/solver/store/auto-set/fixSolverRoundingError';
 import type { SolverRequest } from '@/solver/store/Solver';
 import type { Highs } from 'highs';
 
 export interface ISolverSolutionSuggestion {
   addRecipes?: string[];
   resetOutputMinimum?: { index: number; resource: string }[];
+  changeInputsUsage?: { index: number; resource: string }[];
   unblockResources?: string[];
 }
 
@@ -26,21 +28,61 @@ export function proposeSolverSolutionSuggestions(
   const suggestions: ISolverSolutionSuggestion = {};
 
   // 0A. Try to unblock resources
-  if (request.blockedResources?.length) {
+  if (
+    request.blockedResources?.length ||
+    inputsOutputs.inputs?.some(i => (i.constraint ?? 'max') === 'max')
+  ) {
     const withUnblockedResources = solveProduction(highs, {
       ...request,
       blockedResources: [],
       ...inputsOutputs,
+      inputs: inputsOutputs.inputs.map(input => ({
+        ...input,
+        constraint: 'input',
+      })),
     });
     if (isSolutionFound(withUnblockedResources)) {
       suggestions.unblockResources = withUnblockedResources.nodes
+        .filter(isResourceNode)
         .filter(
           node =>
-            node.type === 'Resource' &&
             node.data.isRaw &&
             request.blockedResources?.includes(node.data.resource.id),
         )
-        .map(node => (node.data as IResourceNodeData).resource.id);
+        .map(node => node.data.resource.id);
+
+      const resourceNodes = withUnblockedResources.nodes.filter(isResourceNode);
+      const amountsByResource = resourceNodes.reduce(
+        (acc, node) => {
+          acc[node.data.resource.id] =
+            (acc[node.data.resource.id] ?? 0) +
+            fixSolverRoundingError(node.data.value);
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+      const amountsByInputs = inputsOutputs.inputs.reduce(
+        (acc, input) => {
+          acc[input.resource ?? ''] =
+            (acc[input.resource ?? ''] ?? 0) + (input.amount ?? 0);
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+
+      suggestions.changeInputsUsage = resourceNodes
+        .filter(
+          node =>
+            node.data.input != null &&
+            (inputsOutputs.inputs.find((_, i) => i === node.data.inputIndex)
+              ?.constraint ?? 'max') === 'max' &&
+            amountsByResource[node.data.resource.id] !==
+              amountsByInputs[node.data.resource.id],
+        )
+        .map(node => ({
+          index: node.data.inputIndex!,
+          resource: node.data.resource.id,
+        }));
       console.log('Solution found with unblocked resources', suggestions);
     }
   }

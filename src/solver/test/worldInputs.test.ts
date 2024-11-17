@@ -1,7 +1,7 @@
 import { getAllDefaultRecipesIds } from '@/recipes/graph/getAllDefaultRecipes';
 import { itemId } from '@/recipes/itemId';
-import { describe, expect, test } from 'vitest';
 import { loadHighs, solveProduction } from '@/solver/algorithm/solveProduction';
+import { describe, expect, test } from 'vitest';
 
 describe('worldInputs', () => {
   test('should prefer world inputs instead of adding world var', async () => {
@@ -36,6 +36,7 @@ describe('worldInputs', () => {
         {
           amount: 100,
           resource: itemId('Desc_SAM_C'),
+          constraint: 'input',
         },
       ],
       outputs: [{ amount: 200, resource: itemId('Desc_FicsiteIngot_C') }],

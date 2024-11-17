@@ -34,6 +34,7 @@ export class SolverContext {
   integers: string[] = [];
   bounds: string[] = [];
   objective?: string;
+  minimizeExpressions: string[] = [];
 
   constructor(request: SolverProductionRequest) {
     this.request = request;
@@ -69,6 +70,18 @@ export class SolverContext {
     return this.graph
       .filterNodes((node, attributes) => attributes.type === 'area')
       .map(node => this.graph.getNodeAttributes(node) as SolverAreaNode);
+  }
+
+  addMinimizeExpressions(expression: string) {
+    this.minimizeExpressions.push(expression);
+  }
+
+  getMinimizeExpressionsObjective() {
+    if (this.minimizeExpressions.length === 0) {
+      return '';
+    }
+
+    return ' + ' + this.minimizeExpressions.join(' + ');
   }
 
   getMaximizedOutputs() {

@@ -32,9 +32,9 @@
         // Matches `@/`, `../` and `./`, move them up in the suggestions (This is the default config if you leave it empty)
         "moveUpPatterns": ["@/", "@/core/zustand", "\\.{1,2}/"],
         // Move `dist` down in the suggestions, by deafult it's `[]`
-        "moveDownPatterns": ["^zustand"]
+        "moveDownPatterns": ["^zustand", "^node:test"]
       }
-    ],
+    ]
   },
   "include": ["src", "scripts"],
   "references": [{ "path": "./tsconfig.node.json" }]

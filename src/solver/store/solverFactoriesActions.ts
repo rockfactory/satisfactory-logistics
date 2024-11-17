@@ -1,6 +1,6 @@
 import { loglev } from '@/core/logger/log';
 import { createActions } from '@/core/zustand-helpers/actions';
-import { Factory, FactoryOutput } from '@/factories/Factory';
+import { Factory, FactoryOutput, type FactoryInput } from '@/factories/Factory';
 import type { ISolverSolution } from '@/solver/page/SolverPage';
 import { bfsFromNode } from 'graphology-traversal';
 import { v4 } from 'uuid';
@@ -74,6 +74,24 @@ export const solverFactoriesActions = createActions({
     state.factories.factories[factoryId]?.inputs?.splice(inputIndex, 1);
     // state.solvers.instances[factoryId]?.request.inputs?.splice(inputIndex, 1);
   },
+  updateFactoryInput:
+    (
+      factoryId: string,
+      inputIndex: number,
+      input: Pick<FactoryInput, 'constraint'>,
+    ) =>
+    state => {
+      const factoryInput =
+        state.factories.factories[factoryId]?.inputs?.[inputIndex];
+      if (!factoryInput) {
+        console.error('Factory input not found', factoryId, inputIndex);
+      }
+
+      if (input.constraint) {
+        factoryInput.constraint = input.constraint;
+      }
+    },
+
   addFactoryOutput: (factoryId: string) => state => {
     state.factories.factories[factoryId]?.outputs?.push({
       resource: null,
