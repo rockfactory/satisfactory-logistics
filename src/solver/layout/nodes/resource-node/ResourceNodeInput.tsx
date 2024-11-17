@@ -3,9 +3,22 @@ import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputI
 import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
 import { WORLD_SOURCE_ID } from '@/factories/Factory';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { Badge, Box, CloseButton, Group, Text, Title } from '@mantine/core';
-import { IconBuildingFactory2, IconWorld } from '@tabler/icons-react';
+import {
+  Anchor,
+  Badge,
+  Box,
+  CloseButton,
+  Group,
+  Text,
+  Title,
+} from '@mantine/core';
+import {
+  IconBuildingFactory2,
+  IconExternalLink,
+  IconWorld,
+} from '@tabler/icons-react';
 import { useReactFlow } from '@xyflow/react';
+import { Link } from 'react-router-dom';
 import type { IResourceNodeData } from './ResourceNode';
 
 export interface IResourceNodeInputProps {
@@ -14,7 +27,11 @@ export interface IResourceNodeInputProps {
   data: IResourceNodeData;
   sourceFactory?:
     | typeof WORLD_SOURCE_ID
-    | { name?: string | null; outputAmount?: number | null };
+    | {
+        id?: string | null;
+        name?: string | null;
+        outputAmount?: number | null;
+      };
 }
 
 export function ResourceNodeInput(props: IResourceNodeInputProps) {
@@ -49,9 +66,22 @@ export function ResourceNodeInput(props: IResourceNodeInputProps) {
             ) : (
               <IconBuildingFactory2 size={16} />
             )}
-            {sourceFactory === WORLD_SOURCE_ID
-              ? 'World'
-              : (sourceFactory?.name ?? 'Unknown Factory')}
+            {sourceFactory === WORLD_SOURCE_ID ? (
+              'World'
+            ) : sourceFactory ? (
+              <Anchor
+                component={Link}
+                to={`/factories/${sourceFactory?.id}/calculator`}
+                c="gray"
+              >
+                <Group gap={2}>
+                  {sourceFactory.name}
+                  <IconExternalLink size={12} />
+                </Group>
+              </Anchor>
+            ) : (
+              'Unknown Factory'
+            )}
           </Group>
         </Title>
         {props.selected && (
