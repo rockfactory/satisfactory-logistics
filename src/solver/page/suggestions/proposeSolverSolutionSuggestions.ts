@@ -8,6 +8,7 @@ import { isResourceNode } from '@/solver/algorithm/getSolutionNodes';
 import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
 import { solveProduction } from '@/solver/algorithm/solveProduction';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
+import { fixSolverRoundingError } from '@/solver/store/auto-set/fixSolverRoundingError';
 import type { SolverRequest } from '@/solver/store/Solver';
 import type { Highs } from 'highs';
 
@@ -50,13 +51,33 @@ export function proposeSolverSolutionSuggestions(
         )
         .map(node => node.data.resource.id);
 
-      suggestions.changeInputsUsage = withUnblockedResources.nodes
-        .filter(isResourceNode)
+      const resourceNodes = withUnblockedResources.nodes.filter(isResourceNode);
+      const amountsByResource = resourceNodes.reduce(
+        (acc, node) => {
+          acc[node.data.resource.id] =
+            (acc[node.data.resource.id] ?? 0) +
+            fixSolverRoundingError(node.data.value);
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+      const amountsByInputs = inputsOutputs.inputs.reduce(
+        (acc, input) => {
+          acc[input.resource ?? ''] =
+            (acc[input.resource ?? ''] ?? 0) + (input.amount ?? 0);
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
+
+      suggestions.changeInputsUsage = resourceNodes
         .filter(
           node =>
             node.data.input != null &&
             (inputsOutputs.inputs.find((_, i) => i === node.data.inputIndex)
-              ?.constraint ?? 'max') === 'max',
+              ?.constraint ?? 'max') === 'max' &&
+            amountsByResource[node.data.resource.id] !==
+              amountsByInputs[node.data.resource.id],
         )
         .map(node => ({
           index: node.data.inputIndex!,

@@ -4,10 +4,10 @@ import {
   type FactoryInput,
 } from '@/factories/Factory';
 import { isWorldResource } from '@/recipes/WorldResources';
-import type { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
+import { isResourceNode } from '@/solver/algorithm/getSolutionNodes';
 import type { ISolverSolution } from '@/solver/page/SolverPage';
-import type { Node } from '@xyflow/react';
 import { sortBy } from 'lodash';
+import { fixSolverRoundingError } from './fixSolverRoundingError';
 
 export function computeAutoSetInputs(
   solution: ISolverSolution,
@@ -17,27 +17,27 @@ export function computeAutoSetInputs(
   const nextInputs = [] as FactoryInput[];
 
   const inputNodes = sortBy(
-    solution.nodes.filter(
-      (n): n is Node<IResourceNodeData, 'Resource'> => n.type === 'Resource',
-    ),
+    solution.nodes.filter(isResourceNode),
     n => n.data.resource.displayName,
   );
   for (const node of inputNodes) {
+    const nodeAmount = fixSolverRoundingError(node.data.value);
+
     const nextInput = nextInputs.find(
       i => i.resource === node.data.resource.id,
     );
     const input = prevInputs.find(i => i.resource === node.data.resource.id);
     if (nextInput) {
-      nextInput.amount = (nextInput.amount ?? 0) + node.data.value;
+      nextInput.amount = (nextInput.amount ?? 0) + nodeAmount;
     } else if (input) {
       nextInputs.push({
         ...input,
-        amount: node.data.value,
+        amount: nodeAmount,
       });
     } else {
       nextInputs.push({
         resource: node.data.resource.id,
-        amount: node.data.value,
+        amount: nodeAmount,
         factoryId: isWorldResource(node.data.resource.id)
           ? WORLD_SOURCE_ID
           : undefined,
