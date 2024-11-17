@@ -62,6 +62,14 @@ export function applySolverObjective(
     ctx.objective += ` - ${maximizedOutputs
       .map(v => `${v.variable}`)
       .join(' - ')}`;
+
+    if (maximizedOutputs.length > 1) {
+      for (let i = 1; i < maximizedOutputs.length; i++) {
+        ctx.constraints.push(
+          `OUTPUT_MAX_${i}: ${maximizedOutputs[i].variable} - ${maximizedOutputs[0].variable} = 0`,
+        );
+      }
+    }
   }
 
   // Add custom minimization vars
