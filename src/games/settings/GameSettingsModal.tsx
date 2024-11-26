@@ -69,6 +69,12 @@ export function GameSettingsModal(props: IGameSettingsModalProps) {
             checked={settings?.noHighlight100PercentUsage}
             onChange={onChangeHandler('noHighlight100PercentUsage')}
           />
+          <Checkbox
+            label="Animate connections"
+            description="This will add little circles to the connections between nodes in the calculator to show resources moving between nodes. Disable if you don't like it"
+            checked={settings?.animateEdges}
+            onChange={onChangeHandler('animateEdges')}
+          />
           <ColorInput
             label="Highlight 100% usage color"
             description="Color used to highlight factories that are at 100% usage. By default it's a blue (#339af0)"
