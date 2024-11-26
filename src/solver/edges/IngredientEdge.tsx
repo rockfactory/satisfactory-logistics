@@ -1,6 +1,7 @@
 import {
   useGameSettingMaxBelt,
   useGameSettingMaxPipeline,
+  useGameSettings,
 } from '@/games/gamesSlice';
 import {
   FactoryConveyorBelts,
@@ -61,6 +62,7 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
   const isOverMaxBelt = maxBelt && (data?.value ?? 0) > maxBelt.conveyor!.speed;
   const isOverMaxPipeline =
     maxPipeline && (data?.value ?? 0) > maxPipeline.pipeline!.flowRate;
+  const settings = useGameSettings();
 
   const isOverMaxLogistic =
     data?.resource?.form === FactoryItemForm.Gas ||
@@ -123,13 +125,15 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
             sx < tx ? 'url(#edge-gradient)' : 'url(#edge-gradient-reverse)',
         }}
       />
-      <circle r="2" fill="var(--mantine-color-indigo-3)">
-        <animateMotion
-          dur={`${duration}s`}
-          repeatCount="indefinite"
-          path={edgePath}
-        />
-      </circle>
+      {settings.animateEdges ? (
+        <circle r="2" fill="var(--mantine-color-indigo-3)">
+          <animateMotion
+            dur={`${duration}s`}
+            repeatCount="indefinite"
+            path={edgePath}
+          />
+        </circle>
+      ) : null}
       <EdgeLabelRenderer>
         <Box
           p={'4px'}
