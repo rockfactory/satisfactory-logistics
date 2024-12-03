@@ -1,7 +1,13 @@
 import type { FactoryInput, FactoryInputConstraint } from '@/factories/Factory';
+import { isWorldResource } from '@/recipes/WorldResources';
 import { ActionIcon, Menu, Stack, Text, Tooltip } from '@mantine/core';
-import { IconCheck, IconEqual, IconMathLower } from '@tabler/icons-react';
-import { useCallback } from 'react';
+import {
+  IconArrowMergeAltLeft,
+  IconCheck,
+  IconEqual,
+  IconMathLower,
+} from '@tabler/icons-react';
+import { useCallback, useMemo } from 'react';
 
 export interface IFactoryInputConstraintSelectProps {
   input: FactoryInput;
@@ -27,7 +33,30 @@ const FactoryInputConstraints = {
     ),
     icon: <IconEqual size={16} />,
   },
+  input: {
+    label: 'Input',
+    description: (
+      <span>
+        Use <em>at most</em> amount from this input, but allows calculator to
+        allocate <em>extra</em> world resources
+      </span>
+    ),
+    icon: <IconArrowMergeAltLeft size={16} />,
+  },
 } satisfies Record<FactoryInputConstraint, any>;
+
+function getTooltipLabel(constraint: FactoryInputConstraint) {
+  switch (constraint) {
+    case 'max':
+      return <span>Use at most this amount</span>;
+    case 'exact':
+      return <span>Force usage of full input amount</span>;
+    case 'input':
+      return (
+        <span>Use at most this amount, but allows extra world resources</span>
+      );
+  }
+}
 
 export function FactoryInputConstraintSelect(
   props: IFactoryInputConstraintSelectProps,
@@ -44,18 +73,23 @@ export function FactoryInputConstraintSelect(
   const constraint = input.constraint ?? 'max';
   const current = FactoryInputConstraints[constraint];
 
+  const allowedConstraints = useMemo(() => {
+    let constraints = Object.entries(FactoryInputConstraints);
+
+    if (input.resource && !isWorldResource(input.resource)) {
+      // Input is allowed only for world resources
+      constraints = constraints.filter(([key]) => key !== 'input');
+    }
+
+    return constraints;
+  }, [input]);
+
   return (
     <Menu withinPortal loop returnFocus>
       <Menu.Target>
         <Tooltip
           color="dark.8"
-          label={
-            constraint === 'max' ? (
-              <span>Use at most this amount</span>
-            ) : (
-              <span>Force usage of full input amount</span>
-            )
-          }
+          label={getTooltipLabel(constraint)}
           position="top"
         >
           <ActionIcon
@@ -69,7 +103,7 @@ export function FactoryInputConstraintSelect(
         </Tooltip>
       </Menu.Target>
       <Menu.Dropdown>
-        {Object.entries(FactoryInputConstraints).map(([value, attributes]) => (
+        {allowedConstraints.map(([value, attributes]) => (
           <Menu.Item
             key={value}
             onClick={() => handleChange(value)}
