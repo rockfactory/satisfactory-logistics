@@ -22,6 +22,7 @@ import { withActions } from './zustand-helpers/actions';
 import { forceMigrationOnInitialPersist } from './zustand-helpers/forceMigrationOnInitialPersist';
 import { indexedDbStorage } from './zustand-helpers/indexedDbStorage';
 import { withSlices } from './zustand-helpers/slices';
+import { notepadSlice } from '@/notepad/notepadSlice.ts';
 
 const logger = loglev.getLogger('store:zustand');
 
@@ -30,6 +31,7 @@ const slices = withSlices(
   gamesSlice,
   gameSaveSlice,
   factoriesSlice,
+  notepadSlice,
   factoryViewSlice,
   solversSlice,
   chartsSlice,

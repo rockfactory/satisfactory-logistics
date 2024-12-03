@@ -5,6 +5,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import {
   IconArrowsDiff,
   IconBarrierBlock,
+  IconNoDerivatives,
   IconTestPipe,
   IconX,
 } from '@tabler/icons-react';
@@ -15,6 +16,7 @@ import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
 import { SolverLimitationsDrawer } from './SolverLimitationsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';
 import classes from './SolverRequestDrawer.module.css';
+import { Notepad } from '@/notepad/Notepad.tsx';
 
 export interface ISolverRequestDrawerProps {
   solution: ISolverSolution | null;
@@ -32,6 +34,11 @@ const SolverRequestTabs = [
     value: 'limitations',
     label: 'Limitations',
     icon: <IconBarrierBlock size={16} />,
+  },
+  {
+    value: 'notes',
+    label: 'Notes',
+    icon: <IconNoDerivatives size={16} />,
   },
 ] as const;
 
@@ -140,6 +147,9 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
                   id={id}
                   onSolverChangeHandler={onSolverChangeHandler}
                 />
+              </Tabs.Panel>
+              <Tabs.Panel value="notes">
+                <Notepad adaQuotes={true} />
               </Tabs.Panel>
             </Tabs>
           </Drawer.Body>
