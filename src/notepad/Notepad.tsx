@@ -4,7 +4,7 @@ import { TaskItem } from '@tiptap/extension-task-item';
 import TipTapTaskList from '@tiptap/extension-task-list';
 import { useEditor } from '@tiptap/react';
 import React from 'react';
-import AdaQuotes from '../ada/quotes.json';
+import AdaQuotes from '@/ada/quotes.json';
 import { Placeholder } from '@tiptap/extension-placeholder';
 import { rem } from '@mantine/core';
 
