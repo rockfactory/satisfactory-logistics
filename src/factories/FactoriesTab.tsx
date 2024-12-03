@@ -2,7 +2,9 @@ import {
   Button,
   Container,
   Divider,
+  Grid,
   Group,
+  SimpleGrid,
   Space,
   Stack,
   Text,
@@ -14,7 +16,7 @@ import {
   IconDeviceGamepad,
   IconPlus,
 } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useSession } from '@/auth/authSelectors';
 // import { loadFromRemote } from '../auth/sync/loadFromRemote';
 import { Link, useNavigate } from 'react-router-dom';
@@ -26,7 +28,12 @@ import classes from './FactoriesTab.module.css';
 import { FactoryRow } from './FactoryRow';
 import { FactoriesFiltersMenu } from './filters/FactoriesFiltersMenu';
 import { FactoryWideCard } from './wide/FactoryWideCard';
-
+import { ControlledBoard, KanbanBoard, moveCard } from '@caldwell619/react-kanban';
+import { Factory, FactoryProgressStatus } from '@/factories/Factory.ts';
+import { useGameFactories } from '@/games/store/gameFactoriesSelectors.ts';
+import { ProgressChip } from '@/factories/ProgressChip.tsx';
+import './FactoryKanban.css'
+import { Path, setByPath } from '@clickbar/dot-diver';
 export interface IFactoriesTabProps {}
 
 export function FactoriesTab(_props: IFactoriesTabProps) {
@@ -45,6 +52,21 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
       state.games.games[state.games.selected]?.factoriesIds.length > 0,
   );
   const factoriesIds = useGameFactoriesIds(gameId);
+  const factories = useGameFactories(gameId);
+
+  const board: KanbanBoard<Factory> = {
+    columns: [
+      'draft',
+      'to_be_done',
+      'in_progress',
+      'done',
+    ].map(status => ({
+      id: status,
+      title: status,
+      cards: factories.filter(it => it.progress === status)
+        .sort((a, b) => (a.boardIndex ?? Number.MAX_VALUE) - (b.boardIndex ?? Number.MAX_VALUE))
+    }))
+  };
 
   return (
     <div>
@@ -90,17 +112,68 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
             </Button>
           </Stack>
         )}
-        <Stack gap="md">
-          {viewMode === 'wide' &&
-            factoriesIds.map((factoryId, index) => (
-              <FactoryWideCard key={factoryId} id={factoryId} index={index} />
+        {viewMode === 'compact' && (
+          <SimpleGrid spacing="lg" cols={3}>
+            {factoriesIds.map((factoryId, index) => (
+              <FactoryRow key={factoryId} id={factoryId} />
             ))}
-          {viewMode === 'compact' &&
-            factoriesIds.map((factoryId, index) => (
-              <FactoryRow key={factoryId} id={factoryId} index={index} />
-            ))}
-        </Stack>
+          </SimpleGrid>
+        )}
         {!hasFactories && <Divider mb="lg" />}
+      </Container>
+
+      {viewMode === 'wide' && (
+        <ControlledBoard<Factory>
+          renderColumnHeader={it => (
+            <ProgressChip
+              status={it.id as FactoryProgressStatus}
+              size="lg"
+              variant="light"
+            />
+          )}
+          allowAddCard={false}
+          allowAddColumn={false}
+          renderCard={({ id }) => (
+            <FactoryRow id={id} showProgressStatus={false} />
+          )}
+          onCardDragEnd={(movedFactory, source, destination) => {
+            const { toPosition, toColumnId } = destination!;
+            const { fromPosition, fromColumnId } = source!;
+
+            if (fromPosition === undefined || fromColumnId === undefined|| toPosition === undefined|| toColumnId === undefined) {
+              throw new Error();
+            }
+
+            const newBoard = moveCard(board, source, destination) as KanbanBoard<Factory>;
+
+            const newToColumn = newBoard.columns.find(it => it.id === toColumnId)!
+            const newFromColumn = newBoard.columns.find(it => it.id === fromColumnId)!
+
+            return useStore
+              .getState()
+              .updateFactories(factory => {
+                if (factory.id === movedFactory.id) {
+                  factory.progress = toColumnId as FactoryProgressStatus;
+                }
+
+                if (factory.progress === toColumnId) {
+                  factory.boardIndex = newToColumn.cards.findIndex(it => it.id === factory.id);
+
+                  return;
+                }
+
+                if (factory.progress === fromColumnId) {
+                  factory.boardIndex = newFromColumn.cards.findIndex(it => it.id === factory.id);
+
+                  return;
+                }
+              });
+            }}
+        >
+          {board}
+        </ControlledBoard>
+      )}
+      <Container size="lg" mt="lg">
         <Group mt="lg" justify="space-between">
           <Group>
             <Button
@@ -131,28 +204,9 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
                 Add and Plan Factory
               </Button>
             </Tooltip>
-
-            {/* <FactoryUndoButtons /> */}
           </Group>
           <Group>
             <GameSettingsModal withLabel />
-            {/* <SyncButton /> */}
-            {/* <Button
-              leftSection={<IconTrash size={16} />}
-              color="red"
-              variant="light"
-              onClick={() => {
-                dispatch(factoryActions.clear());
-                notifications.show({
-                  title: 'Factories cleared',
-                  message:
-                    'All factories have been removed. You can undo this action with Ctrl+Z or using the undo/redo buttons in the command bar.',
-                  color: 'blue',
-                });
-              }}
-            >
-              Clear All
-            </Button> */}
           </Group>
         </Group>
       </Container>

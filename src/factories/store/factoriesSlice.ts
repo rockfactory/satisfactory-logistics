@@ -11,6 +11,9 @@ export const factoriesSlice = createSlice({
     factories: {},
   } as FactoriesSlice,
   actions: {
+    updateFactories: (fn: (factory: Factory) => void) => state => {
+      Object.values(state.factories).forEach(fn);
+    },
     updateFactory: (id: string, fn: (factory: Factory) => void) => state => {
       fn(state.factories[id]);
     },
@@ -24,6 +27,7 @@ export const factoriesSlice = createSlice({
           outputs: [],
           ...factory,
           id,
+          progress: 'draft'
         };
       },
     updateFactoryInputAmount:

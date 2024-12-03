@@ -14,7 +14,8 @@ import { useEffect } from 'react';
 import { Box } from '@mantine/core';
 import '@xyflow/react/dist/style.css';
 import { log } from '@/core/logger/log';
-import type { ISolverSolution } from '@/solver/page/SolverPage';
+
+import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
 
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));

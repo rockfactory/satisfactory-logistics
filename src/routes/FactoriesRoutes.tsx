@@ -1,11 +1,12 @@
 import { ChartsTab } from '@/factories/charts/ChartsTab';
 import { GamesAtleastOneManager } from '@/games/manager/GamesAtleastOneManager';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes, ScrollRestoration, useLocation, useNavigate } from 'react-router-dom';
 import { FactoriesTab } from '@/factories/FactoriesTab';
 import { Footer } from '@/layout/Footer';
 import { Header } from '@/layout/Header';
 import { SolverPage } from '@/solver/page/SolverPage';
 import { SolverShareImporterPage } from '@/solver/share/SolverShareImporter';
+import { FactoryPage } from '@/factories/FactoryPage.tsx';
 export interface IFactoryRoutesProps {}
 
 function useActiveTab() {
@@ -23,6 +24,10 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
 
   return (
     <>
+      <ScrollRestoration
+        getKey={(location, matches) => {
+          return location.pathname;
+        }}/>
       <GamesAtleastOneManager />
 
       <Header
@@ -42,6 +47,7 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
 
       <Routes>
         <Route index element={<FactoriesTab />} />
+        <Route path=":id" element={<FactoryPage />} />
         <Route path=":id/calculator" element={<SolverPage />} />
         <Route path="charts" element={<ChartsTab />} />
         <Route path="calculator/:id?" element={<SolverPage />} />

@@ -17,8 +17,8 @@ import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
 import { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
 import { usePathSolverInstance } from '@/solver/store/solverSelectors';
-import { ISolverSolution } from '@/solver/page/SolverPage';
 import { SummaryBuildings } from './SummaryBuildings';
+import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
 
 export interface ISolverSummaryDrawerProps {
   solution: ISolverSolution;

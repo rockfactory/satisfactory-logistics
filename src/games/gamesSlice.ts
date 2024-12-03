@@ -120,6 +120,7 @@ export const gamesSlice = createSlice({
         game.collapsedFactoriesIds = game.factoriesIds;
       }
     },
+
   },
 });
 

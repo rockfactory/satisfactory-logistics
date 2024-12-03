@@ -1,10 +1,10 @@
 import { useStore } from '@/core/zustand';
-import type { ISolverSolution } from '@/solver/page/SolverPage';
 import { Divider, Group, Stack, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { IconConfetti } from '@tabler/icons-react';
 import confetti from 'canvas-confetti';
 import { difference } from 'lodash';
+import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
 
 export function showConfettiWhenFactoryBuilt(
   solution: ISolverSolution,

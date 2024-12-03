@@ -1,12 +1,20 @@
 import type { LogisticType } from '@/recipes/logistics/LogisticTypes';
 
+export type FactoryProgressStatus =
+  | 'draft'
+  | 'to_be_done'
+  | 'in_progress'
+  | 'done';
+
 export interface Factory {
   id: string;
-  name?: string | null;
-  description?: string | null;
+  name?: string;
+  description?: string;
   inputs: FactoryInput[];
   outputs: FactoryOutput[];
-  powerConsumption?: number | null;
+  powerConsumption?: number;
+  progress?: FactoryProgressStatus;
+  boardIndex?: number;
 }
 
 export interface FactoryInput {

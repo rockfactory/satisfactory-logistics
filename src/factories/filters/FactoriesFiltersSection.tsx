@@ -25,6 +25,27 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
   return (
     <Group justify="space-between">
       <Group>
+
+
+        <SegmentedControl
+          data={[
+            {
+              label: 'Grid',
+              value: 'compact',
+            },
+            {
+              label: 'Kanban',
+              value: 'wide',
+            },
+          ]}
+          value={factoryView?.viewMode ?? 'wide'}
+          onChange={value =>
+            updateFactoryView(state => {
+              state.viewMode = value as 'compact' | 'wide';
+            })
+          }
+        />
+
         <TextInput
           placeholder="Filter by name"
           rightSection={<IconSearch size={16} />}
@@ -68,26 +89,6 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
-
-        <SegmentedControl
-          data={[
-            {
-              label: 'Compact',
-              value: 'compact',
-            },
-            {
-              label: 'Wide',
-              value: 'wide',
-            },
-          ]}
-          value={factoryView?.viewMode ?? 'wide'}
-          onChange={value =>
-            updateFactoryView(state => {
-              state.viewMode = value as 'compact' | 'wide';
-            })
-          }
-        />
-
         <GameFactoriesExpandActionIcon />
       </Group>
       <Group>
