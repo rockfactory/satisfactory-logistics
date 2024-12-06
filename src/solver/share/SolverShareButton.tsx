@@ -20,7 +20,10 @@ import { LoginModal } from '@/auth/LoginModal';
 import { Json } from '@/core/database.types';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
-import { sharedSolverUUIDTranslator, SolverInstance } from '@/solver/store/Solver';
+import {
+  sharedSolverUUIDTranslator,
+  SolverInstance,
+} from '@/solver/store/Solver';
 import { usePathSolverInstance } from '@/solver/store/solverSelectors';
 
 export interface ISharedSolverData {
@@ -28,10 +31,12 @@ export interface ISharedSolverData {
   factory?: Factory;
 }
 
-export interface ISolverShareButtonProps {}
+export interface ISolverShareButtonProps {
+  id: string;
+}
 
 export function SolverShareButton(props: ISolverShareButtonProps) {
-  const instance = usePathSolverInstance();
+  const instance = usePathSolverInstance(props.id);
   const session = useSession();
 
   const [loading, setLoading] = useState(false);

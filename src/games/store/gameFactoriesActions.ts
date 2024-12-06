@@ -31,9 +31,12 @@ export const gameFactoriesActions = createActions({
     };
   },
   addGameFactory:
-    (gameId?: string | null, factory?: Partial<Omit<Factory, 'id'>>) =>
+    (
+      factoryId: string,
+      gameId?: string | null,
+      factory?: Partial<Omit<Factory, 'id'>>,
+    ) =>
     (state, get) => {
-      const factoryId = v4();
       const targetId = gameId ?? state.games.selected;
       if (!targetId) {
         throw new Error('No game selected');
