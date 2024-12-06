@@ -7,8 +7,8 @@ import { IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 
 export interface ISolverResetButtonProps {
-  id: string | null | undefined;
-  factory: FactorySimpleAttributes | null;
+  id?: string;
+  factory?: FactorySimpleAttributes;
 }
 
 export function SolverResetButton(props: ISolverResetButtonProps) {

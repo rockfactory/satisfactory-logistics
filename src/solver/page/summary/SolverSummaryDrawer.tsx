@@ -21,13 +21,14 @@ import { SummaryBuildings } from './SummaryBuildings';
 import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
 
 export interface ISolverSummaryDrawerProps {
+  id: string;
   solution: ISolverSolution;
 }
 
 export function SolverSummaryDrawer(props: ISolverSummaryDrawerProps) {
   const { solution } = props;
   const [opened, { open, close }] = useDisclosure();
-  const instance = usePathSolverInstance();
+  const instance = usePathSolverInstance(props.id);
 
   const stats = useMemo(() => {
     const machineNodes = solution.nodes.filter(

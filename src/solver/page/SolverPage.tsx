@@ -2,7 +2,6 @@ import { loglev } from '@/core/logger/log';
 import { useStore } from '@/core/zustand';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
-import { getSolverGame } from '@/solver/store/solverSelectors';
 import {
   Box,
   Button,
@@ -13,52 +12,44 @@ import {
 } from '@mantine/core';
 import { IconArrowLeft, IconPlus } from '@tabler/icons-react';
 import { HighsSolution } from 'highs';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
 import { SolverResetButton } from './SolverResetButton';
 import { useSolverSolution } from '@/solver/page/useSolverSolution.ts';
 import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment.tsx';
+import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors.ts';
 
 const logger = loglev.getLogger('solver:page');
 
 export interface ISolverPageProps {}
 
 export function SolverPage(props: ISolverPageProps) {
-  const params = useParams<{ id: string }>();
-  const id = params.id;
   const navigate = useNavigate();
+  let currentSolverId = useStore.getState().solvers.current;
+
+  if (!currentSolverId) {
+    logger.log('No solver ID, creating');
+    const newSolverId = v4();
+
+    useStore.getState().setCurrentSolver(newSolverId);
+
+    currentSolverId = newSolverId;
+  }
+  const factory = useFactorySimpleAttributes(currentSolverId);
 
   const {
     loading,
-    factory,
-    currentSolverId,
     solverGameId,
     onChangeHandler,
     solution,
     suggestions,
     instance,
-  } = useSolverSolution(id);
-
-  if (params.id == null) {
-    const hasCurrentSolverGame = getSolverGame(
-      useStore.getState(),
-      currentSolverId ?? '',
-    );
-    if (!currentSolverId || hasCurrentSolverGame) {
-      logger.log('No solver ID, creating');
-      const newSolverId = v4();
-      useStore.getState().setCurrentSolver(newSolverId);
-      navigate(`/factories/${v4()}/calculator`);
-    } else {
-      logger.log('No solver ID, redirecting to', currentSolverId);
-      navigate(`/factories/${currentSolverId}/calculator`);
-    }
-  }
+  } = useSolverSolution(currentSolverId, 'standalone');
 
   return (
     <Box w="100%" pos="relative">
-      <LoadingOverlay visible={loading} />
+      <LoadingOverlay visible={loading || !instance} />
 
       <AfterHeaderSticky>
         <Group gap="sm" justify="space-between">
@@ -78,33 +69,40 @@ export function SolverPage(props: ISolverPageProps) {
             )}
             <Title order={4}>
               <TextInput
-                value={factory?.name ?? 'Solver'}
+                value={factory.name}
                 placeholder="Factory Name"
                 onChange={e => {
                   useStore
                     .getState()
                     .updateFactory(
-                      factory.id,
+                      currentSolverId,
                       f => (f.name = e.currentTarget.value),
                     );
                 }}
               />
             </Title>
-            {!solverGameId && id && (
+            {!solverGameId && (
               <Button
                 variant="filled"
                 onClick={() => {
-                  useStore.getState().addFactoryIdToGame(undefined, id);
+                  useStore
+                    .getState()
+                    .addFactoryIdToGame(undefined, currentSolverId);
+
+                  useStore.getState().setCurrentSolver(null);
+
+                  navigate(`/factories/${currentSolverId}/calculator`);
                 }}
                 leftSection={<IconPlus size={16} />}
               >
                 Add to Game
               </Button>
             )}
-            <SolverResetButton id={id} factory={factory} />
+            <SolverResetButton id={currentSolverId} factory={factory} />
           </Group>
           <Group gap="sm">
             <SolverRequestDrawer
+              factoryId={currentSolverId}
               solution={solution}
               onSolverChangeHandler={onChangeHandler}
             />
@@ -113,11 +111,14 @@ export function SolverPage(props: ISolverPageProps) {
           </Group>
         </Group>
       </AfterHeaderSticky>
-      <SolverSolutionFragment
-        suggestions={suggestions}
-        solution={solution!}
-        instance={instance}
-      />
+      {instance && (
+        <SolverSolutionFragment
+          solverId={currentSolverId}
+          suggestions={suggestions}
+          solution={solution!}
+          instance={instance}
+        />
+      )}
     </Box>
   );
 }

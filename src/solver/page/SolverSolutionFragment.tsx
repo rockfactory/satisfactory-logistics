@@ -1,6 +1,5 @@
 import type { ISolverSolutionSuggestion } from '@/solver/page/suggestions/proposeSolverSolutionSuggestions.ts';
 import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
-import { usePathSolverInstance } from '@/solver/store/solverSelectors.ts';
 import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound.ts';
 import { Container, Group, Space, Stack, Text } from '@mantine/core';
 import { Panel, ReactFlowProvider } from '@xyflow/react';
@@ -12,15 +11,18 @@ import { SolverLayoutButtons } from '@/solver/layout/state/SolverLayoutButtons.t
 import { SolverInspectorDrawer } from '@/solver/inspector/SolverInspectorDrawer.tsx';
 import { IconZoomExclamation } from '@tabler/icons-react';
 import { SolverSuggestions } from '@/solver/page/suggestions/SolverSuggestions.tsx';
+import { SolverInstance } from '@/solver/store/Solver.ts';
 
 export const SolverSolutionFragment = ({
   solution,
   suggestions,
   instance,
+  solverId,
 }: {
   suggestions: ISolverSolutionSuggestion;
   solution: ISolverSolution;
-  instance: ReturnType<typeof usePathSolverInstance>;
+  instance: SolverInstance;
+  solverId: string;
 }) => {
   const hasSolution = isSolutionFound(solution);
 
@@ -30,12 +32,19 @@ export const SolverSolutionFragment = ({
         <Stack gap="md">
           <ReactFlowProvider>
             <SolverSolutionProvider solution={solution}>
-              <SolverLayout nodes={solution.nodes} edges={solution.edges}>
+              <SolverLayout
+                nodes={solution.nodes}
+                edges={solution.edges}
+                id={solverId}
+              >
                 <Panel>
                   <Group gap="xs">
-                    <SolverSummaryDrawer solution={solution} />
-                    <SolverShareButton />
-                    <SolverLayoutButtons solution={solution} />
+                    <SolverSummaryDrawer solution={solution} id={solverId} />
+                    <SolverShareButton id={solverId} />
+                    <SolverLayoutButtons
+                      solution={solution}
+                      solverId={solverId}
+                    />
                     {import.meta.env.DEV && (
                       <SolverInspectorDrawer solution={solution} />
                     )}
@@ -56,7 +65,7 @@ export const SolverSolutionFragment = ({
               inputs, outputs and available recipes.
             </Text>
             <Space />
-            <SolverSuggestions suggestions={suggestions} instance={instance} />
+            <SolverSuggestions suggestions={suggestions} instance={instance!} />
           </Stack>
         </Container>
       )}

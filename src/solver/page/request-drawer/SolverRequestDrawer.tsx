@@ -9,7 +9,6 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import { useCallback, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
 import { SolverLimitationsDrawer } from './SolverLimitationsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';
@@ -17,6 +16,7 @@ import classes from './SolverRequestDrawer.module.css';
 import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
 
 export interface ISolverRequestDrawerProps {
+  factoryId: string;
   solution: ISolverSolution | null;
   onSolverChangeHandler: FormOnChangeHandler<SolverInstance>;
 }
@@ -39,7 +39,6 @@ const SolverRequestTabs = [
  * Drawer and buttons to configure the request to the solver.
  */
 export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
-  const id = useParams<{ id: string }>().id;
   const { solution, onSolverChangeHandler } = props;
 
   const [tab, setTab] = useState<
@@ -126,18 +125,18 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
               onChange={value => setTab(value as any)}
             >
               <Tabs.Panel value="recipes">
-                <SolverRecipesDrawer />
+                <SolverRecipesDrawer id={props.factoryId} />
               </Tabs.Panel>
               <Tabs.Panel value="inputs-outputs">
                 <SolverInputOutputsDrawer
-                  id={id}
+                  id={props.factoryId}
                   solution={solution}
                   onSolverChangeHandler={onSolverChangeHandler}
                 />
               </Tabs.Panel>
               <Tabs.Panel value="limitations">
                 <SolverLimitationsDrawer
-                  id={id}
+                  id={props.factoryId}
                   onSolverChangeHandler={onSolverChangeHandler}
                 />
               </Tabs.Panel>

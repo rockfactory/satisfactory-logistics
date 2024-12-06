@@ -27,7 +27,7 @@ export const factoriesSlice = createSlice({
           outputs: [],
           ...factory,
           id,
-          progress: 'draft'
+          progress: 'draft',
         };
       },
     updateFactoryInputAmount:

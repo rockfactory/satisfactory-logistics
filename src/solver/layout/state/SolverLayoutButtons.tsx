@@ -10,6 +10,7 @@ import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
 
 export interface ISolverLayoutButtonsProps {
   solution: ISolverSolution;
+  solverId: string;
 }
 
 const logger = loglev.getLogger('solver:layout-buttons');
@@ -19,9 +20,8 @@ logger.setLevel('debug');
  * Shows buttons for solver layout management.
  */
 export function SolverLayoutButtons(props: ISolverLayoutButtonsProps) {
-  const { solution } = props;
+  const { solution, solverId } = props;
 
-  const { id: solverId } = usePathSolverInstance();
   const { setNodes } = useReactFlow<SolutionNode>();
 
   const handleReset = useCallback(() => {

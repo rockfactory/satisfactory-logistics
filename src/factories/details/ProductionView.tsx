@@ -1,39 +1,28 @@
-import {
-  Box,
-  Button,
-  Container,
-  Group,
-  SegmentedControl,
-  Select,
-  Stack,
-  Text,
-  TextInput,
-  Title,
-} from '@mantine/core';
-import React, { useCallback, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Factory, FactoryProgressStatus } from '@/factories/Factory.ts';
 import {
   useFactoryInputsOutputs,
   useFactorySimpleAttributes,
 } from '@/factories/store/factoriesSelectors.ts';
-import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow.tsx';
+import React, { useCallback } from 'react';
 import { Path, setByPath } from '@clickbar/dot-diver';
-import { Factory, FactoryProgressStatus } from '@/factories/Factory.ts';
 import { useStore } from '@/core/zustand.ts';
 import { useFormOnChange } from '@/core/form/useFormOnChange.ts';
+import { progressProperties } from '@/factories/components/progressProperties.ts';
 import {
-  IconArrowLeft,
-  IconPlus,
-  IconProgressCheck,
-} from '@tabler/icons-react';
-import { SolverResetButton } from '@/solver/page/SolverResetButton.tsx';
-import { SolverRequestDrawer } from '@/solver/page/request-drawer/SolverRequestDrawer.tsx';
-import { GameSettingsModal } from '@/games/settings/GameSettingsModal.tsx';
-import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky.tsx';
+  Button,
+  Container,
+  Group,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+} from '@mantine/core';
+import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow.tsx';
+import {
+  FactoryInputIcon,
+  FactoryOutputIcon,
+} from '@/factories/components/peek/icons/OutputInputIcons.tsx';
 import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow.tsx';
-import { progressProperties } from '@/factories/ProgressChip.tsx';
-import { useSolverSolution } from '@/solver/page/useSolverSolution.ts';
-import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment.tsx';
 
 const progressValues: { value: FactoryProgressStatus; label: string }[] = [
   {
@@ -54,7 +43,7 @@ const progressValues: { value: FactoryProgressStatus; label: string }[] = [
   },
 ];
 
-const ProductionView = ({ id }: { id: string }) => {
+export const ProductionView = ({ id }: { id: string }) => {
   const factory = useFactorySimpleAttributes(id);
   const { inputs, outputs } = useFactoryInputsOutputs(id);
   const update = useCallback(
@@ -86,9 +75,22 @@ const ProductionView = ({ id }: { id: string }) => {
                 />
               ))}
             </Stack>
+
+            <Button
+              size="sm"
+              leftSection={<FactoryInputIcon />}
+              color="blue"
+              variant="light"
+              onClick={() => {
+                useStore.getState().addFactoryInput(id!);
+              }}
+            >
+              Add Input
+            </Button>
           </Stack>
           <Stack gap="sm">
             <Text size="lg">Outputs</Text>
+
             <Stack gap="xs">
               {outputs?.map((output, i) => (
                 <FactoryOutputRow
@@ -100,6 +102,18 @@ const ProductionView = ({ id }: { id: string }) => {
                 />
               ))}
             </Stack>
+
+            <Button
+              size="sm"
+              leftSection={<FactoryOutputIcon />}
+              color="blue"
+              variant="filled"
+              onClick={() => {
+                useStore.getState().addFactoryOutput(id!);
+              }}
+            >
+              Add Output
+            </Button>
           </Stack>
         </Stack>
         <Stack gap="sm" align="stretch" bg="dark" p="md">
@@ -138,70 +152,5 @@ const ProductionView = ({ id }: { id: string }) => {
         </Stack>
       </Group>
     </Container>
-  );
-};
-
-const FactoryGraph = ({ id }) => {
-  const { suggestions, instance, solution, loading, onChangeHandler } = useSolverSolution(id);
-
-  return <Box h='80vh' pos={'relative'}>
-    <Box pos={'absolute'} right={0} top={0} style={{ zIndex: 99 }} p='md'>
-
-      <SolverRequestDrawer solution={solution} onSolverChangeHandler={onChangeHandler} />
-    </Box>
-    {!loading && (
-      <SolverSolutionFragment
-        suggestions={suggestions}
-        solution={solution!}
-        instance={instance}
-      />
-    ) }
-  </Box>
-};
-
-export const FactoryPage = () => {
-  const { id } = useParams<{ id: string }>();
-  const [currentView, setCurrentView] = useState<'overview' | 'graph'>(
-    'overview',
-  );
-
-  if (!id) {
-    throw new Error();
-  }
-
-  const factory = useFactorySimpleAttributes(id);
-
-  return (
-    <>
-      <AfterHeaderSticky>
-        <Group gap="sm" justify="space-between">
-          <Group gap="sm">
-            <Button
-              component={Link}
-              to="/factories"
-              variant="light"
-              color="gray"
-              leftSection={<IconArrowLeft size={16} />}
-            >
-              All Factories
-            </Button>
-            <Title order={4}>{factory.name}</Title>
-          </Group>
-          <Group gap="sm">
-            <SegmentedControl
-              data={[
-                { value: 'overview', label: 'Overview' },
-                { value: 'graph', label: 'Graph' },
-              ]}
-              value={currentView}
-              onChange={val => setCurrentView(val as 'overview' | 'graph')}
-            />
-            <GameSettingsModal />
-          </Group>
-        </Group>
-      </AfterHeaderSticky>
-      {currentView === 'overview' && <ProductionView id={id} />}
-      {currentView === 'graph' && <FactoryGraph id={id} />}
-    </>
   );
 };

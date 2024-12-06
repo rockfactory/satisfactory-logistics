@@ -5,6 +5,7 @@ import {
 import {
   useFactoryInputsOutputs,
   useFactorySimpleAttributes,
+  useSafeFactorySimpleAttributes,
 } from '@/factories/store/factoriesSelectors.ts';
 import {
   useCurrentSolverId,
@@ -22,34 +23,40 @@ import {
 } from '@/solver/page/suggestions/proposeSolverSolutionSuggestions.ts';
 import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound.ts';
 import { loglev } from '@/core/logger/log.ts';
+
 const logger = loglev.getLogger('solver:page');
 
-export const useSolverSolution = (
-  id: string | undefined,
-) => {
+const DEFAULT_FACTORY = {
+  inputs: [],
+  outputs: [
+    {
+      resource: 'Desc_Cement_C',
+      amount: 20,
+    },
+  ],
+};
+export const useSolverSolution = (id: string, mode: 'game' | 'standalone') => {
   const { highsRef, loading } = useHighs();
 
-  const factory = useFactorySimpleAttributes(id);
-  const inputsOutputs = useFactoryInputsOutputs(id);
-  const instance = usePathSolverInstance();
-  // This is not the _displayed_ solver ID, but the one that is to be used if no solver ID is provided
   const currentSolverId = useCurrentSolverId();
+  const inputsOutputs = useFactoryInputsOutputs(id);
+  const instance = usePathSolverInstance(id);
+  // This is not the _displayed_ solver ID, but the one that is to be used if no solver ID is provided
   const solverGameId = useSolverGameId(id);
 
   useEffect(() => {
-    if (instance && factory?.id) return;
+    if (instance) return;
 
     logger.info('SolverPage: No instance or factory, creating', id);
-    useStore.getState().upsertFactorySolver(id, {
-      inputs: [],
-      outputs: [
-        {
-          resource: 'Desc_Cement_C',
-          amount: 20,
-        },
-      ],
-    });
-  }, [instance, factory, id]);
+
+    useStore.getState().upsertFactorySolver(id, DEFAULT_FACTORY);
+
+    if (mode === 'standalone') {
+      useStore.getState().updateFactory(id, old => {
+        Object.assign(old, DEFAULT_FACTORY);
+      });
+    }
+  }, [instance, mode, id]);
 
   const updater = useMemo(
     () => (path: Path<SolverInstance>, value: string | null | number) => {
@@ -99,12 +106,11 @@ export const useSolverSolution = (
 
   return {
     loading,
-    factory,
     currentSolverId,
     solverGameId,
     onChangeHandler,
     solution,
     suggestions,
-    instance
+    instance,
   };
 };

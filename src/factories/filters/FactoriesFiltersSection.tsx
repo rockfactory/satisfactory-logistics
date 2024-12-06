@@ -13,35 +13,40 @@ import {
 } from '@tabler/icons-react';
 import { useStore } from '@/core/zustand';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
-import { GameFactoriesExpandActionIcon } from '@/factories/components/expand/GameFactoriesExpandActionIcon';
 import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
+import { FactoryViewSlice } from '@/factories/store/factoryViewSlice.ts';
+import { v4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
 
 export interface IFactoriesFiltersSectionProps {}
 
 export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
   const factoryView = useStore(state => state.factoryView);
   const updateFactoryView = useStore(state => state.updateFactoryView);
+  const navigate = useNavigate();
 
   return (
     <Group justify="space-between">
       <Group>
-
-
         <SegmentedControl
           data={[
             {
               label: 'Grid',
-              value: 'compact',
+              value: 'grid',
             },
             {
               label: 'Kanban',
-              value: 'wide',
+              value: 'kanban',
+            },
+            {
+              label: 'Spreadsheet',
+              value: 'spreadsheet',
             },
           ]}
-          value={factoryView?.viewMode ?? 'wide'}
+          value={factoryView?.viewMode ?? 'grid'}
           onChange={value =>
             updateFactoryView(state => {
-              state.viewMode = value as 'compact' | 'wide';
+              state.viewMode = value as FactoryViewSlice['viewMode'];
             })
           }
         />
@@ -89,13 +94,18 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
-        <GameFactoriesExpandActionIcon />
       </Group>
       <Group>
         <GameSettingsModal />
         {/* <FactoryUndoButtons /> */}
         <Button
-          onClick={e => useStore.getState().addGameFactory()}
+          onClick={e => {
+            const factoryId = v4();
+
+            useStore.getState().addGameFactory(factoryId);
+
+            navigate(factoryId);
+          }}
           leftSection={<IconPlus size={16} />}
         >
           Add Factory

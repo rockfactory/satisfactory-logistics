@@ -19,19 +19,18 @@ import {
   InternalNode,
   MiniMap,
   Node,
+  type OnNodesChange,
   Position,
   ReactFlow,
   useEdgesState,
   useNodesInitialized,
   useNodesState,
   useReactFlow,
-  type OnNodesChange,
   type XYPosition,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { isEqual } from 'lodash';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { ByproductNode } from './nodes/byproduct-node/ByproductNode';
 import { MachineNode } from './nodes/machine-node/MachineNode';
 import { ResourceNode } from './nodes/resource-node/ResourceNode';
@@ -186,6 +185,7 @@ const getLayoutedElements = (
 };
 
 interface SolverLayoutProps {
+  id: string;
   nodes: SolutionNode[];
   edges: Edge[];
   children?: React.ReactNode;
@@ -203,8 +203,7 @@ const edgeTypes = {
 };
 
 export const SolverLayout = (props: SolverLayoutProps) => {
-  const solverId = useParams<{ id: string }>().id;
-  const savedLayout = usePathSolverLayout();
+  const savedLayout = usePathSolverLayout(props.id);
   const { fitView, getNodes, getEdges } = useReactFlow<SolutionNode, Edge>();
 
   const [nodes, setNodes, onNodesChange] = useNodesState(props.nodes);
@@ -307,7 +306,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
       const computedLayout = computeSolverLayout(layouted.nodes);
       if (!areSolverLayoutsEqual(savedLayout, computedLayout)) {
         logger.debug('-> Updating saved layout');
-        useStore.getState().setSolverLayout(solverId!, computedLayout);
+        useStore.getState().setSolverLayout(props.id!, computedLayout);
       }
     }
 
@@ -352,13 +351,13 @@ export const SolverLayout = (props: SolverLayoutProps) => {
 
       if (!isEqual(updatedLayout, savedLayout)) {
         if (areSavedLayoutsCompatible(updatedLayout, savedLayout)) {
-          useStore.getState().setSolverLayout(solverId!, updatedLayout);
+          useStore.getState().setSolverLayout(props.id!, updatedLayout);
         } else if (savedLayout != null) {
           cachePreviousLayout(savedLayout);
         }
       }
     },
-    [cachePreviousLayout, getNodes, onNodesChange, savedLayout, solverId],
+    [cachePreviousLayout, getNodes, onNodesChange, savedLayout, props.id],
   );
 
   // Context menu

@@ -41,6 +41,22 @@ export const useFactorySimpleAttributes = (id: string | null | undefined) => {
   });
 };
 
+export const useSafeFactorySimpleAttributes = (id?: string) => {
+  return useShallowStore(state => {
+    if (!id) {
+      return undefined;
+    }
+    const factory = state.factories.factories[id];
+    return {
+      id: factory!.id,
+      name: factory!.name,
+      description: factory!.description,
+      progress: factory!.progress,
+      boardIndex: factory!.boardIndex,
+    };
+  });
+};
+
 export type FactorySimpleAttributes = ReturnType<
   typeof useFactorySimpleAttributes
 >;
