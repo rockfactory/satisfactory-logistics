@@ -14,8 +14,8 @@ export const useFactoryOnChangeHandler = (id: string | null | undefined) => {
     },
     [id],
   );
-  const onChangeHandler = useFormOnChange<Factory | SolverRequest>(updater);
-  return onChangeHandler;
+
+  return useFormOnChange<Factory | SolverRequest>(updater);
 };
 
 export const useFactoryInputsOutputs = (id: string | null | undefined) => {
@@ -35,6 +35,24 @@ export const useFactorySimpleAttributes = (id: string | null | undefined) => {
       id: factory?.id,
       name: factory?.name,
       description: factory?.description,
+      progress: factory?.progress,
+      boardIndex: factory?.boardIndex,
+    };
+  });
+};
+
+export const useSafeFactorySimpleAttributes = (id?: string) => {
+  return useShallowStore(state => {
+    if (!id) {
+      return undefined;
+    }
+    const factory = state.factories.factories[id];
+    return {
+      id: factory!.id,
+      name: factory!.name,
+      description: factory!.description,
+      progress: factory!.progress,
+      boardIndex: factory!.boardIndex,
     };
   });
 };
