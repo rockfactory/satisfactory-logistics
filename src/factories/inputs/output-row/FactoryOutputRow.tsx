@@ -150,6 +150,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       >
         <IconTrash size={16} stroke={1.5} />
       </ActionIcon>
+      <OutputDependenciesPeekModal factoryId={factoryId} output={output} />
 
       <FactoryUsage factoryId={factoryId} output={output.resource} />
     </Group>

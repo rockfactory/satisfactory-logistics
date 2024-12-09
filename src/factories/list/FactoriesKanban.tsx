@@ -16,7 +16,7 @@ export const FactoriesKanban = () => {
   const factories = useGameFactories(gameId);
 
   const board: KanbanBoard<Factory> = {
-    columns: ['draft', 'to_be_done', 'in_progress', 'done'].map(status => ({
+    columns: ['draft', 'todo', 'in_progress', 'done'].map(status => ({
       id: status,
       title: status,
       cards: factories

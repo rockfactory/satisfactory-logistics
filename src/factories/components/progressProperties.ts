@@ -25,7 +25,7 @@ export const progressProperties: Record<
   },
   todo: {
     color: 'yellow',
-    label: 'To Be Done',
+    label: 'Todo',
     Icon: IconCircle,
   },
   in_progress: {
