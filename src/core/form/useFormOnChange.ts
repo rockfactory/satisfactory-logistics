@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 import { Path, PathValue } from '@clickbar/dot-diver';
 

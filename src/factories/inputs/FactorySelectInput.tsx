@@ -9,13 +9,13 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconWorld } from '@tabler/icons-react';
-import React, { useCallback, useMemo } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
 
 export interface IFactorySelectInputProps extends SelectProps {
   exceptId?: string;
   showOnlyIds?: string[] | null;
   /** To provide note handling */
-  worldSection?: React.ReactNode;
+  worldSection?: ReactNode;
 }
 
 export function FactorySelectInput(props: IFactorySelectInputProps) {
