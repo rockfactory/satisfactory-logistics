@@ -20,7 +20,10 @@ import { LoginModal } from '@/auth/LoginModal';
 import { Json } from '@/core/database.types';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
-import { sharedSolverUUIDTranslator, SolverInstance } from '@/solver/store/Solver';
+import {
+  sharedSolverUUIDTranslator,
+  SolverInstance,
+} from '@/solver/store/Solver';
 import { usePathSolverInstance } from '@/solver/store/solverSelectors';
 
 export interface ISharedSolverData {

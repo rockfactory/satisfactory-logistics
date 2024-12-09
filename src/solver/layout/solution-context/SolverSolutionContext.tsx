@@ -1,12 +1,17 @@
 import type { ISolverSolution } from '@/solver/page/SolverPage';
-import React, { useMemo, type PropsWithChildren } from 'react';
+import {
+  useMemo,
+  type PropsWithChildren,
+  createContext,
+  useContext,
+} from 'react';
 
 export interface SolverSolutionContextValue {
   solution: ISolverSolution;
 }
 
 export const SolverSolutionContext =
-  React.createContext<SolverSolutionContextValue | null>(null);
+  createContext<SolverSolutionContextValue | null>(null);
 
 export const SolverSolutionProvider: React.FC<
   PropsWithChildren<SolverSolutionContextValue>
@@ -21,7 +26,7 @@ export const SolverSolutionProvider: React.FC<
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useSolverSolution() {
-  const context = React.useContext(SolverSolutionContext);
+  const context = useContext(SolverSolutionContext);
   if (!context) {
     throw new Error(
       'useSolverSolution must be used within a SolverSolutionProvider',
