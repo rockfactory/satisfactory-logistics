@@ -13,7 +13,7 @@ import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
 import { SolverLimitationsDrawer } from './SolverLimitationsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';
 import classes from './SolverRequestDrawer.module.css';
-import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export interface ISolverRequestDrawerProps {
   factoryId: string;

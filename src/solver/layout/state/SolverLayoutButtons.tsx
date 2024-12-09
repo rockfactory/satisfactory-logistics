@@ -6,7 +6,7 @@ import { Button } from '@mantine/core';
 import { IconLayout } from '@tabler/icons-react';
 import { useReactFlow } from '@xyflow/react';
 import { useCallback } from 'react';
-import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export interface ISolverLayoutButtonsProps {
   solution: ISolverSolution;

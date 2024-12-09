@@ -1,13 +1,12 @@
 import { Button, Group, SegmentedControl, Title } from '@mantine/core';
-import React from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors.ts';
+import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
 import { IconArrowLeft } from '@tabler/icons-react';
-import { GameSettingsModal } from '@/games/settings/GameSettingsModal.tsx';
-import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky.tsx';
-import { FactoryDeleteButton } from '@/factories/details/FactoryDeleteButton.tsx';
-import { ProductionView } from '@/factories/details/ProductionView.tsx';
-import { FactoryGraph } from '@/factories/details/FactoryGraph.tsx';
+import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
+import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
+import { FactoryDeleteButton } from '@/factories/details/FactoryDeleteButton';
+import { ProductionView } from '@/factories/details/ProductionView';
+import { FactoryGraph } from '@/factories/details/FactoryGraph';
 
 export const FactoryPage = ({
   currentView,

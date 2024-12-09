@@ -5,12 +5,12 @@ import { useSession } from '@/auth/authSelectors';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '@/core/zustand';
 import { useGameFactoriesIds } from '@/games/gamesSlice';
-import { FactoryGridCard } from './list/FactoryGridCard.tsx';
+import { FactoryGridCard } from './list/FactoryGridCard';
 import { FactoriesFiltersMenu } from './filters/FactoriesFiltersMenu';
-import { useGameFactories } from '@/games/store/gameFactoriesSelectors.ts';
-import { FactoriesKanban } from '@/factories/list/FactoriesKanban.tsx';
-import { FactoryRow } from '@/factories/list/FactoryRow.tsx';
-import { FactoriesEmptyState } from '@/factories/list/FactoriesEmptyState.tsx';
+import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
+import { FactoriesKanban } from '@/factories/list/FactoriesKanban';
+import { FactoryRow } from '@/factories/list/FactoryRow';
+import { FactoriesEmptyState } from '@/factories/list/FactoriesEmptyState';
 
 export interface IFactoriesTabProps {}
 

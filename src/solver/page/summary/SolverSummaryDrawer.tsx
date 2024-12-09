@@ -18,7 +18,7 @@ import { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode
 import { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
 import { usePathSolverInstance } from '@/solver/store/solverSelectors';
 import { SummaryBuildings } from './SummaryBuildings';
-import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export interface ISolverSummaryDrawerProps {
   id: string;

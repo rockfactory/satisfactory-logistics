@@ -8,7 +8,7 @@ import { Group, Image, Stack, Table } from '@mantine/core';
 import { groupBy, sum } from 'lodash';
 import { useMemo } from 'react';
 import classes from './SummaryBuildings.module.css';
-import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export interface ISummaryBuildingsProps {
   solution: ISolverSolution;

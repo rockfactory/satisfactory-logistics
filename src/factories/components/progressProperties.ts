@@ -1,4 +1,4 @@
-import { FactoryProgressStatus } from '@/factories/Factory.ts';
+import { FactoryProgressStatus } from '@/factories/Factory';
 import { MantineColor } from '@mantine/core';
 import { ForwardRefExoticComponent, RefAttributes } from 'react';
 import {

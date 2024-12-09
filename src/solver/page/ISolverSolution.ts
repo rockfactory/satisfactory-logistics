@@ -1,10 +1,10 @@
 // TODO Move in dedicated file
 import { HighsSolution } from 'highs';
-import type { SolutionNode } from '@/solver/algorithm/solveProduction.tsx';
+import type { SolutionNode } from '@/solver/algorithm/solveProduction';
 import { Edge } from '@xyflow/react';
 import Graph from 'graphology';
-import type { SolverEdge, SolverNode } from '@/solver/algorithm/SolverNode.ts';
-import type { SolverContext } from '@/solver/algorithm/SolverContext.ts';
+import type { SolverEdge, SolverNode } from '@/solver/algorithm/SolverNode';
+import type { SolverContext } from '@/solver/algorithm/SolverContext';
 
 export interface ISolverSolution {
   result: HighsSolution;

@@ -7,7 +7,7 @@ import { isWorldResource } from '@/recipes/WorldResources';
 import { isResourceNode } from '@/solver/algorithm/getSolutionNodes';
 import { sortBy } from 'lodash';
 import { fixSolverRoundingError } from './fixSolverRoundingError';
-import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export function computeAutoSetInputs(
   solution: ISolverSolution,

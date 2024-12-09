@@ -2,7 +2,7 @@ import { Button, Drawer } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconPick } from '@tabler/icons-react';
 
-import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export interface ISolverInspectorDrawerProps {
   solution: ISolverSolution | null;

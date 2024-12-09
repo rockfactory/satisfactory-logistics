@@ -4,7 +4,7 @@ import { modals } from '@mantine/modals';
 import { IconConfetti } from '@tabler/icons-react';
 import confetti from 'canvas-confetti';
 import { difference } from 'lodash';
-import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export function showConfettiWhenFactoryBuilt(
   solution: ISolverSolution,

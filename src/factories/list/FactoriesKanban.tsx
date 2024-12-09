@@ -1,14 +1,14 @@
-import { useStore } from '@/core/zustand.ts';
-import { useGameFactories } from '@/games/store/gameFactoriesSelectors.ts';
+import { useStore } from '@/core/zustand';
+import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
 import {
   ControlledBoard,
   KanbanBoard,
   moveCard,
 } from '@caldwell619/react-kanban';
-import { Factory, FactoryProgressStatus } from '@/factories/Factory.ts';
-import { ProgressChip } from '@/factories/components/ProgressChip.tsx';
+import { Factory, FactoryProgressStatus } from '@/factories/Factory';
+import { ProgressChip } from '@/factories/components/ProgressChip';
 import './FactoriesKanban.css';
-import { FactoryGridCard } from '@/factories/list/FactoryGridCard.tsx';
+import { FactoryGridCard } from '@/factories/list/FactoryGridCard';
 
 export const FactoriesKanban = () => {
   const gameId = useStore(state => state.games.selected);

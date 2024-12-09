@@ -16,9 +16,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
 import { SolverResetButton } from './SolverResetButton';
-import { useSolverSolution } from '@/solver/page/useSolverSolution.ts';
-import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment.tsx';
-import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors.ts';
+import { useSolverSolution } from '@/solver/page/useSolverSolution';
+import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
+import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
 
 const logger = loglev.getLogger('solver:page');
 

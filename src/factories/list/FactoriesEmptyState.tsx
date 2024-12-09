@@ -1,4 +1,4 @@
-import { useStore } from '@/core/zustand.ts';
+import { useStore } from '@/core/zustand';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Divider, Stack, Text } from '@mantine/core';
 import {

@@ -5,7 +5,7 @@ import { bfsFromNode } from 'graphology-traversal';
 import { v4 } from 'uuid';
 import { SolverRequest, type SolverInstance } from './Solver';
 import { computeAutoSetInputs } from './auto-set/computeAutoSetInputs';
-import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 const logger = loglev.getLogger('store:solver-factories');
 

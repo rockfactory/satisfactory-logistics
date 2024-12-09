@@ -1,28 +1,26 @@
 import {
   solveProduction,
   useHighs,
-} from '@/solver/algorithm/solveProduction.tsx';
+} from '@/solver/algorithm/solveProduction';
 import {
   useFactoryInputsOutputs,
-  useFactorySimpleAttributes,
-  useSafeFactorySimpleAttributes,
-} from '@/factories/store/factoriesSelectors.ts';
+} from '@/factories/store/factoriesSelectors';
 import {
   useCurrentSolverId,
   usePathSolverInstance,
   useSolverGameId,
-} from '@/solver/store/solverSelectors.ts';
+} from '@/solver/store/solverSelectors';
 import { useEffect, useMemo } from 'react';
-import { useStore } from '@/core/zustand.ts';
+import { useStore } from '@/core/zustand';
 import { Path, setByPath } from '@clickbar/dot-diver';
-import { SolverInstance } from '@/solver/store/Solver.ts';
-import { useFormOnChange } from '@/core/form/useFormOnChange.ts';
+import { SolverInstance } from '@/solver/store/Solver';
+import { useFormOnChange } from '@/core/form/useFormOnChange';
 import {
   ISolverSolutionSuggestion,
   proposeSolverSolutionSuggestions,
-} from '@/solver/page/suggestions/proposeSolverSolutionSuggestions.ts';
-import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound.ts';
-import { loglev } from '@/core/logger/log.ts';
+} from '@/solver/page/suggestions/proposeSolverSolutionSuggestions';
+import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
+import { loglev } from '@/core/logger/log';
 
 const logger = loglev.getLogger('solver:page');
 

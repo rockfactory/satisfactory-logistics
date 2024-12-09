@@ -1,17 +1,17 @@
-import type { ISolverSolutionSuggestion } from '@/solver/page/suggestions/proposeSolverSolutionSuggestions.ts';
-import { ISolverSolution } from '@/solver/page/ISolverSolution.ts';
-import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound.ts';
+import type { ISolverSolutionSuggestion } from '@/solver/page/suggestions/proposeSolverSolutionSuggestions';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
+import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
 import { Container, Group, Space, Stack, Text } from '@mantine/core';
 import { Panel, ReactFlowProvider } from '@xyflow/react';
-import { SolverSolutionProvider } from '@/solver/layout/solution-context/SolverSolutionContext.tsx';
-import { SolverLayout } from '@/solver/layout/SolverLayout.tsx';
-import { SolverSummaryDrawer } from '@/solver/page/summary/SolverSummaryDrawer.tsx';
-import { SolverShareButton } from '@/solver/share/SolverShareButton.tsx';
-import { SolverLayoutButtons } from '@/solver/layout/state/SolverLayoutButtons.tsx';
-import { SolverInspectorDrawer } from '@/solver/inspector/SolverInspectorDrawer.tsx';
+import { SolverSolutionProvider } from '@/solver/layout/solution-context/SolverSolutionContext';
+import { SolverLayout } from '@/solver/layout/SolverLayout';
+import { SolverSummaryDrawer } from '@/solver/page/summary/SolverSummaryDrawer';
+import { SolverShareButton } from '@/solver/share/SolverShareButton';
+import { SolverLayoutButtons } from '@/solver/layout/state/SolverLayoutButtons';
+import { SolverInspectorDrawer } from '@/solver/inspector/SolverInspectorDrawer';
 import { IconZoomExclamation } from '@tabler/icons-react';
-import { SolverSuggestions } from '@/solver/page/suggestions/SolverSuggestions.tsx';
-import { SolverInstance } from '@/solver/store/Solver.ts';
+import { SolverSuggestions } from '@/solver/page/suggestions/SolverSuggestions';
+import { SolverInstance } from '@/solver/store/Solver';
 
 export const SolverSolutionFragment = ({
   solution,

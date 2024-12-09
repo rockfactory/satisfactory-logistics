@@ -3,11 +3,11 @@ import { Card, Flex, Group, Stack, Text } from '@mantine/core';
 import * as React from 'react';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { useStore } from '@/core/zustand.ts';
-import { Factory } from '@/factories/Factory.ts';
-import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible.tsx';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage.tsx';
-import { ProgressChip } from '@/factories/components/ProgressChip.tsx';
+import { useStore } from '@/core/zustand';
+import { Factory } from '@/factories/Factory';
+import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { ProgressChip } from '@/factories/components/ProgressChip';
 
 export interface IFactoryGridCard {
   id: string;

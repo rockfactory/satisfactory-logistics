@@ -12,7 +12,7 @@ import { Footer } from '@/layout/Footer';
 import { Header } from '@/layout/Header';
 import { SolverPage } from '@/solver/page/SolverPage';
 import { SolverShareImporterPage } from '@/solver/share/SolverShareImporter';
-import { FactoryPage } from '@/factories/details/FactoryPage.tsx';
+import { FactoryPage } from '@/factories/details/FactoryPage';
 export interface IFactoryRoutesProps {}
 
 function useActiveTab() {

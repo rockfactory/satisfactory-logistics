@@ -1,8 +1,7 @@
-import { useSolverSolution } from '@/solver/page/useSolverSolution.ts';
+import { useSolverSolution } from '@/solver/page/useSolverSolution';
 import { Box } from '@mantine/core';
-import { SolverRequestDrawer } from '@/solver/page/request-drawer/SolverRequestDrawer.tsx';
-import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment.tsx';
-import React from 'react';
+import { SolverRequestDrawer } from '@/solver/page/request-drawer/SolverRequestDrawer';
+import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
 
 export const FactoryGraph = ({ id }: { id: string }) => {
   const { suggestions, instance, solution, loading, onChangeHandler } =

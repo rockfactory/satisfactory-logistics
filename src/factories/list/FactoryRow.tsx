@@ -1,4 +1,4 @@
-import { useGameFactoryIsCollapsed } from '@/games/gamesSlice.ts';
+import { useGameFactoryIsCollapsed } from '@/games/gamesSlice';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
   ActionIcon,
@@ -13,17 +13,17 @@ import { IconCalculator, IconTrash } from '@tabler/icons-react';
 import * as React from 'react';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { useFormOnChange } from '@/core/form/useFormOnChange.ts';
-import { useStore } from '@/core/zustand.ts';
-import { FactoryExpandActionIcon } from '@/factories/components/expand/FactoryExpandActionIcon.tsx';
+import { useFormOnChange } from '@/core/form/useFormOnChange';
+import { useStore } from '@/core/zustand';
+import { FactoryExpandActionIcon } from '@/factories/components/expand/FactoryExpandActionIcon';
 import {
   FactoryInputIcon,
   FactoryOutputIcon,
-} from '@/factories/components/peek/icons/OutputInputIcons.tsx';
-import { Factory } from '@/factories/Factory.ts';
-import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow.tsx';
-import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow.tsx';
-import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible.tsx';
+} from '@/factories/components/peek/icons/OutputInputIcons';
+import { Factory } from '@/factories/Factory';
+import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
+import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
+import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
 
 export interface IFactoryRowProps {
   id: string;
