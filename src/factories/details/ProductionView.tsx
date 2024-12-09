@@ -30,7 +30,7 @@ const progressValues: { value: FactoryProgressStatus; label: string }[] = [
     label: 'Draft',
   },
   {
-    value: 'to_be_done',
+    value: 'todo',
     label: 'To be done',
   },
   {

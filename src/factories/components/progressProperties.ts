@@ -23,7 +23,7 @@ export const progressProperties: Record<
     label: 'Draft',
     Icon: IconProgressHelp,
   },
-  to_be_done: {
+  todo: {
     color: 'yellow',
     label: 'To Be Done',
     Icon: IconCircle,

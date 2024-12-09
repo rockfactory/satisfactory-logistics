@@ -2,7 +2,7 @@ import type { LogisticType } from '@/recipes/logistics/LogisticTypes';
 
 export type FactoryProgressStatus =
   | 'draft'
-  | 'to_be_done'
+  | 'todo'
   | 'in_progress'
   | 'done';
 
