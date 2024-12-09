@@ -5,7 +5,7 @@ import { FloatingEdge } from '@/solver/edges/FloatingEdge';
 import { IngredientEdge } from '@/solver/edges/IngredientEdge';
 import type { SolverLayoutState, SolverNodeState } from '@/solver/store/Solver';
 import { usePathSolverLayout } from '@/solver/store/solverSelectors';
-import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
+import { toggleFullscreen } from '@/utils/toggleFullscreen';
 import dagre from '@dagrejs/dagre';
 import { Box } from '@mantine/core';
 import { IconArrowsMaximize, IconMaximizeOff } from '@tabler/icons-react';
@@ -30,7 +30,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { isEqual } from 'lodash';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ByproductNode } from './nodes/byproduct-node/ByproductNode';
 import { MachineNode } from './nodes/machine-node/MachineNode';
 import { ResourceNode } from './nodes/resource-node/ResourceNode';
