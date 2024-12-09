@@ -6,8 +6,8 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
     'plugin:typescript-paths/recommended',
-    "plugin:import/errors",
-    "plugin:import/typescript",
+    'plugin:import/errors',
+    'plugin:import/typescript',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
@@ -16,16 +16,16 @@ module.exports = {
     'react-refresh/only-export-components': 'warn',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    'import/extensions': ["error", "never", { json: 'always' }]
+    'import/extensions': ['error', 'never', { json: 'always' }],
   },
-  "settings": {
-    "import/resolver": {
+  settings: {
+    'import/resolver': {
       // See also https://github.com/import-js/eslint-import-resolver-typescript#configuration
-      "typescript": {
+      typescript: {
         alwaysTryTypes: true,
-        project: path.resolve(process.cwd(), "tsconfig.json"),
+        project: path.resolve(process.cwd(), 'tsconfig.json'),
       },
-      "node": true,
+      node: true,
     },
   },
 };
