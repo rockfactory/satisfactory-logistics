@@ -1,6 +1,7 @@
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { useChartSetting } from '@/factories/charts/store/chartsSlice';
 import type { FactoryInput } from '@/factories/Factory';
+import { useGameSettings } from '@/games/gamesSlice';
 import { AllLogisticTypesMap } from '@/recipes/logistics/LogisticTypes';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { getEdgeParams, getSpecialPath } from '@/solver/edges/utils';
@@ -50,6 +51,8 @@ export const InputEdge: FC<EdgeProps<Edge<IInputEdgeData>>> = ({
 
   const widthMatchesInputAmount = useChartSetting('widthMatchesInputAmount');
 
+  const settings = useGameSettings();
+
   if (!sourceNode || !targetNode) {
     return null;
   }
@@ -91,13 +94,15 @@ export const InputEdge: FC<EdgeProps<Edge<IInputEdgeData>>> = ({
             sx < tx ? 'url(#edge-gradient)' : 'url(#edge-gradient-reverse)',
         }}
       />
-      <circle r="2" fill="var(--mantine-color-indigo-3)">
-        <animateMotion
-          dur={`${duration}s`}
-          repeatCount="indefinite"
-          path={edgePath}
-        />
-      </circle>
+      {settings.animateEdges ? (
+        <circle r="2" fill="var(--mantine-color-indigo-3)">
+          <animateMotion
+            dur={`${duration}s`}
+            repeatCount="indefinite"
+            path={edgePath}
+          />
+        </circle>
+      ) : null}
       <EdgeLabelRenderer>
         <Box
           p={'4px'}
