@@ -1,4 +1,3 @@
-// TODO Move in dedicated file
 import { HighsSolution } from 'highs';
 import type { SolutionNode } from '@/solver/algorithm/solveProduction';
 import { Edge } from '@xyflow/react';

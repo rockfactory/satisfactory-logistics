@@ -119,17 +119,10 @@ export const ProductionView = ({ id }: { id: string }) => {
         <Stack gap="sm" align="stretch" bg="dark" p="md">
           <Text size="lg">Properties</Text>
           <TextInput
-            value={factory?.name ?? 'Solver'}
+            value={factory?.name}
             placeholder="Factory Name"
             label="Name"
-            onChange={e => {
-              useStore
-                .getState()
-                .updateFactory(
-                  factory.id,
-                  f => (f.name = e.currentTarget.value),
-                );
-            }}
+            onChange={onChangeHandler('name')}
           />
           <Select
             variant="filled"
