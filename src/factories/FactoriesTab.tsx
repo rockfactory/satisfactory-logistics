@@ -1,9 +1,9 @@
-import { Container, Divider, SimpleGrid, Space, Stack } from '@mantine/core';
-import { useState } from 'react';
+import { Container, Divider, Group, SimpleGrid, Space, Stack } from '@mantine/core';
+import { ReactNode, useMemo, useState } from 'react';
 import { useSession } from '@/auth/authSelectors';
 // import { loadFromRemote } from '../auth/sync/loadFromRemote';
 import { useNavigate } from 'react-router-dom';
-import { useStore } from '@/core/zustand';
+import { useStore, useUiStore } from '@/core/zustand';
 import { useGameFactoriesIds } from '@/games/gamesSlice';
 import { FactoryGridCard } from './list/FactoryGridCard';
 import { FactoriesFiltersMenu } from './filters/FactoriesFiltersMenu';
@@ -11,6 +11,7 @@ import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
 import { FactoriesKanban } from '@/factories/list/FactoriesKanban';
 import { FactoryRow } from '@/factories/list/FactoryRow';
 import { FactoriesEmptyState } from '@/factories/list/FactoriesEmptyState';
+import { sortBy } from 'lodash';
 
 export interface IFactoriesTabProps {}
 
@@ -19,7 +20,8 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
   const navigate = useNavigate();
 
   const gameId = useStore(state => state.games.selected);
-  const viewMode = useStore(state => state.factoryView.viewMode ?? 'grid');
+  const viewMode = useUiStore(state => state.factoryView.viewMode ?? 'grid');
+  const viewSortBy = useUiStore(state => state.factoryView.sortBy);
 
   const [loadingFactories, setLoadingFactories] = useState(false);
 

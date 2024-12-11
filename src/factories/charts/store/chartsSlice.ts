@@ -1,5 +1,6 @@
-import { useStore } from '@/core/zustand';
+import { useStore, useUiStore } from '@/core/zustand';
 import { createSlice } from '@/core/zustand-helpers/slices';
+import { Auth } from '@supabase/auth-ui-react';
 
 export interface ChartsSlice {
   selected: 'graph' | 'sankey';
@@ -30,16 +31,16 @@ export const chartsSlice = createSlice({
 });
 
 export function useChartsView() {
-  return useStore(state => state.charts.selected);
+  return useUiStore(state => state.charts.selected);
 }
 
 export function useChartsSettings() {
-  return useStore(state => state.charts.settings);
+  return useUiStore(state => state.charts.settings);
 }
 
 export function useChartSetting<K extends keyof ChartsSlice['settings']>(
   key: K,
   defaultValue?: ChartsSlice['settings'][K],
 ) {
-  return useStore(state => state.charts.settings[key] ?? defaultValue);
+  return useUiStore(state => state.charts.settings[key] ?? defaultValue);
 }
