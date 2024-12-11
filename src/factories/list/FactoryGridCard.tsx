@@ -58,7 +58,11 @@ export function FactoryGridCard(props: IFactoryGridCard) {
           </Flex>
         </Stack>
         {showProgressStatus && (
-          <ProgressChip status={factory.progress} size="md" variant="light" />
+          <ProgressChip
+            status={factory.progress ?? undefined}
+            size="md"
+            variant="light"
+          />
         )}
       </Group>
     </Card>

@@ -5,17 +5,23 @@ import {
   KanbanBoard,
   moveCard,
 } from '@caldwell619/react-kanban';
-import { Factory, FactoryProgressStatus } from '@/factories/Factory';
+import { FactoryProgressStatus } from '@/factories/Factory';
 import { ProgressChip } from '@/factories/components/ProgressChip';
 import './FactoriesKanban.css';
 import { FactoryGridCard } from '@/factories/list/FactoryGridCard';
+
+type FactoryCard = {
+  id: string;
+  name?: string;
+  progress?: FactoryProgressStatus;
+};
 
 export const FactoriesKanban = () => {
   const gameId = useStore(state => state.games.selected);
 
   const factories = useGameFactories(gameId);
 
-  const board: KanbanBoard<Factory> = {
+  const board: KanbanBoard<FactoryCard> = {
     columns: ['draft', 'todo', 'in_progress', 'done'].map(status => ({
       id: status,
       title: status,
@@ -25,12 +31,17 @@ export const FactoriesKanban = () => {
           (a, b) =>
             (a.boardIndex ?? Number.MAX_VALUE) -
             (b.boardIndex ?? Number.MAX_VALUE),
-        ),
+        )
+        .map(it => ({
+          id: it.id,
+          name: it.name ?? undefined,
+          progress: it.progress ?? undefined,
+        })),
     })),
   };
 
   return (
-    <ControlledBoard<Factory>
+    <ControlledBoard<FactoryCard>
       renderColumnHeader={it => (
         <ProgressChip
           status={it.id as FactoryProgressStatus}
@@ -60,7 +71,7 @@ export const FactoriesKanban = () => {
           board,
           source,
           destination,
-        ) as KanbanBoard<Factory>;
+        ) as KanbanBoard<FactoryCard>;
 
         const newToColumn = newBoard.columns.find(it => it.id === toColumnId)!;
         const newFromColumn = newBoard.columns.find(

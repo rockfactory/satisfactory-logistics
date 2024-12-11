@@ -119,7 +119,7 @@ export const ProductionView = ({ id }: { id: string }) => {
         <Stack gap="sm" align="stretch" bg="dark" p="md">
           <Text size="lg">Properties</Text>
           <TextInput
-            value={factory?.name}
+            value={factory?.name ?? undefined}
             placeholder="Factory Name"
             label="Name"
             onChange={onChangeHandler('name')}

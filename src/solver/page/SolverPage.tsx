@@ -69,7 +69,7 @@ export function SolverPage(props: ISolverPageProps) {
             )}
             <Title order={4}>
               <TextInput
-                value={factory.name}
+                value={factory.name ?? undefined}
                 placeholder="Factory Name"
                 onChange={e => {
                   useStore
