@@ -93,6 +93,7 @@ const useRehydrateOnTabFocus = () => {
     };
   }, []);
 };
+
 export default function App() {
   useRehydrateOnTabFocus();
 

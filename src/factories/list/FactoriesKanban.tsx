@@ -10,11 +10,13 @@ import { ProgressChip } from '@/factories/components/ProgressChip';
 import './FactoriesKanban.css';
 import { FactoryGridCard } from '@/factories/list/FactoryGridCard';
 
-export const FactoriesKanban = () => {
-  const gameId = useStore(state => state.games.selected);
-
-  const factories = useGameFactories(gameId);
-
+export const FactoriesKanban = ({
+  factories,
+  disableCardDrag,
+}: {
+  factories: Factory[];
+  disableCardDrag: boolean;
+}) => {
   const board: KanbanBoard<Factory> = {
     columns: ['draft', 'todo', 'in_progress', 'done'].map(status => ({
       id: status,
@@ -38,6 +40,8 @@ export const FactoriesKanban = () => {
           variant="light"
         />
       )}
+      disableColumnDrag
+      disableCardDrag={disableCardDrag}
       allowAddCard={false}
       allowAddColumn={false}
       renderCard={({ id }) => (

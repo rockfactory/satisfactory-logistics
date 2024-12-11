@@ -1,11 +1,11 @@
-import { useShallowStore, useStore } from '@/core/zustand';
+import { useShallowStore, useStore, useUiStore } from '@/core/zustand';
 import { useCallback } from 'react';
 
 export function useIsFactoryVisible(isRoot: boolean) {
-  const { filterName, filterResource, viewMode } = useStore(
+  const { filterName, filterResource, viewMode } = useUiStore(
     state => state.factoryView,
   );
-  const { factories } = useShallowStore(state => state.factories.factories);
+  const factories = useShallowStore(state => state.factories.factories);
 
   return useCallback(
     (factoryId: string, resource?: string | null | undefined) => {
@@ -36,6 +36,6 @@ export function useIsFactoryVisible(isRoot: boolean) {
 
       return true;
     },
-    [factories, filterResource, filterResource, viewMode, filterName, isRoot],
+    [factories, filterResource, filterResource, filterName, isRoot],
   );
 }

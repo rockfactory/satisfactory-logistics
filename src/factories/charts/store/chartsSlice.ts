@@ -1,6 +1,5 @@
 import { useStore, useUiStore } from '@/core/zustand';
 import { createSlice } from '@/core/zustand-helpers/slices';
-import { Auth } from '@supabase/auth-ui-react';
 
 export interface ChartsSlice {
   selected: 'graph' | 'sankey';
