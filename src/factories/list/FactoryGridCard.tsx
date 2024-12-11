@@ -26,10 +26,6 @@ export function FactoryGridCard(props: IFactoryGridCard) {
     [id],
   );
 
-  const isVisible = useIsFactoryVisible(id, true);
-
-  if (!isVisible) return null;
-
   if (!factory) {
     console.error('Factory not found', id);
     return null;

@@ -51,9 +51,7 @@ export function FactoryRow(props: IFactoryRowProps) {
   );
   const onChangeHandler = useFormOnChange<Factory>(updater);
 
-  const isVisible = useIsFactoryVisible(id, true);
   const isCollapsed = useGameFactoryIsCollapsed(id);
-  if (!isVisible) return null;
 
   if (!factory) {
     console.error('Factory not found', id);

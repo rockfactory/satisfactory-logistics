@@ -41,7 +41,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
   // are synced with solvers
   const onChangeHandler = useFactoryOnChangeHandler(factoryId);
 
-  const isVisible = useIsFactoryVisible(factoryId, false, output.resource);
+  const isVisible = useIsFactoryVisible(false)(factoryId, output.resource);
   if (!isVisible && displayMode === 'factory') return null;
 
   const item = output.resource ? AllFactoryItemsMap[output.resource] : null;
