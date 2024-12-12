@@ -42,6 +42,7 @@
     "core-js": "^3.39.0",
     "dayjs": "^1.11.13",
     "dot-prop": "^9.0.0",
+    "fuse.js": "^7.0.0",
     "graphology": "^0.25.4",
     "graphology-traversal": "^0.3.1",
     "highs": "^1.8.0",
