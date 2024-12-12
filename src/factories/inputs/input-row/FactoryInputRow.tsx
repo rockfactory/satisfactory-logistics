@@ -6,7 +6,12 @@ import {
 } from '@/factories/components/peek/icons/OutputInputIcons';
 import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
 import { useOutputUsage } from '@/factories/components/usage/useOutputUsage';
-import { Factory, FactoryInput, WORLD_SOURCE_ID } from '@/factories/Factory';
+import {
+  Factory,
+  FactoryInput,
+  FactoryOutput,
+  WORLD_SOURCE_ID,
+} from '@/factories/Factory';
 import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
 import { FactorySelectInput } from '@/factories/inputs/FactorySelectInput';
 import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
@@ -34,6 +39,21 @@ export interface IFactoryInputRowProps {
   displayMode?: 'solver' | 'factory';
 }
 
+const useAllowedItems = (
+  input: FactoryInput,
+  sourceOutputs: FactoryOutput[] | undefined,
+) => {
+  return useMemo(() => {
+    if (input.factoryId === WORLD_SOURCE_ID) {
+      return WorldResourcesList;
+    }
+
+    return (
+      sourceOutputs?.filter(o => o.resource).map(o => o.resource!) ?? undefined
+    );
+  }, [input.factoryId, sourceOutputs]);
+};
+
 export function FactoryInputRow(props: IFactoryInputRowProps) {
   const { index, input, factoryId, displayMode = 'factory' } = props;
 
@@ -55,12 +75,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
       : null,
   );
 
-  const allowedItems = useMemo(() => {
-    return input.factoryId === WORLD_SOURCE_ID
-      ? WorldResourcesList
-      : (sourceOutputs?.filter(o => o.resource).map(o => o.resource!) ??
-          undefined);
-  }, [input.factoryId, sourceOutputs]);
+  const allowedItems = useAllowedItems(input, sourceOutputs);
 
   const usage = useOutputUsage({
     factoryId: input.factoryId,
@@ -71,7 +86,8 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   // are synced with solvers
   const onChangeHandler = useFactoryOnChangeHandler(factoryId);
 
-  const isVisible = useIsFactoryVisible(factoryId, false, input.resource);
+  const isVisible = useIsFactoryVisible(false)(factoryId, input.resource);
+
   if (!isVisible && displayMode === 'factory') return null;
 
   return (

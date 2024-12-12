@@ -1,11 +1,11 @@
 import { loglev } from '@/core/logger/log';
 import { createActions } from '@/core/zustand-helpers/actions';
 import { Factory, FactoryOutput, type FactoryInput } from '@/factories/Factory';
-import type { ISolverSolution } from '@/solver/page/SolverPage';
 import { bfsFromNode } from 'graphology-traversal';
 import { v4 } from 'uuid';
 import { SolverRequest, type SolverInstance } from './Solver';
 import { computeAutoSetInputs } from './auto-set/computeAutoSetInputs';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 const logger = loglev.getLogger('store:solver-factories');
 

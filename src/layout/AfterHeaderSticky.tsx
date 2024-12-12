@@ -1,5 +1,5 @@
 import { Box, Container } from '@mantine/core';
-import React, { useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 export interface IAfterHeaderStickyProps {}
 
@@ -20,7 +20,7 @@ function useHeaderTop() {
 }
 
 export function AfterHeaderSticky(
-  props: React.PropsWithChildren<IAfterHeaderStickyProps>,
+  props: PropsWithChildren<IAfterHeaderStickyProps>,
 ) {
   const headerTop = useHeaderTop();
   return (

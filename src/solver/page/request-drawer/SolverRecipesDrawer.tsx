@@ -31,10 +31,12 @@ import {
 import { useMemo, useState } from 'react';
 import { SolverRecipesList } from './recipes/SolverRecipesList';
 
-export interface ISolverRecipesDrawerProps {}
+export interface ISolverRecipesDrawerProps {
+  id: string;
+}
 
 export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
-  const instance = usePathSolverInstance();
+  const instance = usePathSolverInstance(props.id);
 
   const allowedRecipes = useSolverAllowedRecipes(instance?.id);
   const [search, setSearch] = useState('');

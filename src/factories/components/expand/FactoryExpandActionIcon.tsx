@@ -3,6 +3,8 @@ import { ActionIcon, Tooltip } from '@mantine/core';
 import {
   IconArrowsDiagonal,
   IconArrowsDiagonalMinimize2,
+  IconChevronDown,
+  IconChevronUp,
 } from '@tabler/icons-react';
 export interface IFactoryExpandActionIconProps {
   isCollapsed: boolean;
@@ -19,9 +21,9 @@ export function FactoryExpandActionIcon(props: IFactoryExpandActionIconProps) {
         onClick={() => useStore.getState().toggleGameFactoryExpanded(factoryId)}
       >
         {isCollapsed ? (
-          <IconArrowsDiagonal stroke={2} size={16} />
+          <IconChevronDown stroke={2} size={16} />
         ) : (
-          <IconArrowsDiagonalMinimize2 stroke={2} size={16} />
+          <IconChevronUp stroke={2} size={16} />
         )}
       </ActionIcon>
     </Tooltip>

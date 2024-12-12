@@ -1,10 +1,8 @@
 import { useStore } from '@/core/zustand';
 import { useGameFactoriesHasAnyCollapsed } from '@/games/gamesSlice';
-import { ActionIcon, Tooltip } from '@mantine/core';
-import {
-  IconArrowsDiagonal,
-  IconArrowsDiagonalMinimize2,
-} from '@tabler/icons-react';
+import { Button } from '@mantine/core';
+import { IconChevronsDown, IconChevronsUp } from '@tabler/icons-react';
+
 export interface IGameFactoriesExpandActionIconProps {}
 
 export function GameFactoriesExpandActionIcon(
@@ -13,18 +11,20 @@ export function GameFactoriesExpandActionIcon(
   const isCollapsed = useGameFactoriesHasAnyCollapsed();
 
   return (
-    <Tooltip label={isCollapsed ? 'Expand all' : 'Collapse all'} color="dark.8">
-      <ActionIcon
-        variant="subtle"
-        color="gray"
-        onClick={() => useStore.getState().toggleAllFactoriesExpanded()}
-      >
-        {isCollapsed ? (
-          <IconArrowsDiagonal stroke={2} size={16} />
+    <Button
+      size="xs"
+      variant="subtle"
+      color="dimmed"
+      onClick={() => useStore.getState().toggleAllFactoriesExpanded()}
+      leftSection={
+        isCollapsed ? (
+          <IconChevronsDown stroke={2} size={16} />
         ) : (
-          <IconArrowsDiagonalMinimize2 stroke={2} size={16} />
-        )}
-      </ActionIcon>
-    </Tooltip>
+          <IconChevronsUp stroke={2} size={16} />
+        )
+      }
+    >
+      {isCollapsed ? 'Expand all' : 'Collapse all'}
+    </Button>
   );
 }

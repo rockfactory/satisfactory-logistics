@@ -29,7 +29,6 @@ export enum FactoryItemForm {
 
 import { IconBolt } from '@tabler/icons-react';
 import { last } from 'lodash';
-import type React from 'react';
 import type { FactoryItemId } from './FactoryItemId';
 import RawFactoryItems from './FactoryItems.json';
 

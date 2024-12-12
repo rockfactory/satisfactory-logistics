@@ -6,7 +6,7 @@ import type { SolverInstance } from '@/solver/store/Solver';
 import * as base64 from 'base-64';
 import dayjs from 'dayjs';
 import without from 'lodash/without';
-import pako from 'pako';
+import * as pako from 'pako';
 import { v4 } from 'uuid';
 import type { SerializedGame } from '@/games/store/gameFactoriesActions';
 import type {
