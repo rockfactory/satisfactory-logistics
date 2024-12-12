@@ -56,7 +56,9 @@ export function SolverShareImporterPage(props: ISolverShareImporterPageProps) {
         if (existing) {
           logger.info('Already loaded shared solver with id', existing.id, 'remote id is', sharedId); // prettier-ignore
           // TODO Update? Only if newer?
-          navigate(`/factories/${existing.id}/calculator`);
+          useStore.getState().solvers.current = existing.id;
+
+          navigate(`/factories/calculator`);
           return;
         }
 
@@ -67,7 +69,9 @@ export function SolverShareImporterPage(props: ISolverShareImporterPageProps) {
           sharedId,
         });
 
-        navigate(`/factories/${localId}/calculator`);
+        useStore.getState().solvers.current = localId;
+
+        navigate(`/factories/calculator`);
       } catch (error) {
         console.error('Error loading shared solver:', error);
         notifications.show({
