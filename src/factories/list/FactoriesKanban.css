@@ -1,0 +1,68 @@
+.react-kanban-board {
+  align-items: center;
+  justify-content: center;
+
+  & > div {
+    display: flex;
+    gap: var(--mantine-spacing-lg);
+  }
+}
+
+.react-kanban-column {
+  padding: var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-sm);
+  background-color: var(--mantine-color-dark-8);
+
+  display: flex !important;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+  align-items: stretch;
+  min-width: 292px;
+
+  & > :not(:first-child) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mantine-spacing-sm);
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+.react-kanban-column-header {
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+
+.react-kanban-column-header input:focus {
+  outline: none;
+}
+
+.react-kanban-column-header__spacer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.react-kanban-column-header__button {
+  color: #333333;
+  background-color: #ffffff;
+  border-color: #cccccc;
+}
+
+.react-kanban-column-header__button:hover,
+.react-kanban-column-header__button:focus,
+.react-kanban-column-header__button:active {
+  background-color: #e6e6e6;
+}
+
+.react-kanban-column-adder-button {
+  border: 2px dashed #eee;
+  height: 132px;
+  margin: 5px;
+}
+
+.react-kanban-column-adder-button:hover {
+  cursor: pointer;
+}

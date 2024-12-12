@@ -79,12 +79,29 @@ function Redirect({ to }: { to: string }) {
   return null;
 }
 
+const useRehydrateOnTabFocus = () => {
+  const updateStore = () => {
+    useStore.persist.rehydrate();
+  };
+
+  useEffect(() => {
+    document.addEventListener('visibilitychange', updateStore);
+    window.addEventListener('focus', updateStore);
+    return () => {
+      document.removeEventListener('visibilitychange', updateStore);
+      window.removeEventListener('focus', updateStore);
+    };
+  }, []);
+};
+
 export default function App() {
+  useRehydrateOnTabFocus();
+
   const hasRehydrated = useStore(
     state => state.gameSave.hasRehydratedLocalData,
   );
 
-  if (!hasRehydrated) {
+  if (!hasRehydrated || !useStore.persist.hasHydrated) {
     console.log('Waiting for rehydration');
     return (
       <MantineProvider theme={theme} forceColorScheme="dark">

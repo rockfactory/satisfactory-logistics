@@ -30,19 +30,28 @@ const slices = withSlices(
   gamesSlice,
   gameSaveSlice,
   factoriesSlice,
-  factoryViewSlice,
   solversSlice,
-  chartsSlice,
 );
 
+const uiSlices = withSlices(
+  factoryViewSlice,
+  chartsSlice,
+)
+
 export type RootState = ReturnType<typeof slices>;
+export type UiState = ReturnType<typeof uiSlices>;
+
 const slicesWithActions = withActions(
   slices,
   gameFactoriesActions,
   solverFactoriesActions,
   gameRemoteActions,
-  factoryViewSortActions,
 );
+
+const uiSlicesWithActions = withActions(
+  uiSlices,
+  factoryViewSortActions,
+)
 
 export const useStore = create(
   devtools(
@@ -97,6 +106,17 @@ export const useStore = create(
     }),
   ),
 );
+
+export const useUiStore = create(
+  devtools(
+    persist(uiSlicesWithActions, {
+      name: 'zustand:persist:ui',
+      version: 1,
+      storage: createJSONStorage(() => sessionStorage),
+    }),
+  ),
+);
+
 
 export const useShallowStore = <T>(selector: (state: RootState) => T) =>
   useStore(useShallow(selector));

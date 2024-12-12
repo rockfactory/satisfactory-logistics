@@ -1,11 +1,11 @@
 import { Draft } from 'immer';
 import { createSlice } from '@/core/zustand-helpers/slices';
 
-interface FactoryViewSlice {
+export interface FactoryViewSlice {
   filterName: string | null;
   filterResource: string | null;
   sortBy: 'name';
-  viewMode: 'compact' | 'wide';
+  viewMode: 'spreadsheet' | 'kanban' | 'grid';
 }
 
 export const factoryViewSlice = createSlice({
@@ -14,7 +14,7 @@ export const factoryViewSlice = createSlice({
     filterName: null,
     filterResource: null,
     sortBy: 'name',
-    viewMode: 'compact',
+    viewMode: 'spreadsheet',
   } as FactoryViewSlice,
   actions: {
     updateFactoryView:

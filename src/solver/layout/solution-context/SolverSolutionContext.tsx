@@ -1,10 +1,10 @@
-import type { ISolverSolution } from '@/solver/page/SolverPage';
 import {
   useMemo,
   type PropsWithChildren,
   createContext,
   useContext,
 } from 'react';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export interface SolverSolutionContextValue {
   solution: ISolverSolution;
