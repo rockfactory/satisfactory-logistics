@@ -8667,6 +8667,37 @@
     "powerConsumptionFactor": 1
   },
   {
+    "index": 690,
+    "id": "Recipe_XmasWreath_C",
+    "name": "FICSMAS Wreath",
+    "ingredients": [
+      {
+        "resource": "Desc_XmasBranch_C",
+        "amount": 15,
+        "displayAmount": 15,
+        "originalAmount": 15
+      },
+      {
+        "resource": "Desc_XmasBallCluster_C",
+        "amount": 6,
+        "displayAmount": 6,
+        "originalAmount": 6
+      }
+    ],
+    "products": [
+      {
+        "resource": "Desc_XmasWreath_C",
+        "amount": 2,
+        "displayAmount": 2,
+        "originalAmount": 2
+      }
+    ],
+    "time": 60,
+    "producedIn": "Build_AssemblerMk1_C",
+    "powerConsumption": 0,
+    "powerConsumptionFactor": 1
+  },
+  {
     "index": 686,
     "id": "Recipe_Snowball_C",
     "name": "Snowball",
@@ -8723,33 +8754,64 @@
     "powerConsumptionFactor": 1
   },
   {
-    "index": 690,
-    "id": "Recipe_XmasWreath_C",
-    "name": "FICSMAS Decoration",
+    "index": 695,
+    "id": "Recipe_XmasBall3_C",
+    "name": "Copper FICSMAS Ornament",
     "ingredients": [
       {
-        "resource": "Desc_XmasBranch_C",
-        "amount": 15,
-        "displayAmount": 15,
-        "originalAmount": 15
+        "resource": "Desc_XmasBall1_C",
+        "amount": 2,
+        "displayAmount": 2,
+        "originalAmount": 2
       },
       {
-        "resource": "Desc_XmasBallCluster_C",
-        "amount": 6,
-        "displayAmount": 6,
-        "originalAmount": 6
-      }
-    ],
-    "products": [
-      {
-        "resource": "Desc_XmasWreath_C",
+        "resource": "Desc_CopperIngot_C",
         "amount": 2,
         "displayAmount": 2,
         "originalAmount": 2
       }
     ],
-    "time": 60,
-    "producedIn": "Build_AssemblerMk1_C",
+    "products": [
+      {
+        "resource": "Desc_XmasBall3_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
+      }
+    ],
+    "time": 12,
+    "producedIn": "Build_FoundryMk1_C",
+    "powerConsumption": 0,
+    "powerConsumptionFactor": 1
+  },
+  {
+    "index": 696,
+    "id": "Recipe_XmasBall4_C",
+    "name": "Iron FICSMAS Ornament",
+    "ingredients": [
+      {
+        "resource": "Desc_XmasBall2_C",
+        "amount": 3,
+        "displayAmount": 3,
+        "originalAmount": 3
+      },
+      {
+        "resource": "Desc_IronIngot_C",
+        "amount": 3,
+        "displayAmount": 3,
+        "originalAmount": 3
+      }
+    ],
+    "products": [
+      {
+        "resource": "Desc_XmasBall4_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
+      }
+    ],
+    "time": 12,
+    "producedIn": "Build_FoundryMk1_C",
     "powerConsumption": 0,
     "powerConsumptionFactor": 1
   },
@@ -8835,71 +8897,9 @@
     "powerConsumptionFactor": 1
   },
   {
-    "index": 695,
-    "id": "Recipe_XmasBall3_C",
-    "name": "Copper FICSMAS Ornament",
-    "ingredients": [
-      {
-        "resource": "Desc_XmasBall1_C",
-        "amount": 2,
-        "displayAmount": 2,
-        "originalAmount": 2
-      },
-      {
-        "resource": "Desc_CopperIngot_C",
-        "amount": 2,
-        "displayAmount": 2,
-        "originalAmount": 2
-      }
-    ],
-    "products": [
-      {
-        "resource": "Desc_XmasBall3_C",
-        "amount": 1,
-        "displayAmount": 1,
-        "originalAmount": 1
-      }
-    ],
-    "time": 12,
-    "producedIn": "Build_FoundryMk1_C",
-    "powerConsumption": 0,
-    "powerConsumptionFactor": 1
-  },
-  {
-    "index": 696,
-    "id": "Recipe_XmasBall4_C",
-    "name": "Iron FICSMAS Ornament",
-    "ingredients": [
-      {
-        "resource": "Desc_XmasBall2_C",
-        "amount": 3,
-        "displayAmount": 3,
-        "originalAmount": 3
-      },
-      {
-        "resource": "Desc_IronIngot_C",
-        "amount": 3,
-        "displayAmount": 3,
-        "originalAmount": 3
-      }
-    ],
-    "products": [
-      {
-        "resource": "Desc_XmasBall4_C",
-        "amount": 1,
-        "displayAmount": 1,
-        "originalAmount": 1
-      }
-    ],
-    "time": 12,
-    "producedIn": "Build_FoundryMk1_C",
-    "powerConsumption": 0,
-    "powerConsumptionFactor": 1
-  },
-  {
     "index": 699,
     "id": "Recipe_Snow_C",
-    "name": "Actual Snow",
+    "name": "FICSMAS Actual Snow",
     "ingredients": [
       {
         "resource": "Desc_Gift_C",

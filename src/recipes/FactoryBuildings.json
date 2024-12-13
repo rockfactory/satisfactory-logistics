@@ -570,7 +570,7 @@
     "somersloopSlots": 0,
     "clearance": {
       "width": 2.4,
-      "length": 1.5,
+      "length": 2.4,
       "height": 1.5
     },
     "imagePath": "/images/game/pipeline-junction_256.png",
