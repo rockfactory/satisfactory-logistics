@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { ParsingContext } from '../ParsingContext';
+import { ParsingContext } from 'scripts/parsers/ParsingContext';
 
 // from `Desc_NuclearWaste_C` to `nuclear-waste.png`
 // should convert to kebab-case and append `.png`, remove `Desc` prefix and `_C` suffix

@@ -1,4 +1,4 @@
-import type { ISolverSolution } from '@/solver/page/SolverPage';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export function isSolutionFound(
   solution: ISolverSolution | null,

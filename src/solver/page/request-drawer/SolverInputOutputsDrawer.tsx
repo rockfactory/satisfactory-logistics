@@ -12,7 +12,8 @@ import {
 import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
 import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
 import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
-import type { ISolverSolution } from '@/solver/page/SolverPage';
+
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 const logger = loglev.getLogger('solver:inputs-outputs');
 

@@ -22,6 +22,7 @@ import { withActions } from './zustand-helpers/actions';
 import { forceMigrationOnInitialPersist } from './zustand-helpers/forceMigrationOnInitialPersist';
 import { indexedDbStorage } from './zustand-helpers/indexedDbStorage';
 import { withSlices } from './zustand-helpers/slices';
+import { markFactoriesAsDone } from '@/core/migrations/markFactoriesAsDone';
 
 const logger = loglev.getLogger('store:zustand');
 
@@ -49,7 +50,7 @@ export const useStore = create(
     persist(slicesWithActions, {
       name: 'zustand:persist',
       partialize: state => omit(state, ['gameSave']),
-      version: 3,
+      version: 4,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
       ),
@@ -87,9 +88,14 @@ export const useStore = create(
         }
 
         if (version === 2) {
-          // Fix for missing factories in games
           logger.log('Migrating from version 2 to 3');
           return removeMissingFactoriesInGames(state as any);
+        }
+
+        if (version === 3) {
+          logger.log('Migrating from version 3 to 4');
+
+          return markFactoriesAsDone(state as any);
         }
 
         return state;

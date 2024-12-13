@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import sharp from 'sharp';
-import { ParsingContext } from '../ParsingContext';
+import { ParsingContext } from 'scripts/parsers/ParsingContext';
 
 export async function convertDocsImagesToPublic() {
   if (!ParsingContext.images.length) {

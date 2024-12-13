@@ -17,17 +17,18 @@ import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
 import { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
 import { usePathSolverInstance } from '@/solver/store/solverSelectors';
-import { ISolverSolution } from '@/solver/page/SolverPage';
 import { SummaryBuildings } from './SummaryBuildings';
+import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export interface ISolverSummaryDrawerProps {
+  id: string;
   solution: ISolverSolution;
 }
 
 export function SolverSummaryDrawer(props: ISolverSummaryDrawerProps) {
   const { solution } = props;
   const [opened, { open, close }] = useDisclosure();
-  const instance = usePathSolverInstance();
+  const instance = usePathSolverInstance(props.id);
 
   const stats = useMemo(() => {
     const machineNodes = solution.nodes.filter(

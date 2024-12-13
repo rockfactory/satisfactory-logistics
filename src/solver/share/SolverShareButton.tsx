@@ -31,10 +31,12 @@ export interface ISharedSolverData {
   factory?: Factory;
 }
 
-export interface ISolverShareButtonProps {}
+export interface ISolverShareButtonProps {
+  id: string;
+}
 
 export function SolverShareButton(props: ISolverShareButtonProps) {
-  const instance = usePathSolverInstance();
+  const instance = usePathSolverInstance(props.id);
   const session = useSession();
 
   const [loading, setLoading] = useState(false);
