@@ -94,7 +94,9 @@ export const useStore = create(
 
         if (version === 3) {
           logger.log('Migrating from version 3 to 4 [kanban]');
-          return migrateStoreWithPlan(storeMigrationV4, state as any);
+          return migrateStoreWithPlan(storeMigrationV4, state as any, draft => {
+            draft.factoryView.viewMode = 'grid';
+          });
         }
 
         return state;
