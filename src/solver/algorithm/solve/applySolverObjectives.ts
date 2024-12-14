@@ -39,6 +39,19 @@ export function applySolverObjective(
       // For now, we are only considering _WORLD_ resources
       const inputs = ctx.getWorldInputVars();
       const worldInputs = inputs.filter(v => isWorldResource(v.resource.id));
+
+      // The FICSMAS fix! If there are no raw inputs, we need to minimize all inputs
+      // since there's nothing else to minimize.
+      if (ctx.getWorldVars().length === 0) {
+        ctx.objective = `${inputs
+          .filter(v => !isWorldResource(v.resource.id))
+          .map(v => {
+            const inputResourceWeight = 1_000_000;
+            return `${1 / inputResourceWeight} ${v.variable}`;
+          })
+          .join(' + ')}`;
+      }
+
       if (worldInputs.length > 0) {
         ctx.objective += ` + ${worldInputs
           .map(v => {
