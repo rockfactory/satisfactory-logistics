@@ -1,13 +1,18 @@
+import { useFormOnChange } from '@/core/form/useFormOnChange';
+import { useStore } from '@/core/zustand';
+import {
+  FactoryInputIcon,
+  FactoryOutputIcon,
+} from '@/factories/components/peek/icons/OutputInputIcons';
+import { progressProperties } from '@/factories/components/progressProperties';
 import { Factory, FactoryProgressStatus } from '@/factories/Factory';
+import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
+import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
 import {
   useFactoryInputsOutputs,
   useFactorySimpleAttributes,
 } from '@/factories/store/factoriesSelectors';
-import { useCallback } from 'react';
 import { Path, setByPath } from '@clickbar/dot-diver';
-import { useStore } from '@/core/zustand';
-import { useFormOnChange } from '@/core/form/useFormOnChange';
-import { progressProperties } from '@/factories/components/progressProperties';
 import {
   Button,
   Container,
@@ -17,12 +22,8 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
-import {
-  FactoryInputIcon,
-  FactoryOutputIcon,
-} from '@/factories/components/peek/icons/OutputInputIcons';
-import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
+import { useCallback } from 'react';
+import classes from './ProductionView.module.css';
 
 const progressValues: { value: FactoryProgressStatus; label: string }[] = [
   {
@@ -116,7 +117,13 @@ export const ProductionView = ({ id }: { id: string }) => {
             </Button>
           </Stack>
         </Stack>
-        <Stack gap="sm" align="stretch" bg="dark" p="md">
+        <Stack
+          gap="sm"
+          align="stretch"
+          bg="dark"
+          p="md"
+          className={classes.sideBar}
+        >
           <Text size="lg">Properties</Text>
           <TextInput
             value={factory?.name ?? undefined}

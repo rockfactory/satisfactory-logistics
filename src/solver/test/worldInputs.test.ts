@@ -101,4 +101,36 @@ describe('worldInputs', () => {
     expect(wetConcreteNode).not.toBeNull();
     expect(wetConcreteNode?.data.value).toBe(20);
   });
+
+  test('should allow gift and leaves (world inputs but not resources)', async () => {
+    const highs = await loadHighs();
+    const solution = solveProduction(highs, {
+      inputs: [
+        {
+          amount: 100,
+          resource: itemId('Desc_Gift_C'),
+        },
+      ],
+      outputs: [
+        { amount: 0, objective: 'max', resource: itemId('Desc_XmasBow_C') },
+      ],
+    });
+
+    const inputNode = solution?.nodes.find(
+      n =>
+        n.type === 'Resource' &&
+        n.data.resource.id === 'Desc_Gift_C' &&
+        n.data.input?.resource === 'Desc_Gift_C',
+    );
+
+    expect(solution?.result.Status).toBe('Optimal');
+    expect(inputNode).not.toBeNull();
+    expect(inputNode?.data.value).toBe(100);
+
+    const outputNode = solution?.nodes.find(
+      n => n.type === 'Byproduct' && n.data.resource.id === 'Desc_XmasBow_C',
+    );
+    expect(outputNode).not.toBeNull();
+    expect(outputNode?.data.value).toBe(50);
+  });
 });

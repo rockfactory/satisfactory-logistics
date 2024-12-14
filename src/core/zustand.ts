@@ -18,6 +18,7 @@ import { migratePersistedStoreFromRedux } from './migrations/migratePersistedSto
 import { migrateStoreWithPlan } from './migrations/planner/StoreMigrationPlan';
 import { removeMissingFactoriesInGames } from './migrations/removeMissingFactoriesInGames';
 import { storeMigrationV2 } from './migrations/v2';
+import { storeMigrationV4 } from './migrations/v4';
 import { withActions } from './zustand-helpers/actions';
 import { forceMigrationOnInitialPersist } from './zustand-helpers/forceMigrationOnInitialPersist';
 import { indexedDbStorage } from './zustand-helpers/indexedDbStorage';
@@ -58,7 +59,7 @@ export const useStore = create(
     persist(slicesWithActions, {
       name: 'zustand:persist',
       partialize: state => omit(state, ['gameSave']),
-      version: 3,
+      version: 4,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
       ),
@@ -96,9 +97,15 @@ export const useStore = create(
         }
 
         if (version === 2) {
-          // Fix for missing factories in games
           logger.log('Migrating from version 2 to 3');
           return removeMissingFactoriesInGames(state as any);
+        }
+
+        if (version === 3) {
+          logger.log('Migrating from version 3 to 4 [kanban]');
+          return migrateStoreWithPlan(storeMigrationV4, state as any, draft => {
+            draft.factoryView.viewMode = 'grid';
+          });
         }
 
         return state;

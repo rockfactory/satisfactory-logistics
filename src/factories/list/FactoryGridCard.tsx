@@ -1,13 +1,12 @@
-import { Path, setByPath } from '@clickbar/dot-diver';
-import { Card, Flex, Group, Stack, Text } from '@mantine/core';
-import * as React from 'react';
-import { useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { useStore } from '@/core/zustand';
+import { ProgressChip } from '@/factories/components/ProgressChip';
 import { Factory } from '@/factories/Factory';
 import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { ProgressChip } from '@/factories/components/ProgressChip';
+import { Path, setByPath } from '@clickbar/dot-diver';
+import { Card, Flex, Group, Stack, Text } from '@mantine/core';
+import { useCallback } from 'react';
+import { Link } from 'react-router-dom';
 
 export interface IFactoryGridCard {
   id: string;
@@ -44,8 +43,8 @@ export function FactoryGridCard(props: IFactoryGridCard) {
             gap="sm"
             style={{ textOverflow: 'ellipsis', minWidth: 0 }}
           >
-            {factory.outputs.map(output => (
-              <Group gap={6} wrap={'nowrap'}>
+            {factory.outputs.map((output, outputIndex) => (
+              <Group gap={6} wrap={'nowrap'} key={outputIndex}>
                 <FactoryItemImage id={output.resource} size={24} />
                 <Text size="xs">&times;</Text>
                 <Text size="xs">{output.amount}</Text>

@@ -15,6 +15,7 @@ export interface StoreMigrationPlan {
 export function migrateStoreWithPlan(
   plan: StoreMigrationPlan,
   state: RootState,
+  updateState?: (state: RootState) => void,
 ) {
   return produce(state, draft => {
     if (plan.factory) {
@@ -33,6 +34,9 @@ export function migrateStoreWithPlan(
       }
       game.version = plan.version;
     });
+    if (updateState) {
+      updateState(draft);
+    }
   });
 }
 
