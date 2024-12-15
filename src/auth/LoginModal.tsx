@@ -1,12 +1,12 @@
 import { Divider, Modal, Stack, Text } from '@mantine/core';
-import React from 'react';
+import { ReactNode } from 'react';
 import { DiscordLoginButton } from './providers/DiscordLoginButton';
 import { GoogleLoginButton } from './providers/GoogleLoginButton';
 
 export interface ILoginModalProps {
   opened: boolean;
   close: () => void;
-  message?: React.ReactNode;
+  message?: ReactNode;
 }
 
 export function LoginModal(props: ILoginModalProps) {

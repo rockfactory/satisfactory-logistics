@@ -1,5 +1,5 @@
 import { repeat } from 'lodash';
-import React from 'react';
+import { Fragment } from 'react';
 
 export const NumberFormatter = new Intl.NumberFormat('en-US', {
   style: 'decimal',
@@ -43,7 +43,7 @@ export const RepeatingNumber = ({
           if (type !== 'fraction') return value;
 
           return (
-            <React.Fragment key={repetend.index}>
+            <Fragment key={repetend.index}>
               <span>{value.substring(0, repetend.index)}</span>
               <span style={{ textDecoration: 'overline' }}>
                 {repeat(
@@ -51,7 +51,7 @@ export const RepeatingNumber = ({
                   value.length - repetend.index,
                 ).substring(0, value.length - repetend.index)}
               </span>
-            </React.Fragment>
+            </Fragment>
           );
         })}
       </>

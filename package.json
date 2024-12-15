@@ -15,9 +15,11 @@
     "parse-docs": "tsx scripts/parseDocs.ts"
   },
   "dependencies": {
+    "@caldwell619/react-kanban": "^0.0.11",
     "@clickbar/dot-diver": "^1.0.7",
     "@dagrejs/dagre": "^1.1.4",
     "@etothepii/satisfactory-file-parser": "^2.0.1",
+    "@hello-pangea/dnd": "^17.0.0",
     "@mantine/colors-generator": "^7.14.0",
     "@mantine/core": "^7.14.0",
     "@mantine/hooks": "^7.14.0",
@@ -77,6 +79,8 @@
     "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react": "^4.3.3",
     "eslint": "^8.57.1",
+    "eslint-import-resolver-typescript": "^3.7.0",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react-google-translate": "^0.0.114",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.14",

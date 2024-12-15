@@ -16,7 +16,7 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import React, { useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { InputEdge } from './edges/input-edge/InputEdge';
 import { FactoryNode } from './nodes/factory-node/FactoryNode';
 
@@ -26,7 +26,7 @@ logger.setLevel('info');
 interface FactoriesGraphLayoutProps {
   nodes: Node[];
   edges: Edge[];
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 const nodeTypes = {

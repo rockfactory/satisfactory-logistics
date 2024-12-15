@@ -1,6 +1,6 @@
 import { FormOnChangeHandler } from '@/core/form/useFormOnChange';
 import { useStore } from '@/core/zustand';
-import { useGameSetting } from '@/games/gamesSlice.ts';
+import { useGameSetting } from '@/games/gamesSlice';
 import {
   FactoryBuildingsForRecipes,
   FactoryConveyorBelts,
