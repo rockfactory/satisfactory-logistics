@@ -13,6 +13,8 @@ import { Header } from '@/layout/Header';
 import { SolverPage } from '@/solver/page/SolverPage';
 import { SolverShareImporterPage } from '@/solver/share/SolverShareImporter';
 import { FactoryPage } from '@/factories/details/FactoryPage';
+import { AppContainer } from '@/layout/AppContainer';
+
 export interface IFactoryRoutesProps {}
 
 function useActiveTab() {
@@ -36,27 +38,30 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
   const activeTab = useActiveTab();
 
   return (
-    <>
+    <AppContainer
+      header={
+        <Header
+          tabs={['factories', 'charts', 'calculator']}
+          activeTab={
+            activeTab === 'charts'
+              ? 'charts'
+              : activeTab === 'calculator'
+                ? 'calculator'
+                : 'factories'
+          }
+          onChangeTab={value => {
+            navigate(`/factories/${value === 'factories' ? '' : value}`);
+          }}
+        />
+      }
+      footer={<Footer compact={['calculator', 'charts'].includes(activeTab)} />}
+    >
       <ScrollRestoration
         getKey={(location, matches) => {
           return location.pathname;
         }}
       />
       <GamesAtleastOneManager />
-
-      <Header
-        tabs={['factories', 'charts', 'calculator']}
-        activeTab={
-          activeTab === 'charts'
-            ? 'charts'
-            : activeTab === 'calculator'
-              ? 'calculator'
-              : 'factories'
-        }
-        onChangeTab={value => {
-          navigate(`/factories/${value === 'factories' ? '' : value}`);
-        }}
-      />
 
       <Routes>
         <Route index element={<FactoriesTab />} />
@@ -72,7 +77,6 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
           element={<SolverShareImporterPage />}
         />
       </Routes>
-      <Footer compact={activeTab === 'calculator'} />
-    </>
+    </AppContainer>
   );
 }

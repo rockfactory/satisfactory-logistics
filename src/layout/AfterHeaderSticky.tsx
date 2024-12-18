@@ -22,14 +22,14 @@ function useHeaderTop() {
 export function AfterHeaderSticky(
   props: React.PropsWithChildren<IAfterHeaderStickyProps>,
 ) {
-  const headerTop = useHeaderTop();
+  // const headerTop = useHeaderTop();
   return (
     <Box
       bg="dark.7"
       w="100%"
       style={{
         position: 'sticky',
-        top: headerTop,
+        top: 0,
         zIndex: 10,
         boxShadow: '0 4px 4px rgba(0, 0, 0, 0.1)',
       }}

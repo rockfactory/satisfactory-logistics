@@ -20,6 +20,8 @@ import { useSolverSolution } from '@/solver/page/useSolverSolution';
 import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
 import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
 
+import { FullHeightContainer } from '@/layout/FullHeightContainer';
+
 const logger = loglev.getLogger('solver:page');
 
 export interface ISolverPageProps {}
@@ -48,7 +50,7 @@ export function SolverPage(props: ISolverPageProps) {
   } = useSolverSolution(currentSolverId, 'standalone');
 
   return (
-    <Box w="100%" pos="relative">
+    <>
       <LoadingOverlay visible={loading || !instance} />
 
       <AfterHeaderSticky>
@@ -111,14 +113,17 @@ export function SolverPage(props: ISolverPageProps) {
           </Group>
         </Group>
       </AfterHeaderSticky>
-      {instance && (
-        <SolverSolutionFragment
-          solverId={currentSolverId}
-          suggestions={suggestions}
-          solution={solution!}
-          instance={instance}
-        />
-      )}
-    </Box>
+
+      <FullHeightContainer>
+        {instance && (
+          <SolverSolutionFragment
+            solverId={currentSolverId}
+            suggestions={suggestions}
+            solution={solution!}
+            instance={instance}
+          />
+        )}
+      </FullHeightContainer>
+    </>
   );
 }

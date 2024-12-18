@@ -29,31 +29,29 @@ export const SolverSolutionFragment = ({
   return (
     <>
       {solution && hasSolution && (
-        <Stack gap="md">
-          <ReactFlowProvider>
-            <SolverSolutionProvider solution={solution}>
-              <SolverLayout
-                nodes={solution.nodes}
-                edges={solution.edges}
-                id={solverId}
-              >
-                <Panel>
-                  <Group gap="xs">
-                    <SolverSummaryDrawer solution={solution} id={solverId} />
-                    <SolverShareButton id={solverId} />
-                    <SolverLayoutButtons
-                      solution={solution}
-                      solverId={solverId}
-                    />
-                    {import.meta.env.DEV && (
-                      <SolverInspectorDrawer solution={solution} />
-                    )}
-                  </Group>
-                </Panel>
-              </SolverLayout>
-            </SolverSolutionProvider>
-          </ReactFlowProvider>
-        </Stack>
+        <ReactFlowProvider>
+          <SolverSolutionProvider solution={solution}>
+            <SolverLayout
+              nodes={solution.nodes}
+              edges={solution.edges}
+              id={solverId}
+            >
+              <Panel>
+                <Group gap="xs">
+                  <SolverSummaryDrawer solution={solution} id={solverId} />
+                  <SolverShareButton id={solverId} />
+                  <SolverLayoutButtons
+                    solution={solution}
+                    solverId={solverId}
+                  />
+                  {import.meta.env.DEV && (
+                    <SolverInspectorDrawer solution={solution} />
+                  )}
+                </Group>
+              </Panel>
+            </SolverLayout>
+          </SolverSolutionProvider>
+        </ReactFlowProvider>
       )}
       {!hasSolution && (
         <Container size="lg" mt="lg">
