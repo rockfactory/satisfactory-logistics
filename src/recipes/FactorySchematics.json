@@ -4335,6 +4335,19 @@
     "unlocks": []
   },
   {
+    "id": "Schematic_Helmet_Ficsmas_C",
+    "name": "FICSMAS Hat",
+    "unlockName": "FICSMAS Hat",
+    "description": "",
+    "tier": null,
+    "type": "Customization",
+    "imagePath": null,
+    "dependencies": [],
+    "hiddenUntilDependeciesMet": false,
+    "cost": [],
+    "unlocks": []
+  },
+  {
     "id": "Schematic_Helmet_Default_C",
     "name": "Standard FICSIT Helmet",
     "unlockName": "Standard FICSIT Helmet",
@@ -4413,6 +4426,32 @@
     "unlocks": []
   },
   {
+    "id": "Schematic_Trinket_FicsmasStar_C",
+    "name": "Wonder Star Trinket",
+    "unlockName": "Wonder Star Trinket",
+    "description": "",
+    "tier": null,
+    "type": "Customization",
+    "imagePath": null,
+    "dependencies": [],
+    "hiddenUntilDependeciesMet": false,
+    "cost": [],
+    "unlocks": []
+  },
+  {
+    "id": "Schematic_Trinket_FicsmasBall_C",
+    "name": "Red Ornament Trinket",
+    "unlockName": "Red Ornament Trinket",
+    "description": "",
+    "tier": null,
+    "type": "Customization",
+    "imagePath": null,
+    "dependencies": [],
+    "hiddenUntilDependeciesMet": false,
+    "cost": [],
+    "unlocks": []
+  },
+  {
     "id": "Schematic_Trinket_FicsitCoupon_C",
     "name": "Coupon Trinket",
     "unlockName": "Coupon Trinket",
@@ -4442,6 +4481,19 @@
     "id": "Schematic_Trinket_Checkit_C",
     "name": "Checkit Trinket",
     "unlockName": "Checkit Trinket",
+    "description": "",
+    "tier": null,
+    "type": "Customization",
+    "imagePath": null,
+    "dependencies": [],
+    "hiddenUntilDependeciesMet": false,
+    "cost": [],
+    "unlocks": []
+  },
+  {
+    "id": "Schematic_Trinket_AirFreshener_C",
+    "name": "Fresh Factory Trinket",
+    "unlockName": "Fresh Factory Trinket",
     "description": "",
     "tier": null,
     "type": "Customization",
@@ -7138,6 +7190,32 @@
     ]
   },
   {
+    "id": "Research_Mycelia_7_C",
+    "name": "Expanded Toolbelt",
+    "unlockName": "Expanded Toolbelt",
+    "description": "",
+    "tier": 3,
+    "type": "MAM",
+    "imagePath": null,
+    "dependencies": [],
+    "hiddenUntilDependeciesMet": false,
+    "cost": [
+      {
+        "resource": "Desc_Fabric_C",
+        "amount": 50,
+        "displayAmount": 50,
+        "originalAmount": 50
+      },
+      {
+        "resource": "Desc_Rotor_C",
+        "amount": 100,
+        "displayAmount": 100,
+        "originalAmount": 100
+      }
+    ],
+    "unlocks": []
+  },
+  {
     "id": "Research_Nutrients_2_C",
     "name": "Bacon Agaric",
     "unlockName": "Bacon Agaric",
@@ -7353,32 +7431,6 @@
         ]
       }
     ]
-  },
-  {
-    "id": "Research_Mycelia_7_C",
-    "name": "Expanded Toolbelt",
-    "unlockName": "Expanded Toolbelt",
-    "description": "",
-    "tier": 3,
-    "type": "MAM",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_Fabric_C",
-        "amount": 50,
-        "displayAmount": 50,
-        "originalAmount": 50
-      },
-      {
-        "resource": "Desc_Rotor_C",
-        "amount": 100,
-        "displayAmount": 100,
-        "originalAmount": 100
-      }
-    ],
-    "unlocks": []
   },
   {
     "id": "Research_Nutrients_4_C",
@@ -8385,13 +8437,13 @@
     "hiddenUntilDependeciesMet": false,
     "cost": [
       {
-        "resource": "Desc_XmasStar_C",
+        "resource": "Desc_XmasDataCartridge4_C",
         "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       },
       {
-        "resource": "Desc_XmasWreath_C",
+        "resource": "Desc_XmasBranch_C",
         "amount": 200,
         "displayAmount": 200,
         "originalAmount": 200
@@ -8408,6 +8460,12 @@
         "type": "Schematic",
         "scripts": [
           "Schematic_XMassTree_T3_C"
+        ]
+      },
+      {
+        "type": "Recipe",
+        "scripts": [
+          "Recipe_XmasWreath_C"
         ]
       }
     ]
@@ -8453,8 +8511,8 @@
   },
   {
     "id": "Research_XMas_4-1_C",
-    "name": "FICSMAS Wreath",
-    "unlockName": "FICSMAS Wreath",
+    "name": "FICSMAS Decoration",
+    "unlockName": "FICSMAS Decoration",
     "description": "",
     "tier": 3,
     "type": "MAM",
@@ -8516,22 +8574,28 @@
     "hiddenUntilDependeciesMet": false,
     "cost": [
       {
-        "resource": "Desc_XmasBallCluster_C",
+        "resource": "Desc_XmasDataCartridge3_C",
         "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       },
       {
-        "resource": "Desc_XmasBall3_C",
+        "resource": "Desc_XmasBall1_C",
         "amount": 200,
         "displayAmount": 200,
         "originalAmount": 200
       },
       {
-        "resource": "Desc_XmasBall4_C",
+        "resource": "Desc_XmasBall2_C",
         "amount": 200,
         "displayAmount": 200,
         "originalAmount": 200
+      },
+      {
+        "resource": "Desc_Gift_C",
+        "amount": 100,
+        "displayAmount": 100,
+        "originalAmount": 100
       }
     ],
     "unlocks": [
@@ -8539,6 +8603,13 @@
         "type": "Schematic",
         "scripts": [
           "Schematic_XMassTree_T2_C"
+        ]
+      },
+      {
+        "type": "Recipe",
+        "scripts": [
+          "Recipe_XmasBall3_C",
+          "Recipe_XmasBall4_C"
         ]
       }
     ]
@@ -8555,22 +8626,28 @@
     "hiddenUntilDependeciesMet": false,
     "cost": [
       {
-        "resource": "Desc_XmasBallCluster_C",
-        "amount": 10,
-        "displayAmount": 10,
-        "originalAmount": 10
-      },
-      {
         "resource": "Desc_Snow_C",
         "amount": 100,
         "displayAmount": 100,
         "originalAmount": 100
       },
       {
-        "resource": "Desc_XmasBranch_C",
-        "amount": 500,
-        "displayAmount": 500,
-        "originalAmount": 500
+        "resource": "Desc_XmasBall3_C",
+        "amount": 200,
+        "displayAmount": 200,
+        "originalAmount": 200
+      },
+      {
+        "resource": "Desc_XmasBall4_C",
+        "amount": 200,
+        "displayAmount": 200,
+        "originalAmount": 200
+      },
+      {
+        "resource": "Desc_CandyCane_C",
+        "amount": 200,
+        "displayAmount": 200,
+        "originalAmount": 200
       }
     ],
     "unlocks": [
@@ -8578,7 +8655,7 @@
         "type": "Recipe",
         "scripts": [
           "Recipe_SnowDispenser_C",
-          "Recipe_XmasWreath_C"
+          "Recipe_SnowCannon_C"
         ]
       }
     ]
@@ -8654,7 +8731,7 @@
     "hiddenUntilDependeciesMet": false,
     "cost": [
       {
-        "resource": "Desc_XmasBall1_C",
+        "resource": "Desc_XmasDataCartridge2_C",
         "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
@@ -8722,9 +8799,7 @@
       {
         "type": "Recipe",
         "scripts": [
-          "Recipe_TreeGiftProducer_C",
-          "Recipe_XmasBall3_C",
-          "Recipe_XmasBall4_C"
+          "Recipe_TreeGiftProducer_C"
         ]
       }
     ]
@@ -8775,10 +8850,10 @@
     "hiddenUntilDependeciesMet": false,
     "cost": [
       {
-        "resource": "Desc_Gift_C",
-        "amount": 100,
-        "displayAmount": 100,
-        "originalAmount": 100
+        "resource": "Desc_XmasDataCartridge1_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
       }
     ],
     "unlocks": [
@@ -14866,6 +14941,19 @@
     "unlocks": []
   },
   {
+    "id": "Schematic_FicsmasHits_C",
+    "name": "FICSMAS Greatest Hits",
+    "unlockName": "FICSMAS Greatest Hits",
+    "description": "",
+    "tier": null,
+    "type": "Custom",
+    "imagePath": null,
+    "dependencies": [],
+    "hiddenUntilDependeciesMet": false,
+    "cost": [],
+    "unlocks": []
+  },
+  {
     "id": "Schematic_DeepRockGalactic_C",
     "name": "Deep Rock Galactic Boombox Tape",
     "unlockName": "Deep Rock Galactic Boombox Tape",
@@ -15159,8 +15247,8 @@
   },
   {
     "id": "Ficsmas_Schematic_SkinBundle_2_C",
-    "name": "Customizer: Premium FICSMAS Skin",
-    "unlockName": "Customizer: Premium FICSMAS Skin",
+    "name": "Premium FICSMAS Skins",
+    "unlockName": "Premium FICSMAS Skins",
     "description": "",
     "tier": 1,
     "type": "Custom",
@@ -15180,8 +15268,8 @@
   },
   {
     "id": "Ficsmas_Schematic_SkinBundle_1_C",
-    "name": "Customizer: Basic FICSMAS Skin",
-    "unlockName": "Customizer: Basic FICSMAS Skin",
+    "name": "Basic FICSMAS Skins",
+    "unlockName": "Basic FICSMAS Skins",
     "description": "",
     "tier": 1,
     "type": "Custom",

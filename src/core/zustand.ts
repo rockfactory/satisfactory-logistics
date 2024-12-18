@@ -18,11 +18,11 @@ import { migratePersistedStoreFromRedux } from './migrations/migratePersistedSto
 import { migrateStoreWithPlan } from './migrations/planner/StoreMigrationPlan';
 import { removeMissingFactoriesInGames } from './migrations/removeMissingFactoriesInGames';
 import { storeMigrationV2 } from './migrations/v2';
+import { storeMigrationV4 } from './migrations/v4';
 import { withActions } from './zustand-helpers/actions';
 import { forceMigrationOnInitialPersist } from './zustand-helpers/forceMigrationOnInitialPersist';
 import { indexedDbStorage } from './zustand-helpers/indexedDbStorage';
 import { withSlices } from './zustand-helpers/slices';
-import { markFactoriesAsDone } from '@/core/migrations/markFactoriesAsDone';
 
 const logger = loglev.getLogger('store:zustand');
 
@@ -93,9 +93,10 @@ export const useStore = create(
         }
 
         if (version === 3) {
-          logger.log('Migrating from version 3 to 4');
-
-          return markFactoriesAsDone(state as any);
+          logger.log('Migrating from version 3 to 4 [kanban]');
+          return migrateStoreWithPlan(storeMigrationV4, state as any, draft => {
+            draft.factoryView.viewMode = 'grid';
+          });
         }
 
         return state;
