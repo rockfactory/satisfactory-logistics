@@ -7,6 +7,7 @@ import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import { FactoryDeleteButton } from '@/factories/details/FactoryDeleteButton';
 import { ProductionView } from '@/factories/details/ProductionView';
 import { FactoryGraph } from '@/factories/details/FactoryGraph';
+import { FullHeightContainer } from '@/layout/FullHeightContainer';
 
 export const FactoryPage = ({
   currentView,
@@ -60,7 +61,11 @@ export const FactoryPage = ({
         </Group>
       </AfterHeaderSticky>
       {currentView === 'overview' && <ProductionView id={id} />}
-      {currentView === 'calculator' && <FactoryGraph id={id} />}
+      {currentView === 'calculator' && (
+        <FullHeightContainer>
+          <FactoryGraph id={id} />
+        </FullHeightContainer>
+      )}
     </>
   );
 };

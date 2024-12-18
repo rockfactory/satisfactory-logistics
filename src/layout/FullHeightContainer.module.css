@@ -1,4 +1,5 @@
 .fullHeightContainer {
+    position: relative;
     height: 0;
 
     flex-grow: 1;

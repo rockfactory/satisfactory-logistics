@@ -8,7 +8,7 @@ export const FactoryGraph = ({ id }: { id: string }) => {
     useSolverSolution(id, 'game');
 
   return (
-    <Box>
+    <>
       <Box pos={'absolute'} right={0} top={0} style={{ zIndex: 99 }} p="md">
         <SolverRequestDrawer
           factoryId={id}
@@ -24,6 +24,6 @@ export const FactoryGraph = ({ id }: { id: string }) => {
           instance={instance}
         />
       )}
-    </Box>
+    </>
   );
 };
