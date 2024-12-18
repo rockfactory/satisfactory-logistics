@@ -95,67 +95,59 @@ export const FactoriesGraphLayout = (props: FactoriesGraphLayoutProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
   return (
-    <Box w={'100%'} h={'80vh'} opacity={opacity}>
-      <ReactFlow
-        ref={ref}
-        minZoom={0.2}
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        connectionLineType={ConnectionLineType.SmoothStep}
-        fitView
-        snapToGrid
-        colorMode="dark"
-        proOptions={{
-          hideAttribution: true,
-        }}
-        snapGrid={[10, 10]}
-      >
-        <Controls showFitView />
-        <MiniMap pannable={true} nodeStrokeWidth={3} />
+    <ReactFlow
+      ref={ref}
+      minZoom={0.2}
+      nodes={nodes}
+      edges={edges}
+      nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      connectionLineType={ConnectionLineType.SmoothStep}
+      fitView
+      snapToGrid
+      colorMode="dark"
+      proOptions={{
+        hideAttribution: true,
+      }}
+      snapGrid={[10, 10]}
+    >
+      <Controls showFitView />
+      <MiniMap pannable={true} nodeStrokeWidth={3} />
 
-        <svg>
-          <defs>
-            <linearGradient id="edge-gradient">
-              <stop offset="0%" stopColor="var(--mantine-color-gray-7)" />
-              <stop offset="100%" stopColor="var(--mantine-color-gray-4)" />
-            </linearGradient>
-            <linearGradient id="edge-gradient-reverse">
-              <stop offset="0%" stopColor="var(--mantine-color-gray-4)" />
-              <stop offset="100%" stopColor="var(--mantine-color-gray-7)" />
-            </linearGradient>
+      <svg>
+        <defs>
+          <linearGradient id="edge-gradient">
+            <stop offset="0%" stopColor="var(--mantine-color-gray-7)" />
+            <stop offset="100%" stopColor="var(--mantine-color-gray-4)" />
+          </linearGradient>
+          <linearGradient id="edge-gradient-reverse">
+            <stop offset="0%" stopColor="var(--mantine-color-gray-4)" />
+            <stop offset="100%" stopColor="var(--mantine-color-gray-7)" />
+          </linearGradient>
 
-            <marker
-              id="edge-circle"
-              viewBox="-5 -5 10 10"
-              refX="0"
-              refY="0"
-              markerUnits="strokeWidth"
-              markerWidth="10"
-              markerHeight="10"
-              orient="auto"
-            >
-              <circle
-                stroke="#2a8af6"
-                strokeOpacity="0.75"
-                r="2"
-                cx="0"
-                cy="0"
-              />
-            </marker>
-          </defs>
-        </svg>
-        <Background
-          bgColor="var(--mantine-color-dark-7)"
-          color="var(--mantine-color-dark-4)"
-          variant={BackgroundVariant.Dots}
-          gap={[10, 10]}
-        />
-        {props.children}
-      </ReactFlow>
-    </Box>
+          <marker
+            id="edge-circle"
+            viewBox="-5 -5 10 10"
+            refX="0"
+            refY="0"
+            markerUnits="strokeWidth"
+            markerWidth="10"
+            markerHeight="10"
+            orient="auto"
+          >
+            <circle stroke="#2a8af6" strokeOpacity="0.75" r="2" cx="0" cy="0" />
+          </marker>
+        </defs>
+      </svg>
+      <Background
+        bgColor="var(--mantine-color-dark-7)"
+        color="var(--mantine-color-dark-4)"
+        variant={BackgroundVariant.Dots}
+        gap={[10, 10]}
+      />
+      {props.children}
+    </ReactFlow>
   );
 };

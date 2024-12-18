@@ -8,6 +8,8 @@ import { FactoriesGraphSettingsModal } from './graph/settings/FactoriesGraphSett
 import { FactoriesSankeyChart } from './sankey/FactoriesSankeyChart';
 import { useChartsView } from './store/chartsSlice';
 
+import { FullHeightContainer } from '@/layout/FullHeightContainer';
+
 export interface IChartsTabProps {}
 
 export function ChartsTab(_props: IChartsTabProps) {
@@ -30,7 +32,7 @@ export function ChartsTab(_props: IChartsTabProps) {
   }
 
   return (
-    <div>
+    <>
       <AfterHeaderSticky>
         <Group gap="xs">
           <SegmentedControl
@@ -44,8 +46,10 @@ export function ChartsTab(_props: IChartsTabProps) {
           {view === 'graph' && <FactoriesGraphSettingsModal />}
         </Group>
       </AfterHeaderSticky>
-      {view === 'graph' && <FactoriesGraphContainer />}
-      {view === 'sankey' && <FactoriesSankeyChart />}
-    </div>
+      <FullHeightContainer>
+        {view === 'graph' && <FactoriesGraphContainer />}
+        {view === 'sankey' && <FactoriesSankeyChart />}
+      </FullHeightContainer>
+    </>
   );
 }
