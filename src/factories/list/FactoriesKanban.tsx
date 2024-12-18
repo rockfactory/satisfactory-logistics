@@ -5,7 +5,7 @@ import {
   KanbanBoard,
   moveCard,
 } from '@caldwell619/react-kanban';
-import { FactoryProgressStatus } from '@/factories/Factory';
+import { Factory, FactoryProgressStatus } from '@/factories/Factory';
 import { ProgressChip } from '@/factories/components/ProgressChip';
 import './FactoriesKanban.css';
 import { FactoryGridCard } from '@/factories/list/FactoryGridCard';
@@ -16,11 +16,13 @@ type FactoryCard = {
   progress?: FactoryProgressStatus;
 };
 
-export const FactoriesKanban = () => {
-  const gameId = useStore(state => state.games.selected);
-
-  const factories = useGameFactories(gameId);
-
+export const FactoriesKanban = ({
+                                  factories,
+                                  disableCardDrag,
+                                }: {
+  factories: Factory[];
+  disableCardDrag: boolean;
+}) => {
   const board: KanbanBoard<FactoryCard> = {
     columns: ['draft', 'todo', 'in_progress', 'done'].map(status => ({
       id: status,
@@ -49,6 +51,8 @@ export const FactoriesKanban = () => {
           variant="light"
         />
       )}
+      disableColumnDrag
+      disableCardDrag={disableCardDrag}
       allowAddCard={false}
       allowAddColumn={false}
       renderCard={({ id }) => (

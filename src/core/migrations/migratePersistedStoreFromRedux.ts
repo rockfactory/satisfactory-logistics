@@ -38,7 +38,6 @@ export function migratePersistedStoreFromRedux() {
           parsed.factories.present.factories?.map((f: any) => [f.id, f]) ?? [],
         ),
       },
-      factoryView: parsed.factories.present.filter ?? {},
       games: {
         selected: migratedGameId,
         games: {

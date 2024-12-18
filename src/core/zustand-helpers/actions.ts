@@ -65,8 +65,8 @@ export function withActions<
 }
 
 export function createActions<
-  Actions extends Record<string, Action<RootState>>,
->(actions: Actions) {
+  State extends Record<string, any> = RootState
+>(actions: Record<string, Action<State>>) {
   return actions;
 }
 

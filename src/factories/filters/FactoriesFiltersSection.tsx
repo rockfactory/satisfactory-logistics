@@ -11,7 +11,7 @@ import {
   IconSearch,
   IconTextGrammar,
 } from '@tabler/icons-react';
-import { useStore } from '@/core/zustand';
+import { useStore, useUiStore } from '@/core/zustand';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
 import { FactoryViewSlice } from '@/factories/store/factoryViewSlice';
@@ -21,8 +21,8 @@ import { useNavigate } from 'react-router-dom';
 export interface IFactoriesFiltersSectionProps {}
 
 export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
-  const factoryView = useStore(state => state.factoryView);
-  const updateFactoryView = useStore(state => state.updateFactoryView);
+  const factoryView = useUiStore(state => state.factoryView);
+  const updateFactoryView = useUiStore(state => state.updateFactoryView);
   const navigate = useNavigate();
 
   return (
@@ -72,28 +72,6 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
             })
           }
         />
-        <Menu shadow="md" width={120}>
-          <Menu.Target>
-            <Button
-              variant="default"
-              rightSection={
-                <IconChevronDown color="white" width={16} height={16} />
-              }
-            >
-              Sort
-            </Button>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item
-              leftSection={<IconTextGrammar width={16} height={16} />}
-              onClick={_e => {
-                useStore.getState().sortFactoriesBy('name');
-              }}
-            >
-              By Name
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
       </Group>
       <Group>
         <GameSettingsModal />

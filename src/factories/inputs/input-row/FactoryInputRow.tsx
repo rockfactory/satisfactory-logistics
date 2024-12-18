@@ -86,7 +86,8 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   // are synced with solvers
   const onChangeHandler = useFactoryOnChangeHandler(factoryId);
 
-  const isVisible = useIsFactoryVisible(factoryId, false, input.resource);
+  const isVisible = useIsFactoryVisible(false)(factoryId, input.resource);
+
   if (!isVisible && displayMode === 'factory') return null;
 
   return (

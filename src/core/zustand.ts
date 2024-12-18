@@ -31,20 +31,23 @@ const slices = withSlices(
   gamesSlice,
   gameSaveSlice,
   factoriesSlice,
-  factoryViewSlice,
   solversSlice,
-  chartsSlice,
 );
 
+const uiSlices = withSlices(factoryViewSlice, chartsSlice);
+
 export type RootState = ReturnType<typeof slices>;
+export type UiState = ReturnType<typeof uiSlices>;
+
 const slicesWithActions = withActions(
   slices,
   gameFactoriesActions,
   solverFactoriesActions,
   gameRemoteActions,
-  factoryViewSortActions,
 );
 
+const uiSlicesWithActions = withActions(uiSlices, factoryViewSortActions);
+3;
 export const useStore = create(
   devtools(
     persist(slicesWithActions, {
@@ -92,15 +95,18 @@ export const useStore = create(
           return removeMissingFactoriesInGames(state as any);
         }
 
-        if (version === 3) {
-          logger.log('Migrating from version 3 to 4 [kanban]');
-          return migrateStoreWithPlan(storeMigrationV4, state as any, draft => {
-            draft.factoryView.viewMode = 'grid';
-          });
-        }
-
         return state;
       },
+    }),
+  ),
+);
+
+export const useUiStore = create(
+  devtools(
+    persist(uiSlicesWithActions, {
+      name: 'zustand:persist:ui',
+      version: 1,
+      storage: createJSONStorage(() => sessionStorage),
     }),
   ),
 );
