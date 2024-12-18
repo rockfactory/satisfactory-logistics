@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useShallowStore, useStore, type RootState } from '@/core/zustand';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import { SolverInstance } from '@/solver/store/Solver';
+import { useFactoryContext } from '@/FactoryContext';
 
 export const usePathSolverInstance = (
   id: string,
@@ -10,7 +11,7 @@ export const usePathSolverInstance = (
 };
 
 export const usePathSolverRequest = () => {
-  const id = useParams<{ id: string }>().id;
+  const id = useFactoryContext();
   return useStore(state => state.solvers.instances[id ?? '']?.request);
 };
 

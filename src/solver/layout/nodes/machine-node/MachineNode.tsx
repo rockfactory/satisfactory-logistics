@@ -41,6 +41,7 @@ import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { MachineNodeActions } from './MachineNodeActions';
 import { RecipeIngredientRow } from './RecipeIngredientRow';
+import { useFactoryContext } from '@/FactoryContext';
 
 export interface IMachineNodeData {
   label: string;
@@ -71,7 +72,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
 
   const [isHovering, { close, open }] = useDisclosure(false);
 
-  const solverId = useParams<{ id: string }>().id;
+  const solverId = useFactoryContext();
 
   const nodeState = useStore(
     state => state.solvers.instances[solverId ?? '']?.nodes?.[props.id],

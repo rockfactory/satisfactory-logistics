@@ -10,6 +10,7 @@ import {
   type FactoryRecipe,
 } from '@/recipes/FactoryRecipe';
 import { useSolverAllowedRecipes } from '@/solver/store/solverSelectors';
+import { useFactoryContext } from '@/FactoryContext';
 
 export interface ISwitchRecipeActionProps {
   recipeId: string;
@@ -20,7 +21,7 @@ export interface ISwitchRecipeActionProps {
 }
 
 export function useRecipeAlternatesInputState(recipeId: string) {
-  const solverId = useParams<{ id: string }>().id;
+  const solverId = useFactoryContext();
   const allAllowedRecipes = useSolverAllowedRecipes(solverId);
 
   const recipe = AllFactoryRecipesMap[recipeId];

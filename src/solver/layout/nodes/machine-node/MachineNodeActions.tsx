@@ -12,6 +12,7 @@ import {
   useRecipeAlternatesInputState,
 } from './SwitchRecipeAction';
 import { showConfettiWhenFactoryBuilt } from './showConfettiWhenFactoryBuilt';
+import { useFactoryContext } from '@/FactoryContext';
 
 export interface IMachineNodeActionsProps {
   id: string;
@@ -28,7 +29,7 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
   const { data, buildingsAmount } = props;
   const { recipe, value } = data;
 
-  const solverId = useParams<{ id: string }>().id;
+  const solverId = useFactoryContext();
   const { solution } = useSolverSolution();
 
   const nodeState = useStore(
