@@ -19,6 +19,7 @@ import { SolverResetButton } from './SolverResetButton';
 import { useSolverSolution } from '@/solver/page/useSolverSolution';
 import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
 import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
+import { FactoryContext } from '@/FactoryContext';
 
 const logger = loglev.getLogger('solver:page');
 
@@ -48,77 +49,79 @@ export function SolverPage(props: ISolverPageProps) {
   } = useSolverSolution(currentSolverId, 'standalone');
 
   return (
-    <Box w="100%" pos="relative">
-      <LoadingOverlay visible={loading || !instance} />
+    <FactoryContext.Provider value={currentSolverId}>
+      <Box w="100%" pos="relative">
+        <LoadingOverlay visible={loading || !instance} />
 
-      <AfterHeaderSticky>
-        <Group gap="sm" justify="space-between">
-          <Group gap="sm">
-            {solverGameId && (
-              <>
+        <AfterHeaderSticky>
+          <Group gap="sm" justify="space-between">
+            <Group gap="sm">
+              {solverGameId && (
+                <>
+                  <Button
+                    component={Link}
+                    to="/factories"
+                    variant="light"
+                    color="gray"
+                    leftSection={<IconArrowLeft size={16} />}
+                  >
+                    All Factories
+                  </Button>
+                </>
+              )}
+              <Title order={4}>
+                <TextInput
+                  value={factory.name ?? undefined}
+                  placeholder="Factory Name"
+                  onChange={e => {
+                    useStore
+                      .getState()
+                      .updateFactory(
+                        currentSolverId,
+                        f => (f.name = e.currentTarget.value),
+                      );
+                  }}
+                />
+              </Title>
+              {!solverGameId && (
                 <Button
-                  component={Link}
-                  to="/factories"
-                  variant="light"
-                  color="gray"
-                  leftSection={<IconArrowLeft size={16} />}
+                  variant="filled"
+                  onClick={() => {
+                    useStore
+                      .getState()
+                      .addFactoryIdToGame(undefined, currentSolverId);
+
+                    useStore.getState().setCurrentSolver(null);
+
+                    navigate(`/factories/${currentSolverId}/calculator`);
+                  }}
+                  leftSection={<IconPlus size={16} />}
                 >
-                  All Factories
+                  Add to Game
                 </Button>
-              </>
-            )}
-            <Title order={4}>
-              <TextInput
-                value={factory.name ?? undefined}
-                placeholder="Factory Name"
-                onChange={e => {
-                  useStore
-                    .getState()
-                    .updateFactory(
-                      currentSolverId,
-                      f => (f.name = e.currentTarget.value),
-                    );
-                }}
+              )}
+              <SolverResetButton id={currentSolverId} factory={factory} />
+            </Group>
+            <Group gap="sm">
+              <SolverRequestDrawer
+                factoryId={currentSolverId}
+                solution={solution}
+                onSolverChangeHandler={onChangeHandler}
               />
-            </Title>
-            {!solverGameId && (
-              <Button
-                variant="filled"
-                onClick={() => {
-                  useStore
-                    .getState()
-                    .addFactoryIdToGame(undefined, currentSolverId);
 
-                  useStore.getState().setCurrentSolver(null);
-
-                  navigate(`/factories/${currentSolverId}/calculator`);
-                }}
-                leftSection={<IconPlus size={16} />}
-              >
-                Add to Game
-              </Button>
-            )}
-            <SolverResetButton id={currentSolverId} factory={factory} />
+              <GameSettingsModal />
+            </Group>
           </Group>
-          <Group gap="sm">
-            <SolverRequestDrawer
-              factoryId={currentSolverId}
-              solution={solution}
-              onSolverChangeHandler={onChangeHandler}
-            />
-
-            <GameSettingsModal />
-          </Group>
-        </Group>
-      </AfterHeaderSticky>
-      {instance && (
-        <SolverSolutionFragment
-          solverId={currentSolverId}
-          suggestions={suggestions}
-          solution={solution!}
-          instance={instance}
-        />
-      )}
-    </Box>
+        </AfterHeaderSticky>
+        {instance && (
+          <SolverSolutionFragment
+            solverId={currentSolverId}
+            suggestions={suggestions}
+            solution={solution!}
+            instance={instance}
+          />
+        )}
+      </Box>
+    </FactoryContext.Provider>
   );
 }
