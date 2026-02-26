@@ -27,9 +27,12 @@ export interface SolverProductionRequest extends SolverRequest {
 }
 
 export async function loadHighs() {
+  const base = import.meta.env.BASE_URL;
   const highs = await highloader({
     locateFile:
-      typeof process === 'undefined' ? file => `/highs/${file}` : undefined,
+      typeof process === 'undefined'
+        ? file => `${base}highs/${file}`
+        : undefined,
   });
   return highs;
 }
