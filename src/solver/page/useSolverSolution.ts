@@ -20,6 +20,7 @@ import {
   proposeSolverSolutionSuggestions,
 } from '@/solver/page/suggestions/proposeSolverSolutionSuggestions';
 import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
+import { isByproductNode } from '@/solver/algorithm/getSolutionNodes';
 import { loglev } from '@/core/logger/log';
 
 const logger = loglev.getLogger('solver:page');
@@ -101,6 +102,25 @@ export const useSolverSolution = (id: string, mode: 'game' | 'standalone') => {
     return { solution, suggestions };
     // We don't want to re-run computation if instance changes, only if its request changes
   }, [highsRef, instance?.request, instance?.nodes, inputsOutputs, loading]);
+
+  useEffect(() => {
+    if (!id || !solution || !isSolutionFound(solution)) return;
+    const outputs = useStore.getState().factories.factories[id]?.outputs;
+    if (!outputs) return;
+    const maximizedNodes = solution.nodes
+      .filter(isByproductNode)
+      .filter(
+        n => n.data.output?.objective === 'max' && n.data.outputIndex != null,
+      );
+    for (const node of maximizedNodes) {
+      const outputIndex = node.data.outputIndex;
+      if (outputIndex == null) continue;
+      if (outputs[outputIndex]?.computedAmount === node.data.value) continue;
+      useStore.getState().updateFactoryOutput(id, outputIndex, {
+        computedAmount: node.data.value,
+      });
+    }
+  }, [id, solution]);
 
   return {
     loading,
