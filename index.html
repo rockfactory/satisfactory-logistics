@@ -12,6 +12,25 @@
       content="A web tool to keep track of Satisfactory logistics (by train, drones, vehicles), setup inputs and outputs between factories and see where items are consumed."
     />
     <title>Satisfactory Logistics</title>
+    <!-- SPA redirect restore for GitHub Pages (from 404.html) -->
+    <script>
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
+          window.history.replaceState(
+            null,
+            null,
+            l.pathname.slice(0, -1) + decoded + l.hash,
+          );
+        }
+      })(window.location);
+    </script>
     <script
       defer
       src="https://cloud.umami.is/script.js"

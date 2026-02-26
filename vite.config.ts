@@ -6,6 +6,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: process.env.GITHUB_PAGES ? '/satisfactory-logistics/' : '/',
   plugins: [
     react(),
     sentryVitePlugin({

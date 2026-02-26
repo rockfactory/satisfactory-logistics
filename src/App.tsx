@@ -36,34 +36,39 @@ import { GamesRoutes } from './games/page/GamesRoutes';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
 import { theme } from './theme';
 
-const router = createBrowserRouter([
-  {
-    path: '/privacy-policy',
-    element: <PrivacyPolicy />,
-  },
-  {
-    path: '/factories/*',
-    element: <FactoryRoutes />,
-    ErrorBoundary: () => {
-      throw useRouteError();
+const basename = import.meta.env.BASE_URL.replace(/\/+$/, '') || '/';
+
+const router = createBrowserRouter(
+  [
+    {
+      path: '/privacy-policy',
+      element: <PrivacyPolicy />,
     },
-  },
-  {
-    path: '/games/*',
-    element: <GamesRoutes />,
-    ErrorBoundary: () => {
-      throw useRouteError();
+    {
+      path: '/factories/*',
+      element: <FactoryRoutes />,
+      ErrorBoundary: () => {
+        throw useRouteError();
+      },
     },
-  },
-  {
-    path: '/login',
-    element: <LoginPage />,
-  },
-  {
-    path: '*',
-    element: <Redirect to="/factories" />,
-  },
-]);
+    {
+      path: '/games/*',
+      element: <GamesRoutes />,
+      ErrorBoundary: () => {
+        throw useRouteError();
+      },
+    },
+    {
+      path: '/login',
+      element: <LoginPage />,
+    },
+    {
+      path: '*',
+      element: <Redirect to="/factories" />,
+    },
+  ],
+  { basename },
+);
 
 function Redirect({ to }: { to: string }) {
   const location = useLocation();
