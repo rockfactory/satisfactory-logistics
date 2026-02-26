@@ -12,7 +12,11 @@ export function useOutputUsage(
       : Math.max(
           state.factories.factories[options.factoryId ?? '']?.outputs
             ?.filter(o => o?.resource === options.output)
-            .reduce((sum, o) => sum + (o?.amount ?? 0), 0) ?? 0,
+            .reduce(
+              (sum, o) =>
+                sum + ((o?.computedAmount ?? o?.amount) ?? 0),
+              0,
+            ) ?? 0,
           0,
         ),
   );

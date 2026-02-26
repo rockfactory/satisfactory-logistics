@@ -66,7 +66,8 @@ export function OutputDependenciesTable(props: IOutputDependenciesTableProps) {
             </Table.Td>
             <Table.Td>
               {PercentageFormatter.format(
-                (input.amount ?? 0) / (output.amount ?? 1),
+                (input.amount ?? 0) /
+                  ((output.computedAmount ?? output.amount) ?? 1),
               )}
             </Table.Td>
           </Table.Tr>

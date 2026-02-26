@@ -27,6 +27,7 @@ import { useParams } from 'react-router-dom';
 
 import { assetPath } from '@/core/assetPath';
 import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
+import { calculateMachineNodeBuildings } from './postprocess/calculateMachineNodeBuildings';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
@@ -39,7 +40,6 @@ import {
 import {
   FactoryRecipe,
   getRecipeDisplayName,
-  getRecipeProductPerBuilding,
 } from '@/recipes/FactoryRecipe';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
@@ -71,8 +71,6 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
   const isAlt = recipe.name.includes('Alternate');
   const { updateNode } = useReactFlow();
 
-  const perBuilding = getRecipeProductPerBuilding(recipe, product.id);
-
   const [isHovering, { close, open }] = useDisclosure(false);
 
   const solverId = useParams<{ id: string }>().id;
@@ -80,9 +78,10 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
   const nodeState = useStore(
     state => state.solvers.instances[solverId ?? '']?.nodes?.[props.id],
   );
-  const overclock = nodeState?.overclock ?? 1;
-  const buildingsAmount = originalValue / perBuilding / overclock;
-  const amplifiedRate = (amplifiedValue + originalValue) / originalValue;
+  const machineCalc = calculateMachineNodeBuildings(props.data, nodeState);
+  const overclock = machineCalc.overclock;
+  const buildingsAmount = machineCalc.buildingsAmount;
+  const amplifiedRate = machineCalc.amplifiedRate;
   return (
     <Popover
       opened={(isHovering || props.selected) && !props.dragging}
@@ -256,10 +255,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                   </Group>
                   <Group gap={4} align="center">
                     <IconBolt size={16} />{' '}
-                    <RepeatingNumber
-                      value={building.powerConsumption * buildingsAmount}
-                    />{' '}
-                    MW
+                    <RepeatingNumber value={machineCalc.totalPower} /> MW
                   </Group>
                 </Group>
               </Text>

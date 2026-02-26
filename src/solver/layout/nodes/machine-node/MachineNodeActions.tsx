@@ -1,5 +1,6 @@
 import { useStore } from '@/core/zustand';
 import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
+import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { useSolverSolution } from '@/solver/layout/solution-context/SolverSolutionContext';
 import { ActionIcon, Button, Group, Stack, Tooltip } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
@@ -20,6 +21,14 @@ export interface IMachineNodeActionsProps {
   buildingsAmount: number;
 }
 
+function toPerMachine(
+  totalSomersloops: number | undefined,
+  slotsPerBuilding: number,
+): number | string {
+  if (!totalSomersloops || slotsPerBuilding <= 0) return '';
+  return Math.min(totalSomersloops, slotsPerBuilding);
+}
+
 /**
  * Contains all changes which can be applied to a machine node.
  * These are the ones requiring the "apply" button.
@@ -35,6 +44,10 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
     state => state.solvers.instances[solverId ?? '']?.nodes?.[props.id],
   );
 
+  const building = AllFactoryBuildingsMap[recipe.producedIn];
+  const slotsPerBuilding = building.somersloopSlots;
+  const roundedBuildings = Math.ceil(buildingsAmount - 0.0001);
+
   // 1. Edit alternate recipes
   const {
     recipes,
@@ -43,17 +56,19 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
     changed: recipesChanged,
   } = useRecipeAlternatesInputState(data.recipe.id);
 
-  // 2. Somersloops and overclock
+  // 2. Somersloops (stored as total, displayed as per-machine) and overclock
   const [somersloopsValue, setSomersloopsValue] = useInputState(
-    nodeState?.somersloops as number | string,
+    toPerMachine(nodeState?.somersloops, slotsPerBuilding),
   );
   const [overclockValue, setOverclockValue] = useInputState(
     nodeState?.overclock as number | string,
   );
 
+  const totalSomersloops = Number(somersloopsValue) * roundedBuildings || 0;
+
   const isApplyDisabled =
     !recipesChanged &&
-    somersloopsValue === nodeState?.somersloops &&
+    totalSomersloops === (nodeState?.somersloops ?? 0) &&
     overclockValue === nodeState?.overclock;
 
   const handleApply = () => {
@@ -68,27 +83,22 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
         );
     }
 
-    // 2. Update somersloops
-    if (somersloopsValue !== nodeState?.somersloops) {
+    // 2. Update somersloops (convert per-machine back to total)
+    if (totalSomersloops !== (nodeState?.somersloops ?? 0)) {
       useStore
         .getState()
         .updateSolverSomersloops(
           solution.graph,
           solverId!,
           props.id,
-          Number(somersloopsValue),
+          totalSomersloops,
         );
     }
 
     // 3. Update overclock
     if (overclockValue !== nodeState?.overclock)
       useStore.getState().updateSolverNode(solverId!, props.id, node => {
-        node.somersloops = somersloopsValue
-          ? Number(somersloopsValue)
-          : undefined;
-        // node.amplification = node.somersloops
-        //   ? node.somersloops / maxSlots
-        //   : undefined;
+        node.somersloops = totalSomersloops || undefined;
         node.overclock = overclockValue ? Number(overclockValue) : undefined;
       });
   };

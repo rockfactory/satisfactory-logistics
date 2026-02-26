@@ -81,7 +81,7 @@ export function SummaryBuildings(props: ISummaryBuildingsProps) {
                     <Table.Td>
                       <RepeatingNumber value={node.overclock * 100} />%
                     </Table.Td>
-                    <Table.Td>{node.somersloops}</Table.Td>
+                    <Table.Td>{node.somersloopsPerMachine}/{node.building.somersloopSlots}</Table.Td>
                   </Table.Tr>
                   {node.partialBuildingAmount > Number.EPSILON && (
                     <Table.Tr>
@@ -100,7 +100,7 @@ export function SummaryBuildings(props: ISummaryBuildingsProps) {
                         />
                         %
                       </Table.Td>
-                      <Table.Td>{node.somersloops}</Table.Td>
+                      <Table.Td>{node.somersloopsPerMachine}/{node.building.somersloopSlots}</Table.Td>
                     </Table.Tr>
                   )}
                 </>
