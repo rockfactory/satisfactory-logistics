@@ -1,3 +1,4 @@
+import { assetPath } from '@/core/assetPath';
 import {
   useGameSettingMaxBelt,
   useGameSettingMaxPipeline,
@@ -150,7 +151,7 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
             label={
               <Group>
                 <Image
-                  src={usedLogistic.imagePath}
+                  src={assetPath(usedLogistic.imagePath)}
                   alt={usedLogistic.name}
                   w={24}
                   h={24}

@@ -1,3 +1,4 @@
+import { assetPath } from '@/core/assetPath';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { OverclockImage } from '@/recipes/ui/OverclockImage';
@@ -43,7 +44,7 @@ export function SummaryBuildings(props: ISummaryBuildingsProps) {
       {groupedByBuilding.map(({ buildingId, data }) => (
         <>
           <Group gap="xs" className={classes.building}>
-            <Image src={data[0].building.imagePath} width={24} height={24} />
+            <Image src={assetPath(data[0].building.imagePath)} width={24} height={24} />
             <span>{sum(data.map(node => node.roundedBuildingsAmount))}x</span>
             {data[0].building.name}
           </Group>

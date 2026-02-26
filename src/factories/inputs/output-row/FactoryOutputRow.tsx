@@ -1,3 +1,4 @@
+import { assetPath } from '@/core/assetPath';
 import { useStore } from '@/core/zustand';
 import { FactoryOutputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
 import { OutputDependenciesPeekModal } from '@/factories/components/peek/OutputDependenciesPeekModal';
@@ -130,7 +131,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
           }}
           rightSection={
             <Image
-              src="/images/game/wat-1_256.png"
+              src={assetPath("/images/game/wat-1_256.png")}
               alt="Somerloops"
               width={20}
               height={20}

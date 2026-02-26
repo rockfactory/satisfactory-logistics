@@ -1,3 +1,4 @@
+import { assetPath } from '@/core/assetPath';
 import { FormOnChangeHandler } from '@/core/form/useFormOnChange';
 import { useStore } from '@/core/zustand';
 import { useGameSetting } from '@/games/gamesSlice.ts';
@@ -121,7 +122,7 @@ export function SolverLimitationsDrawer(
               label={
                 <Group gap="xs">
                   <Image
-                    src={building.imagePath.replace('_256', '_64')}
+                    src={assetPath(building.imagePath.replace('_256', '_64'))}
                     width={24}
                     height={24}
                   />
@@ -156,7 +157,7 @@ export function SolverLimitationsDrawer(
               label={
                 <Group gap="xs">
                   <Image
-                    src={building.imagePath.replace('_256', '_64')}
+                    src={assetPath(building.imagePath.replace('_256', '_64'))}
                     width={24}
                     height={24}
                   />
@@ -185,7 +186,7 @@ export function SolverLimitationsDrawer(
               label={
                 <Group gap="xs">
                   <Image
-                    src={building.imagePath.replace('_256', '_64')}
+                    src={assetPath(building.imagePath.replace('_256', '_64'))}
                     width={24}
                     height={24}
                   />

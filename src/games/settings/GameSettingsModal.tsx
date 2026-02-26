@@ -1,3 +1,4 @@
+import { assetPath } from '@/core/assetPath';
 import { SelectIconInput } from '@/core/form/SelectIconInput';
 import {
   FactoryConveyorBelts,
@@ -36,7 +37,7 @@ const BeltsOptions = FactoryConveyorBelts.map(
     ({
       label: belt.name,
       value: belt.id,
-      icon: <Image src={belt.imagePath} alt={belt.name} w={16} h={16} />,
+      icon: <Image src={assetPath(belt.imagePath)} alt={belt.name} w={16} h={16} />,
     }) as const,
 );
 
@@ -46,7 +47,7 @@ const PipelinesOptions = FactoryPipelinesExclAlternates.map(
       label: pipeline.name,
       value: pipeline.id,
       icon: (
-        <Image src={pipeline.imagePath} alt={pipeline.name} w={16} h={16} />
+        <Image src={assetPath(pipeline.imagePath)} alt={pipeline.name} w={16} h={16} />
       ),
     }) as const,
 );

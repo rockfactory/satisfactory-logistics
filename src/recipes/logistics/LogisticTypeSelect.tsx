@@ -1,3 +1,4 @@
+import { assetPath } from '@/core/assetPath';
 import {
   SelectIconInput,
   type ISelectInputProps,
@@ -13,7 +14,7 @@ const LogisticOptions = LogisticTypes.map(logisticType => ({
   label: logisticType.name,
   icon: (
     <Image
-      src={logisticType.imagePath}
+      src={assetPath(logisticType.imagePath)}
       width={16}
       height={16}
       alt={logisticType.name}

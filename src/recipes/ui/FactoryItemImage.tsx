@@ -1,3 +1,4 @@
+import { assetPath } from '@/core/assetPath';
 import { Image } from '@mantine/core';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 
@@ -26,5 +27,5 @@ export function FactoryItemImage(props: IFactoryItemImageProps) {
     size <= 32 && !highRes
       ? baseImagePath.replace('_256', '_64')
       : baseImagePath;
-  return <Image w={size} h={size} src={imagePath} alt={item.displayName} />;
+  return <Image w={size} h={size} src={assetPath(imagePath)} alt={item.displayName} />;
 }

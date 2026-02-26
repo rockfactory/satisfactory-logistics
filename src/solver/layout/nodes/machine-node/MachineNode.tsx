@@ -25,6 +25,7 @@ import { NodeProps, useReactFlow } from '@xyflow/react';
 import { memo } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { assetPath } from '@/core/assetPath';
 import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
@@ -176,7 +177,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
 
           <Group gap="sm">
             <Box pos="relative" p="0">
-              <Image w="32" h="32" src={building.imagePath} />
+              <Image w="32" h="32" src={assetPath(building.imagePath)} />
             </Box>
             <Stack gap={2} align="center">
               <Group gap={2}>

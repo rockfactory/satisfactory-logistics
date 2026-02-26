@@ -1,3 +1,4 @@
+import { assetPath } from '@/core/assetPath';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { getWorldResourceMachines } from '@/recipes/algorithms/getWorldResourceMachines';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
@@ -61,7 +62,7 @@ export function ResourceNodeExtractorDetail(
           <Table.Tr key={machine.id}>
             <Table.Td>
               <Image
-                src={machine.imagePath.replace('_256', '_64')}
+                src={assetPath(machine.imagePath.replace('_256', '_64'))}
                 alt={machine.name}
                 w={24}
                 h={24}

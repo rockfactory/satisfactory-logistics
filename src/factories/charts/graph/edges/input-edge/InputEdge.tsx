@@ -1,3 +1,4 @@
+import { assetPath } from '@/core/assetPath';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { useChartSetting } from '@/factories/charts/store/chartsSlice';
 import type { FactoryInput } from '@/factories/Factory';
@@ -117,7 +118,7 @@ export const InputEdge: FC<EdgeProps<Edge<IInputEdgeData>>> = ({
               /min
             </Text>
             {transport && (
-              <Image ml={6} src={transport.imagePath} w="16" h="16" />
+              <Image ml={6} src={assetPath(transport.imagePath)} w="16" h="16" />
             )}
           </Group>
         </Box>
