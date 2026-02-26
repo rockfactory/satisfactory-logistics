@@ -1,85 +1,85 @@
-import { GameMenu } from '@/games/menu/GameMenu';
+import { UserMenu } from "@/auth/UserMenu";
+import { GameMenu } from "@/games/menu/GameMenu";
 import {
-  Badge,
-  Burger,
-  Container,
-  Group,
-  Image,
-  Tabs,
-  useMantineTheme,
-} from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { capitalize } from 'lodash';
-import { Link } from 'react-router-dom';
-import { UserMenu } from '@/auth/UserMenu';
-import classes from './Header.module.css';
+	Badge,
+	Burger,
+	Container,
+	Group,
+	Image,
+	Tabs,
+	useMantineTheme,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { capitalize } from "lodash";
+import { Link } from "react-router-dom";
+import classes from "./Header.module.css";
 
 interface HeaderProps {
-  tabs?: string[];
-  activeTab?: string | null;
-  children?: React.ReactNode;
-  onChangeTab?: (tab: string | null) => void;
+	tabs?: string[];
+	activeTab?: string | null;
+	children?: React.ReactNode;
+	onChangeTab?: (tab: string | null) => void;
 }
 
 export function Header(props: HeaderProps) {
-  const { children } = props;
-  const theme = useMantineTheme();
-  const [opened, { toggle }] = useDisclosure(false);
+	const { children } = props;
+	const theme = useMantineTheme();
+	const [opened, { toggle }] = useDisclosure(false);
 
-  return (
-    <header className={classes.header}>
-      {import.meta.env.VITE_DEV_BANNER === 'true' && (
-        <div className={classes.devBanner}>
-          <Badge color="lime" variant="filled">
-            Preview Build
-          </Badge>
-        </div>
-      )}
-      <Container className={classes.mainSection} size="lg">
-        <Group justify="space-between">
-          <Group align="flex-start">
-            <Link to="/factories">
-              <Image
-                h={32}
-                miw={200}
-                w="auto"
-                src="/images/logo/satisfactory-logistics-logo.png"
-                alt="Satisfactory Logistics Planner"
-              />
-            </Link>
-          </Group>
-          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-          <Group>
-            <GameMenu />
-            <UserMenu />
-          </Group>
-        </Group>
-      </Container>
-      {children}
-      {props.tabs && (
-        <Container size="lg">
-          <Tabs
-            defaultValue="factories"
-            value={props.activeTab}
-            variant="outline"
-            visibleFrom="sm"
-            onChange={tab => props.onChangeTab?.(tab)}
-            classNames={{
-              root: classes.tabs,
-              list: classes.tabsList,
-              tab: classes.tab,
-            }}
-          >
-            <Tabs.List>
-              {props.tabs?.map(tab => (
-                <Tabs.Tab value={tab} key={tab}>
-                  {capitalize(tab)}
-                </Tabs.Tab>
-              ))}
-            </Tabs.List>
-          </Tabs>
-        </Container>
-      )}
-    </header>
-  );
+	return (
+		<header className={classes.header}>
+			{import.meta.env.VITE_DEV_BANNER === "true" && (
+				<div className={classes.devBanner}>
+					<Badge color="lime" variant="filled">
+						Preview Build
+					</Badge>
+				</div>
+			)}
+			<Container className={classes.mainSection} size="lg">
+				<Group justify="space-between">
+					<Group align="flex-start">
+						<Link to="/factories">
+							<Image
+								h={32}
+								miw={200}
+								w="auto"
+								src="images/logo/satisfactory-logistics-logo.png"
+								alt="Satisfactory Logistics Planner"
+							/>
+						</Link>
+					</Group>
+					<Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+					<Group>
+						<GameMenu />
+						<UserMenu />
+					</Group>
+				</Group>
+			</Container>
+			{children}
+			{props.tabs && (
+				<Container size="lg">
+					<Tabs
+						defaultValue="factories"
+						value={props.activeTab}
+						variant="outline"
+						visibleFrom="sm"
+						onChange={(tab) => props.onChangeTab?.(tab)}
+						classNames={{
+							root: classes.tabs,
+							list: classes.tabsList,
+							tab: classes.tab,
+						}}
+					>
+						<Tabs.List>
+							{props.tabs?.map((tab) => (
+								<Tabs.Tab value={tab} key={tab}>
+									{capitalize(tab)}
+								</Tabs.Tab>
+							))}
+						</Tabs.List>
+					</Tabs>
+				</Container>
+			)}
+		</header>
+	);
 }
