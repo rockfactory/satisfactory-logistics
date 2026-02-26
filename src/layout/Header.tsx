@@ -1,4 +1,5 @@
 import { UserMenu } from "@/auth/UserMenu";
+import { assetPath } from "@/core/assetPath";
 import { GameMenu } from "@/games/menu/GameMenu";
 import {
 	Badge,
@@ -43,7 +44,7 @@ export function Header(props: HeaderProps) {
 								h={32}
 								miw={200}
 								w="auto"
-								src="images/logo/satisfactory-logistics-logo.png"
+								src={assetPath("/images/logo/satisfactory-logistics-logo.png")}
 								alt="Satisfactory Logistics Planner"
 							/>
 						</Link>
