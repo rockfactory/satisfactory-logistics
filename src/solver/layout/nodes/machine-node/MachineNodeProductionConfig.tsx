@@ -64,15 +64,21 @@ export function MachineNodeProductionConfig(
         }
       />
       <NumberInput
-        placeholder="Overlock"
+        placeholder="Overclock"
         suffix="%"
-        value={overclockValue ? Number(overclockValue) * 100 : 100}
-        onValueChange={({ floatValue }) =>
-          setOverclockValue(floatValue ? floatValue / 100 : 1)
+        value={
+          overclockValue === '' || overclockValue == null
+            ? ''
+            : Number(overclockValue) * 100
         }
-        onChange={setOverclockValue}
+        onValueChange={({ floatValue }) =>
+          setOverclockValue(
+            floatValue == null ? '' : floatValue / 100,
+          )
+        }
         min={0}
         max={250}
+        allowNegative={false}
         error={
           Number(overclockValue) > 2.5
             ? 'Max overclock: 250%'
