@@ -137,3 +137,5 @@ dist
 
 # intellij idea
 .idea
+/.cursor/hooks/state
+/AGENTS.md
