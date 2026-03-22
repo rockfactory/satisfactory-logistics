@@ -13,6 +13,7 @@ import {
   Divider,
   Group,
   Modal,
+  SegmentedControl,
   Stack,
   Table,
   Text,
@@ -26,11 +27,12 @@ import {
   IconCheck,
   IconLayoutGrid,
 } from '@tabler/icons-react';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   computeBeltFriendlyBanks,
   type BankOption,
+  type PlannerPriority,
 } from './computeBeltFriendlyBanks';
 
 export interface IBeltPlannerModalProps {
@@ -267,16 +269,30 @@ function SplitDiagram({
   );
 }
 
+const PRIORITY_OPTIONS = [
+  { value: 'logistics', label: 'Easy Logistics' },
+  { value: 'power', label: 'Energy Efficient' },
+  { value: 'buildings', label: 'Fewest Buildings' },
+];
+
 export function BeltPlannerModal(props: IBeltPlannerModalProps) {
   const { nodeId, recipe, overclock, buildingsAmount } = props;
   const solverId = useParams<{ id: string }>().id;
   const [opened, { open, close }] = useDisclosure(false);
+  const [priority, setPriority] = useState<PlannerPriority>('logistics');
 
   const roundedTotal = Math.ceil(buildingsAmount - 0.0001);
   const maxBankSize = Math.min(Math.max(roundedTotal, 32), 64);
   const options = useMemo(
-    () => computeBeltFriendlyBanks(recipe, overclock, roundedTotal, maxBankSize),
-    [recipe, overclock, roundedTotal, maxBankSize],
+    () =>
+      computeBeltFriendlyBanks(
+        recipe,
+        overclock,
+        roundedTotal,
+        maxBankSize,
+        priority,
+      ),
+    [recipe, overclock, roundedTotal, maxBankSize, priority],
   );
 
   const handleApplyOverclock = useCallback(
@@ -323,6 +339,14 @@ export function BeltPlannerModal(props: IBeltPlannerModalProps) {
             . Banks are scored by how cleanly throughputs fit on single belts,
             including alternate clock speeds.
           </Text>
+
+          <SegmentedControl
+            value={priority}
+            onChange={v => setPriority(v as PlannerPriority)}
+            data={PRIORITY_OPTIONS}
+            size="xs"
+            fullWidth
+          />
 
           {topOptions.map((option, i) => (
             <BankOptionCard

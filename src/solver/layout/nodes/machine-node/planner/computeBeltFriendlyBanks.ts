@@ -96,6 +96,8 @@ function trunkFriendliness(totalRate: number, isFluid: boolean): number {
   return best;
 }
 
+export type PlannerPriority = 'logistics' | 'power' | 'buildings';
+
 function scoreBankOption(lines: BankLine[], machineCount: number, totalMachines: number): number {
   let score = 0;
 
@@ -104,14 +106,12 @@ function scoreBankOption(lines: BankLine[], machineCount: number, totalMachines:
     const friendly = trunkFriendliness(line.totalRate, line.isFluid);
 
     if (isInput) {
-      // Must fit on 1 belt, ideally a clean split from a trunk
       if (line.transportsNeeded === 1) score += 25;
       else if (line.transportsNeeded === 2) score -= 10;
       else score -= 25;
 
       score += friendly;
     } else {
-      // Outputs: reward clean merge-back into trunk
       score += friendly;
       if (line.transportsNeeded <= 2) score += 3;
     }
@@ -178,15 +178,26 @@ function computeTotalPower(
   );
 }
 
+const PRIORITY_WEIGHTS: Record<
+  PlannerPriority,
+  { logistics: number; power: number; buildings: number }
+> = {
+  logistics: { logistics: 1.0, power: 0.3, buildings: 0.2 },
+  power: { logistics: 0.4, power: 1.0, buildings: 0.3 },
+  buildings: { logistics: 0.4, power: 0.2, buildings: 1.0 },
+};
+
 export function computeBeltFriendlyBanks(
   recipe: FactoryRecipe,
   currentOverclock: number = 1,
   totalMachines: number = 0,
   maxBankSize: number = 32,
+  priority: PlannerPriority = 'logistics',
 ): BankOption[] {
   const baseLines = buildBaseLines(recipe);
   const building = AllFactoryBuildingsMap[recipe.producedIn];
   const roundedTotal = Math.ceil(totalMachines - 0.0001);
+  const weights = PRIORITY_WEIGHTS[priority];
 
   const basePower = computeTotalPower(building, roundedTotal, currentOverclock);
 
@@ -200,7 +211,6 @@ export function computeBeltFriendlyBanks(
 
     const totalPower = computeTotalPower(building, scaledTotalMachines, oc);
     const powerDelta = totalPower - basePower;
-
     const powerRatio = basePower > 0 ? totalPower / basePower : 1;
 
     for (let n = 1; n <= maxBankSize; n++) {
@@ -224,16 +234,27 @@ export function computeBeltFriendlyBanks(
 
       const banksNeeded =
         scaledTotalMachines > 0 ? Math.ceil(scaledTotalMachines / n) : 0;
-      let score = scoreBankOption(lines, n, scaledTotalMachines);
+
+      const logisticsScore = scoreBankOption(lines, n, scaledTotalMachines);
+
+      let powerScore = 0;
+      if (powerRatio > 1) {
+        powerScore -= (powerRatio - 1) * 30;
+      } else if (powerRatio < 1) {
+        powerScore += (1 - powerRatio) * 30;
+      }
+
+      let buildingsScore = (oc - 1) * 15;
+      if (scaledTotalMachines > 0 && scaledTotalMachines < roundedTotal) {
+        buildingsScore += 10;
+      }
+
+      let score =
+        logisticsScore * weights.logistics +
+        powerScore * weights.power +
+        buildingsScore * weights.buildings;
 
       if (oc === currentOverclock) score += 5;
-      score += (oc - 1) * 3;
-
-      if (powerRatio > 1) {
-        score -= (powerRatio - 1) * 10;
-      } else if (powerRatio < 1) {
-        score += (1 - powerRatio) * 5;
-      }
 
       options.push({
         machineCount: n,
