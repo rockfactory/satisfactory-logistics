@@ -48,7 +48,7 @@ function getTransportTiers(isFluid: boolean) {
  * e.g., 1/1, 1/2, 1/3, 2/3 of a belt = one splitter/merger stage.
  */
 const CLEAN_FRACTIONS = [1, 1 / 2, 1 / 3, 2 / 3];
-const TOLERANCE = 0.002;
+const TOLERANCE = 0.0005;
 
 function isCleanSplit(totalRate: number, beltSpeed: number): boolean {
   const ratio = totalRate / beltSpeed;
@@ -115,15 +115,34 @@ function exactBeltMatch(totalRate: number, isFluid: boolean): number {
   return 0;
 }
 
+function outputBeltScore(totalRate: number, isFluid: boolean): number {
+  const tiers = getTransportTiers(isFluid);
+  for (const tier of tiers) {
+    if (totalRate > tier.speed) continue;
+    const ratio = totalRate / tier.speed;
+    for (const frac of CLEAN_FRACTIONS) {
+      if (Math.abs(ratio - frac) < TOLERANCE) {
+        // Full belt = best, half belt = nearly as good, thirds = good
+        if (frac === 1) return 120;
+        if (frac >= 0.5) return 100;
+        return 70;
+      }
+    }
+    break;
+  }
+  return 0;
+}
+
 function scoreBankOption(lines: BankLine[], machineCount: number, totalMachines: number): number {
   let score = 0;
 
   for (const line of lines) {
     const isInput = line.type === 'ingredient';
-    const friendly = trunkFriendliness(line.totalRate, line.isFluid);
-    const exactBelt = exactBeltMatch(line.totalRate, line.isFluid);
 
     if (isInput) {
+      const friendly = trunkFriendliness(line.totalRate, line.isFluid);
+      const exactBelt = exactBeltMatch(line.totalRate, line.isFluid);
+
       if (line.transportsNeeded === 1) score += 25;
       else if (line.transportsNeeded === 2) score -= 10;
       else score -= 25;
@@ -131,12 +150,9 @@ function scoreBankOption(lines: BankLine[], machineCount: number, totalMachines:
       score += friendly;
       if (exactBelt > 0) score += 10;
     } else {
-      // Output belt alignment is the PRIMARY driver of bank sizing
-      if (exactBelt > 0) {
-        score += 120;
-      } else {
-        score += friendly;
-      }
+      // Output belt alignment is the PRIMARY driver of bank sizing.
+      // Full belt, half belt, and third belt are all excellent for merging.
+      score += outputBeltScore(line.totalRate, line.isFluid);
       if (line.transportsNeeded === 1) score += 15;
       else if (line.transportsNeeded <= 2) score += 5;
     }
@@ -287,10 +303,11 @@ interface SearchContext {
   basePower: number;
   weights: { logistics: number; power: number; buildings: number };
   maxBankSize: number;
+  targetBanks: number;
 }
 
 function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
-  const { baseLines, building, roundedTotal, currentOverclock, basePower, weights, maxBankSize } = ctx;
+  const { baseLines, building, roundedTotal, currentOverclock, basePower, weights, maxBankSize, targetBanks } = ctx;
 
   const scaledTotalMachines =
     roundedTotal > 0
@@ -345,7 +362,23 @@ function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
       powerScore * weights.power +
       buildingsScore * weights.buildings;
 
+    if (targetBanks > 0 && banksNeeded > 0) {
+      if (banksNeeded === targetBanks) {
+        score += 500;
+      } else if (targetBanks % banksNeeded === 0 || banksNeeded % targetBanks === 0) {
+        score += 200;
+      } else {
+        const diff = Math.abs(banksNeeded - targetBanks);
+        score -= diff * 20;
+      }
+    }
+
     if (oc === currentOverclock) score += 5;
+
+    // Prefer clean overclock percentages (whole %) over fractional ones
+    const ocPct = oc * 100;
+    if (Math.abs(ocPct - Math.round(ocPct)) < 0.01) score += 3;
+    else if (Math.abs(ocPct * 2 - Math.round(ocPct * 2)) < 0.01) score += 1;
 
     results.push({
       machineCount: n,
@@ -368,6 +401,7 @@ export function computeBeltFriendlyBanks(
   maxBankSize: number = 32,
   priority: PlannerPriority = 'logistics',
   amplifiedRate = 1,
+  targetBanks = 0,
 ): BankOption[] {
   const baseLines = buildBaseLines(recipe, amplifiedRate);
   const building = AllFactoryBuildingsMap[recipe.producedIn];
@@ -376,7 +410,7 @@ export function computeBeltFriendlyBanks(
   const basePower = computeTotalPower(building, roundedTotal, currentOverclock);
 
   const ctx: SearchContext = {
-    baseLines, building, roundedTotal, currentOverclock, basePower, weights, maxBankSize,
+    baseLines, building, roundedTotal, currentOverclock, basePower, weights, maxBankSize, targetBanks,
   };
 
   // Phase 1: coarse search at 5% steps
@@ -413,12 +447,21 @@ export function computeBeltFriendlyBanks(
 function diversifyResults(sorted: BankOption[], maxResults = 8): BankOption[] {
   const result: BankOption[] = [];
   const seenOverclocks = new Map<number, number>();
+  const seenBankSizes = new Set<number>();
 
   for (const opt of sorted) {
     if (result.length >= maxResults) break;
-    const ocCount = seenOverclocks.get(opt.overclock) ?? 0;
+
+    // Bucket overclocks to nearest 1% to avoid near-duplicate suggestions
+    const ocBucket = Math.round(opt.overclock * 100);
+    const ocCount = seenOverclocks.get(ocBucket) ?? 0;
     if (ocCount >= 3) continue;
-    seenOverclocks.set(opt.overclock, ocCount + 1);
+
+    // Skip if we already have this bank size (a different overclock variant)
+    if (seenBankSizes.has(opt.machineCount)) continue;
+
+    seenOverclocks.set(ocBucket, ocCount + 1);
+    seenBankSizes.add(opt.machineCount);
     result.push(opt);
   }
 

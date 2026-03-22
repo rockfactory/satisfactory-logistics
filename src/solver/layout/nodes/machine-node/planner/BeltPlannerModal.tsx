@@ -13,6 +13,7 @@ import {
   Divider,
   Group,
   Modal,
+  NumberInput,
   SegmentedControl,
   Stack,
   Table,
@@ -281,9 +282,11 @@ export function BeltPlannerModal(props: IBeltPlannerModalProps) {
   const solverId = useParams<{ id: string }>().id;
   const [opened, { open, close }] = useDisclosure(false);
   const [priority, setPriority] = useState<PlannerPriority>('logistics');
+  const [targetBanks, setTargetBanks] = useState<number | string>('');
 
   const roundedTotal = Math.ceil(buildingsAmount - 0.0001);
   const maxBankSize = Math.min(Math.max(roundedTotal, 32), 64);
+  const targetBanksNum = Number(targetBanks) || 0;
   const options = useMemo(
     () =>
       computeBeltFriendlyBanks(
@@ -293,8 +296,9 @@ export function BeltPlannerModal(props: IBeltPlannerModalProps) {
         maxBankSize,
         priority,
         amplifiedRate,
+        targetBanksNum,
       ),
-    [recipe, overclock, roundedTotal, maxBankSize, priority, amplifiedRate],
+    [recipe, overclock, roundedTotal, maxBankSize, priority, amplifiedRate, targetBanksNum],
   );
 
   const handleApplyOverclock = useCallback(
@@ -342,13 +346,26 @@ export function BeltPlannerModal(props: IBeltPlannerModalProps) {
             including alternate clock speeds.
           </Text>
 
-          <SegmentedControl
-            value={priority}
-            onChange={v => setPriority(v as PlannerPriority)}
-            data={PRIORITY_OPTIONS}
-            size="xs"
-            fullWidth
-          />
+          <Group gap="sm" align="flex-end">
+            <SegmentedControl
+              value={priority}
+              onChange={v => setPriority(v as PlannerPriority)}
+              data={PRIORITY_OPTIONS}
+              size="xs"
+              style={{ flex: 1 }}
+            />
+            <NumberInput
+              placeholder="Any"
+              label="Target banks"
+              size="xs"
+              min={1}
+              max={roundedTotal}
+              value={targetBanks}
+              onChange={setTargetBanks}
+              w={100}
+              allowNegative={false}
+            />
+          </Group>
 
           {topOptions.map((option, i) => (
             <BankOptionCard
