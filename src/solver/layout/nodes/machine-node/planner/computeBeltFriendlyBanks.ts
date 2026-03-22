@@ -43,15 +43,37 @@ function getTransportTiers(isFluid: boolean) {
   return isFluid ? PIPE_FLOW_RATES : BELT_SPEEDS;
 }
 
+/**
+ * Rates that are clean fractions of a belt speed are easy to split/merge.
+ * e.g., 1/1, 1/2, 1/3, 2/3 of a belt = one splitter/merger stage.
+ */
+const CLEAN_FRACTIONS = [1, 1 / 2, 1 / 3, 2 / 3];
+const TOLERANCE = 0.002;
+
+function isCleanSplit(totalRate: number, beltSpeed: number): boolean {
+  const ratio = totalRate / beltSpeed;
+  return CLEAN_FRACTIONS.some(frac => Math.abs(ratio - frac) < TOLERANCE);
+}
+
+function isCleanFromAnyTier(totalRate: number, isFluid: boolean): boolean {
+  const tiers = getTransportTiers(isFluid);
+  for (const tier of tiers) {
+    if (totalRate > tier.speed) continue;
+    if (isCleanSplit(totalRate, tier.speed)) return true;
+  }
+  return false;
+}
+
 function bestTransport(totalRate: number, isFluid: boolean) {
   const tiers = getTransportTiers(isFluid);
+  const clean = isCleanFromAnyTier(totalRate, isFluid);
   for (const tier of tiers) {
     if (totalRate <= tier.speed) {
       return {
         name: tier.name,
         speed: tier.speed,
         count: 1,
-        isClean: isCleanRate(totalRate, tier.speed),
+        isClean: clean,
       };
     }
   }
@@ -61,22 +83,9 @@ function bestTransport(totalRate: number, isFluid: boolean) {
     name: max.name,
     speed: max.speed,
     count,
-    isClean: isCleanRate(totalRate, max.speed),
+    isClean: clean,
   };
 }
-
-function isCleanRate(totalRate: number, beltSpeed: number): boolean {
-  const tolerance = 0.001;
-  const ratio = totalRate / beltSpeed;
-  return Math.abs(ratio - Math.round(ratio)) < tolerance;
-}
-
-/**
- * Rates that are clean fractions of a belt speed are easy to split/merge.
- * e.g., 1/1, 1/2, 1/3, 2/3 of a belt = one splitter/merger stage.
- */
-const CLEAN_FRACTIONS = [1, 1 / 2, 1 / 3, 2 / 3];
-const TOLERANCE = 0.002;
 
 function trunkFriendliness(totalRate: number, isFluid: boolean): number {
   const tiers = getTransportTiers(isFluid);
@@ -123,9 +132,13 @@ function scoreBankOption(lines: BankLine[], machineCount: number, totalMachines:
 
   if (totalMachines > 0) {
     const banksNeeded = Math.ceil(totalMachines / machineCount);
-    if (banksNeeded > 16) score -= 30;
+    if (banksNeeded > 16) score -= 15 + banksNeeded * 2;
     else if (banksNeeded > 8) score -= 15;
     else if (banksNeeded > 4) score -= 5;
+  }
+
+  if (machineCount <= 2 && totalMachines > 10) {
+    score -= 40;
   }
 
   return score;
@@ -290,9 +303,10 @@ export function computeBeltFriendlyBanks(
         powerScore += (1 - powerRatio) * 30;
       }
 
-      let buildingsScore = (oc - 1) * 15;
-      if (scaledTotalMachines > 0 && scaledTotalMachines < roundedTotal) {
-        buildingsScore += 10;
+      let buildingsScore = 0;
+      if (roundedTotal > 0 && scaledTotalMachines > 0) {
+        const reduction = 1 - scaledTotalMachines / roundedTotal;
+        buildingsScore += reduction * 50;
       }
 
       let score =
