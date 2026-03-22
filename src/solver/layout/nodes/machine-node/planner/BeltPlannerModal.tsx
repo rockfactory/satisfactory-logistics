@@ -22,6 +22,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import {
   IconArrowRight,
+  IconBolt,
   IconCheck,
   IconLayoutGrid,
 } from '@tabler/icons-react';
@@ -37,6 +38,31 @@ export interface IBeltPlannerModalProps {
   recipe: FactoryRecipe;
   overclock: number;
   buildingsAmount: number;
+}
+
+function PowerDeltaIndicator({
+  powerDelta,
+  basePower,
+}: {
+  powerDelta: number;
+  basePower: number;
+}) {
+  const isIncrease = powerDelta > 0;
+  const color = isIncrease ? 'red.5' : 'green.5';
+  const iconColor = isIncrease
+    ? 'var(--mantine-color-red-5)'
+    : 'var(--mantine-color-green-5)';
+  const sign = isIncrease ? '+' : '';
+  const pct = basePower > 0 ? Math.round((powerDelta / basePower) * 100) : 0;
+
+  return (
+    <Group gap={4} mb="xs">
+      <IconBolt size={14} color={iconColor} />
+      <Text size="xs" c={color}>
+        {sign}{Math.round(powerDelta)} MW ({sign}{pct}%)
+      </Text>
+    </Group>
+  );
 }
 
 function BankOptionCard({
@@ -98,6 +124,13 @@ function BankOptionCard({
           )}
         </Group>
       </Group>
+
+      {isOverclockChanged && option.powerDelta !== 0 && (
+        <PowerDeltaIndicator
+          powerDelta={option.powerDelta}
+          basePower={option.totalPower - option.powerDelta}
+        />
+      )}
 
       <Table withColumnBorders withRowBorders={false} verticalSpacing={4}>
         <Table.Thead>

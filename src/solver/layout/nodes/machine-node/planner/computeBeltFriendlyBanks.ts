@@ -1,4 +1,5 @@
 import {
+  AllFactoryBuildingsMap,
   FactoryConveyorBelts,
   FactoryPipelinesExclAlternates,
 } from '@/recipes/FactoryBuilding';
@@ -32,6 +33,8 @@ export interface BankOption {
   machineCount: number;
   banksNeeded: number;
   overclock: number;
+  totalPower: number;
+  powerDelta: number;
   score: number;
   lines: BankLine[];
 }
@@ -163,6 +166,18 @@ function buildBaseLines(recipe: FactoryRecipe): BaseLineInfo[] {
   return lines;
 }
 
+function computeTotalPower(
+  building: { powerConsumption: number; powerConsumptionExponent: number },
+  numMachines: number,
+  overclock: number,
+): number {
+  return (
+    numMachines *
+    building.powerConsumption *
+    Math.pow(overclock, building.powerConsumptionExponent)
+  );
+}
+
 export function computeBeltFriendlyBanks(
   recipe: FactoryRecipe,
   currentOverclock: number = 1,
@@ -170,7 +185,10 @@ export function computeBeltFriendlyBanks(
   maxBankSize: number = 32,
 ): BankOption[] {
   const baseLines = buildBaseLines(recipe);
+  const building = AllFactoryBuildingsMap[recipe.producedIn];
   const roundedTotal = Math.ceil(totalMachines - 0.0001);
+
+  const basePower = computeTotalPower(building, roundedTotal, currentOverclock);
 
   const options: BankOption[] = [];
 
@@ -179,6 +197,11 @@ export function computeBeltFriendlyBanks(
       roundedTotal > 0
         ? Math.ceil(roundedTotal * (currentOverclock / oc) - 0.0001)
         : 0;
+
+    const totalPower = computeTotalPower(building, scaledTotalMachines, oc);
+    const powerDelta = totalPower - basePower;
+
+    const powerRatio = basePower > 0 ? totalPower / basePower : 1;
 
     for (let n = 1; n <= maxBankSize; n++) {
       const lines: BankLine[] = baseLines.map(bl => {
@@ -206,10 +229,18 @@ export function computeBeltFriendlyBanks(
       if (oc === currentOverclock) score += 5;
       score += (oc - 1) * 3;
 
+      if (powerRatio > 1) {
+        score -= (powerRatio - 1) * 10;
+      } else if (powerRatio < 1) {
+        score += (1 - powerRatio) * 5;
+      }
+
       options.push({
         machineCount: n,
         banksNeeded,
         overclock: oc,
+        totalPower,
+        powerDelta,
         score,
         lines,
       });
