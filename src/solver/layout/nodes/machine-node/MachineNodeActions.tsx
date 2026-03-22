@@ -20,6 +20,7 @@ export interface IMachineNodeActionsProps {
   data: IMachineNodeData;
 
   buildingsAmount: number;
+  amplifiedRate: number;
 }
 
 function toPerMachine(
@@ -170,6 +171,7 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
             recipe={recipe}
             overclock={nodeState?.overclock ?? 1}
             buildingsAmount={buildingsAmount}
+            amplifiedRate={props.amplifiedRate}
           />
         </Group>
         <Button

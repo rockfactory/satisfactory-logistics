@@ -40,6 +40,7 @@ export interface IBeltPlannerModalProps {
   recipe: FactoryRecipe;
   overclock: number;
   buildingsAmount: number;
+  amplifiedRate: number;
 }
 
 function PowerDeltaIndicator({
@@ -276,7 +277,7 @@ const PRIORITY_OPTIONS = [
 ];
 
 export function BeltPlannerModal(props: IBeltPlannerModalProps) {
-  const { nodeId, recipe, overclock, buildingsAmount } = props;
+  const { nodeId, recipe, overclock, buildingsAmount, amplifiedRate } = props;
   const solverId = useParams<{ id: string }>().id;
   const [opened, { open, close }] = useDisclosure(false);
   const [priority, setPriority] = useState<PlannerPriority>('logistics');
@@ -291,8 +292,9 @@ export function BeltPlannerModal(props: IBeltPlannerModalProps) {
         roundedTotal,
         maxBankSize,
         priority,
+        amplifiedRate,
       ),
-    [recipe, overclock, roundedTotal, maxBankSize, priority],
+    [recipe, overclock, roundedTotal, maxBankSize, priority, amplifiedRate],
   );
 
   const handleApplyOverclock = useCallback(

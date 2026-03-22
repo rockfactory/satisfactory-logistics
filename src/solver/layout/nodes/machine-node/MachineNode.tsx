@@ -80,8 +80,8 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
 	const amplifiedRate = machineCalc.amplifiedRate;
 
 	const bestBank = useMemo(
-		() => computeBestBankSize(recipe, overclock, buildingsAmount),
-		[recipe, overclock, buildingsAmount],
+		() => computeBestBankSize(recipe, overclock, buildingsAmount, amplifiedRate),
+		[recipe, overclock, buildingsAmount, amplifiedRate],
 	);
 	return (
 		<Popover
@@ -360,6 +360,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
 								data={props.data}
 								id={props.id}
 								buildingsAmount={buildingsAmount}
+								amplifiedRate={amplifiedRate}
 							/>
 						) : (
 							<Stack>

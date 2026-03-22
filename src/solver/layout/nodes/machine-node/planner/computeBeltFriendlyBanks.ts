@@ -148,11 +148,12 @@ export function computeBestBankSize(
   recipe: FactoryRecipe,
   overclock: number,
   totalMachines: number,
+  amplifiedRate = 1,
 ): { machineCount: number; banksNeeded: number } | null {
   const roundedTotal = Math.ceil(totalMachines - 0.0001);
   if (roundedTotal <= 1) return null;
 
-  const baseLines = buildBaseLines(recipe);
+  const baseLines = buildBaseLines(recipe, amplifiedRate);
   const maxBankSize = Math.min(Math.max(roundedTotal, 32), 64);
 
   let bestScore = -Infinity;
@@ -200,7 +201,7 @@ interface BaseLineInfo {
   isFluid: boolean;
 }
 
-function buildBaseLines(recipe: FactoryRecipe): BaseLineInfo[] {
+function buildBaseLines(recipe: FactoryRecipe, amplifiedRate = 1): BaseLineInfo[] {
   const lines: BaseLineInfo[] = [];
   for (const ing of recipe.ingredients) {
     const item = AllFactoryItemsMap[ing.resource];
@@ -217,7 +218,7 @@ function buildBaseLines(recipe: FactoryRecipe): BaseLineInfo[] {
     lines.push({
       resource: prod.resource,
       displayName: item?.displayName ?? prod.resource,
-      baseRate: (prod.displayAmount * 60) / recipe.time,
+      baseRate: ((prod.displayAmount * 60) / recipe.time) * amplifiedRate,
       type: 'product',
       isFluid: item?.form === FactoryItemForm.Liquid,
     });
@@ -252,8 +253,9 @@ export function computeBeltFriendlyBanks(
   totalMachines: number = 0,
   maxBankSize: number = 32,
   priority: PlannerPriority = 'logistics',
+  amplifiedRate = 1,
 ): BankOption[] {
-  const baseLines = buildBaseLines(recipe);
+  const baseLines = buildBaseLines(recipe, amplifiedRate);
   const building = AllFactoryBuildingsMap[recipe.producedIn];
   const roundedTotal = Math.ceil(totalMachines - 0.0001);
   const weights = PRIORITY_WEIGHTS[priority];
