@@ -131,6 +131,52 @@ function scoreBankOption(lines: BankLine[], machineCount: number, totalMachines:
   return score;
 }
 
+export function computeBestBankSize(
+  recipe: FactoryRecipe,
+  overclock: number,
+  totalMachines: number,
+): { machineCount: number; banksNeeded: number } | null {
+  const roundedTotal = Math.ceil(totalMachines - 0.0001);
+  if (roundedTotal <= 1) return null;
+
+  const baseLines = buildBaseLines(recipe);
+  const maxBankSize = Math.min(Math.max(roundedTotal, 32), 64);
+
+  let bestScore = -Infinity;
+  let bestOption: { machineCount: number; banksNeeded: number } | null = null;
+
+  for (let n = 1; n <= maxBankSize; n++) {
+    const lines: BankLine[] = baseLines.map(bl => {
+      const perBuilding = bl.baseRate * overclock;
+      const totalRate = perBuilding * n;
+      const transport = bestTransport(totalRate, bl.isFluid);
+      return {
+        resource: bl.resource,
+        displayName: bl.displayName,
+        type: bl.type,
+        perBuilding,
+        totalRate,
+        transportName: transport.name,
+        transportSpeed: transport.speed,
+        transportsNeeded: transport.count,
+        isClean: transport.isClean,
+        isFluid: bl.isFluid,
+      };
+    });
+
+    const banksNeeded = Math.ceil(roundedTotal / n);
+    if (banksNeeded <= 1) continue;
+
+    const score = scoreBankOption(lines, n, roundedTotal);
+    if (score > bestScore) {
+      bestScore = score;
+      bestOption = { machineCount: n, banksNeeded };
+    }
+  }
+
+  return bestOption;
+}
+
 const OVERCLOCK_STEPS = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5];
 
 interface BaseLineInfo {

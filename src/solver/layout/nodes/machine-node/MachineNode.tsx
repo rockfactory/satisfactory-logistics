@@ -20,9 +20,10 @@ import {
 	IconBuildingFactory2,
 	IconCircleCheckFilled,
 	IconClockBolt,
+	IconLayoutGrid,
 } from "@tabler/icons-react";
 import { NodeProps, useReactFlow } from "@xyflow/react";
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
 import { assetPath } from "@/core/assetPath";
@@ -37,6 +38,7 @@ import { FactoryItemImage } from "@/recipes/ui/FactoryItemImage";
 import { NodeActionsBox } from "@/solver/layout/nodes/utils/NodeActionsBox";
 import { InvisibleHandles } from "@/solver/layout/rendering/InvisibleHandles";
 import { MachineNodeActions } from "./MachineNodeActions";
+import { computeBestBankSize } from "./planner/computeBeltFriendlyBanks";
 import { calculateMachineNodeBuildings } from "./postprocess/calculateMachineNodeBuildings";
 import { RecipeIngredientRow } from "./RecipeIngredientRow";
 
@@ -76,6 +78,11 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
 	const overclock = machineCalc.overclock;
 	const buildingsAmount = machineCalc.buildingsAmount;
 	const amplifiedRate = machineCalc.amplifiedRate;
+
+	const bestBank = useMemo(
+		() => computeBestBankSize(recipe, overclock, buildingsAmount),
+		[recipe, overclock, buildingsAmount],
+	);
 	return (
 		<Popover
 			opened={(isHovering || props.selected) && !props.dragging}
@@ -260,6 +267,14 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
 										</Text>
 									)}
 								</Stack>
+									{bestBank && (
+										<Group gap={4} align="center">
+											<IconLayoutGrid size={16} color="var(--mantine-color-cyan-5)" />
+											<Text size="sm">
+												{bestBank.banksNeeded} x {bestBank.machineCount}
+											</Text>
+										</Group>
+									)}
 									<Group gap={4} align="center">
 										<IconBolt size={16} />{" "}
 										<RepeatingNumber value={machineCalc.totalPower} /> MW
