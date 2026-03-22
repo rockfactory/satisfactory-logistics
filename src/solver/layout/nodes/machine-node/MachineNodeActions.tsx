@@ -12,6 +12,7 @@ import {
   SwitchRecipeAction,
   useRecipeAlternatesInputState,
 } from './SwitchRecipeAction';
+import { BeltPlannerModal } from './planner/BeltPlannerModal';
 import { showConfettiWhenFactoryBuilt } from './showConfettiWhenFactoryBuilt';
 
 export interface IMachineNodeActionsProps {
@@ -163,6 +164,13 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
               <FactoryInputIcon size={16} />
             </ActionIcon>
           </Tooltip>
+
+          <BeltPlannerModal
+            nodeId={props.id}
+            recipe={recipe}
+            overclock={nodeState?.overclock ?? 1}
+            buildingsAmount={buildingsAmount}
+          />
         </Group>
         <Button
           variant={isApplyDisabled ? 'default' : 'filled'}
