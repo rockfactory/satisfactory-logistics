@@ -107,12 +107,21 @@ function trunkFriendliness(totalRate: number, isFluid: boolean): number {
 
 export type PlannerPriority = 'logistics' | 'power' | 'buildings';
 
+function exactBeltMatch(totalRate: number, isFluid: boolean): number {
+  const tiers = getTransportTiers(isFluid);
+  for (const tier of tiers) {
+    if (Math.abs(totalRate - tier.speed) < TOLERANCE) return 40;
+  }
+  return 0;
+}
+
 function scoreBankOption(lines: BankLine[], machineCount: number, totalMachines: number): number {
   let score = 0;
 
   for (const line of lines) {
     const isInput = line.type === 'ingredient';
     const friendly = trunkFriendliness(line.totalRate, line.isFluid);
+    const exactBelt = exactBeltMatch(line.totalRate, line.isFluid);
 
     if (isInput) {
       if (line.transportsNeeded === 1) score += 25;
@@ -120,9 +129,16 @@ function scoreBankOption(lines: BankLine[], machineCount: number, totalMachines:
       else score -= 25;
 
       score += friendly;
+      if (exactBelt > 0) score += 10;
     } else {
-      score += friendly;
-      if (line.transportsNeeded <= 2) score += 3;
+      // Output belt alignment is the PRIMARY driver of bank sizing
+      if (exactBelt > 0) {
+        score += 120;
+      } else {
+        score += friendly;
+      }
+      if (line.transportsNeeded === 1) score += 15;
+      else if (line.transportsNeeded <= 2) score += 5;
     }
   }
 
@@ -191,7 +207,23 @@ export function computeBestBankSize(
   return bestOption;
 }
 
-const OVERCLOCK_STEPS = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25, 2.5];
+function generateCoarseSteps(): number[] {
+  const steps: number[] = [];
+  for (let pct = 50; pct <= 250; pct += 5) {
+    steps.push(pct / 100);
+  }
+  return steps;
+}
+
+function generateRefineSteps(center: number, halfRange = 0.05, step = 0.001): number[] {
+  const steps: number[] = [];
+  const lo = Math.max(0.5, center - halfRange);
+  const hi = Math.min(2.5, center + halfRange);
+  for (let v = lo; v <= hi + 1e-9; v += step) {
+    steps.push(Math.round(v * 1000) / 1000);
+  }
+  return steps;
+}
 
 interface BaseLineInfo {
   resource: string;
@@ -247,6 +279,88 @@ const PRIORITY_WEIGHTS: Record<
   buildings: { logistics: 0.4, power: 0.2, buildings: 1.0 },
 };
 
+interface SearchContext {
+  baseLines: BaseLineInfo[];
+  building: { powerConsumption: number; powerConsumptionExponent: number };
+  roundedTotal: number;
+  currentOverclock: number;
+  basePower: number;
+  weights: { logistics: number; power: number; buildings: number };
+  maxBankSize: number;
+}
+
+function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
+  const { baseLines, building, roundedTotal, currentOverclock, basePower, weights, maxBankSize } = ctx;
+
+  const scaledTotalMachines =
+    roundedTotal > 0
+      ? Math.ceil(roundedTotal * (currentOverclock / oc) - 0.0001)
+      : 0;
+
+  const totalPower = computeTotalPower(building, scaledTotalMachines, oc);
+  const powerDelta = totalPower - basePower;
+  const powerRatio = basePower > 0 ? totalPower / basePower : 1;
+
+  const results: BankOption[] = [];
+
+  for (let n = 1; n <= maxBankSize; n++) {
+    const lines: BankLine[] = baseLines.map(bl => {
+      const perBuilding = bl.baseRate * oc;
+      const totalRate = perBuilding * n;
+      const transport = bestTransport(totalRate, bl.isFluid);
+      return {
+        resource: bl.resource,
+        displayName: bl.displayName,
+        type: bl.type,
+        perBuilding,
+        totalRate,
+        transportName: transport.name,
+        transportSpeed: transport.speed,
+        transportsNeeded: transport.count,
+        isClean: transport.isClean,
+        isFluid: bl.isFluid,
+      };
+    });
+
+    const banksNeeded =
+      scaledTotalMachines > 0 ? Math.ceil(scaledTotalMachines / n) : 0;
+
+    const logisticsScore = scoreBankOption(lines, n, scaledTotalMachines);
+
+    let powerScore = 0;
+    if (powerRatio > 1) {
+      powerScore -= (powerRatio - 1) * 30;
+    } else if (powerRatio < 1) {
+      powerScore += (1 - powerRatio) * 30;
+    }
+
+    let buildingsScore = 0;
+    if (roundedTotal > 0 && scaledTotalMachines > 0) {
+      const reduction = 1 - scaledTotalMachines / roundedTotal;
+      buildingsScore += reduction * 50;
+    }
+
+    let score =
+      logisticsScore * weights.logistics +
+      powerScore * weights.power +
+      buildingsScore * weights.buildings;
+
+    if (oc === currentOverclock) score += 5;
+
+    results.push({
+      machineCount: n,
+      banksNeeded,
+      overclock: oc,
+      totalPower,
+      powerDelta,
+      score,
+      lines,
+    });
+  }
+
+  return results;
+}
+
 export function computeBeltFriendlyBanks(
   recipe: FactoryRecipe,
   currentOverclock: number = 1,
@@ -259,80 +373,41 @@ export function computeBeltFriendlyBanks(
   const building = AllFactoryBuildingsMap[recipe.producedIn];
   const roundedTotal = Math.ceil(totalMachines - 0.0001);
   const weights = PRIORITY_WEIGHTS[priority];
-
   const basePower = computeTotalPower(building, roundedTotal, currentOverclock);
 
-  const options: BankOption[] = [];
+  const ctx: SearchContext = {
+    baseLines, building, roundedTotal, currentOverclock, basePower, weights, maxBankSize,
+  };
 
-  for (const oc of OVERCLOCK_STEPS) {
-    const scaledTotalMachines =
-      roundedTotal > 0
-        ? Math.ceil(roundedTotal * (currentOverclock / oc) - 0.0001)
-        : 0;
+  // Phase 1: coarse search at 5% steps
+  const coarseOptions: BankOption[] = [];
+  for (const oc of generateCoarseSteps()) {
+    coarseOptions.push(...evaluateOverclock(ctx, oc));
+  }
+  coarseOptions.sort((a, b) => b.score - a.score);
 
-    const totalPower = computeTotalPower(building, scaledTotalMachines, oc);
-    const powerDelta = totalPower - basePower;
-    const powerRatio = basePower > 0 ? totalPower / basePower : 1;
+  // Collect top overclock neighborhoods to refine
+  const topOverclocks = new Set<number>();
+  for (const opt of coarseOptions) {
+    topOverclocks.add(opt.overclock);
+    if (topOverclocks.size >= 3) break;
+  }
 
-    for (let n = 1; n <= maxBankSize; n++) {
-      const lines: BankLine[] = baseLines.map(bl => {
-        const perBuilding = bl.baseRate * oc;
-        const totalRate = perBuilding * n;
-        const transport = bestTransport(totalRate, bl.isFluid);
-        return {
-          resource: bl.resource,
-          displayName: bl.displayName,
-          type: bl.type,
-          perBuilding,
-          totalRate,
-          transportName: transport.name,
-          transportSpeed: transport.speed,
-          transportsNeeded: transport.count,
-          isClean: transport.isClean,
-          isFluid: bl.isFluid,
-        };
-      });
-
-      const banksNeeded =
-        scaledTotalMachines > 0 ? Math.ceil(scaledTotalMachines / n) : 0;
-
-      const logisticsScore = scoreBankOption(lines, n, scaledTotalMachines);
-
-      let powerScore = 0;
-      if (powerRatio > 1) {
-        powerScore -= (powerRatio - 1) * 30;
-      } else if (powerRatio < 1) {
-        powerScore += (1 - powerRatio) * 30;
-      }
-
-      let buildingsScore = 0;
-      if (roundedTotal > 0 && scaledTotalMachines > 0) {
-        const reduction = 1 - scaledTotalMachines / roundedTotal;
-        buildingsScore += reduction * 50;
-      }
-
-      let score =
-        logisticsScore * weights.logistics +
-        powerScore * weights.power +
-        buildingsScore * weights.buildings;
-
-      if (oc === currentOverclock) score += 5;
-
-      options.push({
-        machineCount: n,
-        banksNeeded,
-        overclock: oc,
-        totalPower,
-        powerDelta,
-        score,
-        lines,
-      });
+  // Phase 2: refine around top overclocks at 0.1% precision
+  const refinedOptions: BankOption[] = [...coarseOptions];
+  const seenOc = new Set(generateCoarseSteps().map(v => Math.round(v * 1000)));
+  for (const center of topOverclocks) {
+    for (const oc of generateRefineSteps(center)) {
+      const key = Math.round(oc * 1000);
+      if (seenOc.has(key)) continue;
+      seenOc.add(key);
+      refinedOptions.push(...evaluateOverclock(ctx, oc));
     }
   }
 
-  options.sort((a, b) => b.score - a.score);
+  refinedOptions.sort((a, b) => b.score - a.score);
 
-  return diversifyResults(options);
+  return diversifyResults(refinedOptions);
 }
 
 function diversifyResults(sorted: BankOption[], maxResults = 8): BankOption[] {
