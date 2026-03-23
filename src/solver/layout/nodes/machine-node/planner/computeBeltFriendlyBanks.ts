@@ -43,13 +43,8 @@ function getTransportTiers(isFluid: boolean) {
   return isFluid ? PIPE_FLOW_RATES : BELT_SPEEDS;
 }
 
-/**
- * Rates that are clean fractions of a belt speed are easy to split/merge.
- * e.g., 1/1, 1/2, 1/3, 2/3 of a belt = one splitter/merger stage.
- */
 const CLEAN_FRACTIONS = [1, 1 / 2, 1 / 3];
 const TOLERANCE = 0.0005;
-
 
 const FRACTION_LABELS: { frac: number; label: string }[] = [
   { frac: 1, label: 'Full' },
@@ -68,7 +63,6 @@ function describeSplit(totalRate: number, isFluid: boolean): string | null {
         return label;
       }
     }
-    break;
   }
   return null;
 }
@@ -96,7 +90,101 @@ function bestTransport(totalRate: number, isFluid: boolean) {
   };
 }
 
-function trunkFriendliness(totalRate: number, isFluid: boolean): number {
+export type PlannerPriority = 'logistics' | 'power' | 'buildings';
+
+// --- Formula-based anchor computation ---
+
+function getMaxTransportSpeed(isFluid: boolean): number {
+  const tiers = getTransportTiers(isFluid);
+  return tiers[tiers.length - 1].speed;
+}
+
+/**
+ * k = min(floor(B / r_i)) across all inputs.
+ * The largest block size where every input fits on a single max-tier belt.
+ */
+function computeAnchorBlockSize(baseLines: BaseLineInfo[], overclock: number): number {
+  let k = Infinity;
+  for (const bl of baseLines) {
+    if (bl.type !== 'ingredient') continue;
+    const rate = bl.baseRate * overclock;
+    const maxBelt = getMaxTransportSpeed(bl.isFluid);
+    const maxMachines = Math.floor(maxBelt / rate);
+    if (maxMachines < k) k = maxMachines;
+  }
+  return k === Infinity ? 64 : Math.max(k, 1);
+}
+
+/**
+ * For each product, find block sizes where output is a clean fraction of
+ * any belt tier (full, 1/2, 1/3).
+ */
+function computeOutputAlignedSizes(baseLines: BaseLineInfo[], overclock: number, maxBankSize: number): number[] {
+  const sizes = new Set<number>();
+  for (const bl of baseLines) {
+    if (bl.type !== 'product') continue;
+    const rate = bl.baseRate * overclock;
+    if (rate <= 0) continue;
+    const tiers = getTransportTiers(bl.isFluid);
+    for (const tier of tiers) {
+      for (const frac of CLEAN_FRACTIONS) {
+        const n = Math.floor((tier.speed * frac) / rate);
+        if (n >= 1 && n <= maxBankSize) sizes.add(n);
+      }
+    }
+  }
+  return [...sizes];
+}
+
+/**
+ * Generate a focused set of candidate block sizes from the anchor
+ * and output-aligned sizes.
+ */
+function generateCandidates(
+  anchorK: number,
+  outputAligned: number[],
+  totalMachines: number,
+  maxBankSize: number,
+): number[] {
+  const candidates = new Set<number>();
+
+  candidates.add(anchorK);
+
+  for (let d = 2; d <= 8; d++) {
+    if (anchorK % d === 0) candidates.add(anchorK / d);
+    const multiple = anchorK * d;
+    if (multiple <= maxBankSize) candidates.add(multiple);
+  }
+
+  for (const n of outputAligned) {
+    candidates.add(n);
+    if (n % 2 === 0) candidates.add(n / 2);
+    if (n % 3 === 0) candidates.add(n / 3);
+  }
+
+  for (let n = Math.max(1, anchorK - 4); n <= Math.min(maxBankSize, anchorK + 4); n++) {
+    candidates.add(n);
+  }
+
+  if (totalMachines > 1) {
+    for (let n = 2; n <= maxBankSize; n++) {
+      if (totalMachines % n === 0) candidates.add(n);
+    }
+  }
+
+  return [...candidates]
+    .filter(n => n >= 1 && n <= maxBankSize)
+    .sort((a, b) => a - b);
+}
+
+// --- Formula-based ranking ---
+
+/**
+ * How cleanly does a rate fit a belt tier? Returns a score reflecting
+ * the best clean-fraction match across all available transport tiers.
+ * Full belt > 1/2 belt > 1/3 belt > no match.
+ */
+function beltUtilization(totalRate: number, isFluid: boolean): number {
   const tiers = getTransportTiers(isFluid);
   let best = 0;
   for (const tier of tiers) {
@@ -104,151 +192,75 @@ function trunkFriendliness(totalRate: number, isFluid: boolean): number {
     const ratio = totalRate / tier.speed;
     for (const frac of CLEAN_FRACTIONS) {
       if (Math.abs(ratio - frac) < TOLERANCE) {
-        // Exact match is best; 1/1 (full belt) is ideal
-        const fracScore = frac === 1 ? 20 : frac >= 0.5 ? 15 : 10;
-        best = Math.max(best, fracScore);
+        const s = frac === 1 ? 100 : frac >= 0.5 ? 80 : 60;
+        if (s > best) best = s;
       }
     }
-    if (best > 0) break;
   }
   return best;
 }
 
-export type PlannerPriority = 'logistics' | 'power' | 'buildings';
-
-function exactBeltMatch(totalRate: number, isFluid: boolean): number {
-  const tiers = getTransportTiers(isFluid);
-  for (const tier of tiers) {
-    if (Math.abs(totalRate - tier.speed) < TOLERANCE) return 40;
-  }
-  return 0;
-}
-
-function outputBeltScore(totalRate: number, isFluid: boolean): number {
-  const tiers = getTransportTiers(isFluid);
-  for (const tier of tiers) {
-    if (totalRate > tier.speed) continue;
-    const ratio = totalRate / tier.speed;
-    for (const frac of CLEAN_FRACTIONS) {
-      if (Math.abs(ratio - frac) < TOLERANCE) {
-        // Full belt = best, half belt = nearly as good, thirds = good
-        if (frac === 1) return 120;
-        if (frac >= 0.5) return 100;
-        return 70;
-      }
-    }
-    break;
-  }
-  return 0;
-}
-
-function scoreBankOption(lines: BankLine[], machineCount: number, totalMachines: number): number {
+/**
+ * Deterministic ranking of a candidate block size based on:
+ * 1. Input constraint: does machineCount <= anchorK? (single-belt inputs)
+ * 2. Output belt utilization: how cleanly outputs fill belt tiers
+ * 3. Number of belts needed for inputs (fewer is better)
+ * 4. Remainder minimization and practical bank-count constraints
+ */
+function rankCandidate(
+  lines: BankLine[],
+  machineCount: number,
+  totalMachines: number,
+  anchorK: number,
+): number {
   let score = 0;
 
+  // Primary: input constraint — does every input fit on one belt?
+  if (machineCount <= anchorK) {
+    score += 1000;
+  }
+
+  // Secondary: output belt utilization is the main driver of bank sizing
   for (const line of lines) {
-    const isInput = line.type === 'ingredient';
-
-    if (isInput) {
-      const friendly = trunkFriendliness(line.totalRate, line.isFluid);
-      const exactBelt = exactBeltMatch(line.totalRate, line.isFluid);
-
-      if (line.transportsNeeded === 1) score += 25;
-      else if (line.transportsNeeded === 2) score -= 10;
-      else score -= 25;
-
-      score += friendly;
-      if (exactBelt > 0) score += 10;
-    } else {
-      // Output belt alignment is the PRIMARY driver of bank sizing.
-      // Full belt, half belt, and third belt are all excellent for merging.
-      score += outputBeltScore(line.totalRate, line.isFluid);
-      if (line.transportsNeeded === 1) score += 15;
-      else if (line.transportsNeeded <= 2) score += 5;
+    if (line.type === 'product') {
+      score += beltUtilization(line.totalRate, line.isFluid) * 3;
+      if (line.transportsNeeded === 1) score += 20;
     }
   }
 
-  if (totalMachines > 0 && totalMachines % machineCount === 0) {
-    score += 15;
+  // Input quality: single-belt inputs with clean splits are better
+  for (const line of lines) {
+    if (line.type !== 'ingredient') continue;
+    if (line.transportsNeeded === 1) score += 30;
+    else score -= 50 * (line.transportsNeeded - 1);
+    score += beltUtilization(line.totalRate, line.isFluid);
   }
 
+  // Remainder minimization: prefer sizes that evenly divide total machines
+  if (totalMachines > 0) {
+    if (totalMachines % machineCount === 0) {
+      score += 50;
+    } else {
+      const remainder = totalMachines % machineCount;
+      if (remainder >= machineCount / 2) score += 15;
+    }
+  }
+
+  // Practical bank-count constraints
   if (totalMachines > 0) {
     const banksNeeded = Math.ceil(totalMachines / machineCount);
-    if (banksNeeded > 16) score -= 15 + banksNeeded * 2;
-    else if (banksNeeded > 8) score -= 15;
-    else if (banksNeeded > 4) score -= 5;
+    if (banksNeeded > 16) score -= 30 + banksNeeded * 2;
+    else if (banksNeeded > 8) score -= 20;
   }
 
   if (machineCount <= 2 && totalMachines > 10) {
-    score -= 40;
+    score -= 100;
   }
 
   return score;
 }
 
-export function computeBestBankSize(
-  recipe: FactoryRecipe,
-  overclock: number,
-  totalMachines: number,
-  amplifiedRate = 1,
-): { machineCount: number; banksNeeded: number } | null {
-  const roundedTotal = Math.ceil(totalMachines - 0.0001);
-  if (roundedTotal <= 1) return null;
-
-  const baseLines = buildBaseLines(recipe, amplifiedRate);
-  const maxBankSize = Math.min(Math.max(roundedTotal, 32), 64);
-
-  let bestScore = -Infinity;
-  let bestOption: { machineCount: number; banksNeeded: number } | null = null;
-
-  for (let n = 1; n <= maxBankSize; n++) {
-    const lines: BankLine[] = baseLines.map(bl => {
-      const perBuilding = bl.baseRate * overclock;
-      const totalRate = perBuilding * n;
-      const transport = bestTransport(totalRate, bl.isFluid);
-      return {
-        resource: bl.resource,
-        displayName: bl.displayName,
-        type: bl.type,
-        perBuilding,
-        totalRate,
-        transportName: transport.name,
-        transportSpeed: transport.speed,
-        transportsNeeded: transport.count,
-        splitLabel: transport.splitLabel,
-        isFluid: bl.isFluid,
-      };
-    });
-
-    const banksNeeded = Math.ceil(roundedTotal / n);
-    if (banksNeeded <= 1) continue;
-
-    const score = scoreBankOption(lines, n, roundedTotal);
-    if (score > bestScore) {
-      bestScore = score;
-      bestOption = { machineCount: n, banksNeeded };
-    }
-  }
-
-  return bestOption;
-}
-
-function generateCoarseSteps(): number[] {
-  const steps: number[] = [];
-  for (let pct = 50; pct <= 250; pct += 5) {
-    steps.push(pct / 100);
-  }
-  return steps;
-}
-
-function generateRefineSteps(center: number, halfRange = 0.05, step = 0.001): number[] {
-  const steps: number[] = [];
-  const lo = Math.max(0.5, center - halfRange);
-  const hi = Math.min(2.5, center + halfRange);
-  for (let v = lo; v <= hi + 1e-9; v += step) {
-    steps.push(Math.round(v * 1000) / 1000);
-  }
-  return steps;
-}
+// --- Data helpers ---
 
 interface BaseLineInfo {
   resource: string;
@@ -283,6 +295,26 @@ function buildBaseLines(recipe: FactoryRecipe, amplifiedRate = 1): BaseLineInfo[
   return lines;
 }
 
+function buildBankLines(baseLines: BaseLineInfo[], oc: number, n: number): BankLine[] {
+  return baseLines.map(bl => {
+    const perBuilding = bl.baseRate * oc;
+    const totalRate = perBuilding * n;
+    const transport = bestTransport(totalRate, bl.isFluid);
+    return {
+      resource: bl.resource,
+      displayName: bl.displayName,
+      type: bl.type,
+      perBuilding,
+      totalRate,
+      transportName: transport.name,
+      transportSpeed: transport.speed,
+      transportsNeeded: transport.count,
+      splitLabel: transport.splitLabel,
+      isFluid: bl.isFluid,
+    };
+  });
+}
+
 function computeTotalPower(
   building: { powerConsumption: number; powerConsumptionExponent: number },
   numMachines: number,
@@ -295,14 +327,61 @@ function computeTotalPower(
   );
 }
 
-const PRIORITY_WEIGHTS: Record<
-  PlannerPriority,
-  { logistics: number; power: number; buildings: number }
-> = {
-  logistics: { logistics: 1.0, power: 0.3, buildings: 0.2 },
-  power: { logistics: 0.4, power: 1.0, buildings: 0.3 },
-  buildings: { logistics: 0.4, power: 0.2, buildings: 1.0 },
-};
+// --- Best bank for popover (current config only) ---
+
+export function computeBestBankSize(
+  recipe: FactoryRecipe,
+  overclock: number,
+  totalMachines: number,
+  amplifiedRate = 1,
+): { machineCount: number; banksNeeded: number } | null {
+  const roundedTotal = Math.ceil(totalMachines - 0.0001);
+  if (roundedTotal <= 1) return null;
+
+  const baseLines = buildBaseLines(recipe, amplifiedRate);
+  const maxBankSize = Math.min(Math.max(roundedTotal, 32), 64);
+
+  const anchorK = computeAnchorBlockSize(baseLines, overclock);
+  const outputAligned = computeOutputAlignedSizes(baseLines, overclock, maxBankSize);
+  const candidates = generateCandidates(anchorK, outputAligned, roundedTotal, maxBankSize);
+
+  let bestScore = -Infinity;
+  let bestOption: { machineCount: number; banksNeeded: number } | null = null;
+
+  for (const n of candidates) {
+    const banksNeeded = Math.ceil(roundedTotal / n);
+    if (banksNeeded <= 1) continue;
+
+    const lines = buildBankLines(baseLines, overclock, n);
+    const score = rankCandidate(lines, n, roundedTotal, anchorK);
+    if (score > bestScore) {
+      bestScore = score;
+      bestOption = { machineCount: n, banksNeeded };
+    }
+  }
+
+  return bestOption;
+}
+
+// --- Overclock search ---
+
+function generateCoarseSteps(): number[] {
+  const steps: number[] = [];
+  for (let pct = 50; pct <= 250; pct += 5) {
+    steps.push(pct / 100);
+  }
+  return steps;
+}
+
+function generateRefineSteps(center: number, halfRange = 0.05, step = 0.001): number[] {
+  const steps: number[] = [];
+  const lo = Math.max(0.5, center - halfRange);
+  const hi = Math.min(2.5, center + halfRange);
+  for (let v = lo; v <= hi + 1e-9; v += step) {
+    steps.push(Math.round(v * 1000) / 1000);
+  }
+  return steps;
+}
 
 interface SearchContext {
   baseLines: BaseLineInfo[];
@@ -310,13 +389,13 @@ interface SearchContext {
   roundedTotal: number;
   currentOverclock: number;
   basePower: number;
-  weights: { logistics: number; power: number; buildings: number };
+  priority: PlannerPriority;
   maxBankSize: number;
   targetBanks: number;
 }
 
 function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
-  const { baseLines, building, roundedTotal, currentOverclock, basePower, weights, maxBankSize, targetBanks } = ctx;
+  const { baseLines, building, roundedTotal, currentOverclock, basePower, priority, maxBankSize, targetBanks } = ctx;
 
   const scaledTotalMachines =
     roundedTotal > 0
@@ -327,50 +406,34 @@ function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
   const powerDelta = totalPower - basePower;
   const powerRatio = basePower > 0 ? totalPower / basePower : 1;
 
+  const anchorK = computeAnchorBlockSize(baseLines, oc);
+  const outputAligned = computeOutputAlignedSizes(baseLines, oc, maxBankSize);
+  const candidates = generateCandidates(anchorK, outputAligned, scaledTotalMachines, maxBankSize);
+
   const results: BankOption[] = [];
 
-  for (let n = 1; n <= maxBankSize; n++) {
-    const lines: BankLine[] = baseLines.map(bl => {
-      const perBuilding = bl.baseRate * oc;
-      const totalRate = perBuilding * n;
-      const transport = bestTransport(totalRate, bl.isFluid);
-      return {
-        resource: bl.resource,
-        displayName: bl.displayName,
-        type: bl.type,
-        perBuilding,
-        totalRate,
-        transportName: transport.name,
-        transportSpeed: transport.speed,
-        transportsNeeded: transport.count,
-        splitLabel: transport.splitLabel,
-        isFluid: bl.isFluid,
-      };
-    });
-
+  for (const n of candidates) {
+    const lines = buildBankLines(baseLines, oc, n);
     const banksNeeded =
       scaledTotalMachines > 0 ? Math.ceil(scaledTotalMachines / n) : 0;
 
-    const logisticsScore = scoreBankOption(lines, n, scaledTotalMachines);
+    // The formula-based logistics score is always the foundation
+    const logisticsScore = rankCandidate(lines, n, scaledTotalMachines, anchorK);
 
-    let powerScore = 0;
-    if (powerRatio > 1) {
-      powerScore -= (powerRatio - 1) * 30;
-    } else if (powerRatio < 1) {
-      powerScore += (1 - powerRatio) * 30;
+    // Priority only affects how we weight overclock-related factors
+    let score = logisticsScore;
+
+    if (priority === 'power') {
+      if (powerRatio > 1) score -= (powerRatio - 1) * 100;
+      else if (powerRatio < 1) score += (1 - powerRatio) * 100;
+    } else if (priority === 'buildings') {
+      if (roundedTotal > 0 && scaledTotalMachines > 0) {
+        const reduction = 1 - scaledTotalMachines / roundedTotal;
+        score += reduction * 200;
+      }
     }
 
-    let buildingsScore = 0;
-    if (roundedTotal > 0 && scaledTotalMachines > 0) {
-      const reduction = 1 - scaledTotalMachines / roundedTotal;
-      buildingsScore += reduction * 50;
-    }
-
-    let score =
-      logisticsScore * weights.logistics +
-      powerScore * weights.power +
-      buildingsScore * weights.buildings;
-
+    // Target banks override
     if (targetBanks > 0 && banksNeeded > 0) {
       if (banksNeeded === targetBanks) {
         score += 500;
@@ -382,9 +445,14 @@ function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
       }
     }
 
-    if (oc === currentOverclock) score += 5;
+    // For logistics priority, strongly prefer the current overclock.
+    // Changing overclock is itself a logistics burden — the formula assumes
+    // the current overclock as a given and optimizes bank size around it.
+    if (oc === currentOverclock) {
+      score += priority === 'logistics' ? 500 : 50;
+    }
 
-    // Prefer clean overclock percentages (whole %) over fractional ones
+    // Tiebreaker: prefer clean overclock percentages
     const ocPct = oc * 100;
     if (Math.abs(ocPct - Math.round(ocPct)) < 0.01) score += 3;
     else if (Math.abs(ocPct * 2 - Math.round(ocPct * 2)) < 0.01) score += 1;
@@ -415,11 +483,10 @@ export function computeBeltFriendlyBanks(
   const baseLines = buildBaseLines(recipe, amplifiedRate);
   const building = AllFactoryBuildingsMap[recipe.producedIn];
   const roundedTotal = Math.ceil(totalMachines - 0.0001);
-  const weights = PRIORITY_WEIGHTS[priority];
   const basePower = computeTotalPower(building, roundedTotal, currentOverclock);
 
   const ctx: SearchContext = {
-    baseLines, building, roundedTotal, currentOverclock, basePower, weights, maxBankSize, targetBanks,
+    baseLines, building, roundedTotal, currentOverclock, basePower, priority, maxBankSize, targetBanks,
   };
 
   // Phase 1: coarse search at 5% steps
@@ -461,12 +528,10 @@ function diversifyResults(sorted: BankOption[], maxResults = 8): BankOption[] {
   for (const opt of sorted) {
     if (result.length >= maxResults) break;
 
-    // Bucket overclocks to nearest 1% to avoid near-duplicate suggestions
     const ocBucket = Math.round(opt.overclock * 100);
     const ocCount = seenOverclocks.get(ocBucket) ?? 0;
     if (ocCount >= 3) continue;
 
-    // Skip if we already have this bank size (a different overclock variant)
     if (seenBankSizes.has(opt.machineCount)) continue;
 
     seenOverclocks.set(ocBucket, ocCount + 1);
