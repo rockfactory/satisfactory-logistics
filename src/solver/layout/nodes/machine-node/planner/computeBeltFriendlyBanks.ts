@@ -247,19 +247,20 @@ function rankCandidate(
     score += beltUtilization(line.totalRate, line.isFluid);
   }
 
-  // Remainder minimization: prefer sizes that evenly divide total machines
-  if (totalMachines > 0) {
-    if (totalMachines % machineCount === 0) {
-      score += 50;
-    } else {
-      const remainder = totalMachines % machineCount;
-      if (remainder >= machineCount / 2) score += 15;
-    }
-  }
-
-  // Practical bank-count constraints
+  // Remainder minimization: prefer sizes that evenly divide total machines.
+  // Waste = unused slots across all banks = (banksNeeded * machineCount) - totalMachines.
   if (totalMachines > 0) {
     const banksNeeded = Math.ceil(totalMachines / machineCount);
+    const totalSlots = banksNeeded * machineCount;
+    const waste = totalSlots - totalMachines;
+
+    if (waste === 0) {
+      score += 150;
+    } else {
+      const wasteFraction = waste / totalSlots;
+      score -= Math.round(wasteFraction * 300);
+    }
+
     if (banksNeeded > 16) score -= 30 + banksNeeded * 2;
     else if (banksNeeded > 8) score -= 20;
   }
@@ -380,6 +381,26 @@ export function computeBestBankSize(
     if (banksNeeded <= 1) continue;
 
     const lines = buildBankLines(baseLines, overclock, n);
+
+    const exceedsPerBank = lines.some(
+      l =>
+        l.type === 'ingredient' &&
+        l.totalRate > getMaxTransportSpeed(l.isFluid) + TOLERANCE,
+    );
+    if (exceedsPerBank) continue;
+
+    if (roundedTotal > 0) {
+      const exceedsTrunk = lines.some(l => {
+        if (l.type !== 'ingredient') return false;
+        const maxSpeed = getMaxTransportSpeed(l.isFluid);
+        const actualDemand = l.perBuilding * roundedTotal;
+        const fullBanksDemand = banksNeeded * l.totalRate;
+        const trunksForActual = Math.ceil(actualDemand / maxSpeed);
+        return fullBanksDemand > maxSpeed * trunksForActual + TOLERANCE;
+      });
+      if (exceedsTrunk) continue;
+    }
+
     const score = rankCandidate(lines, n, roundedTotal, anchorK);
     if (score > bestScore) {
       bestScore = score;
@@ -459,8 +480,32 @@ function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
 
   for (const n of candidates) {
     const lines = buildBankLines(baseLines, oc, n);
+
+    // Hard filter: every input in a single bank must fit on one max-tier belt.
+    const exceedsPerBank = lines.some(
+      l =>
+        l.type === 'ingredient' &&
+        l.totalRate > getMaxTransportSpeed(l.isFluid) + TOLERANCE,
+    );
+    if (exceedsPerBank) continue;
+
     const banksNeeded =
       scaledTotalMachines > 0 ? Math.ceil(scaledTotalMachines / n) : 0;
+
+    // Hard filter: the full-banks demand must not require more trunk lines
+    // than the actual machine demand. If waste slots push demand beyond
+    // what the available trunks can deliver, reject the candidate.
+    if (scaledTotalMachines > 0) {
+      const exceedsTrunk = lines.some(l => {
+        if (l.type !== 'ingredient') return false;
+        const maxSpeed = getMaxTransportSpeed(l.isFluid);
+        const actualDemand = l.perBuilding * scaledTotalMachines;
+        const fullBanksDemand = banksNeeded * l.totalRate;
+        const trunksForActual = Math.ceil(actualDemand / maxSpeed);
+        return fullBanksDemand > maxSpeed * trunksForActual + TOLERANCE;
+      });
+      if (exceedsTrunk) continue;
+    }
 
     // The formula-based logistics score is always the foundation
     const logisticsScore = rankCandidate(

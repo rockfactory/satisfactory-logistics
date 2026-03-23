@@ -30,7 +30,12 @@ export interface IFactoryOutputRowProps {
 }
 
 export function FactoryOutputRow(props: IFactoryOutputRowProps) {
-  const { factoryId, output, index, displayMode = 'factory' } = props;
+  const { factoryId, index, displayMode = 'factory' } = props;
+
+  const output =
+    useStore(
+      state => state.factories.factories[factoryId]?.outputs?.[index],
+    ) ?? props.output;
 
   const outputsCount = useStore(
     state => state.factories.factories[factoryId]?.outputs?.length ?? 0,
