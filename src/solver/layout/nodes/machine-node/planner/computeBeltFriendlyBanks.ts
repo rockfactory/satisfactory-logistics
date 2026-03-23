@@ -470,16 +470,22 @@ function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
       anchorK,
     );
 
-    // Priority only affects how we weight overclock-related factors
     let score = logisticsScore;
 
     if (priority === 'power') {
-      if (powerRatio > 1) score -= (powerRatio - 1) * 100;
-      else if (powerRatio < 1) score += (1 - powerRatio) * 100;
+      // P_total ∝ c^0.6 — lower clock = lower total power.
+      // Score is proportional to how much power is saved vs current config.
+      // Normalized so that 50% clock (c^0.6 ≈ 0.66) gets a large bonus.
+      const powerFactor = oc ** 0.6;
+      const baseFactor = currentOverclock ** 0.6;
+      const savings = (baseFactor - powerFactor) / baseFactor;
+      score += savings * 500;
     } else if (priority === 'buildings') {
+      // M = I / (r * c) — higher clock = fewer machines.
+      // Directly reward the reduction in total machines.
       if (roundedTotal > 0 && scaledTotalMachines > 0) {
         const reduction = 1 - scaledTotalMachines / roundedTotal;
-        score += reduction * 200;
+        score += reduction * 500;
       }
     }
 
@@ -499,8 +505,7 @@ function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
     }
 
     // For logistics priority, strongly prefer the current overclock.
-    // Changing overclock is itself a logistics burden — the formula assumes
-    // the current overclock as a given and optimizes bank size around it.
+    // The formula assumes overclock as a given and optimizes bank size around it.
     if (oc === currentOverclock) {
       score += priority === 'logistics' ? 500 : 50;
     }
