@@ -25,7 +25,7 @@ export interface BankLine {
   transportName: string;
   transportSpeed: number;
   transportsNeeded: number;
-  isClean: boolean;
+  splitLabel: string | null;
   isFluid: boolean;
 }
 
@@ -50,30 +50,39 @@ function getTransportTiers(isFluid: boolean) {
 const CLEAN_FRACTIONS = [1, 1 / 2, 1 / 3, 2 / 3];
 const TOLERANCE = 0.0005;
 
-function isCleanSplit(totalRate: number, beltSpeed: number): boolean {
-  const ratio = totalRate / beltSpeed;
-  return CLEAN_FRACTIONS.some(frac => Math.abs(ratio - frac) < TOLERANCE);
-}
 
-function isCleanFromAnyTier(totalRate: number, isFluid: boolean): boolean {
+const FRACTION_LABELS: { frac: number; label: string }[] = [
+  { frac: 1, label: 'Full' },
+  { frac: 1 / 2, label: '1/2' },
+  { frac: 1 / 3, label: '1/3' },
+  { frac: 2 / 3, label: '2/3' },
+];
+
+function describeSplit(totalRate: number, isFluid: boolean): string | null {
   const tiers = getTransportTiers(isFluid);
   for (const tier of tiers) {
     if (totalRate > tier.speed) continue;
-    if (isCleanSplit(totalRate, tier.speed)) return true;
+    const ratio = totalRate / tier.speed;
+    for (const { frac, label } of FRACTION_LABELS) {
+      if (Math.abs(ratio - frac) < TOLERANCE) {
+        return label;
+      }
+    }
+    break;
   }
-  return false;
+  return null;
 }
 
 function bestTransport(totalRate: number, isFluid: boolean) {
+  const splitLabel = describeSplit(totalRate, isFluid);
   const tiers = getTransportTiers(isFluid);
-  const clean = isCleanFromAnyTier(totalRate, isFluid);
   for (const tier of tiers) {
     if (totalRate <= tier.speed) {
       return {
         name: tier.name,
         speed: tier.speed,
         count: 1,
-        isClean: clean,
+        splitLabel,
       };
     }
   }
@@ -83,7 +92,7 @@ function bestTransport(totalRate: number, isFluid: boolean) {
     name: max.name,
     speed: max.speed,
     count,
-    isClean: clean,
+    splitLabel,
   };
 }
 
@@ -205,7 +214,7 @@ export function computeBestBankSize(
         transportName: transport.name,
         transportSpeed: transport.speed,
         transportsNeeded: transport.count,
-        isClean: transport.isClean,
+        splitLabel: transport.splitLabel,
         isFluid: bl.isFluid,
       };
     });
@@ -334,7 +343,7 @@ function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
         transportName: transport.name,
         transportSpeed: transport.speed,
         transportsNeeded: transport.count,
-        isClean: transport.isClean,
+        splitLabel: transport.splitLabel,
         isFluid: bl.isFluid,
       };
     });
