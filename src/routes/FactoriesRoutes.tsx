@@ -44,11 +44,11 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
         <Route index element={<FactoriesTab />} />
         <Route path=":id/calculator" element={<SolverPage />} />
         <Route path="charts" element={<ChartsTab />} />
-        <Route path="calculator/:id?" element={<SolverPage />} />
         <Route
           path="calculator/shared/:sharedId"
           element={<SolverShareImporterPage />}
         />
+        <Route path="calculator/:id?" element={<SolverPage />} />
       </Routes>
       <Footer compact={activeTab === 'calculator'} />
     </>
