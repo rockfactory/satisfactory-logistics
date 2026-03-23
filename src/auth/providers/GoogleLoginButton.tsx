@@ -13,6 +13,9 @@ export function GoogleLoginButton(props: IGoogleLoginButtonProps) {
       setLoading(true);
       const { data, error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'google',
+        options: {
+          redirectTo: window.location.origin + import.meta.env.BASE_URL,
+        },
       });
       if (error) {
         throw error;

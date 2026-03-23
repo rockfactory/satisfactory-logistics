@@ -13,6 +13,9 @@ export function DiscordLoginButton(props: IDiscordLoginButtonProps) {
       setLoading(true);
       const { data, error } = await supabaseClient.auth.signInWithOAuth({
         provider: 'discord',
+        options: {
+          redirectTo: window.location.origin + import.meta.env.BASE_URL,
+        },
       });
       if (error) {
         throw error;
