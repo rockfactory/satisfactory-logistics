@@ -1,5 +1,4 @@
-import { useGameFactoryIsCollapsed } from '@/games/gamesSlice';
-import { Path, setByPath } from '@clickbar/dot-diver';
+import { type Path, setByPath } from '@clickbar/dot-diver';
 import {
   ActionIcon,
   Card,
@@ -10,17 +9,18 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconCalculator, IconTrash } from '@tabler/icons-react';
-import * as React from 'react';
+import type * as React from 'react';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useFormOnChange } from '@/core/form/useFormOnChange';
 import { useStore } from '@/core/zustand';
+import { useGameFactoryIsCollapsed } from '@/games/gamesSlice';
 import { FactoryExpandActionIcon } from './components/expand/FactoryExpandActionIcon';
 import {
   FactoryInputIcon,
   FactoryOutputIcon,
 } from './components/peek/icons/OutputInputIcons';
-import { Factory } from './Factory';
+import type { Factory } from './Factory';
 import { FactoryInputRow } from './inputs/input-row/FactoryInputRow';
 import { FactoryOutputRow } from './inputs/output-row/FactoryOutputRow';
 import { useIsFactoryVisible } from './useIsFactoryVisible';

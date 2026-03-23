@@ -1,13 +1,3 @@
-import { assetPath } from '@/core/assetPath';
-import { useStore } from '@/core/zustand';
-import { FactoryOutputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
-import { OutputDependenciesPeekModal } from '@/factories/components/peek/OutputDependenciesPeekModal';
-import { FactoryUsage } from '@/factories/components/usage/FactoryUsage';
-import { FactoryOutput } from '@/factories/Factory';
-import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
-import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
-import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import {
   ActionIcon,
   Group,
@@ -19,6 +9,16 @@ import {
 import { IconTrash } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
+import { assetPath } from '@/core/assetPath';
+import { useStore } from '@/core/zustand';
+import { FactoryOutputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
+import { OutputDependenciesPeekModal } from '@/factories/components/peek/OutputDependenciesPeekModal';
+import { FactoryUsage } from '@/factories/components/usage/FactoryUsage';
+import type { FactoryOutput } from '@/factories/Factory';
+import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
+import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
+import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { FactoryOutputObjectiveSelect } from './FactoryOutputObjectiveSelect';
 import classes from './FactoryOutputRow.module.css';
 
@@ -131,7 +131,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
           }}
           rightSection={
             <Image
-              src={assetPath("/images/game/wat-1_256.png")}
+              src={assetPath('/images/game/wat-1_256.png')}
               alt="Somerloops"
               width={20}
               height={20}

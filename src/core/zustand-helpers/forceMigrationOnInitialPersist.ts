@@ -1,4 +1,4 @@
-import { PersistStorage, StorageValue } from 'zustand/middleware';
+import type { PersistStorage, StorageValue } from 'zustand/middleware';
 
 export function forceMigrationOnInitialPersist<S>(
   originalStorage: PersistStorage<S> | undefined,

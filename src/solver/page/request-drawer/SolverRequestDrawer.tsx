@@ -1,5 +1,3 @@
-import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
-import type { SolverInstance } from '@/solver/store/Solver';
 import { Button, Center, Drawer, em, Stack, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
@@ -10,7 +8,9 @@ import {
 } from '@tabler/icons-react';
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
 import type { ISolverSolution } from '@/solver/page/SolverPage';
+import type { SolverInstance } from '@/solver/store/Solver';
 import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
 import { SolverLimitationsDrawer } from './SolverLimitationsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';

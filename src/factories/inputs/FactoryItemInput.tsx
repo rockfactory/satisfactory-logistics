@@ -1,10 +1,9 @@
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import {
   CloseButton,
   Combobox,
   Group,
   Input,
-  InputWrapperProps,
+  type InputWrapperProps,
   ScrollArea,
   Text,
   useCombobox,
@@ -13,8 +12,9 @@ import { useMemo, useState } from 'react';
 import {
   AllFactoryItemsMap,
   AllProducibleFactoryItems,
-  FactoryItem,
+  type FactoryItem,
 } from '@/recipes/FactoryItem';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 
 export interface IFactoryItemInputProps
   extends Omit<InputWrapperProps, 'value' | 'onChange'> {

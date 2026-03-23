@@ -1,5 +1,3 @@
-import type { FactoryInput, FactoryInputConstraint } from '@/factories/Factory';
-import { isWorldResource } from '@/recipes/WorldResources';
 import { ActionIcon, Menu, Stack, Text, Tooltip } from '@mantine/core';
 import {
   IconArrowMergeAltLeft,
@@ -8,6 +6,8 @@ import {
   IconMathLower,
 } from '@tabler/icons-react';
 import { useCallback, useMemo } from 'react';
+import type { FactoryInput, FactoryInputConstraint } from '@/factories/Factory';
+import { isWorldResource } from '@/recipes/WorldResources';
 
 export interface IFactoryInputConstraintSelectProps {
   input: FactoryInput;

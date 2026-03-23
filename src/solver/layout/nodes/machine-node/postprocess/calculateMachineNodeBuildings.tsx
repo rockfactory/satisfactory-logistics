@@ -1,8 +1,8 @@
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { getRecipeProductPerBuilding } from '@/recipes/FactoryRecipe';
-import type { SolverNodeState } from '@/solver/store/Solver';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
+import type { SolverNodeState } from '@/solver/store/Solver';
 
 export function calculateMachineNodeBuildings(
   data: IMachineNodeData,
@@ -29,25 +29,24 @@ export function calculateMachineNodeBuildings(
 
   const roundedBuildingsAmount = fullBuildingsAmount + partialBuildingAmount;
   const boostedBuildings = Math.min(
-    somersloops > 0
-      ? Math.ceil(somersloops / building.somersloopSlots)
-      : 0,
+    somersloops > 0 ? Math.ceil(somersloops / building.somersloopSlots) : 0,
     roundedBuildingsAmount,
   );
   const normalBuildings = roundedBuildingsAmount - boostedBuildings;
   const normalPower =
     normalBuildings *
     building.powerConsumption *
-    Math.pow(overclock, building.powerConsumptionExponent);
+    overclock ** building.powerConsumptionExponent;
   const boostedPower =
     boostedBuildings *
     building.powerConsumption *
-    Math.pow(overclock, building.somersloopPowerConsumptionExponent);
+    overclock ** building.somersloopPowerConsumptionExponent;
   const totalPower = normalPower + boostedPower;
 
-  const somersloopsPerMachine = building.somersloopSlots > 0
-    ? Math.min(somersloops, building.somersloopSlots)
-    : 0;
+  const somersloopsPerMachine =
+    building.somersloopSlots > 0
+      ? Math.min(somersloops, building.somersloopSlots)
+      : 0;
 
   return {
     overclock,

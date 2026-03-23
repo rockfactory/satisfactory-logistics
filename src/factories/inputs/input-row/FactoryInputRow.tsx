@@ -1,18 +1,3 @@
-import { FormOnChangeHandler } from '@/core/form/useFormOnChange';
-import { useShallowStore, useStore } from '@/core/zustand';
-import {
-  FactoryInputIcon,
-  FactoryOutputIcon,
-} from '@/factories/components/peek/icons/OutputInputIcons';
-import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
-import { useOutputUsage } from '@/factories/components/usage/useOutputUsage';
-import { Factory, FactoryInput, WORLD_SOURCE_ID } from '@/factories/Factory';
-import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
-import { FactorySelectInput } from '@/factories/inputs/FactorySelectInput';
-import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
-import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
-import { LogisticTypeSelect } from '@/recipes/logistics/LogisticTypeSelect';
-import { WorldResourcesList } from '@/recipes/WorldResources';
 import {
   ActionIcon,
   Group,
@@ -24,6 +9,25 @@ import {
 } from '@mantine/core';
 import { IconTrash, IconWorld } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
+import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
+import { useShallowStore, useStore } from '@/core/zustand';
+import {
+  FactoryInputIcon,
+  FactoryOutputIcon,
+} from '@/factories/components/peek/icons/OutputInputIcons';
+import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
+import { useOutputUsage } from '@/factories/components/usage/useOutputUsage';
+import {
+  type Factory,
+  type FactoryInput,
+  WORLD_SOURCE_ID,
+} from '@/factories/Factory';
+import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
+import { FactorySelectInput } from '@/factories/inputs/FactorySelectInput';
+import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
+import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
+import { LogisticTypeSelect } from '@/recipes/logistics/LogisticTypeSelect';
+import { WorldResourcesList } from '@/recipes/WorldResources';
 import { FactoryInputConstraintSelect } from './FactoryInputConstraintSelect';
 
 export interface IFactoryInputRowProps {

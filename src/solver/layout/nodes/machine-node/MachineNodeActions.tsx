@@ -1,18 +1,18 @@
-import { useStore } from '@/core/zustand';
-import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
-import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
-import { useSolverSolution } from '@/solver/layout/solution-context/SolverSolutionContext';
 import { ActionIcon, Button, Group, Stack, Tooltip } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { IconCircleCheckFilled, IconTrash } from '@tabler/icons-react';
 import { useParams } from 'react-router-dom';
+import { useStore } from '@/core/zustand';
+import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
+import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
+import { useSolverSolution } from '@/solver/layout/solution-context/SolverSolutionContext';
 import type { IMachineNodeData } from './MachineNode';
 import { MachineNodeProductionConfig } from './MachineNodeProductionConfig';
+import { BeltPlannerModal } from './planner/BeltPlannerModal';
 import {
   SwitchRecipeAction,
   useRecipeAlternatesInputState,
 } from './SwitchRecipeAction';
-import { BeltPlannerModal } from './planner/BeltPlannerModal';
 import { showConfettiWhenFactoryBuilt } from './showConfettiWhenFactoryBuilt';
 
 export interface IMachineNodeActionsProps {

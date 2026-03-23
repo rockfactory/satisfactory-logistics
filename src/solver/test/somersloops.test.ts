@@ -1,7 +1,7 @@
+import { describe, expect, test } from 'vitest';
 import { getAllDefaultRecipesIds } from '@/recipes/graph/getAllDefaultRecipes';
 import { itemId } from '@/recipes/itemId';
 import { loadHighs, solveProduction } from '@/solver/algorithm/solveProduction';
-import { describe, expect, test } from 'vitest';
 
 describe('Somersloops', () => {
   test('should double byproducts', async () => {

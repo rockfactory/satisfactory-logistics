@@ -1,8 +1,8 @@
+import { groupBy } from 'lodash';
 import { loglev } from '@/core/logger/log';
 import type { FactoryInput } from '@/factories/Factory';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import type { SolverContext } from '@/solver/algorithm/SolverContext';
-import { groupBy } from 'lodash';
 
 const logger = loglev.getLogger('solver:block-world-resources-for-inputs');
 

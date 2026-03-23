@@ -103,7 +103,10 @@ function getMaxTransportSpeed(isFluid: boolean): number {
  * k = min(floor(B / r_i)) across all inputs.
  * The largest block size where every input fits on a single max-tier belt.
  */
-function computeAnchorBlockSize(baseLines: BaseLineInfo[], overclock: number): number {
+function computeAnchorBlockSize(
+  baseLines: BaseLineInfo[],
+  overclock: number,
+): number {
   let k = Infinity;
   for (const bl of baseLines) {
     if (bl.type !== 'ingredient') continue;
@@ -119,7 +122,11 @@ function computeAnchorBlockSize(baseLines: BaseLineInfo[], overclock: number): n
  * For each product, find block sizes where output is a clean fraction of
  * any belt tier (full, 1/2, 1/3).
  */
-function computeOutputAlignedSizes(baseLines: BaseLineInfo[], overclock: number, maxBankSize: number): number[] {
+function computeOutputAlignedSizes(
+  baseLines: BaseLineInfo[],
+  overclock: number,
+  maxBankSize: number,
+): number[] {
   const sizes = new Set<number>();
   for (const bl of baseLines) {
     if (bl.type !== 'product') continue;
@@ -162,7 +169,11 @@ function generateCandidates(
     if (n % 3 === 0) candidates.add(n / 3);
   }
 
-  for (let n = Math.max(1, anchorK - 4); n <= Math.min(maxBankSize, anchorK + 4); n++) {
+  for (
+    let n = Math.max(1, anchorK - 4);
+    n <= Math.min(maxBankSize, anchorK + 4);
+    n++
+  ) {
     candidates.add(n);
   }
 
@@ -270,7 +281,10 @@ interface BaseLineInfo {
   isFluid: boolean;
 }
 
-function buildBaseLines(recipe: FactoryRecipe, amplifiedRate = 1): BaseLineInfo[] {
+function buildBaseLines(
+  recipe: FactoryRecipe,
+  amplifiedRate = 1,
+): BaseLineInfo[] {
   const lines: BaseLineInfo[] = [];
   for (const ing of recipe.ingredients) {
     const item = AllFactoryItemsMap[ing.resource];
@@ -295,7 +309,11 @@ function buildBaseLines(recipe: FactoryRecipe, amplifiedRate = 1): BaseLineInfo[
   return lines;
 }
 
-function buildBankLines(baseLines: BaseLineInfo[], oc: number, n: number): BankLine[] {
+function buildBankLines(
+  baseLines: BaseLineInfo[],
+  oc: number,
+  n: number,
+): BankLine[] {
   return baseLines.map(bl => {
     const perBuilding = bl.baseRate * oc;
     const totalRate = perBuilding * n;
@@ -323,7 +341,7 @@ function computeTotalPower(
   return (
     numMachines *
     building.powerConsumption *
-    Math.pow(overclock, building.powerConsumptionExponent)
+    overclock ** building.powerConsumptionExponent
   );
 }
 
@@ -342,8 +360,17 @@ export function computeBestBankSize(
   const maxBankSize = Math.min(Math.max(roundedTotal, 32), 64);
 
   const anchorK = computeAnchorBlockSize(baseLines, overclock);
-  const outputAligned = computeOutputAlignedSizes(baseLines, overclock, maxBankSize);
-  const candidates = generateCandidates(anchorK, outputAligned, roundedTotal, maxBankSize);
+  const outputAligned = computeOutputAlignedSizes(
+    baseLines,
+    overclock,
+    maxBankSize,
+  );
+  const candidates = generateCandidates(
+    anchorK,
+    outputAligned,
+    roundedTotal,
+    maxBankSize,
+  );
 
   let bestScore = -Infinity;
   let bestOption: { machineCount: number; banksNeeded: number } | null = null;
@@ -373,7 +400,11 @@ function generateCoarseSteps(): number[] {
   return steps;
 }
 
-function generateRefineSteps(center: number, halfRange = 0.05, step = 0.001): number[] {
+function generateRefineSteps(
+  center: number,
+  halfRange = 0.05,
+  step = 0.001,
+): number[] {
   const steps: number[] = [];
   const lo = Math.max(0.5, center - halfRange);
   const hi = Math.min(2.5, center + halfRange);
@@ -395,7 +426,16 @@ interface SearchContext {
 }
 
 function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
-  const { baseLines, building, roundedTotal, currentOverclock, basePower, priority, maxBankSize, targetBanks } = ctx;
+  const {
+    baseLines,
+    building,
+    roundedTotal,
+    currentOverclock,
+    basePower,
+    priority,
+    maxBankSize,
+    targetBanks,
+  } = ctx;
 
   const scaledTotalMachines =
     roundedTotal > 0
@@ -408,7 +448,12 @@ function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
 
   const anchorK = computeAnchorBlockSize(baseLines, oc);
   const outputAligned = computeOutputAlignedSizes(baseLines, oc, maxBankSize);
-  const candidates = generateCandidates(anchorK, outputAligned, scaledTotalMachines, maxBankSize);
+  const candidates = generateCandidates(
+    anchorK,
+    outputAligned,
+    scaledTotalMachines,
+    maxBankSize,
+  );
 
   const results: BankOption[] = [];
 
@@ -418,7 +463,12 @@ function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
       scaledTotalMachines > 0 ? Math.ceil(scaledTotalMachines / n) : 0;
 
     // The formula-based logistics score is always the foundation
-    const logisticsScore = rankCandidate(lines, n, scaledTotalMachines, anchorK);
+    const logisticsScore = rankCandidate(
+      lines,
+      n,
+      scaledTotalMachines,
+      anchorK,
+    );
 
     // Priority only affects how we weight overclock-related factors
     let score = logisticsScore;
@@ -437,7 +487,10 @@ function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
     if (targetBanks > 0 && banksNeeded > 0) {
       if (banksNeeded === targetBanks) {
         score += 500;
-      } else if (targetBanks % banksNeeded === 0 || banksNeeded % targetBanks === 0) {
+      } else if (
+        targetBanks % banksNeeded === 0 ||
+        banksNeeded % targetBanks === 0
+      ) {
         score += 200;
       } else {
         const diff = Math.abs(banksNeeded - targetBanks);
@@ -486,7 +539,14 @@ export function computeBeltFriendlyBanks(
   const basePower = computeTotalPower(building, roundedTotal, currentOverclock);
 
   const ctx: SearchContext = {
-    baseLines, building, roundedTotal, currentOverclock, basePower, priority, maxBankSize, targetBanks,
+    baseLines,
+    building,
+    roundedTotal,
+    currentOverclock,
+    basePower,
+    priority,
+    maxBankSize,
+    targetBanks,
   };
 
   // Phase 1: coarse search at 5% steps

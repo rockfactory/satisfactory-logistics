@@ -1,7 +1,7 @@
-import { supabaseClient } from '@/core/supabase';
-import { useStore } from '@/core/zustand';
 import { notifications } from '@mantine/notifications';
 import type { QueryData } from '@supabase/supabase-js';
+import { supabaseClient } from '@/core/supabase';
+import { useStore } from '@/core/zustand';
 
 // Shared and normal
 const loadRemoteGamesQuery = supabaseClient

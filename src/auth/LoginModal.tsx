@@ -1,5 +1,5 @@
 import { Divider, Modal, Stack, Text } from '@mantine/core';
-import React from 'react';
+import type React from 'react';
 import { DiscordLoginButton } from './providers/DiscordLoginButton';
 import { GoogleLoginButton } from './providers/GoogleLoginButton';
 

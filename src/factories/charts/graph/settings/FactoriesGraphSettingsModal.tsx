@@ -1,8 +1,8 @@
-import { useFormOnChange } from '@/core/form/useFormOnChange';
-import { useStore } from '@/core/zustand';
 import { Button, Checkbox, Modal, Stack } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSettings } from '@tabler/icons-react';
+import { useFormOnChange } from '@/core/form/useFormOnChange';
+import { useStore } from '@/core/zustand';
 import { useChartsSettings } from '@/factories/charts/store/chartsSlice';
 
 export interface IFactoriesGraphSettingsModalProps {}

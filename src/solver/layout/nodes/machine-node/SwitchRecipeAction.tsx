@@ -1,14 +1,13 @@
 import { Checkbox, Group, ScrollArea, Stack } from '@mantine/core';
+import { xor } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
-import { xor } from 'lodash';
 import {
   AllFactoryRecipes,
   AllFactoryRecipesMap,
   type FactoryRecipe,
 } from '@/recipes/FactoryRecipe';
+import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
 import { useSolverAllowedRecipes } from '@/solver/store/solverSelectors';
 
 export interface ISwitchRecipeActionProps {

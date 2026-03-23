@@ -1,11 +1,11 @@
-import { useStore } from '@/core/zustand';
-import { createActions } from '@/core/zustand-helpers/actions';
-import { Factory } from '@/factories/Factory';
-import { Game } from '@/games/Game';
-import type { SolverInstance } from '@/solver/store/Solver';
 import dayjs from 'dayjs';
 import { cloneDeep, omit } from 'lodash';
 import { v4 } from 'uuid';
+import { useStore } from '@/core/zustand';
+import { createActions } from '@/core/zustand-helpers/actions';
+import type { Factory } from '@/factories/Factory';
+import type { Game } from '@/games/Game';
+import type { SolverInstance } from '@/solver/store/Solver';
 
 export const gameFactoriesActions = createActions({
   initGame: (game: Partial<Game>) => state => {

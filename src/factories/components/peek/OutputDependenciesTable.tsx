@@ -1,8 +1,8 @@
-import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
-import { useShallowStore } from '@/core/zustand';
-import { FactoryOutput } from '@/factories/Factory';
 import { Stack, Table, Text } from '@mantine/core';
 import { useMemo } from 'react';
+import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
+import { useShallowStore } from '@/core/zustand';
+import type { FactoryOutput } from '@/factories/Factory';
 
 export interface IOutputDependenciesTableProps {
   factoryId: string;
@@ -67,7 +67,7 @@ export function OutputDependenciesTable(props: IOutputDependenciesTableProps) {
             <Table.Td>
               {PercentageFormatter.format(
                 (input.amount ?? 0) /
-                  ((output.computedAmount ?? output.amount) ?? 1),
+                  (output.computedAmount ?? output.amount ?? 1),
               )}
             </Table.Td>
           </Table.Tr>

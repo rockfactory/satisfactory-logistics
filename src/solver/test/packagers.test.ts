@@ -1,7 +1,7 @@
+import { describe, expect, test } from 'vitest';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import { itemId, recipeId } from '@/recipes/itemId';
 import { loadHighs, solveProduction } from '@/solver/algorithm/solveProduction';
-import { describe, expect, test } from 'vitest';
 
 describe('packagers', () => {
   // Should avoid packagers loops and consume correct amount of oil

@@ -1,11 +1,3 @@
-import { log } from '@/core/logger/log';
-import { useStore } from '@/core/zustand';
-import type { SolutionNode } from '@/solver/algorithm/solveProduction';
-import { FloatingEdge } from '@/solver/edges/FloatingEdge';
-import { IngredientEdge } from '@/solver/edges/IngredientEdge';
-import type { SolverLayoutState, SolverNodeState } from '@/solver/store/Solver';
-import { usePathSolverLayout } from '@/solver/store/solverSelectors';
-import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
 import dagre from '@dagrejs/dagre';
 import { Box } from '@mantine/core';
 import { IconArrowsMaximize, IconMaximizeOff } from '@tabler/icons-react';
@@ -15,22 +7,31 @@ import {
   ConnectionLineType,
   ControlButton,
   Controls,
-  Edge,
-  InternalNode,
+  type Edge,
+  type InternalNode,
   MiniMap,
-  Node,
+  type Node,
+  type OnNodesChange,
   Position,
   ReactFlow,
   useEdgesState,
   useNodesInitialized,
   useNodesState,
   useReactFlow,
-  type OnNodesChange,
   type XYPosition,
 } from '@xyflow/react';
+import { log } from '@/core/logger/log';
+import { useStore } from '@/core/zustand';
+import type { SolutionNode } from '@/solver/algorithm/solveProduction';
+import { FloatingEdge } from '@/solver/edges/FloatingEdge';
+import { IngredientEdge } from '@/solver/edges/IngredientEdge';
+import type { SolverLayoutState, SolverNodeState } from '@/solver/store/Solver';
+import { usePathSolverLayout } from '@/solver/store/solverSelectors';
+import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
 import '@xyflow/react/dist/style.css';
 import { isEqual } from 'lodash';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import type React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ByproductNode } from './nodes/byproduct-node/ByproductNode';
 import { MachineNode } from './nodes/machine-node/MachineNode';
@@ -132,7 +133,9 @@ const getLayoutedElements = (
   const isHorizontal = GraphLayoutOptions.rankdir === 'LR';
   dagreGraph.setGraph(GraphLayoutOptions);
 
-  logger.debug(`getLayouted: nodes[0] width: ${nodes[0].measured?.width ?? '<null>'}, height: ${nodes[0].measured?.height ?? '<null>'}`); // prettier-ignore
+  logger.debug(
+    `getLayouted: nodes[0] width: ${nodes[0].measured?.width ?? '<null>'}, height: ${nodes[0].measured?.height ?? '<null>'}`,
+  ); // prettier-ignore
   (nodes as (InternalNode | Node)[]).forEach(node => {
     dagreGraph.setNode(node.id, {
       width: snapSizeToGrid(node.measured?.width ?? 0),
@@ -164,7 +167,7 @@ const getLayoutedElements = (
       // the saved position.
       const nodePosition = getNodeComputedPosition(
         dagreGraph.node(node.id),
-        node,
+        node as unknown as SolutionNode,
         // We _could_ use the save layout always, but we want to restore to
         // computed layout if atleast one node changes.
         useSavedLayout ? activeLayout[node.id] : undefined,
@@ -255,7 +258,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     setInitialFitViewFinished(false);
 
     // setTimeout(() => {}, 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // biome-ignore lint/correctness/useExhaustiveDependencies: layout effect should only run on these specific deps
   }, [props.edges, props.nodes, setEdges, setNodes]);
 
   const { getCompatiblePreviousLayout, cachePreviousLayout } =
@@ -325,7 +328,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         setOpacity(1);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // biome-ignore lint/correctness/useExhaustiveDependencies: layout effect should only run on these specific deps
   }, [
     nodesInitialized,
     savedLayout,

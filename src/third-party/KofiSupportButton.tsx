@@ -1,4 +1,3 @@
-import { assetPath } from '@/core/assetPath';
 import {
   Box,
   Button,
@@ -10,6 +9,7 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
+import { assetPath } from '@/core/assetPath';
 
 export interface IKofiSupportButtonProps {}
 
@@ -55,7 +55,7 @@ export function KofiSupportButton(props: IKofiSupportButtonProps) {
         leftSection={
           <Image
             alt="Ko-fi"
-            src={assetPath("/images/logo/logo-kofi@2x.png")}
+            src={assetPath('/images/logo/logo-kofi@2x.png')}
             w={24}
             h={24}
             fit="contain"
@@ -86,7 +86,7 @@ export function KofiSupportButton(props: IKofiSupportButtonProps) {
             leftSection={
               <Image
                 alt="Ko-fi"
-                src={assetPath("/images/logo/logo-kofi@2x.png")}
+                src={assetPath('/images/logo/logo-kofi@2x.png')}
                 width={20}
                 height={20}
               />

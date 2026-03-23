@@ -1,3 +1,6 @@
+import { Group, Image, Stack, Table } from '@mantine/core';
+import { groupBy, sum } from 'lodash';
+import { useMemo } from 'react';
 import { assetPath } from '@/core/assetPath';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
@@ -5,9 +8,6 @@ import { OverclockImage } from '@/recipes/ui/OverclockImage';
 import { SomersloopImage } from '@/recipes/ui/SomsersloopImage';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
 import { calculateMachineNodeBuildings } from '@/solver/layout/nodes/machine-node/postprocess/calculateMachineNodeBuildings';
-import { Group, Image, Stack, Table } from '@mantine/core';
-import { groupBy, sum } from 'lodash';
-import { useMemo } from 'react';
 import type { ISolverSolution } from '@/solver/page/SolverPage';
 import classes from './SummaryBuildings.module.css';
 
@@ -44,7 +44,11 @@ export function SummaryBuildings(props: ISummaryBuildingsProps) {
       {groupedByBuilding.map(({ buildingId, data }) => (
         <>
           <Group gap="xs" className={classes.building}>
-            <Image src={assetPath(data[0].building.imagePath)} width={24} height={24} />
+            <Image
+              src={assetPath(data[0].building.imagePath)}
+              width={24}
+              height={24}
+            />
             <span>{sum(data.map(node => node.roundedBuildingsAmount))}x</span>
             {data[0].building.name}
           </Group>
@@ -81,7 +85,10 @@ export function SummaryBuildings(props: ISummaryBuildingsProps) {
                     <Table.Td>
                       <RepeatingNumber value={node.overclock * 100} />%
                     </Table.Td>
-                    <Table.Td>{node.somersloopsPerMachine}/{node.building.somersloopSlots}</Table.Td>
+                    <Table.Td>
+                      {node.somersloopsPerMachine}/
+                      {node.building.somersloopSlots}
+                    </Table.Td>
                   </Table.Tr>
                   {node.partialBuildingAmount > Number.EPSILON && (
                     <Table.Tr>
@@ -100,7 +107,10 @@ export function SummaryBuildings(props: ISummaryBuildingsProps) {
                         />
                         %
                       </Table.Td>
-                      <Table.Td>{node.somersloopsPerMachine}/{node.building.somersloopSlots}</Table.Td>
+                      <Table.Td>
+                        {node.somersloopsPerMachine}/
+                        {node.building.somersloopSlots}
+                      </Table.Td>
                     </Table.Tr>
                   )}
                 </>

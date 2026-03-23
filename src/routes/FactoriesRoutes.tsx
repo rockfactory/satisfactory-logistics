@@ -1,7 +1,7 @@
-import { ChartsTab } from '@/factories/charts/ChartsTab';
-import { GamesAtleastOneManager } from '@/games/manager/GamesAtleastOneManager';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { ChartsTab } from '@/factories/charts/ChartsTab';
 import { FactoriesTab } from '@/factories/FactoriesTab';
+import { GamesAtleastOneManager } from '@/games/manager/GamesAtleastOneManager';
 import { Footer } from '@/layout/Footer';
 import { Header } from '@/layout/Header';
 import { SolverPage } from '@/solver/page/SolverPage';

@@ -1,9 +1,9 @@
+import { Image } from '@mantine/core';
 import { assetPath } from '@/core/assetPath';
 import {
-  SelectIconInput,
   type ISelectInputProps,
+  SelectIconInput,
 } from '@/core/form/SelectIconInput';
-import { Image } from '@mantine/core';
 import { LogisticTypes } from './LogisticTypes';
 
 export interface ILogisticTypeSelectProps

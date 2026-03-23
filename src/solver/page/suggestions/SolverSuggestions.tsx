@@ -1,8 +1,3 @@
-import { useStore } from '@/core/zustand';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { AllFactoryRecipesMap } from '@/recipes/FactoryRecipe';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import type { SolverInstance } from '@/solver/store/Solver';
 import { Button, Group, Text } from '@mantine/core';
 import {
   IconArrowBack,
@@ -10,6 +5,11 @@ import {
   IconPlus,
   IconRestore,
 } from '@tabler/icons-react';
+import { useStore } from '@/core/zustand';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
+import { AllFactoryRecipesMap } from '@/recipes/FactoryRecipe';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import type { SolverInstance } from '@/solver/store/Solver';
 import type { ISolverSolutionSuggestion } from './proposeSolverSolutionSuggestions';
 
 export interface ISolverSuggestionsProps {

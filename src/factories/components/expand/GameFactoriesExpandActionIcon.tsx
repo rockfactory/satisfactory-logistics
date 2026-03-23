@@ -1,10 +1,10 @@
-import { useStore } from '@/core/zustand';
-import { useGameFactoriesHasAnyCollapsed } from '@/games/gamesSlice';
 import { ActionIcon, Tooltip } from '@mantine/core';
 import {
   IconArrowsDiagonal,
   IconArrowsDiagonalMinimize2,
 } from '@tabler/icons-react';
+import { useStore } from '@/core/zustand';
+import { useGameFactoriesHasAnyCollapsed } from '@/games/gamesSlice';
 export interface IGameFactoriesExpandActionIconProps {}
 
 export function GameFactoriesExpandActionIcon(

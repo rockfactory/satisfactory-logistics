@@ -1,3 +1,14 @@
+import { alpha, Box, Group, Image, Text } from '@mantine/core';
+import {
+  BaseEdge,
+  type Edge,
+  EdgeLabelRenderer,
+  type EdgeProps,
+  getBezierPath,
+  useInternalNode,
+  useStore,
+} from '@xyflow/react';
+import type { FC } from 'react';
 import { assetPath } from '@/core/assetPath';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { useChartSetting } from '@/factories/charts/store/chartsSlice';
@@ -5,17 +16,6 @@ import type { FactoryInput } from '@/factories/Factory';
 import { AllLogisticTypesMap } from '@/recipes/logistics/LogisticTypes';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { getEdgeParams, getSpecialPath } from '@/solver/edges/utils';
-import { alpha, Box, Group, Image, Text } from '@mantine/core';
-import {
-  BaseEdge,
-  Edge,
-  EdgeLabelRenderer,
-  EdgeProps,
-  getBezierPath,
-  useInternalNode,
-  useStore,
-} from '@xyflow/react';
-import { FC } from 'react';
 
 export interface IInputEdgeData {
   input: FactoryInput;
@@ -118,7 +118,12 @@ export const InputEdge: FC<EdgeProps<Edge<IInputEdgeData>>> = ({
               /min
             </Text>
             {transport && (
-              <Image ml={6} src={assetPath(transport.imagePath)} w="16" h="16" />
+              <Image
+                ml={6}
+                src={assetPath(transport.imagePath)}
+                w="16"
+                h="16"
+              />
             )}
           </Group>
         </Box>

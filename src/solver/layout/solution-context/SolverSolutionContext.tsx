@@ -1,5 +1,5 @@
+import React, { type PropsWithChildren, useMemo } from 'react';
 import type { ISolverSolution } from '@/solver/page/SolverPage';
-import React, { useMemo, type PropsWithChildren } from 'react';
 
 export interface SolverSolutionContextValue {
   solution: ISolverSolution;
@@ -19,7 +19,6 @@ export const SolverSolutionProvider: React.FC<
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function useSolverSolution() {
   const context = React.useContext(SolverSolutionContext);
   if (!context) {

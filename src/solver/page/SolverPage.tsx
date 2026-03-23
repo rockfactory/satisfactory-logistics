@@ -1,34 +1,4 @@
-import { useFormOnChange } from '@/core/form/useFormOnChange';
-import { loglev } from '@/core/logger/log';
-import { useStore } from '@/core/zustand';
-import {
-  useFactoryInputsOutputs,
-  useFactorySimpleAttributes,
-} from '@/factories/store/factoriesSelectors';
-import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
-import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
-import { isByproductNode } from '@/solver/algorithm/getSolutionNodes';
-import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
-import {
-  solveProduction,
-  useHighs,
-  type SolutionNode,
-} from '@/solver/algorithm/solveProduction';
-import type { SolverContext } from '@/solver/algorithm/SolverContext';
-import type { SolverEdge, SolverNode } from '@/solver/algorithm/SolverNode';
-import { SolverInspectorDrawer } from '@/solver/inspector/SolverInspectorDrawer';
-import { SolverSolutionProvider } from '@/solver/layout/solution-context/SolverSolutionContext';
-import { SolverLayout } from '@/solver/layout/SolverLayout';
-import { SolverLayoutButtons } from '@/solver/layout/state/SolverLayoutButtons';
-import { SolverShareButton } from '@/solver/share/SolverShareButton';
-import { SolverInstance } from '@/solver/store/Solver';
-import {
-  getSolverGame,
-  useCurrentSolverId,
-  usePathSolverInstance,
-  useSolverGameId,
-} from '@/solver/store/solverSelectors';
-import { Path, setByPath } from '@clickbar/dot-diver';
+import { type Path, setByPath } from '@clickbar/dot-diver';
 import {
   Box,
   Button,
@@ -46,17 +16,47 @@ import {
   IconPlus,
   IconZoomExclamation,
 } from '@tabler/icons-react';
-import { Edge, Panel, ReactFlowProvider } from '@xyflow/react';
-import Graph from 'graphology';
-import { HighsSolution } from 'highs';
+import { type Edge, Panel, ReactFlowProvider } from '@xyflow/react';
+import type Graph from 'graphology';
+import type { HighsSolution } from 'highs';
 import { useEffect, useMemo } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { v4 } from 'uuid';
+import { useFormOnChange } from '@/core/form/useFormOnChange';
+import { loglev } from '@/core/logger/log';
+import { useStore } from '@/core/zustand';
+import {
+  useFactoryInputsOutputs,
+  useFactorySimpleAttributes,
+} from '@/factories/store/factoriesSelectors';
+import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
+import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
+import { isByproductNode } from '@/solver/algorithm/getSolutionNodes';
+import type { SolverContext } from '@/solver/algorithm/SolverContext';
+import type { SolverEdge, SolverNode } from '@/solver/algorithm/SolverNode';
+import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
+import {
+  type SolutionNode,
+  solveProduction,
+  useHighs,
+} from '@/solver/algorithm/solveProduction';
+import { SolverInspectorDrawer } from '@/solver/inspector/SolverInspectorDrawer';
+import { SolverLayout } from '@/solver/layout/SolverLayout';
+import { SolverSolutionProvider } from '@/solver/layout/solution-context/SolverSolutionContext';
+import { SolverLayoutButtons } from '@/solver/layout/state/SolverLayoutButtons';
+import { SolverShareButton } from '@/solver/share/SolverShareButton';
+import type { SolverInstance } from '@/solver/store/Solver';
+import {
+  getSolverGame,
+  useCurrentSolverId,
+  usePathSolverInstance,
+  useSolverGameId,
+} from '@/solver/store/solverSelectors';
 import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
 import { SolverResetButton } from './SolverResetButton';
 import {
-  proposeSolverSolutionSuggestions,
   type ISolverSolutionSuggestion,
+  proposeSolverSolutionSuggestions,
 } from './suggestions/proposeSolverSolutionSuggestions';
 import { SolverSuggestions } from './suggestions/SolverSuggestions';
 import { SolverSummaryDrawer } from './summary/SolverSummaryDrawer';
@@ -156,7 +156,9 @@ export function SolverPage(props: ISolverPageProps) {
     if (!outputs) return;
     const maximizedNodes = solution.nodes
       .filter(isByproductNode)
-      .filter(n => n.data.output?.objective === 'max' && n.data.outputIndex != null);
+      .filter(
+        n => n.data.output?.objective === 'max' && n.data.outputIndex != null,
+      );
     for (const node of maximizedNodes) {
       const outputIndex = node.data.outputIndex;
       if (outputIndex == null) continue;

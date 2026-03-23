@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useShallowStore, useStore, type RootState } from '@/core/zustand';
+import { type RootState, useShallowStore, useStore } from '@/core/zustand';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 
 export const usePathSolverInstance = () => {

@@ -1,10 +1,10 @@
-import { useSession } from '@/auth/authSelectors';
-import { supabaseClient } from '@/core/supabase';
-import { useStore } from '@/core/zustand';
 import { ActionIcon, Button, Group, Modal, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconTrash } from '@tabler/icons-react';
+import { useSession } from '@/auth/authSelectors';
+import { supabaseClient } from '@/core/supabase';
+import { useStore } from '@/core/zustand';
 
 export interface IGameDeleteButtonProps {
   gameId: string;

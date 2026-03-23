@@ -1,11 +1,11 @@
-import { useSession } from '@/auth/authSelectors';
-import { supabaseClient } from '@/core/supabase';
-import { useStore } from '@/core/zustand';
 import { ActionIcon, Avatar, Group, Text } from '@mantine/core';
 import type { QueryData } from '@supabase/supabase-js';
 import { IconTrash } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useEffect, useState } from 'react';
+import { useSession } from '@/auth/authSelectors';
+import { supabaseClient } from '@/core/supabase';
+import { useStore } from '@/core/zustand';
 import classes from './GamePlayers.module.css';
 
 export interface IGamePlayersProps {

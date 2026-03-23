@@ -1,11 +1,11 @@
+import { Select } from '@mantine/core';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useShallowStore, useStore } from '@/core/zustand';
 import {
   getSolverGame,
   usePathSolverInstance,
 } from '@/solver/store/solverSelectors';
-import { Select } from '@mantine/core';
-import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export interface ISolverPickerProps {}
 

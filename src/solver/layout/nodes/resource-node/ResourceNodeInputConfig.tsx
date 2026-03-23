@@ -1,8 +1,8 @@
+import { NumberInput, Stack, Text } from '@mantine/core';
 import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
 import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
 import type { FactoryInput } from '@/factories/Factory';
-import { type FactoryItem } from '@/recipes/FactoryItem';
-import { NumberInput, Stack, Text } from '@mantine/core';
+import type { FactoryItem } from '@/recipes/FactoryItem';
 
 export interface IResourceNodeInputConfigProps {
   resource: FactoryItem;

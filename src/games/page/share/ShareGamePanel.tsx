@@ -1,5 +1,3 @@
-import { supabaseClient } from '@/core/supabase';
-import { useStore } from '@/core/zustand';
 import {
   ActionIcon,
   Box,
@@ -17,6 +15,8 @@ import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconCheck, IconCopy, IconShare, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
+import { supabaseClient } from '@/core/supabase';
+import { useStore } from '@/core/zustand';
 import { shareGame } from './shareGame';
 
 export interface IShareGamePanelProps {
@@ -29,7 +29,7 @@ export function ShareGamePanel(props: IShareGamePanelProps) {
   const savedId = useStore(state => state.games.games[props.gameId].savedId);
   const token = useStore(state => state.games.games[props.gameId].shareToken);
   const sharedUrl = token
-    ? `${window.location.origin}/games/shared?gameSavedId=${savedId}&token=${encodeURIComponent(token)}`
+    ? `${window.location.origin}${import.meta.env.BASE_URL}games/shared?gameSavedId=${savedId}&token=${encodeURIComponent(token)}`
     : null;
 
   const handleShare = async () => {

@@ -1,4 +1,4 @@
-import { Draft } from 'immer';
+import type { Draft } from 'immer';
 import { createSlice } from '@/core/zustand-helpers/slices';
 
 interface FactoryViewSlice {

@@ -1,6 +1,6 @@
 // this helper function returns the intersection point
 
-import { InternalNode, Position } from '@xyflow/react';
+import { type InternalNode, Position } from '@xyflow/react';
 
 type Point = {
   x: number;

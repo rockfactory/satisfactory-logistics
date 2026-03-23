@@ -1,3 +1,7 @@
+import { omit } from 'lodash';
+import { create } from 'zustand';
+import { createJSONStorage, devtools, persist } from 'zustand/middleware';
+import { useShallow } from 'zustand/shallow';
 import { authSlice } from '@/auth/authSlice';
 import { chartsSlice } from '@/factories/charts/store/chartsSlice';
 import { factoriesSlice } from '@/factories/store/factoriesSlice';
@@ -9,10 +13,6 @@ import { gameFactoriesActions } from '@/games/store/gameFactoriesActions';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
 import { solverFactoriesActions } from '@/solver/store/solverFactoriesActions';
 import { solversSlice } from '@/solver/store/solverSlice';
-import { omit } from 'lodash';
-import { create } from 'zustand';
-import { createJSONStorage, devtools, persist } from 'zustand/middleware';
-import { useShallow } from 'zustand/shallow';
 import { loglev } from './logger/log';
 import { migratePersistedStoreFromRedux } from './migrations/migratePersistedStoreFromRedux';
 import { migrateStoreWithPlan } from './migrations/planner/StoreMigrationPlan';

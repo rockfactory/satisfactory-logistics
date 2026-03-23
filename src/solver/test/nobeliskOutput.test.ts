@@ -1,5 +1,5 @@
-import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { expect, test } from 'vitest';
+import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { loadHighs, solveProduction } from '@/solver/algorithm/solveProduction';
 
 test('nobeliskOutput', async () => {

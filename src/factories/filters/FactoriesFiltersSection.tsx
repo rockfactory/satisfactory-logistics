@@ -12,9 +12,9 @@ import {
   IconTextGrammar,
 } from '@tabler/icons-react';
 import { useStore } from '@/core/zustand';
-import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { GameFactoriesExpandActionIcon } from '@/factories/components/expand/GameFactoriesExpandActionIcon';
 import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
+import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 
 export interface IFactoriesFiltersSectionProps {}
 

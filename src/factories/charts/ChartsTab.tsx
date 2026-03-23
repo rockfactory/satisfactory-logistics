@@ -1,8 +1,8 @@
-import { useStore } from '@/core/zustand';
-import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import { Box, Container, Group, SegmentedControl, Text } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
+import { useStore } from '@/core/zustand';
 import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
+import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import { FactoriesGraphContainer } from './graph/FactoriesGraphContainer';
 import { FactoriesGraphSettingsModal } from './graph/settings/FactoriesGraphSettingsModal';
 import { FactoriesSankeyChart } from './sankey/FactoriesSankeyChart';

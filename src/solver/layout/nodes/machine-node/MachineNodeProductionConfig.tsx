@@ -1,7 +1,7 @@
+import { NumberInput, SimpleGrid, Text } from '@mantine/core';
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { NumberInput, SimpleGrid, Text } from '@mantine/core';
 import type { IMachineNodeData } from './MachineNode';
 
 export interface IMachineNodeProductionConfigProps {
@@ -31,9 +31,10 @@ export function MachineNodeProductionConfig(
 
   const slotsPerBuilding = building.somersloopSlots;
   const somersloopsNum = Number(somersloopsValue) || 0;
-  const amplificationPct = slotsPerBuilding > 0
-    ? Math.round((somersloopsNum / slotsPerBuilding) * 100 + 100)
-    : 100;
+  const amplificationPct =
+    slotsPerBuilding > 0
+      ? Math.round((somersloopsNum / slotsPerBuilding) * 100 + 100)
+      : 100;
 
   return (
     <SimpleGrid cols={2} spacing={6}>
@@ -46,7 +47,12 @@ export function MachineNodeProductionConfig(
         placeholder={`0/${slotsPerBuilding}`}
         suffix={`/${slotsPerBuilding}`}
         label={
-          <Text size="xs" fw="bold" c="grape.4" style={{ visibility: somersloopsNum > 0 ? 'visible' : 'hidden' }}>
+          <Text
+            size="xs"
+            fw="bold"
+            c="grape.4"
+            style={{ visibility: somersloopsNum > 0 ? 'visible' : 'hidden' }}
+          >
             {somersloopsNum > 0 ? `${amplificationPct}%` : '\u00A0'}
           </Text>
         }
@@ -66,7 +72,11 @@ export function MachineNodeProductionConfig(
         }
       />
       <NumberInput
-        label={<Text size="xs" style={{ visibility: 'hidden' }}>{'\u00A0'}</Text>}
+        label={
+          <Text size="xs" style={{ visibility: 'hidden' }}>
+            {'\u00A0'}
+          </Text>
+        }
         placeholder="Overclock"
         suffix="%"
         value={
@@ -75,9 +85,7 @@ export function MachineNodeProductionConfig(
             : Number(overclockValue) * 100
         }
         onValueChange={({ floatValue }) =>
-          setOverclockValue(
-            floatValue == null ? '' : floatValue / 100,
-          )
+          setOverclockValue(floatValue == null ? '' : floatValue / 100)
         }
         min={0}
         max={250}

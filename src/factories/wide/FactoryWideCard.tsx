@@ -1,5 +1,4 @@
-import { useGameFactoryIsCollapsed } from '@/games/gamesSlice';
-import { Path, setByPath } from '@clickbar/dot-diver';
+import { type Path, setByPath } from '@clickbar/dot-diver';
 import {
   ActionIcon,
   Box,
@@ -23,10 +22,11 @@ import {
   FactoryInputIcon,
   FactoryOutputIcon,
 } from '@/factories/components/peek/icons/OutputInputIcons';
-import { Factory } from '@/factories/Factory';
+import type { Factory } from '@/factories/Factory';
 import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
 import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
 import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
+import { useGameFactoryIsCollapsed } from '@/games/gamesSlice';
 
 export interface IFactoryWideCardProps {
   id: string;

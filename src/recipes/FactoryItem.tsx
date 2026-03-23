@@ -18,7 +18,6 @@ export interface FactoryItem {
   isVechicle?: boolean;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export enum FactoryItemForm {
   Solid = 'Solid',
   Liquid = 'Liquid',
@@ -68,7 +67,6 @@ export const AllFactoryItemsMap = AllFactoryItems.reduce(
   {} as Record<string, FactoryItem>,
 );
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function getFactoryItem(id: FactoryItemId): FactoryItem {
   const item = AllFactoryItemsMap[id];
   if (!item) {

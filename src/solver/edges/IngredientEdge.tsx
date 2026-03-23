@@ -1,4 +1,17 @@
+import { alpha, Box, Group, Image, Text, Tooltip } from '@mantine/core';
+import {
+  BaseEdge,
+  type Edge,
+  EdgeLabelRenderer,
+  type EdgeProps,
+  getBezierPath,
+  useInternalNode,
+  useStore,
+} from '@xyflow/react';
+import { last } from 'lodash';
+import type { FC } from 'react';
 import { assetPath } from '@/core/assetPath';
+import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import {
   useGameSettingMaxBelt,
   useGameSettingMaxPipeline,
@@ -7,21 +20,8 @@ import {
   FactoryConveyorBelts,
   FactoryPipelinesExclAlternates,
 } from '@/recipes/FactoryBuilding';
+import { type FactoryItem, FactoryItemForm } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { alpha, Box, Group, Image, Text, Tooltip } from '@mantine/core';
-import {
-  BaseEdge,
-  Edge,
-  EdgeLabelRenderer,
-  EdgeProps,
-  getBezierPath,
-  useInternalNode,
-  useStore,
-} from '@xyflow/react';
-import { last } from 'lodash';
-import { FC } from 'react';
-import { RepeatingNumber } from '@/core/intl/NumberFormatter';
-import { FactoryItem, FactoryItemForm } from '@/recipes/FactoryItem';
 import { getEdgeParams, getSpecialPath } from './utils';
 
 export interface IIngredientEdgeData {

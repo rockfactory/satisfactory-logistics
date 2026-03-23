@@ -1,17 +1,3 @@
-import { assetPath } from '@/core/assetPath';
-import { FormOnChangeHandler } from '@/core/form/useFormOnChange';
-import { useStore } from '@/core/zustand';
-import { useGameSetting } from '@/games/gamesSlice.ts';
-import {
-  FactoryBuildingsForRecipes,
-  FactoryConveyorBelts,
-  FactoryPipelinesExclAlternates,
-} from '@/recipes/FactoryBuilding';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { WorldResourcesList } from '@/recipes/WorldResources';
-import type { SolverInstance } from '@/solver/store/Solver';
-import { usePathSolverRequest } from '@/solver/store/solverSelectors';
 import {
   Alert,
   Checkbox,
@@ -24,10 +10,22 @@ import {
   Switch,
   Text,
 } from '@mantine/core';
-import { useShallowStore } from '@/core/zustand';
-import { isWorldResource } from '@/recipes/WorldResources';
 import { IconInfoCircleFilled } from '@tabler/icons-react';
 import { useState } from 'react';
+import { assetPath } from '@/core/assetPath';
+import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
+import { useShallowStore, useStore } from '@/core/zustand';
+import { useGameSetting } from '@/games/gamesSlice.ts';
+import {
+  FactoryBuildingsForRecipes,
+  FactoryConveyorBelts,
+  FactoryPipelinesExclAlternates,
+} from '@/recipes/FactoryBuilding';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { isWorldResource, WorldResourcesList } from '@/recipes/WorldResources';
+import type { SolverInstance } from '@/solver/store/Solver';
+import { usePathSolverRequest } from '@/solver/store/solverSelectors';
 import { LimitationResourceAmountInput } from './limitations/LimitationResourceAmountInput';
 
 export interface ISolverLimitationsDrawerProps {
@@ -44,10 +42,11 @@ export function SolverLimitationsDrawer(
   const maxPipeline = useGameSetting('maxPipeline');
   const maxBelt = useGameSetting('maxBelt');
 
-  const inputResources = useShallowStore(state =>
-    state.factories.factories[id ?? '']?.inputs
-      ?.map(i => i.resource)
-      .filter((r): r is string => r != null && isWorldResource(r)) ?? [],
+  const inputResources = useShallowStore(
+    state =>
+      state.factories.factories[id ?? '']?.inputs
+        ?.map(i => i.resource)
+        .filter((r): r is string => r != null && isWorldResource(r)) ?? [],
   );
 
   const [advanced, setAdvanced] = useState(false);

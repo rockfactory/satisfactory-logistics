@@ -1,11 +1,11 @@
 import {
-  Group,
-  Select,
   type ComboboxItem,
   type ComboboxLikeRenderOptionInput,
+  Group,
+  Select,
   type SelectProps,
 } from '@mantine/core';
-import * as React from 'react';
+import type * as React from 'react';
 import { useCallback } from 'react';
 
 export interface ISelectInputProps extends SelectProps {

@@ -1,11 +1,11 @@
-import { loglev } from '@/core/logger/log';
-import { createActions } from '@/core/zustand-helpers/actions';
-import { Factory, FactoryOutput, type FactoryInput } from '@/factories/Factory';
-import type { ISolverSolution } from '@/solver/page/SolverPage';
 import { bfsFromNode } from 'graphology-traversal';
 import { v4 } from 'uuid';
-import { SolverRequest, type SolverInstance } from './Solver';
+import { loglev } from '@/core/logger/log';
+import { createActions } from '@/core/zustand-helpers/actions';
+import type { Factory, FactoryInput, FactoryOutput } from '@/factories/Factory';
+import type { ISolverSolution } from '@/solver/page/SolverPage';
 import { computeAutoSetInputs } from './auto-set/computeAutoSetInputs';
+import type { SolverInstance, SolverRequest } from './Solver';
 
 const logger = loglev.getLogger('store:solver-factories');
 
@@ -211,7 +211,14 @@ export const solverFactoriesActions = createActions({
               o => o.resource === attrs.resource.id,
             );
             if (output) {
-              logger.info('Adding somersloops', somersloopNodeState.somersloops, 'to output', output.resource, 'from node', somersloopNodeId); // prettier-ignore
+              logger.info(
+                'Adding somersloops',
+                somersloopNodeState.somersloops,
+                'to output',
+                output.resource,
+                'from node',
+                somersloopNodeId,
+              ); // prettier-ignore
               output.somersloops =
                 (output.somersloops ?? 0) +
                 (somersloopNodeState.somersloops ?? 0);

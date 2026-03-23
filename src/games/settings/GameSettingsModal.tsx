@@ -1,10 +1,4 @@
-import { assetPath } from '@/core/assetPath';
-import { SelectIconInput } from '@/core/form/SelectIconInput';
-import {
-  FactoryConveyorBelts,
-  FactoryPipelinesExclAlternates,
-} from '@/recipes/FactoryBuilding';
-import { Path, setByPath } from '@clickbar/dot-diver';
+import { type Path, setByPath } from '@clickbar/dot-diver';
 import {
   Button,
   Checkbox,
@@ -17,10 +11,16 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSettings } from '@tabler/icons-react';
+import { assetPath } from '@/core/assetPath';
+import { SelectIconInput } from '@/core/form/SelectIconInput';
 import { useFormOnChange } from '@/core/form/useFormOnChange';
 import { useStore } from '@/core/zustand';
-import { GameSettings } from '@/games/Game';
+import type { GameSettings } from '@/games/Game';
 import { useGameSettings } from '@/games/gamesSlice';
+import {
+  FactoryConveyorBelts,
+  FactoryPipelinesExclAlternates,
+} from '@/recipes/FactoryBuilding';
 
 export interface IGameSettingsModalProps {
   withLabel?: boolean;
@@ -37,7 +37,9 @@ const BeltsOptions = FactoryConveyorBelts.map(
     ({
       label: belt.name,
       value: belt.id,
-      icon: <Image src={assetPath(belt.imagePath)} alt={belt.name} w={16} h={16} />,
+      icon: (
+        <Image src={assetPath(belt.imagePath)} alt={belt.name} w={16} h={16} />
+      ),
     }) as const,
 );
 
@@ -47,7 +49,12 @@ const PipelinesOptions = FactoryPipelinesExclAlternates.map(
       label: pipeline.name,
       value: pipeline.id,
       icon: (
-        <Image src={assetPath(pipeline.imagePath)} alt={pipeline.name} w={16} h={16} />
+        <Image
+          src={assetPath(pipeline.imagePath)}
+          alt={pipeline.name}
+          w={16}
+          h={16}
+        />
       ),
     }) as const,
 );

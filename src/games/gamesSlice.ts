@@ -1,12 +1,12 @@
-import {
-  FactoryConveyorBelts,
-  FactoryPipelinesExclAlternates,
-} from '@/recipes/FactoryBuilding';
 import dayjs from 'dayjs';
 import { useShallow } from 'zustand/shallow';
 import { useStore } from '@/core/zustand';
 import { createSlice } from '@/core/zustand-helpers/slices';
-import { Game, type GameRemoteData, GameSettings } from './Game';
+import {
+  FactoryConveyorBelts,
+  FactoryPipelinesExclAlternates,
+} from '@/recipes/FactoryBuilding';
+import type { Game, GameRemoteData, GameSettings } from './Game';
 
 export interface GamesSlice {
   games: Record<string, Game>;

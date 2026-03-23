@@ -1,7 +1,3 @@
-import { useFormOnChange, type Updater } from '@/core/form/useFormOnChange';
-import { useStore } from '@/core/zustand';
-import type { FactoryOutput } from '@/factories/Factory';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { setByPath } from '@clickbar/dot-diver';
 import { ActionIcon, Button, Group, Stack, Tooltip } from '@mantine/core';
 import { IconDeviceFloppy, IconTrash } from '@tabler/icons-react';
@@ -9,6 +5,10 @@ import { produce, type WritableDraft } from 'immer';
 import { isEqual } from 'lodash';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { type Updater, useFormOnChange } from '@/core/form/useFormOnChange';
+import { useStore } from '@/core/zustand';
+import type { FactoryOutput } from '@/factories/Factory';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import type { IByproductNodeData } from './ByproductNode';
 import { ByproductNodeOutputConfig } from './ByproductNodeInputConfig';
 

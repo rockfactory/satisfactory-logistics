@@ -10,6 +10,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import { AuthSessionManager } from './auth/AuthSessionManager.tsx';
 import { supabaseClient } from './core/supabase.ts';
+
 setAutoFreeze(false); // TODO Bug on change solver
 
 Sentry.init({

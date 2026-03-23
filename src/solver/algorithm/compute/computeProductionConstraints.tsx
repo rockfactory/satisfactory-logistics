@@ -1,3 +1,4 @@
+import { last } from 'lodash';
 import { log } from '@/core/logger/log';
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
@@ -9,7 +10,6 @@ import {
   setGraphResource,
 } from '@/solver/algorithm/SolverContext';
 import type { SolverOutputNode } from '@/solver/algorithm/SolverNode';
-import { last } from 'lodash';
 
 const logger = log.getLogger('recipes:solver');
 logger.setLevel('info');
@@ -48,7 +48,10 @@ export function computeProductionConstraints(
     const mainProductItem = AllFactoryItemsMap[recipe.products[0].resource];
     const mainProductVar = `p${mainProductItem.index}r${recipe.index}`;
     const mainProductAmount = (recipe.products[0].amount * 60) / recipe.time;
-    logger.debug(' Processing recipe:', recipe.name, { mainProductItem, recipe }); // prettier-ignore
+    logger.debug(' Processing recipe:', recipe.name, {
+      mainProductItem,
+      recipe,
+    }); // prettier-ignore
 
     // const buildingsVar = `c${recipe.index}`;
     const building = AllFactoryBuildingsMap[recipe.producedIn];
@@ -143,7 +146,12 @@ export function computeProductionConstraints(
         ctx.constraints.push(
           `${recipeAmplifiedProductVar} - ${sloopRatio} ${recipeOriginalProductVar} <= 0`,
         );
-        logger.info('  Adding somersloops:', recipe.name, `ratio=${sloopRatio}`, last(ctx.constraints)); // prettier-ignore
+        logger.info(
+          '  Adding somersloops:',
+          recipe.name,
+          `ratio=${sloopRatio}`,
+          last(ctx.constraints),
+        ); // prettier-ignore
       } else {
         ctx.constraints.push(`${recipeAmplifiedProductVar} = 0`);
       }

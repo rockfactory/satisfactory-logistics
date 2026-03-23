@@ -603,12 +603,8 @@
     "pipeline": null,
     "extractor": {
       "type": "None",
-      "allowedForms": [
-        "Liquid"
-      ],
-      "allowedResources": [
-        "Desc_Water_C"
-      ],
+      "allowedForms": ["Liquid"],
+      "allowedResources": ["Desc_Water_C"],
       "itemsPerCycle": 2,
       "cycleTime": 1,
       "itemsPerMinute": 120
@@ -702,12 +698,8 @@
     "pipeline": null,
     "extractor": {
       "type": "None",
-      "allowedForms": [
-        "Liquid"
-      ],
-      "allowedResources": [
-        "Desc_LiquidOil_C"
-      ],
+      "allowedForms": ["Liquid"],
+      "allowedResources": ["Desc_LiquidOil_C"],
       "itemsPerCycle": 2,
       "cycleTime": 1,
       "itemsPerMinute": 120
@@ -735,9 +727,7 @@
     "pipeline": null,
     "extractor": {
       "type": "Miner",
-      "allowedForms": [
-        "Solid"
-      ],
+      "allowedForms": ["Solid"],
       "allowedResources": null,
       "itemsPerCycle": 1,
       "cycleTime": 0.5,
@@ -766,9 +756,7 @@
     "pipeline": null,
     "extractor": {
       "type": "Miner",
-      "allowedForms": [
-        "Solid"
-      ],
+      "allowedForms": ["Solid"],
       "allowedResources": null,
       "itemsPerCycle": 1,
       "cycleTime": 1,
@@ -797,9 +785,7 @@
     "pipeline": null,
     "extractor": {
       "type": "Miner",
-      "allowedForms": [
-        "Solid"
-      ],
+      "allowedForms": ["Solid"],
       "allowedResources": null,
       "itemsPerCycle": 1,
       "cycleTime": 0.25,
@@ -1045,10 +1031,7 @@
     "pipeline": null,
     "extractor": {
       "type": "None",
-      "allowedForms": [
-        "Liquid",
-        "Gas"
-      ],
+      "allowedForms": ["Liquid", "Gas"],
       "allowedResources": [
         "Desc_LiquidOil_C",
         "Desc_NitrogenGas_C",
