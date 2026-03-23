@@ -47,7 +47,7 @@ function getTransportTiers(isFluid: boolean) {
  * Rates that are clean fractions of a belt speed are easy to split/merge.
  * e.g., 1/1, 1/2, 1/3, 2/3 of a belt = one splitter/merger stage.
  */
-const CLEAN_FRACTIONS = [1, 1 / 2, 1 / 3, 2 / 3];
+const CLEAN_FRACTIONS = [1, 1 / 2, 1 / 3];
 const TOLERANCE = 0.0005;
 
 

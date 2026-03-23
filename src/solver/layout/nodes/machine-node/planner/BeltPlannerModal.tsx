@@ -69,12 +69,14 @@ function BankOptionCard({
 	recipe,
 	currentOverclock,
 	onApplyOverclock,
+	onSelectBank,
 	rank,
 }: {
 	option: BankOption;
 	recipe: FactoryRecipe;
 	currentOverclock: number;
 	onApplyOverclock: (overclock: number) => void;
+	onSelectBank: (machineCount: number, banksNeeded: number) => void;
 	rank: number;
 }) {
 	const building = AllFactoryBuildingsMap[recipe.producedIn];
@@ -112,6 +114,14 @@ function BankOptionCard({
 							)}
 						</Text>
 					)}
+					<Button
+						size="compact-xs"
+						variant="light"
+						color="cyan"
+						onClick={() => onSelectBank(option.machineCount, option.banksNeeded)}
+					>
+						Use
+					</Button>
 					{isOverclockChanged && (
 						<Button
 							size="compact-xs"
@@ -312,6 +322,17 @@ export function BeltPlannerModal(props: IBeltPlannerModalProps) {
 		[solverId, nodeId, close],
 	);
 
+	const handleSelectBank = useCallback(
+		(machineCount: number, banksNeeded: number) => {
+			if (!solverId) return;
+			useStore.getState().updateSolverNode(solverId, nodeId, (node) => {
+				node.selectedBankSize = { machineCount, banksNeeded };
+			});
+			close();
+		},
+		[solverId, nodeId, close],
+	);
+
 	const topOptions = options.slice(0, 6);
 
 	return (
@@ -374,6 +395,7 @@ export function BeltPlannerModal(props: IBeltPlannerModalProps) {
 							option={option}
 							recipe={recipe}
 							currentOverclock={overclock}
+							onSelectBank={handleSelectBank}
 							onApplyOverclock={handleApplyOverclock}
 							rank={i}
 						/>

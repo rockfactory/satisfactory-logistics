@@ -79,10 +79,11 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
 	const buildingsAmount = machineCalc.buildingsAmount;
 	const amplifiedRate = machineCalc.amplifiedRate;
 
-	const bestBank = useMemo(
+	const computedBank = useMemo(
 		() => computeBestBankSize(recipe, overclock, buildingsAmount, amplifiedRate),
 		[recipe, overclock, buildingsAmount, amplifiedRate],
 	);
+	const bestBank = nodeState?.selectedBankSize ?? computedBank;
 	return (
 		<Popover
 			opened={(isHovering || props.selected) && !props.dragging}
