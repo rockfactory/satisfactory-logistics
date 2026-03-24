@@ -141,7 +141,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
             )}
             <Group gap="sm" align="center">
               {usage.percentage > 1 && (
-                <span>Missing {usage.usedAmount - usage.producedAmount}</span>
+                <span>Missing {Math.round((usage.usedAmount - usage.producedAmount) * 100) / 100}</span>
               )}
               <Text size="sm">
                 <FactoryOutputIcon size={16} /> {usage.producedAmount}
@@ -169,7 +169,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           onBlur={() => setFocused(false)}
           error={
             usage.percentage > 1 ? (
-              <span>Missing {usage.usedAmount - usage.producedAmount}</span>
+              <span>Missing {Math.round((usage.usedAmount - usage.producedAmount) * 100) / 100}</span>
             ) : undefined
           }
           onChange={onChangeHandler(`inputs.${index}.amount`)}
