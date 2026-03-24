@@ -1,13 +1,11 @@
-import { Anchor, Button, Container, Divider, Group, Text } from '@mantine/core';
-import { IconBrandDiscord, IconBrandGithub } from '@tabler/icons-react';
+import { Anchor, Container, Divider, Group, Text } from '@mantine/core';
+import { IconBrandGithub } from '@tabler/icons-react';
 import clsx from 'clsx';
-import { FeedbackButton } from '@/third-party/FeedbackButton';
-import { KofiSupportButton } from '@/third-party/KofiSupportButton';
 import classes from './Footer.module.css';
 
 const links = [
   {
-    link: 'https://github.com/rockfactory/satisfactory-logistics',
+    link: 'https://github.com/th3fallen/satisfactory-logistics',
     label: 'GitHub',
     labelNode: (
       <Group gap="xs">
@@ -16,7 +14,16 @@ const links = [
       </Group>
     ),
   },
-  { link: 'mailto:info@satisfactory-logistics.xyz', label: 'Contact' },
+  {
+    link: 'https://github.com/rockfactory/satisfactory-logistics',
+    label: 'OriginalGitHub',
+    labelNode: (
+      <Group gap="xs">
+        <IconBrandGithub size={16} />
+        Original Repository
+      </Group>
+    ),
+  },
   { link: '/privacy-policy', label: 'Privacy Policy' },
 ];
 
@@ -42,24 +49,11 @@ export function Footer({ compact }: { compact?: boolean }) {
         })}
         size="lg"
       >
-        {/* <MantineLogo size={28} /> */}
         <Group>
           <Text size="sm" c="dimmed">
             v{APP_VERSION} © {new Date().getFullYear()} Satisfactory Logistics
           </Text>
           <Group className={classes.links}>{items}</Group>
-        </Group>
-        <Group>
-          <KofiSupportButton />
-          <FeedbackButton />
-          <Button
-            className={classes.discordButton}
-            leftSection={<IconBrandDiscord size={20} />}
-            component="a"
-            href="https://discord.gg/Crd8r87dwY"
-          >
-            Join Discord
-          </Button>
         </Group>
       </Container>
 
