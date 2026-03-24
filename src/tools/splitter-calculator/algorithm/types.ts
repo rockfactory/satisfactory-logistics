@@ -36,6 +36,7 @@ export interface SplitterRequest {
   targets: SplitterTarget[];
   maxBeltSpeed: number;
   allowSmartSplitters: boolean;
+  useDecomposition: boolean;
 }
 
 export interface SplitterResult {

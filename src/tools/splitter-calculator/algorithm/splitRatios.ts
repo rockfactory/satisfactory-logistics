@@ -34,172 +34,249 @@ function link(from: ConveyorNode, to: ConveyorNode, carrying: number) {
   return l;
 }
 
+// ---------------------------------------------------------------------------
+// Decomposition strategy types
+// ---------------------------------------------------------------------------
+
+interface TargetDecomposition {
+  directStreams: number;
+  chainOutputs: number;
+  chainLength: number;
+}
+
+interface DecompositionStrategy {
+  k: number;
+  streamRate: number;
+  totalStreams: number;
+  targets: TargetDecomposition[];
+  chainLength: number;
+  chainSourcesNeeded: number;
+  score: number;
+}
+
+// ---------------------------------------------------------------------------
+// Strategy search
+// ---------------------------------------------------------------------------
+
+function tryDecompositionStrategy(
+  k: number,
+  sourceRate: number,
+  numSources: number,
+  targetRates: number[],
+  maxBeltSpeed: number,
+): DecompositionStrategy | null {
+  const streamRate = sourceRate / k;
+  if (streamRate > maxBeltSpeed + 0.01) return null;
+
+  const totalStreams = numSources * k;
+  const targets: TargetDecomposition[] = [];
+  let totalDirectNeeded = 0;
+  let totalChainOutputsNeeded = 0;
+  let commonChainLength = 0;
+
+  for (const T of targetRates) {
+    if (T > maxBeltSpeed + 0.01) return null;
+
+    const directStreams = Math.floor(T / streamRate + 0.001);
+    const remainder = T - directStreams * streamRate;
+
+    if (Math.abs(remainder) < 0.01) {
+      targets.push({ directStreams, chainOutputs: 0, chainLength: 0 });
+      totalDirectNeeded += directStreams;
+      continue;
+    }
+
+    if (remainder < -0.01) return null;
+
+    const n = Math.round(streamRate / remainder);
+    if (Math.abs(streamRate / n - remainder) > 0.01) return null;
+    if (n < 2) return null;
+
+    // All targets must use the same chain length for shared chains
+    if (commonChainLength === 0) {
+      commonChainLength = n;
+    } else if (commonChainLength !== n) {
+      return null;
+    }
+
+    targets.push({ directStreams, chainOutputs: 1, chainLength: n });
+    totalDirectNeeded += directStreams;
+    totalChainOutputsNeeded += 1;
+  }
+
+  const chainSourcesNeeded =
+    commonChainLength > 0
+      ? Math.ceil(totalChainOutputsNeeded / commonChainLength)
+      : 0;
+  const totalStreamsNeeded = totalDirectNeeded + chainSourcesNeeded;
+
+  if (totalStreamsNeeded > totalStreams) return null;
+
+  // Score: initial splitters + chain splitters + mergers
+  const initialSplitters = k > 1 ? numSources : 0;
+  const chainSplitters =
+    commonChainLength > 0 ? chainSourcesNeeded * (commonChainLength - 1) : 0;
+  const mergers = targets.filter(
+    t => t.directStreams > 0 && t.chainOutputs > 0,
+  ).length;
+  const multiMergers = targets.filter(t => t.directStreams > 1).length;
+  const score = initialSplitters + chainSplitters + mergers + multiMergers;
+
+  return {
+    k,
+    streamRate,
+    totalStreams,
+    targets,
+    chainLength: commonChainLength,
+    chainSourcesNeeded,
+    score,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Chain builder
+// ---------------------------------------------------------------------------
+
 /**
- * Recursively build a splitter tree that produces `count` equal output
- * streams from an input of `inputRate`.
+ * Build a splitter chain that produces `chainLength` equal outputs via
+ * back-pressure. Each splitter in the chain taps one output and passes
+ * the rest forward to the next splitter.
  *
- * Splitters divide evenly: 2 outputs = 50/50, 3 outputs = thirds.
- * For counts that aren't products of 2s and 3s, we round up to the
- * next 2/3-smooth number, split into that many streams, and loop
- * back the excess — but only when the loopback total fits within
- * belt capacity. When it doesn't, we pre-split into smaller groups
- * and handle each independently.
+ * In-game, back-pressure causes each splitter to output items at the
+ * same rate: inputRate / chainLength per output.
  */
-function splitIntoStreams(
+function buildChain(
   source: ConveyorNode,
-  count: number,
-  ratePerStream: number,
-  maxBeltSpeed: number,
+  chainLength: number,
+  outputRate: number,
 ): ConveyorNode[] {
-  if (count <= 1) return [source];
+  const outputs: ConveyorNode[] = [];
+  let current = source;
 
-  const smooth = nextSmooth(count);
-  const loopBack = smooth - count;
-  const sourceRate = source.holding;
-  const treeInputRate = smooth * ratePerStream;
+  for (let i = 0; i < chainLength - 1; i++) {
+    const remainingCount = chainLength - i;
+    const throughRate = remainingCount * outputRate;
+    const splitter = createNode('splitter', throughRate);
+    link(current, splitter, throughRate);
 
-  if (loopBack === 0 && treeInputRate <= maxBeltSpeed + 0.01) {
-    return buildSplitTree(source, sourceRate, count, ratePerStream);
+    const tap = createNode('splitter', outputRate);
+    link(splitter, tap, outputRate);
+    outputs.push(tap);
+
+    current = splitter;
   }
 
-  // If loopback would push the tree input beyond belt capacity, or
-  // the total rate simply can't fit on one belt, pre-split into
-  // sub-groups that each stay within limits.
-  if (treeInputRate > maxBeltSpeed + 0.01) {
-    return preSplitIntoGroups(source, sourceRate, count, ratePerStream, maxBeltSpeed);
+  // Last output comes directly from the final splitter
+  const lastTap = createNode('splitter', outputRate);
+  link(current, lastTap, outputRate);
+  outputs.push(lastTap);
+
+  return outputs;
+}
+
+// ---------------------------------------------------------------------------
+// Graph builder for decomposition strategy
+// ---------------------------------------------------------------------------
+
+function buildDecompositionGraph(
+  strategy: DecompositionStrategy,
+  sourceRates: number[],
+  targetRates: number[],
+  leftover: number,
+): SplitterResult {
+  const { k, streamRate, targets, chainLength, chainSourcesNeeded } = strategy;
+  const numSources = sourceRates.length;
+  const hasLeftover = leftover > 0.01;
+
+  // Step 1: Create source nodes and initial splits
+  const sourceNodes: ConveyorNode[] = [];
+  const allStreams: ConveyorNode[] = [];
+
+  for (let i = 0; i < numSources; i++) {
+    const src = createNode('source', sourceRates[i], `Source ${i + 1}`);
+    sourceNodes.push(src);
+
+    if (k === 1) {
+      allStreams.push(src);
+    } else {
+      const splitter = createNode('splitter', sourceRates[i]);
+      link(src, splitter, sourceRates[i]);
+      for (let j = 0; j < k; j++) {
+        const out = createNode('splitter', streamRate);
+        link(splitter, out, streamRate);
+        allStreams.push(out);
+      }
+    }
   }
 
-  // Loopback fits within belt capacity. The steady-state rate on the
-  // source belt is throttled by back-pressure to: sourceRate - loopBackRate.
-  // The entry merger combines the throttled source + loopback = treeInputRate.
-  const loopBackRate = loopBack * ratePerStream;
-  const throttledSourceRate = count * ratePerStream;
-
-  const entryMerger = createNode('merger', treeInputRate);
-  link(source, entryMerger, throttledSourceRate);
-
-  const allStreams = buildSplitTree(
-    entryMerger,
-    treeInputRate,
-    smooth,
-    ratePerStream,
+  // Step 2: Separate chain-source streams from direct streams
+  const chainStreams = allStreams.splice(
+    allStreams.length - chainSourcesNeeded,
   );
+  const directStreams = allStreams;
 
-  const excess = allStreams.splice(count, loopBack);
-  if (excess.length > 0) {
-    const merged = mergeStreamNodes(excess);
-    link(merged, entryMerger, loopBackRate);
+  // Step 3: Build chains
+  const chainOutputRate = chainLength > 0 ? streamRate / chainLength : 0;
+  const allChainOutputs: ConveyorNode[] = [];
+  for (const cs of chainStreams) {
+    const outputs = buildChain(cs, chainLength, chainOutputRate);
+    allChainOutputs.push(...outputs);
   }
 
-  return allStreams;
+  // Step 4: Assign streams to targets and build mergers
+  let directIdx = 0;
+  let chainIdx = 0;
+  const targetNodes: ConveyorNode[] = [];
+
+  for (let t = 0; t < targetRates.length; t++) {
+    const decomp = targets[t];
+    const isLeftover = hasLeftover && t === targetRates.length - 1;
+    const label = isLeftover
+      ? `Leftover: ${targetRates[t]}/min`
+      : `Target ${t + 1}: ${targetRates[t]}/min`;
+
+    const inputNodes: ConveyorNode[] = [];
+
+    for (let d = 0; d < decomp.directStreams; d++) {
+      inputNodes.push(directStreams[directIdx++]);
+    }
+    for (let c = 0; c < decomp.chainOutputs; c++) {
+      inputNodes.push(allChainOutputs[chainIdx++]);
+    }
+
+    const merged = mergeStreamNodes(inputNodes);
+    const target = createNode('target', targetRates[t], label);
+    link(merged, target, targetRates[t]);
+    targetNodes.push(target);
+  }
+
+  // Step 5: Handle unused streams as leftover
+  const unusedDirect = directStreams.slice(directIdx);
+  const unusedChain = allChainOutputs.slice(chainIdx);
+  const unused = [...unusedDirect, ...unusedChain];
+  if (unused.length > 0) {
+    const merged = mergeStreamNodes(unused);
+    const unusedRate = unused.reduce((s, n) => s + n.holding, 0);
+    const target = createNode(
+      'target',
+      unusedRate,
+      `Leftover: ${unusedRate}/min`,
+    );
+    link(merged, target, unusedRate);
+    targetNodes.push(target);
+  }
+
+  // Step 6: Collect and clean up
+  const graph = collectGraph(sourceNodes);
+  removePassthroughs(graph.nodes, graph.links);
+
+  return graph;
 }
 
-/**
- * When the total stream count * ratePerStream exceeds belt capacity,
- * pre-split into 2 or 3 sub-groups, each with a proportional share
- * of the source rate, and recurse into splitIntoStreams for each.
- */
-function preSplitIntoGroups(
-  parent: ConveyorNode,
-  inputRate: number,
-  count: number,
-  ratePerStream: number,
-  maxBeltSpeed: number,
-): ConveyorNode[] {
-  const splitter = createNode('splitter', inputRate);
-  link(parent, splitter, inputRate);
+// ---------------------------------------------------------------------------
+// Shared graph utilities
+// ---------------------------------------------------------------------------
 
-  // Try 2-way then 3-way groupings to find sub-groups that fit
-  for (const ways of [2, 3] as const) {
-    const baseSize = Math.floor(count / ways);
-    const remainder = count - baseSize * ways;
-    const groups: number[] = [];
-    for (let i = 0; i < ways; i++) {
-      groups.push(baseSize + (i < remainder ? 1 : 0));
-    }
-
-    const leaves: ConveyorNode[] = [];
-    for (const g of groups) {
-      const groupRate = g * ratePerStream;
-      const child = createNode('splitter', groupRate);
-      link(splitter, child, groupRate);
-      leaves.push(...splitIntoStreams(child, g, ratePerStream, maxBeltSpeed));
-    }
-    return leaves;
-  }
-
-  return [parent];
-}
-
-/**
- * Build a pure split tree (no loop-backs) that divides `inputRate`
- * into `count` streams of `ratePerStream` each.
- */
-function buildSplitTree(
-  parent: ConveyorNode,
-  inputRate: number,
-  count: number,
-  ratePerStream: number,
-): ConveyorNode[] {
-  if (count <= 1) return [parent];
-
-  const splitter = createNode('splitter', inputRate);
-  link(parent, splitter, inputRate);
-
-  if (count <= 3) {
-    // Direct split into `count` outputs
-    const leaves: ConveyorNode[] = [];
-    for (let i = 0; i < count; i++) {
-      const leaf = createNode('splitter', ratePerStream);
-      link(splitter, leaf, ratePerStream);
-      leaves.push(leaf);
-    }
-    return leaves;
-  }
-
-  // Decompose into sub-groups using 2 or 3-way split
-  if (count % 3 === 0) {
-    const subCount = count / 3;
-    const groupRate = subCount * ratePerStream;
-    const leaves: ConveyorNode[] = [];
-    for (let i = 0; i < 3; i++) {
-      const child = createNode('splitter', groupRate);
-      link(splitter, child, groupRate);
-      leaves.push(...buildSplitTree(child, groupRate, subCount, ratePerStream));
-    }
-    return leaves;
-  }
-
-  if (count % 2 === 0) {
-    const subCount = count / 2;
-    const groupRate = subCount * ratePerStream;
-    const leaves: ConveyorNode[] = [];
-    for (let i = 0; i < 2; i++) {
-      const child = createNode('splitter', groupRate);
-      link(splitter, child, groupRate);
-      leaves.push(...buildSplitTree(child, groupRate, subCount, ratePerStream));
-    }
-    return leaves;
-  }
-
-  // Odd count not divisible by 3 — use 3-way with uneven sub-groups
-  // Split into 3 outputs: floor, floor, remainder
-  const small = Math.floor(count / 3);
-  const large = count - 2 * small;
-  const groups = [small, small, large];
-  const leaves: ConveyorNode[] = [];
-  for (const g of groups) {
-    const groupRate = g * ratePerStream;
-    const child = createNode('splitter', groupRate);
-    link(splitter, child, groupRate);
-    leaves.push(...buildSplitTree(child, groupRate, g, ratePerStream));
-  }
-  return leaves;
-}
-
-/**
- * Merge a set of streams into a single output using 3-way mergers.
- */
 function mergeStreamNodes(streams: ConveyorNode[]): ConveyorNode {
   if (streams.length === 1) return streams[0];
 
@@ -226,9 +303,6 @@ function mergeStreamNodes(streams: ConveyorNode[]): ConveyorNode {
   return current[0];
 }
 
-/**
- * Collect all unique nodes and links from a set of root nodes.
- */
 function collectGraph(roots: ConveyorNode[]): {
   nodes: ConveyorNode[];
   links: ConveyorLink[];
@@ -254,10 +328,6 @@ function collectGraph(roots: ConveyorNode[]): {
   return { nodes: allNodes, links: allLinks };
 }
 
-/**
- * Remove pass-through nodes (single input, single output).
- * Collapses A -> passthrough -> B into A -> B.
- */
 function removePassthroughs(nodes: ConveyorNode[], links: ConveyorLink[]) {
   let changed = true;
   while (changed) {
@@ -274,10 +344,8 @@ function removePassthroughs(nodes: ConveyorNode[], links: ConveyorLink[]) {
         const parent = parentLink.from;
         const child = childLink.to;
 
-        // Don't collapse if this is a loop-back target
         if (child === node || parent === node) continue;
 
-        // Rewire parent -> child
         const idx = parent.children.indexOf(parentLink);
         if (idx >= 0) parent.children.splice(idx, 1);
         const cidx = child.parents.indexOf(childLink);
@@ -305,11 +373,6 @@ function removePassthroughs(nodes: ConveyorNode[], links: ConveyorLink[]) {
   }
 }
 
-/**
- * After passthrough removal, two leaf nodes that fed the same merger
- * from the same splitter get collapsed into duplicate edges between
- * the same node pair. Merge them into a single edge with combined rate.
- */
 function mergeParallelEdges(
   _nodes: ConveyorNode[],
   links: ConveyorLink[],
@@ -350,15 +413,209 @@ function mergeParallelEdges(
   return merged;
 }
 
-function getBeltTiers(maxBeltSpeed: number): BeltTier[] {
-  return FactoryConveyorBelts.filter(b => b.conveyor!.speed <= maxBeltSpeed)
-    .map(b => ({ name: b.name, speed: b.conveyor!.speed }))
-    .sort((a, b) => a.speed - b.speed);
+// ---------------------------------------------------------------------------
+// Fallback: unit-rate algorithm (previous approach)
+// ---------------------------------------------------------------------------
+
+function fallbackCalculation(
+  sourceRates: number[],
+  targetRates: number[],
+  leftover: number,
+  maxBeltSpeed: number,
+): SplitterResult {
+  const hasLeftover = leftover > 0.01;
+  const allRates = [...sourceRates, ...targetRates];
+  const intRatios = toIntegerRatios(allRates);
+  const intSources = intRatios.slice(0, sourceRates.length);
+  const intTargets = intRatios.slice(sourceRates.length);
+  const totalSource = sourceRates.reduce((a, b) => a + b, 0);
+  const totalUnits = intSources.reduce((a, b) => a + b, 0);
+  const unitRate = totalSource / totalUnits;
+
+  const sourceNodes: ConveyorNode[] = sourceRates.map((rate, i) =>
+    createNode('source', rate, `Source ${i + 1}`),
+  );
+
+  const allLeaves: ConveyorNode[] = [];
+  for (let i = 0; i < sourceNodes.length; i++) {
+    const leaves = splitIntoStreams(
+      sourceNodes[i],
+      intSources[i],
+      unitRate,
+      maxBeltSpeed,
+    );
+    allLeaves.push(...leaves);
+  }
+
+  const targetNodes: ConveyorNode[] = [];
+  let leafIdx = 0;
+
+  for (let t = 0; t < targetRates.length; t++) {
+    const count = intTargets[t];
+    const streams = allLeaves.slice(leafIdx, leafIdx + count);
+    leafIdx += count;
+
+    const merged = mergeStreamNodes(streams);
+    const isLeftover = hasLeftover && t === targetRates.length - 1;
+    const target = createNode(
+      'target',
+      targetRates[t],
+      isLeftover
+        ? `Leftover: ${targetRates[t]}/min`
+        : `Target ${t + 1}: ${targetRates[t]}/min`,
+    );
+    link(merged, target, targetRates[t]);
+    targetNodes.push(target);
+  }
+
+  const graph = collectGraph(sourceNodes);
+  removePassthroughs(graph.nodes, graph.links);
+
+  return graph;
 }
 
-/**
- * Main entry point: calculate a splitter/merger network.
- */
+function splitIntoStreams(
+  source: ConveyorNode,
+  count: number,
+  ratePerStream: number,
+  maxBeltSpeed: number,
+): ConveyorNode[] {
+  if (count <= 1) return [source];
+
+  const smooth = nextSmooth(count);
+  const loopBack = smooth - count;
+  const sourceRate = source.holding;
+  const treeInputRate = smooth * ratePerStream;
+
+  if (loopBack === 0 && treeInputRate <= maxBeltSpeed + 0.01) {
+    return buildSplitTree(source, sourceRate, count, ratePerStream);
+  }
+
+  if (treeInputRate > maxBeltSpeed + 0.01) {
+    return preSplitIntoGroups(
+      source,
+      sourceRate,
+      count,
+      ratePerStream,
+      maxBeltSpeed,
+    );
+  }
+
+  const loopBackRate = loopBack * ratePerStream;
+  const throttledSourceRate = count * ratePerStream;
+
+  const entryMerger = createNode('merger', treeInputRate);
+  link(source, entryMerger, throttledSourceRate);
+
+  const allStreams = buildSplitTree(
+    entryMerger,
+    treeInputRate,
+    smooth,
+    ratePerStream,
+  );
+
+  const excess = allStreams.splice(count, loopBack);
+  if (excess.length > 0) {
+    const merged = mergeStreamNodes(excess);
+    link(merged, entryMerger, loopBackRate);
+  }
+
+  return allStreams;
+}
+
+function preSplitIntoGroups(
+  parent: ConveyorNode,
+  inputRate: number,
+  count: number,
+  ratePerStream: number,
+  maxBeltSpeed: number,
+): ConveyorNode[] {
+  const splitter = createNode('splitter', inputRate);
+  link(parent, splitter, inputRate);
+
+  for (const ways of [2, 3] as const) {
+    const baseSize = Math.floor(count / ways);
+    const remainder = count - baseSize * ways;
+    const groups: number[] = [];
+    for (let i = 0; i < ways; i++) {
+      groups.push(baseSize + (i < remainder ? 1 : 0));
+    }
+
+    const leaves: ConveyorNode[] = [];
+    for (const g of groups) {
+      const groupRate = g * ratePerStream;
+      const child = createNode('splitter', groupRate);
+      link(splitter, child, groupRate);
+      leaves.push(...splitIntoStreams(child, g, ratePerStream, maxBeltSpeed));
+    }
+    return leaves;
+  }
+
+  return [parent];
+}
+
+function buildSplitTree(
+  parent: ConveyorNode,
+  inputRate: number,
+  count: number,
+  ratePerStream: number,
+): ConveyorNode[] {
+  if (count <= 1) return [parent];
+
+  const splitter = createNode('splitter', inputRate);
+  link(parent, splitter, inputRate);
+
+  if (count <= 3) {
+    const leaves: ConveyorNode[] = [];
+    for (let i = 0; i < count; i++) {
+      const leaf = createNode('splitter', ratePerStream);
+      link(splitter, leaf, ratePerStream);
+      leaves.push(leaf);
+    }
+    return leaves;
+  }
+
+  if (count % 3 === 0) {
+    const subCount = count / 3;
+    const groupRate = subCount * ratePerStream;
+    const leaves: ConveyorNode[] = [];
+    for (let i = 0; i < 3; i++) {
+      const child = createNode('splitter', groupRate);
+      link(splitter, child, groupRate);
+      leaves.push(...buildSplitTree(child, groupRate, subCount, ratePerStream));
+    }
+    return leaves;
+  }
+
+  if (count % 2 === 0) {
+    const subCount = count / 2;
+    const groupRate = subCount * ratePerStream;
+    const leaves: ConveyorNode[] = [];
+    for (let i = 0; i < 2; i++) {
+      const child = createNode('splitter', groupRate);
+      link(splitter, child, groupRate);
+      leaves.push(...buildSplitTree(child, groupRate, subCount, ratePerStream));
+    }
+    return leaves;
+  }
+
+  const small = Math.floor(count / 3);
+  const large = count - 2 * small;
+  const groups = [small, small, large];
+  const leaves: ConveyorNode[] = [];
+  for (const g of groups) {
+    const groupRate = g * ratePerStream;
+    const child = createNode('splitter', groupRate);
+    link(splitter, child, groupRate);
+    leaves.push(...buildSplitTree(child, groupRate, g, ratePerStream));
+  }
+  return leaves;
+}
+
+// ---------------------------------------------------------------------------
+// Main entry point
+// ---------------------------------------------------------------------------
+
 export function calculateSplitterNetwork(
   request: SplitterRequest,
 ): SplitterResult {
@@ -401,58 +658,53 @@ export function calculateSplitterNetwork(
     targetRates.push(leftover);
   }
 
-  const allRates = [...sourceRates, ...targetRates];
-  const intRatios = toIntegerRatios(allRates);
-  const intSources = intRatios.slice(0, sourceRates.length);
-  const intTargets = intRatios.slice(sourceRates.length);
-  const totalUnits = intSources.reduce((a, b) => a + b, 0);
-  const unitRate = totalSource / totalUnits;
+  if (request.useDecomposition) {
+    const uniqueSourceRates = new Set(sourceRates);
 
-  // Step 1: Create source nodes
-  const sourceNodes: ConveyorNode[] = sourceRates.map((rate, i) =>
-    createNode('source', rate, `Source ${i + 1}`),
+    if (uniqueSourceRates.size === 1) {
+      const sourceRate = sourceRates[0];
+
+      const strategies: DecompositionStrategy[] = [];
+      for (const k of [1, 2, 3]) {
+        const strategy = tryDecompositionStrategy(
+          k,
+          sourceRate,
+          sourceRates.length,
+          targetRates,
+          request.maxBeltSpeed,
+        );
+        if (strategy) strategies.push(strategy);
+      }
+
+      if (strategies.length > 0) {
+        strategies.sort((a, b) => a.score - b.score);
+        const best = strategies[0];
+        return buildDecompositionGraph(
+          best,
+          sourceRates,
+          targetRates,
+          leftover,
+        );
+      }
+    }
+  }
+
+  return fallbackCalculation(
+    sourceRates,
+    targetRates,
+    leftover,
+    request.maxBeltSpeed,
   );
+}
 
-  // Step 2: Split each source into unit streams
-  const allLeaves: ConveyorNode[] = [];
-  for (let i = 0; i < sourceNodes.length; i++) {
-    const leaves = splitIntoStreams(
-      sourceNodes[i],
-      intSources[i],
-      unitRate,
-      request.maxBeltSpeed,
-    );
-    allLeaves.push(...leaves);
-  }
+// ---------------------------------------------------------------------------
+// Belt tier utilities (unchanged)
+// ---------------------------------------------------------------------------
 
-  // Step 3: Assign leaves to targets and merge
-  const targetNodes: ConveyorNode[] = [];
-  let leafIdx = 0;
-  const hasLeftover = leftover > 0.01;
-
-  for (let t = 0; t < targetRates.length; t++) {
-    const count = intTargets[t];
-    const streams = allLeaves.slice(leafIdx, leafIdx + count);
-    leafIdx += count;
-
-    const merged = mergeStreamNodes(streams);
-    const isLeftover = hasLeftover && t === targetRates.length - 1;
-    const target = createNode(
-      'target',
-      targetRates[t],
-      isLeftover
-        ? `Leftover: ${targetRates[t]}/min`
-        : `Target ${t + 1}: ${targetRates[t]}/min`,
-    );
-    link(merged, target, targetRates[t]);
-    targetNodes.push(target);
-  }
-
-  // Step 4: Collect and clean up
-  const graph = collectGraph(sourceNodes);
-  removePassthroughs(graph.nodes, graph.links);
-
-  return graph;
+function getBeltTiers(maxBeltSpeed: number): BeltTier[] {
+  return FactoryConveyorBelts.filter(b => b.conveyor!.speed <= maxBeltSpeed)
+    .map(b => ({ name: b.name, speed: b.conveyor!.speed }))
+    .sort((a, b) => a.speed - b.speed);
 }
 
 export function getBeltForRate(

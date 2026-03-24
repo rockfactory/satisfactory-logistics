@@ -39,7 +39,7 @@ const LAYOUT_OPTIONS = {
   rankdir: 'LR' as const,
   nodesep: 60,
   edgesep: 20,
-  ranksep: 160,
+  ranksep: 120,
   ranker: 'network-simplex' as const,
 };
 
@@ -76,7 +76,8 @@ function getLayoutedElements(
     };
   });
 
-  // Align all sources to a common left x and all targets to a common right x
+  // Align sources, targets, and their immediate neighbors into columns
+  const nodeById = new Map(layoutedNodes.map(n => [n.id, n]));
   const sourceNodes = layoutedNodes.filter(n => n.type === 'source');
   const targetNodes = layoutedNodes.filter(n => n.type === 'target');
 
@@ -87,6 +88,48 @@ function getLayoutedElements(
   if (targetNodes.length > 1) {
     const maxX = Math.max(...targetNodes.map(n => n.position.x));
     for (const n of targetNodes) n.position.x = maxX;
+  }
+
+  // Align splitters that are direct children of sources
+  const sourceIds = new Set(sourceNodes.map(n => n.id));
+  const postSplitterIds = new Set<string>();
+  for (const edge of edges) {
+    if (sourceIds.has(edge.source)) {
+      const child = nodeById.get(edge.target);
+      if (child && child.type === 'splitter') postSplitterIds.add(child.id);
+    }
+  }
+  const postSplitters = layoutedNodes.filter(n => postSplitterIds.has(n.id));
+  if (postSplitters.length > 1) {
+    const splitterX = Math.min(...postSplitters.map(n => n.position.x));
+    for (const n of postSplitters) n.position.x = splitterX;
+  }
+
+  // Align mergers that feed directly into targets
+  const targetIds = new Set(targetNodes.map(n => n.id));
+  const preMergerIds = new Set<string>();
+  for (const edge of edges) {
+    if (targetIds.has(edge.target)) preMergerIds.add(edge.source);
+  }
+  const preMergers = layoutedNodes.filter(n => preMergerIds.has(n.id));
+  if (preMergers.length > 1) {
+    const mergerX = Math.max(...preMergers.map(n => n.position.x));
+    for (const n of preMergers) n.position.x = mergerX;
+  }
+
+  // Fix overlaps within aligned columns
+  const MIN_GAP = 20;
+  for (const group of [sourceNodes, postSplitters, targetNodes, preMergers]) {
+    if (group.length <= 1) continue;
+    group.sort((a, b) => a.position.y - b.position.y);
+    for (let i = 1; i < group.length; i++) {
+      const prev = group[i - 1];
+      const prevH = prev.measured?.height ?? 40;
+      const minY = prev.position.y + prevH + MIN_GAP;
+      if (group[i].position.y < minY) {
+        group[i].position.y = minY;
+      }
+    }
   }
 
   return { nodes: layoutedNodes, edges };
