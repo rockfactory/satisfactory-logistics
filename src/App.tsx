@@ -34,6 +34,7 @@ import { SyncManager } from './auth/sync/SyncManager';
 import { useStore } from './core/zustand';
 import { GamesRoutes } from './games/page/GamesRoutes';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
+import { ToolsRoutes } from './tools/page/ToolsRoutes';
 import { theme } from './theme';
 
 const basename = import.meta.env.BASE_URL.replace(/\/+$/, '') || '/';
@@ -54,6 +55,13 @@ const router = createBrowserRouter(
     {
       path: '/games/*',
       element: <GamesRoutes />,
+      ErrorBoundary: () => {
+        throw useRouteError();
+      },
+    },
+    {
+      path: '/tools/*',
+      element: <ToolsRoutes />,
       ErrorBoundary: () => {
         throw useRouteError();
       },

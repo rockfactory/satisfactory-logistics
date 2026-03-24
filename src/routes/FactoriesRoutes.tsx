@@ -26,7 +26,7 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
       <GamesAtleastOneManager />
 
       <Header
-        tabs={['factories', 'charts', 'calculator']}
+        tabs={['factories', 'charts', 'calculator', 'tools']}
         activeTab={
           activeTab === 'charts'
             ? 'charts'
@@ -36,7 +36,11 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
         }
         onChangeTab={value => {
           console.log('Navigating to', value);
-          navigate(`/factories/${value === 'factories' ? '' : value}`);
+          if (value === 'tools') {
+            navigate('/tools');
+          } else {
+            navigate(`/factories/${value === 'factories' ? '' : value}`);
+          }
         }}
       />
 
