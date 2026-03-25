@@ -17,6 +17,7 @@ const BROADCAST_EVENT = 'game:sync';
 
 interface SyncBroadcastPayload {
   senderId: string;
+  timestamp: number;
   serialized: SerializedGame;
   remoteData: Partial<GameRemoteData>;
 }
@@ -32,6 +33,8 @@ export function useRealtimeGameSync() {
   const channelRef = useRef<RealtimeChannel | null>(null);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isApplyingRemoteRef = useRef(false);
+  const lastLocalEditRef = useRef(0);
+  const lastReceivedTimestampRef = useRef(0);
 
   useEffect(() => {
     if (!session || !savedId || !selectedGameId) {
@@ -53,7 +56,15 @@ export function useRealtimeGameSync() {
         const data = payload as SyncBroadcastPayload;
         if (data.senderId === SENDER_ID) return;
 
+        if (data.timestamp <= lastLocalEditRef.current) {
+          logger.debug(
+            `Ignoring stale remote sync (remote=${data.timestamp}, local=${lastLocalEditRef.current})`,
+          );
+          return;
+        }
+
         logger.info('Received remote game sync');
+        lastReceivedTimestampRef.current = data.timestamp;
         isApplyingRemoteRef.current = true;
         try {
           useStore.getState().loadRemoteGame(data.serialized, data.remoteData, {
@@ -75,6 +86,8 @@ export function useRealtimeGameSync() {
       if (isApplyingRemoteRef.current) return;
       if (!channelRef.current) return;
 
+      lastLocalEditRef.current = Date.now();
+
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
       }
@@ -82,12 +95,20 @@ export function useRealtimeGameSync() {
       debounceTimerRef.current = setTimeout(() => {
         if (!channelRef.current) return;
 
+        if (lastLocalEditRef.current < lastReceivedTimestampRef.current) {
+          logger.debug(
+            'Skipping broadcast — no local edits since last received sync',
+          );
+          return;
+        }
+
         try {
           const currentState = useStore.getState();
           const currentGame = currentState.games.games[gameId];
           if (!currentGame?.savedId) return;
 
           const serialized = serializeGame(gameId);
+          const timestamp = lastLocalEditRef.current;
           const remoteData: Partial<GameRemoteData> = {
             id: currentGame.savedId,
             author_id: currentGame.authorId,
@@ -97,6 +118,7 @@ export function useRealtimeGameSync() {
 
           const payload: SyncBroadcastPayload = {
             senderId: SENDER_ID,
+            timestamp,
             serialized,
             remoteData,
           };
@@ -107,7 +129,7 @@ export function useRealtimeGameSync() {
             payload,
           });
 
-          logger.debug('Broadcasted game state');
+          logger.debug(`Broadcasted game state (timestamp=${timestamp})`);
         } catch (err) {
           logger.error('Failed to broadcast game state', err);
         }
