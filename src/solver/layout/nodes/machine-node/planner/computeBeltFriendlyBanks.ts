@@ -5,6 +5,7 @@ import {
 } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap, FactoryItemForm } from '@/recipes/FactoryItem';
 import type { FactoryRecipe } from '@/recipes/FactoryRecipe';
+import type { SplitterRequest } from '@/tools/splitter-calculator/algorithm/types';
 
 const BELT_SPEEDS = FactoryConveyorBelts.map(b => ({
   name: b.name,
@@ -43,14 +44,18 @@ function getTransportTiers(isFluid: boolean) {
   return isFluid ? PIPE_FLOW_RATES : BELT_SPEEDS;
 }
 
-const CLEAN_FRACTIONS = [1, 1 / 2, 1 / 3];
+const CLEAN_FRACTIONS = [1, 2 / 3, 1 / 2, 1 / 3, 1 / 4, 1 / 6, 1 / 8, 1 / 9];
 const TOLERANCE = 0.0005;
 
 const FRACTION_LABELS: { frac: number; label: string }[] = [
   { frac: 1, label: 'Full' },
+  { frac: 2 / 3, label: '2/3' },
   { frac: 1 / 2, label: '1/2' },
   { frac: 1 / 3, label: '1/3' },
-  { frac: 2 / 3, label: '2/3' },
+  { frac: 1 / 4, label: '1/4' },
+  { frac: 1 / 6, label: '1/6' },
+  { frac: 1 / 8, label: '1/8' },
+  { frac: 1 / 9, label: '1/9' },
 ];
 
 function describeSplit(totalRate: number, isFluid: boolean): string | null {
@@ -411,6 +416,66 @@ export function computeBestBankSize(
   return bestOption;
 }
 
+// --- Analytical overclock solver ---
+
+interface ExactMatch {
+  line: BaseLineInfo;
+  blockSize: number;
+  tierName: string;
+  fraction: number;
+}
+
+/**
+ * Backwards-solve: for each recipe line × belt tier × clean fraction × block size,
+ * compute the exact overclock where that line's per-bank rate is a clean fraction
+ * of a belt tier. Returns a map from (rounded) overclock → which lines match there.
+ */
+function computeExactOverclocks(
+  baseLines: BaseLineInfo[],
+  maxBankSize: number,
+): Map<number, ExactMatch[]> {
+  const candidates = new Map<number, ExactMatch[]>();
+
+  for (const bl of baseLines) {
+    if (bl.baseRate <= 0) continue;
+    const tiers = getTransportTiers(bl.isFluid);
+    for (const tier of tiers) {
+      for (const frac of CLEAN_FRACTIONS) {
+        const targetRate = tier.speed * frac;
+        for (let n = 1; n <= maxBankSize; n++) {
+          const oc = targetRate / (n * bl.baseRate);
+          if (oc < 0.5 || oc > 2.5) continue;
+          const key = Math.round(oc * 1000) / 1000;
+          let arr = candidates.get(key);
+          if (!arr) {
+            arr = [];
+            candidates.set(key, arr);
+          }
+          arr.push({
+            line: bl,
+            blockSize: n,
+            tierName: tier.name,
+            fraction: frac,
+          });
+        }
+      }
+    }
+  }
+  return candidates;
+}
+
+/**
+ * Score an overclock candidate by how many distinct recipe lines
+ * achieve clean belt alignment at that overclock (0..1).
+ */
+function scoreExactCandidate(
+  matches: ExactMatch[],
+  totalLines: number,
+): number {
+  const uniqueLines = new Set(matches.map(m => m.line.resource));
+  return uniqueLines.size / totalLines;
+}
+
 // --- Overclock search ---
 
 function generateCoarseSteps(): number[] {
@@ -599,23 +664,46 @@ export function computeBeltFriendlyBanks(
     targetBanks,
   };
 
-  // Phase 1: coarse search at 5% steps
-  const coarseOptions: BankOption[] = [];
-  for (const oc of generateCoarseSteps()) {
-    coarseOptions.push(...evaluateOverclock(ctx, oc));
+  // Phase 1: analytical candidates from backwards-solve
+  const exactCandidates = computeExactOverclocks(baseLines, maxBankSize);
+  const rankedOverclocks = [...exactCandidates.entries()]
+    .map(([oc, matches]) => ({
+      oc,
+      coverage: scoreExactCandidate(matches, baseLines.length),
+    }))
+    .sort((a, b) => b.coverage - a.coverage);
+
+  const analyticalSteps = rankedOverclocks.slice(0, 20).map(r => r.oc);
+
+  // Merge analytical candidates with coarse fallback + current overclock
+  const seenOc = new Set<number>();
+  const allSteps: number[] = [];
+  for (const oc of [
+    ...analyticalSteps,
+    ...generateCoarseSteps(),
+    currentOverclock,
+  ]) {
+    const key = Math.round(oc * 1000);
+    if (seenOc.has(key)) continue;
+    seenOc.add(key);
+    allSteps.push(oc);
   }
-  coarseOptions.sort((a, b) => b.score - a.score);
+
+  const phase1Options: BankOption[] = [];
+  for (const oc of allSteps) {
+    phase1Options.push(...evaluateOverclock(ctx, oc));
+  }
+  phase1Options.sort((a, b) => b.score - a.score);
 
   // Collect top overclock neighborhoods to refine
   const topOverclocks = new Set<number>();
-  for (const opt of coarseOptions) {
+  for (const opt of phase1Options) {
     topOverclocks.add(opt.overclock);
     if (topOverclocks.size >= 3) break;
   }
 
   // Phase 2: refine around top overclocks at 0.1% precision
-  const refinedOptions: BankOption[] = [...coarseOptions];
-  const seenOc = new Set(generateCoarseSteps().map(v => Math.round(v * 1000)));
+  const refinedOptions: BankOption[] = [...phase1Options];
   for (const center of topOverclocks) {
     for (const oc of generateRefineSteps(center)) {
       const key = Math.round(oc * 1000);
@@ -650,4 +738,34 @@ function diversifyResults(sorted: BankOption[], maxResults = 8): BankOption[] {
   }
 
   return result;
+}
+
+// --- Splitter Calculator bridge ---
+
+/**
+ * Convert a BankOption line into a SplitterRequest so the splitter calculator
+ * can auto-generate the splitter/merger network for that input/output.
+ */
+export function bankOptionToSplitterRequest(
+  option: BankOption,
+  lineIndex: number,
+): SplitterRequest {
+  const line = option.lines[lineIndex];
+  return {
+    sources: [
+      {
+        rate: line.transportSpeed,
+        count: line.transportsNeeded,
+      },
+    ],
+    targets: [
+      {
+        rate: line.perBuilding,
+        count: option.machineCount,
+      },
+    ],
+    maxBeltSpeed: line.transportSpeed,
+    allowSmartSplitters: false,
+    useDecomposition: true,
+  };
 }
