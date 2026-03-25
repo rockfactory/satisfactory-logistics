@@ -12,7 +12,7 @@
     "lint": "biome check src",
     "lint:fix": "biome check --write src",
     "preview": "vite preview",
-    "supabase:types": "npx supabase gen types typescript --project-id nymrtujjmzbhxcimjsci > ./src/core/database.types.ts",
+    "supabase:types": "npx supabase gen types typescript --project-id tsiqtavbmponisvhfgxa > ./src/core/database.types.ts",
     "parse-docs": "tsx scripts/parseDocs.ts"
   },
   "dependencies": {
@@ -81,6 +81,7 @@
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
     "sharp": "^0.33.5",
+    "supabase": "^2.84.1",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",

@@ -1,8 +1,8 @@
+import { supabaseClient } from '@/core/supabase';
 import { Button } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { IconBrandGoogleFilled } from '@tabler/icons-react';
 import { useState } from 'react';
-import { supabaseClient } from '@/core/supabase';
 
 export interface IGoogleLoginButtonProps {}
 

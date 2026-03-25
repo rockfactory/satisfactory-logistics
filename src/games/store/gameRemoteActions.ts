@@ -63,6 +63,20 @@ function loadSerializedGameIntoState(
     `Fully loaded game "${serialized.game.name}" (id=${serialized.game.id})`,
     serialized,
   ); // prettier-ignore
+
+  if (options.override) {
+    const existingGame = state.games.games[serialized.game.id];
+    if (existingGame) {
+      const incomingFactoryIds = new Set(serialized.game.factoriesIds);
+      for (const oldFactoryId of existingGame.factoriesIds) {
+        if (!incomingFactoryIds.has(oldFactoryId)) {
+          delete state.factories.factories[oldFactoryId];
+          delete state.solvers.instances[oldFactoryId];
+        }
+      }
+    }
+  }
+
   state.games.games[serialized.game.id] = { ...serialized.game };
   state.games.games[serialized.game.id].authorId = data.author_id;
   state.games.games[serialized.game.id].createdAt = data.created_at;
