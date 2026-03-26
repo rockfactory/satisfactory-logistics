@@ -15,6 +15,10 @@ export interface IBeltEdgeData {
   carrying: number;
   beltName?: string;
   beltSpeed?: number;
+  sourceEdgeIndex?: number;
+  sourceEdgeCount?: number;
+  targetEdgeIndex?: number;
+  targetEdgeCount?: number;
   [key: string]: unknown;
 }
 
@@ -67,12 +71,31 @@ export const BeltEdge: FC<EdgeProps<Edge<IBeltEdgeData>>> = ({
     targetNode,
   );
 
+  const SPREAD = 12;
+  const srcCount = data?.sourceEdgeCount ?? 1;
+  const srcIdx = data?.sourceEdgeIndex ?? 0;
+  const tgtCount = data?.targetEdgeCount ?? 1;
+  const tgtIdx = data?.targetEdgeIndex ?? 0;
+
+  const srcOffset = srcCount > 1 ? (srcIdx - (srcCount - 1) / 2) * SPREAD : 0;
+  const tgtOffset = tgtCount > 1 ? (tgtIdx - (tgtCount - 1) / 2) * SPREAD : 0;
+
+  const isSourceHorizontal =
+    sourcePos === 'left' || sourcePos === 'right';
+  const isTargetHorizontal =
+    targetPos === 'left' || targetPos === 'right';
+
+  const adjSx = sx + (isSourceHorizontal ? 0 : srcOffset);
+  const adjSy = sy + (isSourceHorizontal ? srcOffset : 0);
+  const adjTx = tx + (isTargetHorizontal ? 0 : tgtOffset);
+  const adjTy = ty + (isTargetHorizontal ? tgtOffset : 0);
+
   const [edgePath, labelX, labelY] = getBezierPath({
-    sourceX: sx === tx ? sx + 0.0001 : sx,
-    sourceY: sy === ty ? sy + 0.0001 : sy,
+    sourceX: adjSx === adjTx ? adjSx + 0.0001 : adjSx,
+    sourceY: adjSy === adjTy ? adjSy + 0.0001 : adjSy,
     sourcePosition: sourcePos,
-    targetX: tx,
-    targetY: ty,
+    targetX: adjTx,
+    targetY: adjTy,
     targetPosition: targetPos,
   });
 

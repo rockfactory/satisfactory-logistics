@@ -43,8 +43,11 @@ export function simplifyWithBeltSpeeds(
     );
 
     if (allMatchBelt) {
-      // Label each output link with the belt tier
       for (const childLink of node.children) {
+        // Only label nodes that don't already serve a structural role
+        if (childLink.to.type === 'merger' || childLink.to.type === 'target') {
+          continue;
+        }
         const tier = tiers.find(
           t => Math.abs(t.speed - childLink.carrying) < 0.01,
         );
