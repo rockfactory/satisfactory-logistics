@@ -209,6 +209,72 @@ describe('splitter calculator', () => {
     });
   });
 
+  describe('mixed-rate source routing', () => {
+    test('1050+750+600 → 2×1200: should minimize splitting when sources nearly match targets', () => {
+      const request = makeRequest(
+        [
+          { rate: 1050, count: 1 },
+          { rate: 750, count: 1 },
+          { rate: 600, count: 1 },
+        ],
+        [{ rate: 1200, count: 2 }],
+      );
+      const result = calculateSplitterNetwork(request);
+      runStandardAssertions(result, [1200, 1200], 1200);
+
+      const splitters = result.nodes.filter(n => n.type === 'splitter');
+      const mergers = result.nodes.filter(n => n.type === 'merger');
+      // Flow assignment routes: 1050 + 150(from 750) → T1, 600(from 750) + 600 → T2
+      // Splitting 750 into 1:4 ratio needs loop-back (5 isn't 3-smooth),
+      // so ~8 internal nodes. Far better than the 18 from unit-rate atomization.
+      expect(
+        splitters.length + mergers.length,
+        `Too many internal nodes: ${splitters.length} splitters + ${mergers.length} mergers. ` +
+          `Nodes: ${result.nodes.map(n => `${n.id}(${n.type}:${n.holding})`).join(', ')}`,
+      ).toBeLessThanOrEqual(10);
+    });
+
+    test('480+480 → 1×960: two sources merge directly without splitting', () => {
+      const request = makeRequest(
+        [{ rate: 480, count: 2 }],
+        [{ rate: 960, count: 1 }],
+      );
+      const result = calculateSplitterNetwork(request);
+      runStandardAssertions(result, [960], 1200);
+
+      const splitters = result.nodes.filter(n => n.type === 'splitter');
+      expect(splitters.length).toBe(0);
+    });
+
+    test('1100+100 → 1×1200: near-exact pair merges directly', () => {
+      const request = makeRequest(
+        [
+          { rate: 1100, count: 1 },
+          { rate: 100, count: 1 },
+        ],
+        [{ rate: 1200, count: 1 }],
+      );
+      const result = calculateSplitterNetwork(request);
+      runStandardAssertions(result, [1200], 1200);
+
+      const splitters = result.nodes.filter(n => n.type === 'splitter');
+      const mergers = result.nodes.filter(n => n.type === 'merger');
+      expect(splitters.length + mergers.length).toBeLessThanOrEqual(2);
+    });
+
+    test('600+600 → 2×300+1×600: some sources route directly, others split', () => {
+      const request = makeRequest(
+        [{ rate: 600, count: 2 }],
+        [
+          { rate: 300, count: 2 },
+          { rate: 600, count: 1 },
+        ],
+      );
+      const result = calculateSplitterNetwork(request);
+      runStandardAssertions(result, [300, 300, 600], 1200);
+    });
+  });
+
   describe('error cases', () => {
     test('targets exceed sources', () => {
       const request = makeRequest(

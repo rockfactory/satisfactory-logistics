@@ -76,7 +76,11 @@ function BankOptionCard({
   recipe: FactoryRecipe;
   currentOverclock: number;
   onApplyOverclock: (overclock: number) => void;
-  onSelectBank: (machineCount: number, banksNeeded: number) => void;
+  onSelectBank: (
+    machineCount: number,
+    banksNeeded: number,
+    remainderCount: number,
+  ) => void;
   rank: number;
 }) {
   const building = AllFactoryBuildingsMap[recipe.producedIn];
@@ -105,10 +109,15 @@ function BankOptionCard({
         <Group gap="xs">
           {option.banksNeeded > 0 && (
             <Text size="xs" c="dimmed">
-              {option.banksNeeded} bank{option.banksNeeded !== 1 ? 's' : ''}{' '}
+              {option.remainderCount
+                ? `${option.banksNeeded - 1} x ${option.machineCount} + 1 x ${option.remainderCount}`
+                : `${option.banksNeeded} bank${option.banksNeeded !== 1 ? 's' : ''}`}{' '}
               {isOverclockChanged && (
                 <Text span c="dimmed">
-                  ({Math.ceil(option.banksNeeded * option.machineCount)}{' '}
+                  (
+                  {(option.banksNeeded - (option.remainderCount ? 1 : 0)) *
+                    option.machineCount +
+                    option.remainderCount}{' '}
                   machines total)
                 </Text>
               )}
@@ -119,7 +128,11 @@ function BankOptionCard({
             variant="light"
             color="cyan"
             onClick={() =>
-              onSelectBank(option.machineCount, option.banksNeeded)
+              onSelectBank(
+                option.machineCount,
+                option.banksNeeded,
+                option.remainderCount,
+              )
             }
           >
             Use
@@ -325,10 +338,10 @@ export function BeltPlannerModal(props: IBeltPlannerModalProps) {
   );
 
   const handleSelectBank = useCallback(
-    (machineCount: number, banksNeeded: number) => {
+    (machineCount: number, banksNeeded: number, remainderCount: number) => {
       if (!solverId) return;
       useStore.getState().updateSolverNode(solverId, nodeId, node => {
-        node.selectedBankSize = { machineCount, banksNeeded };
+        node.selectedBankSize = { machineCount, banksNeeded, remainderCount };
       });
       close();
     },

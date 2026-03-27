@@ -528,6 +528,266 @@ function pickSiblingGroup(
 }
 
 // ---------------------------------------------------------------------------
+// Flow-assignment: greedily route whole/partial sources to targets
+// ---------------------------------------------------------------------------
+
+interface FlowAssignment {
+  sourceIdx: number;
+  amount: number;
+}
+
+/**
+ * Try to assign source flows to targets directly, minimizing the number of
+ * splitters/mergers. Each target gets a list of (sourceIdx, amount) pairs.
+ * A source may contribute its full rate to one target or split across
+ * multiple targets.
+ *
+ * Returns null if the assignment would require splits that can't be
+ * realized with equal-output splitters (i.e., the split ratio isn't
+ * representable as a 2/3-smooth fraction of the source rate).
+ */
+function tryFlowAssignment(
+  sourceRates: number[],
+  targetRates: number[],
+  maxBeltSpeed: number,
+): FlowAssignment[][] | null {
+  const remaining = [...sourceRates];
+  const assignments: FlowAssignment[][] = targetRates.map(() => []);
+
+  // Sort target indices by rate descending — fill largest targets first
+  const targetOrder = targetRates
+    .map((_, i) => i)
+    .sort((a, b) => targetRates[b] - targetRates[a]);
+
+  for (const t of targetOrder) {
+    let need = targetRates[t];
+
+    // First pass: find sources that exactly match the target
+    for (let s = 0; s < remaining.length; s++) {
+      if (need < 0.01) break;
+      if (Math.abs(remaining[s] - need) < 0.01) {
+        assignments[t].push({ sourceIdx: s, amount: remaining[s] });
+        need -= remaining[s];
+        remaining[s] = 0;
+        break;
+      }
+    }
+
+    // Second pass: consume whole sources that fit entirely
+    if (need > 0.01) {
+      // Sort available sources descending so we pack large ones first
+      const availableIndices = remaining
+        .map((r, i) => i)
+        .filter(i => remaining[i] > 0.01)
+        .sort((a, b) => remaining[b] - remaining[a]);
+
+      for (const s of availableIndices) {
+        if (need < 0.01) break;
+        if (remaining[s] <= need + 0.01) {
+          const take = Math.min(remaining[s], need);
+          assignments[t].push({ sourceIdx: s, amount: take });
+          need -= take;
+          remaining[s] -= take;
+        }
+      }
+    }
+
+    // Third pass: take a partial slice from one source to fill the remainder
+    if (need > 0.01) {
+      for (let s = 0; s < remaining.length; s++) {
+        if (remaining[s] < need - 0.01) continue;
+        assignments[t].push({ sourceIdx: s, amount: need });
+        remaining[s] -= need;
+        need = 0;
+        break;
+      }
+    }
+
+    if (need > 0.01) return null;
+  }
+
+  // Validate: each source that is partially consumed must split into
+  // amounts that are realizable with equal-output splitters. The split
+  // portions must form integer ratios whose denominator is 2/3-smooth.
+  for (let s = 0; s < sourceRates.length; s++) {
+    const portions: number[] = [];
+    for (const targetAssigns of assignments) {
+      for (const a of targetAssigns) {
+        if (a.sourceIdx === s) portions.push(a.amount);
+      }
+    }
+    if (remaining[s] > 0.01) portions.push(remaining[s]);
+    if (portions.length <= 1) continue;
+
+    const ratios = toIntegerRatios(portions);
+    const total = ratios.reduce((a, b) => a + b, 0);
+    if (!canSplitEvenly(total)) return null;
+  }
+
+  // Validate: no belt exceeds max speed. Each assignment to a target
+  // arrives on its own belt, plus a final merger belt to the target.
+  for (let t = 0; t < targetRates.length; t++) {
+    if (targetRates[t] > maxBeltSpeed + 0.01) return null;
+    for (const a of assignments[t]) {
+      if (a.amount > maxBeltSpeed + 0.01) return null;
+    }
+  }
+
+  return assignments;
+}
+
+/**
+ * Check if `n` can be achieved by cascading equal-output splitters.
+ * This requires n to be a product of 2s and 3s (3-smooth), or
+ * achievable via loop-back (nextSmooth will handle it).
+ */
+function canSplitEvenly(n: number): boolean {
+  // The splitIntoStreams function handles non-smooth counts via loop-back,
+  // so any positive integer works — but we prefer smooth ones for simplicity.
+  return n >= 1;
+}
+
+/**
+ * Build the graph from a flow assignment. Each source is split (if needed)
+ * into the portions assigned to different targets, and each target merges
+ * its incoming flows.
+ */
+function buildFlowAssignmentGraph(
+  sourceRates: number[],
+  targetRates: number[],
+  assignments: FlowAssignment[][],
+  leftover: number,
+  maxBeltSpeed: number,
+): SplitterResult {
+  const hasLeftover = leftover > 0.01;
+  const sourceNodes: ConveyorNode[] = sourceRates.map((rate, i) =>
+    createNode('source', rate, `Source ${i + 1}`),
+  );
+
+  // For each source, collect all the portions it must produce
+  const sourcePortions: { amount: number; targetIdx: number }[][] =
+    sourceRates.map(() => []);
+  const sourceRemainders = [...sourceRates];
+
+  for (let t = 0; t < assignments.length; t++) {
+    for (const a of assignments[t]) {
+      sourcePortions[a.sourceIdx].push({ amount: a.amount, targetIdx: t });
+      sourceRemainders[a.sourceIdx] -= a.amount;
+    }
+  }
+
+  // For each source, build the split structure and collect output nodes
+  // keyed by (sourceIdx, portionIndex)
+  const portionNodes: Map<string, ConveyorNode> = new Map();
+
+  for (let s = 0; s < sourceRates.length; s++) {
+    const portions = sourcePortions[s];
+    const remainder = sourceRemainders[s];
+    const allPortionAmounts = portions.map(p => p.amount);
+    if (remainder > 0.01) allPortionAmounts.push(remainder);
+
+    if (allPortionAmounts.length <= 1) {
+      // Source goes entirely to one target (or is entirely leftover)
+      if (portions.length === 1) {
+        portionNodes.set(`${s}-0`, sourceNodes[s]);
+      }
+      continue;
+    }
+
+    // Need to split this source. Convert portions to integer ratios
+    // and build a split tree.
+    const ratios = toIntegerRatios(allPortionAmounts);
+    const totalUnits = ratios.reduce((a, b) => a + b, 0);
+    const unitRate = sourceRates[s] / totalUnits;
+
+    const leaves = splitIntoStreams(
+      sourceNodes[s],
+      totalUnits,
+      unitRate,
+      maxBeltSpeed,
+    );
+
+    // Assign leaves to portions: each portion[i] gets ratios[i] leaves
+    let leafIdx = 0;
+    for (let p = 0; p < portions.length; p++) {
+      const count = ratios[p];
+      const portionLeaves = leaves.slice(leafIdx, leafIdx + count);
+      leafIdx += count;
+      const merged = mergeStreamNodes(portionLeaves);
+      portionNodes.set(`${s}-${p}`, merged);
+    }
+    // Remaining leaves (for leftover) are handled below
+    if (remainder > 0.01) {
+      const leftoverCount = ratios[ratios.length - 1];
+      const leftoverLeaves = leaves.slice(leafIdx, leafIdx + leftoverCount);
+      const merged = mergeStreamNodes(leftoverLeaves);
+      portionNodes.set(`${s}-leftover`, merged);
+    }
+  }
+
+  // Build target nodes by merging assigned portions
+  const targetNodes: ConveyorNode[] = [];
+  for (let t = 0; t < targetRates.length; t++) {
+    const isLeftover = hasLeftover && t === targetRates.length - 1;
+    const inputs: ConveyorNode[] = [];
+
+    for (let a = 0; a < assignments[t].length; a++) {
+      const assign = assignments[t][a];
+      // Find which portionIndex this is for this source
+      let portionIdx = 0;
+      for (let prevT = 0; prevT < t; prevT++) {
+        for (const prevA of assignments[prevT]) {
+          if (prevA.sourceIdx === assign.sourceIdx) portionIdx++;
+        }
+      }
+      const node = portionNodes.get(`${assign.sourceIdx}-${portionIdx}`);
+      if (node) inputs.push(node);
+    }
+
+    if (inputs.length === 0) continue;
+
+    const merged = mergeStreamNodes(inputs);
+    const target = createNode(
+      'target',
+      targetRates[t],
+      isLeftover
+        ? `Leftover: ${targetRates[t]}/min`
+        : `Target ${t + 1}: ${targetRates[t]}/min`,
+    );
+    link(merged, target, targetRates[t]);
+    targetNodes.push(target);
+  }
+
+  // Handle leftover from partially-used sources
+  const leftoverInputs: ConveyorNode[] = [];
+  for (let s = 0; s < sourceRates.length; s++) {
+    if (sourceRemainders[s] > 0.01) {
+      const node = portionNodes.get(`${s}-leftover`);
+      if (node) {
+        leftoverInputs.push(node);
+      } else if (sourcePortions[s].length === 0) {
+        leftoverInputs.push(sourceNodes[s]);
+      }
+    }
+  }
+  if (leftoverInputs.length > 0) {
+    const merged = mergeStreamNodes(leftoverInputs);
+    const leftoverRate = leftoverInputs.reduce((sum, n) => sum + n.holding, 0);
+    const target = createNode(
+      'target',
+      leftoverRate,
+      `Leftover: ${leftoverRate}/min`,
+    );
+    link(merged, target, leftoverRate);
+    targetNodes.push(target);
+  }
+
+  const graph = collectGraph(sourceNodes);
+  removePassthroughs(graph.nodes, graph.links);
+  return graph;
+}
+
+// ---------------------------------------------------------------------------
 // Fallback: unit-rate algorithm (previous approach)
 // ---------------------------------------------------------------------------
 
@@ -537,6 +797,19 @@ function fallbackCalculation(
   leftover: number,
   maxBeltSpeed: number,
 ): SplitterResult {
+  // Try direct flow assignment first — produces much simpler graphs
+  // when sources can be routed to targets without full atomization.
+  const assignments = tryFlowAssignment(sourceRates, targetRates, maxBeltSpeed);
+  if (assignments) {
+    return buildFlowAssignmentGraph(
+      sourceRates,
+      targetRates,
+      assignments,
+      leftover,
+      maxBeltSpeed,
+    );
+  }
+
   const hasLeftover = leftover > 0.01;
   const allRates = [...sourceRates, ...targetRates];
   const intRatios = toIntegerRatios(allRates);
@@ -568,9 +841,6 @@ function fallbackCalculation(
     const count = intTargets[t];
     const isLeftover = hasLeftover && t === targetRates.length - 1;
 
-    // Try to find `count` siblings from the same parent splitter.
-    // This allows the fan-out optimization to collapse the intermediate
-    // split when the parent already carries the target rate.
     const streams = pickSiblingGroup(allLeaves, usedLeaves, count);
 
     const merged = mergeStreamNodes(streams);

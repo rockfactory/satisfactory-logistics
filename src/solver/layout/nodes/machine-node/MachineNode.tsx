@@ -279,7 +279,9 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                         color="var(--mantine-color-cyan-5)"
                       />
                       <Text size="sm">
-                        {bestBank.banksNeeded} x {bestBank.machineCount}
+                        {bestBank.remainderCount
+                          ? `${bestBank.banksNeeded - 1} x ${bestBank.machineCount} + 1 x ${bestBank.remainderCount}`
+                          : `${bestBank.banksNeeded} x ${bestBank.machineCount}`}
                       </Text>
                     </Group>
                   )}

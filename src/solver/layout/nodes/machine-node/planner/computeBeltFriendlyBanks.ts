@@ -33,6 +33,7 @@ export interface BankLine {
 export interface BankOption {
   machineCount: number;
   banksNeeded: number;
+  remainderCount: number;
   overclock: number;
   totalPower: number;
   powerDelta: number;
@@ -252,22 +253,21 @@ function rankCandidate(
     score += beltUtilization(line.totalRate, line.isFluid);
   }
 
-  // Remainder minimization: prefer sizes that evenly divide total machines.
-  // Waste = unused slots across all banks = (banksNeeded * machineCount) - totalMachines.
+  // Remainder handling: with remainder banks, there's no waste.
+  // Still prefer even divisions for simpler layouts.
   if (totalMachines > 0) {
-    const banksNeeded = Math.ceil(totalMachines / machineCount);
-    const totalSlots = banksNeeded * machineCount;
-    const waste = totalSlots - totalMachines;
+    const fullBanks = Math.floor(totalMachines / machineCount);
+    const remainder = totalMachines % machineCount;
 
-    if (waste === 0) {
+    if (remainder === 0) {
       score += 150;
     } else {
-      const wasteFraction = waste / totalSlots;
-      score -= Math.round(wasteFraction * 300);
+      score += 100;
     }
 
-    if (banksNeeded > 16) score -= 30 + banksNeeded * 2;
-    else if (banksNeeded > 8) score -= 20;
+    const totalBanks = fullBanks + (remainder > 0 ? 1 : 0);
+    if (totalBanks > 16) score -= 30 + totalBanks * 2;
+    else if (totalBanks > 8) score -= 20;
   }
 
   if (machineCount <= 2 && totalMachines > 10) {
@@ -358,7 +358,11 @@ export function computeBestBankSize(
   overclock: number,
   totalMachines: number,
   amplifiedRate = 1,
-): { machineCount: number; banksNeeded: number } | null {
+): {
+  machineCount: number;
+  banksNeeded: number;
+  remainderCount: number;
+} | null {
   const roundedTotal = Math.ceil(totalMachines - 0.0001);
   if (roundedTotal <= 1) return null;
 
@@ -379,11 +383,17 @@ export function computeBestBankSize(
   );
 
   let bestScore = -Infinity;
-  let bestOption: { machineCount: number; banksNeeded: number } | null = null;
+  let bestOption: {
+    machineCount: number;
+    banksNeeded: number;
+    remainderCount: number;
+  } | null = null;
 
   for (const n of candidates) {
-    const banksNeeded = Math.ceil(roundedTotal / n);
-    if (banksNeeded <= 1) continue;
+    const fullBanks = Math.floor(roundedTotal / n);
+    const remainder = roundedTotal % n;
+    const banksNeeded = fullBanks + (remainder > 0 ? 1 : 0);
+    if (banksNeeded < 1) continue;
 
     const lines = buildBankLines(baseLines, overclock, n);
 
@@ -409,7 +419,11 @@ export function computeBestBankSize(
     const score = rankCandidate(lines, n, roundedTotal, anchorK);
     if (score > bestScore) {
       bestScore = score;
-      bestOption = { machineCount: n, banksNeeded };
+      bestOption = {
+        machineCount: n,
+        banksNeeded: fullBanks + (remainder > 0 ? 1 : 0),
+        remainderCount: remainder,
+      };
     }
   }
 
@@ -554,8 +568,10 @@ function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
     );
     if (exceedsPerBank) continue;
 
-    const banksNeeded =
-      scaledTotalMachines > 0 ? Math.ceil(scaledTotalMachines / n) : 0;
+    const fullBanks =
+      scaledTotalMachines > 0 ? Math.floor(scaledTotalMachines / n) : 0;
+    const remainder = scaledTotalMachines > 0 ? scaledTotalMachines % n : 0;
+    const banksNeeded = fullBanks + (remainder > 0 ? 1 : 0);
 
     // Hard filter: the full-banks demand must not require more trunk lines
     // than the actual machine demand. If waste slots push demand beyond
@@ -628,6 +644,7 @@ function evaluateOverclock(ctx: SearchContext, oc: number): BankOption[] {
     results.push({
       machineCount: n,
       banksNeeded,
+      remainderCount: remainder,
       overclock: oc,
       totalPower,
       powerDelta,
