@@ -15,11 +15,7 @@ export interface SolverNodeState {
   amplification?: number;
   overclock?: number;
   layoutIgnoreEdges?: boolean;
-  selectedBankSize?: {
-    machineCount: number;
-    banksNeeded: number;
-    remainderCount?: number;
-  } | null;
+  selectedBankSize?: { machineCount: number; banksNeeded: number } | null;
 }
 
 export type SolverLayoutState = Record<string, { x: number; y: number }>;
