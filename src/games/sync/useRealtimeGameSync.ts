@@ -17,7 +17,7 @@ const BROADCAST_EVENT = 'game:sync';
 
 interface SyncBroadcastPayload {
   senderId: string;
-  timestamp: number;
+  updatedAt: string;
   serialized: SerializedGame;
   remoteData: Partial<GameRemoteData>;
 }
@@ -33,8 +33,7 @@ export function useRealtimeGameSync() {
   const channelRef = useRef<RealtimeChannel | null>(null);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isApplyingRemoteRef = useRef(false);
-  const lastLocalEditRef = useRef(0);
-  const lastReceivedTimestampRef = useRef(0);
+  const lastBroadcastUpdatedAtRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!session || !savedId || !selectedGameId) {
@@ -56,15 +55,19 @@ export function useRealtimeGameSync() {
         const data = payload as SyncBroadcastPayload;
         if (data.senderId === SENDER_ID) return;
 
-        if (data.timestamp <= lastLocalEditRef.current) {
+        const localGame = useStore.getState().games.games[selectedGameId];
+        const localUpdatedAt = localGame?.updatedAt;
+
+        if (localUpdatedAt && data.updatedAt <= localUpdatedAt) {
           logger.debug(
-            `Ignoring stale remote sync (remote=${data.timestamp}, local=${lastLocalEditRef.current})`,
+            `Ignoring stale remote sync (remote=${data.updatedAt}, local=${localUpdatedAt})`,
           );
           return;
         }
 
-        logger.info('Received remote game sync');
-        lastReceivedTimestampRef.current = data.timestamp;
+        logger.info(
+          `Accepting remote sync (remote=${data.updatedAt}, local=${localUpdatedAt ?? 'none'})`,
+        );
         isApplyingRemoteRef.current = true;
         try {
           useStore.getState().loadRemoteGame(data.serialized, data.remoteData, {
@@ -82,11 +85,21 @@ export function useRealtimeGameSync() {
     channelRef.current = channel;
 
     const gameId = selectedGameId;
+    let initializedAt: string | null = null;
+
+    // Snapshot updatedAt at mount time so we can distinguish real user edits
+    // from the initial hydration / remote-load store changes.
+    const snapshotUpdatedAt =
+      useStore.getState().games.games[gameId]?.updatedAt ?? null;
+    // Delay subscription to skip initial mount/hydration store notifications
+    const initTimer = setTimeout(() => {
+      initializedAt = snapshotUpdatedAt;
+    }, 100);
+
     const unsubscribeStore = useStore.subscribe(() => {
       if (isApplyingRemoteRef.current) return;
       if (!channelRef.current) return;
-
-      lastLocalEditRef.current = Date.now();
+      if (initializedAt === null) return;
 
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
@@ -95,41 +108,36 @@ export function useRealtimeGameSync() {
       debounceTimerRef.current = setTimeout(() => {
         if (!channelRef.current) return;
 
-        if (lastLocalEditRef.current < lastReceivedTimestampRef.current) {
-          logger.debug(
-            'Skipping broadcast — no local edits since last received sync',
-          );
-          return;
-        }
+        const latestGame = useStore.getState().games.games[gameId];
+        if (!latestGame?.savedId) return;
+
+        const updatedAt = new Date().toISOString();
+        const serialized = serializeGame(gameId);
+        const remoteData: Partial<GameRemoteData> = {
+          id: latestGame.savedId,
+          author_id: latestGame.authorId,
+          created_at: latestGame.createdAt,
+          updated_at: updatedAt,
+          share_token: latestGame.shareToken,
+        };
+
+        const payload: SyncBroadcastPayload = {
+          senderId: SENDER_ID,
+          updatedAt,
+          serialized,
+          remoteData,
+        };
 
         try {
-          const currentState = useStore.getState();
-          const currentGame = currentState.games.games[gameId];
-          if (!currentGame?.savedId) return;
-
-          const serialized = serializeGame(gameId);
-          const timestamp = lastLocalEditRef.current;
-          const remoteData: Partial<GameRemoteData> = {
-            id: currentGame.savedId,
-            author_id: currentGame.authorId,
-            created_at: currentGame.createdAt,
-            share_token: currentGame.shareToken,
-          };
-
-          const payload: SyncBroadcastPayload = {
-            senderId: SENDER_ID,
-            timestamp,
-            serialized,
-            remoteData,
-          };
-
           channelRef.current.send({
             type: 'broadcast',
             event: BROADCAST_EVENT,
             payload,
           });
 
-          logger.debug(`Broadcasted game state (timestamp=${timestamp})`);
+          lastBroadcastUpdatedAtRef.current = updatedAt;
+          useStore.getState().games.games[gameId].updatedAt = updatedAt;
+          logger.debug(`Broadcasted game state (updatedAt=${updatedAt})`);
         } catch (err) {
           logger.error('Failed to broadcast game state', err);
         }
@@ -138,6 +146,7 @@ export function useRealtimeGameSync() {
 
     return () => {
       unsubscribeStore();
+      clearTimeout(initTimer);
 
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);

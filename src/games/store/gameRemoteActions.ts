@@ -53,6 +53,9 @@ function loadSerializedGameIntoState(
     state.games.games[serialized.game.id].createdAt = data.created_at;
     state.games.games[serialized.game.id].savedId = data.id;
     state.games.games[serialized.game.id].shareToken = data.share_token;
+    if (data.updated_at) {
+      state.games.games[serialized.game.id].updatedAt = data.updated_at;
+    }
     return;
   }
 
@@ -82,6 +85,9 @@ function loadSerializedGameIntoState(
   state.games.games[serialized.game.id].createdAt = data.created_at;
   state.games.games[serialized.game.id].savedId = data.id;
   state.games.games[serialized.game.id].shareToken = data.share_token;
+  if (data.updated_at) {
+    state.games.games[serialized.game.id].updatedAt = data.updated_at;
+  }
 
   serialized.factories.forEach(factory => {
     state.factories.factories[factory.id] = factory;

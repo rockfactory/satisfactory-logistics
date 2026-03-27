@@ -74,6 +74,7 @@ export const gamesSlice = createSlice({
       state.games[gameId].createdAt = data.created_at;
       state.games[gameId].savedId = data.id;
       state.games[gameId].shareToken = data.share_token;
+      state.games[gameId].updatedAt = data.updated_at;
     },
     removeGameShareToken: (gameId: string) => state => {
       state.games[gameId].shareToken = undefined;

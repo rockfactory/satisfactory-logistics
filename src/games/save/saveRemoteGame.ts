@@ -41,7 +41,7 @@ export async function saveRemoteGame(gameId?: string | null) {
         data: serializeGame(gameId) as unknown as Json,
         updated_at: new Date().toISOString(),
       })
-      .select('id, author_id, created_at, share_token')
+      .select('id, author_id, created_at, updated_at, share_token')
       .single();
 
     if (error) {
