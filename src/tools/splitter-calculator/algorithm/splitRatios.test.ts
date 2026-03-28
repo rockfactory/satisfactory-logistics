@@ -275,6 +275,88 @@ describe('splitter calculator', () => {
     });
   });
 
+  describe('smart splitter partitioning', () => {
+    function makeSmartRequest(
+      sources: { rate: number; count: number }[],
+      targets: { rate: number; count: number }[],
+      maxBeltSpeed = 1200,
+    ): SplitterRequest {
+      return {
+        sources,
+        targets,
+        maxBeltSpeed,
+        allowSmartSplitters: true,
+        useDecomposition: false,
+      };
+    }
+
+    test('1x1200 → 10x120: partitions into [6,4] groups via smart splitter', () => {
+      const request = makeSmartRequest(
+        [{ rate: 1200, count: 1 }],
+        [{ rate: 120, count: 10 }],
+      );
+      const result = calculateSplitterNetwork(request);
+      assertNoError(result);
+      assertBeltsWithinSpeed(result, 1200);
+      assertTargetsReceiveCorrectRates(result, Array(10).fill(120));
+
+      const smartSplitters = result.nodes.filter(
+        n => n.type === 'smart_splitter',
+      );
+      expect(smartSplitters.length).toBe(1);
+
+      const mergers = result.nodes.filter(n => n.type === 'merger');
+      expect(mergers.length).toBe(0);
+    });
+
+    test('1x1200 → 5x240: count 5 partitions into [3,2] groups', () => {
+      const request = makeSmartRequest(
+        [{ rate: 1200, count: 1 }],
+        [{ rate: 240, count: 5 }],
+      );
+      const result = calculateSplitterNetwork(request);
+      assertNoError(result);
+      assertBeltsWithinSpeed(result, 1200);
+      assertTargetsReceiveCorrectRates(result, Array(5).fill(240));
+
+      const smartSplitters = result.nodes.filter(
+        n => n.type === 'smart_splitter',
+      );
+      expect(smartSplitters.length).toBe(1);
+    });
+
+    test('1x1200 → 4x300: count 4 is already 3-smooth, no smart splitter used', () => {
+      const request = makeSmartRequest(
+        [{ rate: 1200, count: 1 }],
+        [{ rate: 300, count: 4 }],
+      );
+      const result = calculateSplitterNetwork(request);
+      assertNoError(result);
+      assertTargetsReceiveCorrectRates(result, Array(4).fill(300));
+
+      const smartSplitters = result.nodes.filter(
+        n => n.type === 'smart_splitter',
+      );
+      expect(smartSplitters.length).toBe(0);
+    });
+
+    test('1x780 → 7x111.43: count 7 partitions into [4,3] groups', () => {
+      const rate = 780 / 7;
+      const request = makeSmartRequest(
+        [{ rate: 780, count: 1 }],
+        [{ rate: rate, count: 7 }],
+      );
+      const result = calculateSplitterNetwork(request);
+      assertNoError(result);
+      assertBeltsWithinSpeed(result, 1200);
+
+      const smartSplitters = result.nodes.filter(
+        n => n.type === 'smart_splitter',
+      );
+      expect(smartSplitters.length).toBe(1);
+    });
+  });
+
   describe('error cases', () => {
     test('targets exceed sources', () => {
       const request = makeRequest(

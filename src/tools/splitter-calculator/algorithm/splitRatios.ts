@@ -1,5 +1,5 @@
 import { FactoryConveyorBelts } from '@/recipes/FactoryBuilding';
-import { nextSmooth, toIntegerRatios } from './fraction';
+import { isSmooth, nextSmooth, toIntegerRatios } from './fraction';
 import type {
   BeltTier,
   ConveyorLink,
@@ -984,12 +984,7 @@ function preSplitIntoGroups(
     const groupLeaves: ConveyorNode[][] = [];
     for (let i = 0; i < ways; i++) {
       groupLeaves.push(
-        splitIntoStreams(
-          mergers[i],
-          perGroup,
-          ratePerStream,
-          maxBeltSpeed,
-        ),
+        splitIntoStreams(mergers[i], perGroup, ratePerStream, maxBeltSpeed),
       );
     }
 
@@ -1083,6 +1078,189 @@ function buildSplitTree(
 }
 
 // ---------------------------------------------------------------------------
+// Smart splitter partitioning strategy
+// ---------------------------------------------------------------------------
+
+/**
+ * Generate all 3-smooth numbers (products of 2s and 3s) up to `max`.
+ * These are the only group sizes that split cleanly with standard
+ * 2-way and 3-way splitters — no loop-backs or mergers needed.
+ */
+function smoothNumbersUpTo(max: number): number[] {
+  const result: number[] = [];
+  let pow3 = 1;
+  while (pow3 <= max) {
+    let val = pow3;
+    while (val <= max) {
+      result.push(val);
+      val *= 2;
+    }
+    pow3 *= 3;
+  }
+  return result.sort((a, b) => a - b);
+}
+
+/**
+ * Find the best partition of `total` into 2–3 groups of 3-smooth sizes.
+ * Prefers partitions where the minimum group size is maximized (balanced),
+ * avoiding degenerate size-1 groups. Falls back to fewest-groups if needed.
+ *
+ * Returns the list of group sizes, or null if no partition is possible
+ * within `maxGroups` branches (smart splitter has max 3 outputs).
+ */
+function findFewestSmoothGroups(
+  total: number,
+  maxGroupSize: number,
+  maxGroups: number,
+): number[] | null {
+  const smoothSizes = smoothNumbersUpTo(Math.min(total, maxGroupSize));
+  if (smoothSizes.length === 0) return null;
+
+  let best: number[] | null = null;
+  let bestMinGroup = 0;
+
+  // Try 2-way partitions: a + b = total
+  for (const a of smoothSizes) {
+    const b = total - a;
+    if (b < 1 || b > maxGroupSize) continue;
+    if (!isSmooth(b)) continue;
+    const minGroup = Math.min(a, b);
+    if (!best || minGroup > bestMinGroup) {
+      best = [a, b];
+      bestMinGroup = minGroup;
+    }
+  }
+
+  // Try 3-way partitions: a + b + c = total
+  if (maxGroups >= 3) {
+    for (const a of smoothSizes) {
+      for (const b of smoothSizes) {
+        const c = total - a - b;
+        if (c < 1 || c > maxGroupSize) continue;
+        if (!isSmooth(c)) continue;
+        const minGroup = Math.min(a, b, c);
+        if (!best || minGroup > bestMinGroup) {
+          best = [a, b, c];
+          bestMinGroup = minGroup;
+        }
+      }
+    }
+  }
+
+  if (!best) return null;
+  return best.sort((a, b) => b - a);
+}
+
+interface SmartPartition {
+  groupSizes: number[];
+  targetRate: number;
+}
+
+/**
+ * Try to partition same-rate targets into 3-smooth groups (max 3 branches)
+ * so each branch of the smart splitter feeds a clean splitter tree.
+ *
+ * The smart splitter uses belt-capacity + overflow to produce asymmetric
+ * flow: one output is connected to a belt tier that caps its throughput,
+ * and the overflow output receives the remainder.
+ */
+function trySmartSplitterPartition(
+  sourceRate: number,
+  targetRates: number[],
+  maxBeltSpeed: number,
+): SmartPartition | null {
+  if (targetRates.length < 2) return null;
+
+  // All targets must share the same rate
+  const targetRate = targetRates[0];
+  if (!targetRates.every(r => Math.abs(r - targetRate) < 0.01)) return null;
+
+  const totalCount = targetRates.length;
+  if (Math.abs(targetRate * totalCount - sourceRate) > 0.01) return null;
+
+  // If the count is already 3-smooth, no smart splitter needed
+  if (isSmooth(totalCount)) return null;
+
+  // Each branch's total rate must fit on a belt
+  const maxPerBranch = Math.floor(maxBeltSpeed / targetRate);
+
+  const groups = findFewestSmoothGroups(totalCount, maxPerBranch, 3);
+  if (!groups) return null;
+
+  // Verify each branch rate fits within belt capacity
+  for (const g of groups) {
+    if (g * targetRate > maxBeltSpeed + 0.01) return null;
+  }
+
+  return { groupSizes: groups, targetRate };
+}
+
+/**
+ * Build a graph using a smart splitter at the root that distributes
+ * flow to 2-3 branches using belt-capacity + overflow. Each branch
+ * feeds a clean 3-smooth splitter tree.
+ */
+function buildSmartSplitterGraph(
+  partition: SmartPartition,
+  sourceRates: number[],
+  targetRates: number[],
+  leftover: number,
+  maxBeltSpeed: number,
+): SplitterResult {
+  const hasLeftover = leftover > 0.01;
+  const { groupSizes, targetRate } = partition;
+
+  const source = createNode('source', sourceRates[0], 'Source 1');
+  const smart = createNode('smart_splitter', sourceRates[0]);
+  smart.label = 'Smart Splitter';
+  link(source, smart, sourceRates[0]);
+
+  let targetIdx = 0;
+
+  for (const groupSize of groupSizes) {
+    const branchRate = groupSize * targetRate;
+
+    // Create a branch entry node with the correct holding rate.
+    // The smart splitter feeds this branch at exactly branchRate,
+    // and the splitter tree subdivides from there.
+    const branchEntry = createNode('splitter', branchRate);
+    link(smart, branchEntry, branchRate);
+
+    let leaves: ConveyorNode[];
+    if (groupSize === 1) {
+      leaves = [branchEntry];
+    } else {
+      leaves = buildSplitTree(branchEntry, branchRate, groupSize, targetRate);
+    }
+
+    for (let i = 0; i < groupSize; i++) {
+      const tIdx = targetIdx++;
+      const isLeftoverTarget = hasLeftover && tIdx === targetRates.length - 1;
+      const label = isLeftoverTarget
+        ? `Leftover: ${targetRates[tIdx]}/min`
+        : `Target ${tIdx + 1}: ${targetRates[tIdx]}/min`;
+      const target = createNode('target', targetRates[tIdx], label);
+      link(leaves[i], target, targetRates[tIdx]);
+    }
+  }
+
+  // Handle any leftover targets not covered by the partition
+  while (targetIdx < targetRates.length) {
+    const tIdx = targetIdx++;
+    const target = createNode(
+      'target',
+      targetRates[tIdx],
+      `Leftover: ${targetRates[tIdx]}/min`,
+    );
+    link(smart, target, targetRates[tIdx]);
+  }
+
+  const graph = collectGraph([source]);
+  removePassthroughs(graph.nodes, graph.links);
+  return graph;
+}
+
+// ---------------------------------------------------------------------------
 // Main entry point
 // ---------------------------------------------------------------------------
 
@@ -1126,6 +1304,26 @@ export function calculateSplitterNetwork(
   const leftover = totalSource - totalTarget;
   if (leftover > 0.01) {
     targetRates.push(leftover);
+  }
+
+  // Try smart splitter partitioning first when allowed and single-source.
+  // Uses belt-capacity + overflow to produce asymmetric branches where
+  // each branch feeds a clean 3-smooth splitter tree.
+  if (request.allowSmartSplitters && sourceRates.length === 1) {
+    const partition = trySmartSplitterPartition(
+      sourceRates[0],
+      targetRates,
+      request.maxBeltSpeed,
+    );
+    if (partition) {
+      return buildSmartSplitterGraph(
+        partition,
+        sourceRates,
+        targetRates,
+        leftover,
+        request.maxBeltSpeed,
+      );
+    }
   }
 
   if (request.useDecomposition) {

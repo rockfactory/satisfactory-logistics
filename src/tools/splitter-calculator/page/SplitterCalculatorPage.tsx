@@ -15,18 +15,19 @@ import {
   Title,
 } from '@mantine/core';
 import {
+  IconAlertCircle,
+  IconCalculator,
+  IconCheck,
+  IconCopy,
   IconMinus,
   IconPlus,
-  IconCalculator,
-  IconAlertCircle,
-  IconCopy,
-  IconCheck,
 } from '@tabler/icons-react';
 import { ReactFlowProvider } from '@xyflow/react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { FactoryConveyorBelts } from '@/recipes/FactoryBuilding';
-import { calculateSplitterNetwork } from '../algorithm/splitRatios';
 import { applySimplfications } from '../algorithm/simplify';
+import { calculateSplitterNetwork } from '../algorithm/splitRatios';
 import type { SplitterTarget } from '../algorithm/types';
 import { SplitterGraphLayout } from '../graph/SplitterGraphLayout';
 import { toReactFlowGraph } from '../graph/toReactFlow';
@@ -82,19 +83,69 @@ function BeltLegend() {
   );
 }
 
+const DEFAULT_BELT_SPEED = String(
+  FactoryConveyorBelts[FactoryConveyorBelts.length - 1]?.conveyor?.speed ??
+    1200,
+);
+
+function parseRowsFromParam(
+  param: string | null,
+  fallback: RateRow,
+): RateRow[] {
+  if (!param) return [fallback];
+  const rows: RateRow[] = [];
+  for (const chunk of param.split(',')) {
+    const [rateStr, countStr] = chunk.split('.');
+    const rate = Number(rateStr);
+    const count = Number(countStr);
+    if (rate > 0 && count > 0) {
+      rows.push({ id: nextRowId(), rate, count });
+    }
+  }
+  return rows.length > 0 ? rows : [fallback];
+}
+
+function rowsToParam(rows: RateRow[]): string {
+  return rows.map(r => `${r.rate}.${r.count}`).join(',');
+}
+
 export function SplitterCalculatorPage() {
-  const [sources, setSources] = useState<RateRow[]>([makeSource()]);
-  const [targets, setTargets] = useState<RateRow[]>([makeTarget()]);
-  const [maxBeltSpeed, setMaxBeltSpeed] = useState(
-    String(
-      FactoryConveyorBelts[FactoryConveyorBelts.length - 1]?.conveyor?.speed ??
-        1200,
-    ),
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [sources, setSources] = useState<RateRow[]>(() =>
+    parseRowsFromParam(searchParams.get('s'), makeSource()),
   );
-  const [allowSmart, setAllowSmart] = useState(true);
-  const [useDecomposition, setUseDecomposition] = useState(false);
+  const [targets, setTargets] = useState<RateRow[]>(() =>
+    parseRowsFromParam(searchParams.get('t'), makeTarget()),
+  );
+  const [maxBeltSpeed, setMaxBeltSpeed] = useState(
+    searchParams.get('belt') ?? DEFAULT_BELT_SPEED,
+  );
+  const [allowSmart, setAllowSmart] = useState(
+    searchParams.get('smart') !== '0',
+  );
+  const [useDecomposition, setUseDecomposition] = useState(
+    searchParams.get('decomp') === '1',
+  );
   const [calculated, setCalculated] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params: Record<string, string> = {};
+    params.s = rowsToParam(sources);
+    params.t = rowsToParam(targets);
+    if (maxBeltSpeed !== DEFAULT_BELT_SPEED) params.belt = maxBeltSpeed;
+    if (!allowSmart) params.smart = '0';
+    if (useDecomposition) params.decomp = '1';
+    setSearchParams(params, { replace: true });
+  }, [
+    sources,
+    targets,
+    maxBeltSpeed,
+    allowSmart,
+    useDecomposition,
+    setSearchParams,
+  ]);
 
   const [graphData, setGraphData] = useState<{
     nodes: ReturnType<typeof toReactFlowGraph>['nodes'];
