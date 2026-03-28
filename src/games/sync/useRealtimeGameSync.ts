@@ -33,7 +33,7 @@ export function useRealtimeGameSync() {
   const channelRef = useRef<RealtimeChannel | null>(null);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isApplyingRemoteRef = useRef(false);
-  const lastBroadcastUpdatedAtRef = useRef<string | null>(null);
+  const lastBroadcastHashRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!session || !savedId || !selectedGameId) {
@@ -73,6 +73,7 @@ export function useRealtimeGameSync() {
           useStore.getState().loadRemoteGame(data.serialized, data.remoteData, {
             override: true,
           });
+          lastBroadcastHashRef.current = JSON.stringify(data.serialized);
         } finally {
           isApplyingRemoteRef.current = false;
         }
@@ -85,21 +86,17 @@ export function useRealtimeGameSync() {
     channelRef.current = channel;
 
     const gameId = selectedGameId;
-    let initializedAt: string | null = null;
 
-    // Snapshot updatedAt at mount time so we can distinguish real user edits
-    // from the initial hydration / remote-load store changes.
-    const snapshotUpdatedAt =
-      useStore.getState().games.games[gameId]?.updatedAt ?? null;
-    // Delay subscription to skip initial mount/hydration store notifications
-    const initTimer = setTimeout(() => {
-      initializedAt = snapshotUpdatedAt;
-    }, 100);
+    // Snapshot initial state so we don't broadcast on mount
+    try {
+      lastBroadcastHashRef.current = JSON.stringify(serializeGame(gameId));
+    } catch {
+      // game may not be ready yet
+    }
 
     const unsubscribeStore = useStore.subscribe(() => {
       if (isApplyingRemoteRef.current) return;
       if (!channelRef.current) return;
-      if (initializedAt === null) return;
 
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
@@ -111,8 +108,17 @@ export function useRealtimeGameSync() {
         const latestGame = useStore.getState().games.games[gameId];
         if (!latestGame?.savedId) return;
 
+        let serialized: SerializedGame;
+        try {
+          serialized = serializeGame(gameId);
+        } catch {
+          return;
+        }
+
+        const hash = JSON.stringify(serialized);
+        if (hash === lastBroadcastHashRef.current) return;
+
         const updatedAt = new Date().toISOString();
-        const serialized = serializeGame(gameId);
         const remoteData: Partial<GameRemoteData> = {
           id: latestGame.savedId,
           author_id: latestGame.authorId,
@@ -135,7 +141,7 @@ export function useRealtimeGameSync() {
             payload,
           });
 
-          lastBroadcastUpdatedAtRef.current = updatedAt;
+          lastBroadcastHashRef.current = hash;
           useStore.getState().games.games[gameId].updatedAt = updatedAt;
           logger.debug(`Broadcasted game state (updatedAt=${updatedAt})`);
         } catch (err) {
@@ -146,7 +152,6 @@ export function useRealtimeGameSync() {
 
     return () => {
       unsubscribeStore();
-      clearTimeout(initTimer);
 
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
