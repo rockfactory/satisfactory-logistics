@@ -104,6 +104,12 @@ export function SolverPage(props: ISolverPageProps) {
     });
   }, [instance, factory, id, params.id, navigate]);
 
+  useEffect(() => {
+    if (params.id && params.id !== currentSolverId) {
+      useStore.getState().setCurrentSolver(params.id);
+    }
+  }, [params.id, currentSolverId]);
+
   const updater = useMemo(
     () => (path: Path<SolverInstance>, value: string | null | number) => {
       useStore.getState().updateSolver(id!, state => {
@@ -170,18 +176,14 @@ export function SolverPage(props: ISolverPageProps) {
   }, [id, solution]);
 
   if (params.id == null) {
-    const hasCurrentSolverGame = getSolverGame(
-      useStore.getState(),
-      currentSolverId ?? '',
-    );
-    if (!currentSolverId || hasCurrentSolverGame) {
+    if (currentSolverId) {
+      logger.log('No solver ID, redirecting to', currentSolverId);
+      navigate(`/factories/${currentSolverId}/calculator`);
+    } else {
       logger.log('No solver ID, creating');
       const newSolverId = v4();
       useStore.getState().setCurrentSolver(newSolverId);
-      navigate(`/factories/${v4()}/calculator`);
-    } else {
-      logger.log('No solver ID, redirecting to', currentSolverId);
-      navigate(`/factories/${currentSolverId}/calculator`);
+      navigate(`/factories/${newSolverId}/calculator`);
     }
   }
 
