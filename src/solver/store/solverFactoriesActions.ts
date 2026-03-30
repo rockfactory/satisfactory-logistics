@@ -128,6 +128,9 @@ export const solverFactoriesActions = createActions({
 
       if (output.amount !== undefined) {
         factoryOutput.amount = output.amount;
+        if (factoryOutput.objective !== 'max') {
+          factoryOutput.computedAmount = null;
+        }
       }
 
       if (output.somersloops !== undefined) {
