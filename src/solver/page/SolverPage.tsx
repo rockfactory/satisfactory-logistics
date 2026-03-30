@@ -13,13 +13,15 @@ import {
 } from '@mantine/core';
 import {
   IconArrowLeft,
+  IconCheck,
+  IconCopy,
   IconPlus,
   IconZoomExclamation,
 } from '@tabler/icons-react';
 import { type Edge, Panel, ReactFlowProvider } from '@xyflow/react';
 import type Graph from 'graphology';
 import type { HighsSolution } from 'highs';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { useFormOnChange } from '@/core/form/useFormOnChange';
@@ -47,7 +49,6 @@ import { SolverLayoutButtons } from '@/solver/layout/state/SolverLayoutButtons';
 import { SolverShareButton } from '@/solver/share/SolverShareButton';
 import type { SolverInstance } from '@/solver/store/Solver';
 import {
-  getSolverGame,
   useCurrentSolverId,
   usePathSolverInstance,
   useSolverGameId,
@@ -189,6 +190,41 @@ export function SolverPage(props: ISolverPageProps) {
 
   const hasSolution = isSolutionFound(solution);
 
+  const [copied, setCopied] = useState(false);
+  const copyDebugInfo = useCallback(() => {
+    const debug = {
+      factoryId: id,
+      factory: factory
+        ? {
+            name: factory.name,
+            inputs: inputsOutputs?.inputs,
+            outputs: inputsOutputs?.outputs,
+          }
+        : null,
+      solverRequest: instance?.request ?? null,
+      nodeStates: instance?.nodes ?? null,
+      solution: solution
+        ? {
+            status: solution.result?.Status,
+            nodes: solution.nodes.map(n => ({
+              id: n.id,
+              type: n.type,
+              data: n.data,
+            })),
+            edges: solution.edges.map(e => ({
+              id: e.id,
+              source: e.source,
+              target: e.target,
+              data: e.data,
+            })),
+          }
+        : null,
+    };
+    navigator.clipboard.writeText(JSON.stringify(debug, null, 2));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [id, factory, inputsOutputs, instance, solution]);
+
   return (
     <Box w="100%" pos="relative">
       <LoadingOverlay visible={loading} />
@@ -256,6 +292,21 @@ export function SolverPage(props: ISolverPageProps) {
                     <SolverSummaryDrawer solution={solution} />
                     <SolverShareButton />
                     <SolverLayoutButtons solution={solution} />
+                    <Button
+                      variant="subtle"
+                      size="xs"
+                      color={copied ? 'teal' : 'gray'}
+                      leftSection={
+                        copied ? (
+                          <IconCheck size={14} />
+                        ) : (
+                          <IconCopy size={14} />
+                        )
+                      }
+                      onClick={copyDebugInfo}
+                    >
+                      {copied ? 'Copied' : 'Copy Debug Info'}
+                    </Button>
                     {import.meta.env.DEV && (
                       <SolverInspectorDrawer solution={solution} />
                     )}

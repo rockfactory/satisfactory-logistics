@@ -19,8 +19,15 @@ export function calculateMachineNodeBuildings(
 
   // State-based values
   const overclock = nodeState?.overclock ?? 1;
-  const buildingsAmount = originalValue / perBuilding / overclock;
-  const amplifiedRate = (amplifiedValue + originalValue) / originalValue;
+  const somersloopsPerMachine =
+    building.somersloopSlots > 0
+      ? Math.min(somersloops, building.somersloopSlots)
+      : 0;
+  const amplifiedRate =
+    building.somersloopSlots > 0 && somersloopsPerMachine > 0
+      ? 1 + somersloopsPerMachine / building.somersloopSlots
+      : 1;
+  const buildingsAmount = value / perBuilding / overclock / amplifiedRate;
 
   const fullBuildingsAmount = Math.floor(buildingsAmount);
   const reminder = buildingsAmount - fullBuildingsAmount - Number.EPSILON;
@@ -42,11 +49,6 @@ export function calculateMachineNodeBuildings(
     building.powerConsumption *
     overclock ** building.somersloopPowerConsumptionExponent;
   const totalPower = normalPower + boostedPower;
-
-  const somersloopsPerMachine =
-    building.somersloopSlots > 0
-      ? Math.min(somersloops, building.somersloopSlots)
-      : 0;
 
   return {
     overclock,
