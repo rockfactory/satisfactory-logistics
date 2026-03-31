@@ -1,7 +1,7 @@
 import { notifications } from '@mantine/notifications';
 import { RefObject } from 'react';
 
-export function toggleFullscreen(ref: RefObject<HTMLDivElement>) {
+export function toggleFullscreen(ref: RefObject<HTMLDivElement | null>) {
   try {
     if (!ref.current) {
       return;
