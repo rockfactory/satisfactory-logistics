@@ -15,7 +15,7 @@ import {
   useReactFlow,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BeltEdge } from './edges/BeltEdge';
 import { BeltSourceNode } from './nodes/BeltSourceNode';
 import { BeltTargetNode } from './nodes/BeltTargetNode';
@@ -147,34 +147,25 @@ export function SplitterGraphLayout(props: SplitterGraphLayoutProps) {
   const [opacity, setOpacity] = useState(0);
   const nodesInitialized = useNodesInitialized();
   const [layoutDone, setLayoutDone] = useState(false);
-  const prevPropsRef = useRef(props);
 
   useEffect(() => {
-    setNodes([...props.nodes]);
-    setEdges([...props.edges]);
-    setLayoutDone(false);
-    setOpacity(0);
-    prevPropsRef.current = props;
-  }, [props.nodes, props.edges, setNodes, setEdges]);
+    if (layoutDone) return;
 
-  useEffect(() => {
     const isMeasured =
       nodesInitialized &&
       nodes[0]?.measured?.width &&
       nodes[0]?.measured?.height;
+    if (!isMeasured) return;
 
-    if (isMeasured && !layoutDone) {
-      const layouted = getLayoutedElements(nodes, edges);
-      setNodes([...layouted.nodes]);
-      setEdges([...layouted.edges]);
-      setLayoutDone(true);
-    }
-
-    if (isMeasured && layoutDone) {
+    const layouted = getLayoutedElements(nodes, edges);
+    setNodes([...layouted.nodes]);
+    setEdges([...layouted.edges]);
+    setLayoutDone(true);
+    requestAnimationFrame(() => {
       fitView().then(() => setOpacity(1));
-    }
-    // biome-ignore lint/correctness/useExhaustiveDependencies: layout effect
-  }, [nodesInitialized, layoutDone]);
+    });
+    // biome-ignore lint/correctness/useExhaustiveDependencies: run when nodes get measured
+  }, [nodesInitialized, nodes, edges]);
 
   return (
     <Box w="100%" h="65vh" opacity={opacity}>

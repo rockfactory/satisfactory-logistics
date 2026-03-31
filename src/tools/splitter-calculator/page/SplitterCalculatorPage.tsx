@@ -151,6 +151,7 @@ export function SplitterCalculatorPage() {
     nodes: ReturnType<typeof toReactFlowGraph>['nodes'];
     edges: ReturnType<typeof toReactFlowGraph>['edges'];
   } | null>(null);
+  const [graphKey, setGraphKey] = useState(0);
   const [debugInfo, setDebugInfo] = useState<string>('');
   const [copied, setCopied] = useState(false);
 
@@ -244,6 +245,7 @@ export function SplitterCalculatorPage() {
 
     const { nodes, edges } = toReactFlowGraph(simplified, beltSpeed);
     setGraphData({ nodes, edges });
+    setGraphKey(k => k + 1);
     setCalculated(true);
 
     const debug = {
@@ -457,7 +459,7 @@ export function SplitterCalculatorPage() {
         {calculated && graphData && graphData.nodes.length > 0 && (
           <>
             <Paper withBorder p={0} style={{ overflow: 'hidden' }}>
-              <ReactFlowProvider>
+              <ReactFlowProvider key={graphKey}>
                 <SplitterGraphLayout
                   nodes={graphData.nodes}
                   edges={graphData.edges}
