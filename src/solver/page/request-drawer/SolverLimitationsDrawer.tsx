@@ -131,7 +131,6 @@ export function SolverLimitationsDrawer(
                 const override = e.currentTarget.checked;
                 setUseFactoryOverride(override);
                 if (override) {
-                  // Initialize with current game settings
                   useStore
                     .getState()
                     .setFactoryAllowedBuildings(
@@ -140,16 +139,13 @@ export function SolverLimitationsDrawer(
                         FactoryBuildingsForRecipes.map(b => b.id),
                     );
                 } else {
-                  // Clear factory override, use game settings
                   useStore.getState().setFactoryAllowedBuildings(id!, null);
                 }
-                // Recalculate blocked buildings from fresh store state
                 const updatedFactory =
                   useStore.getState().factories.factories[id!];
                 const allowedBuildings =
                   updatedFactory?.allowedBuildings ?? gameAllowedBuildings;
                 if (allowedBuildings == null) {
-                  // No restrictions at all, clear all blocks
                   useStore.getState().updateSolver(id!, solver => {
                     solver.request.blockedBuildings = undefined;
                   });
@@ -189,8 +185,8 @@ export function SolverLimitationsDrawer(
                   <Group gap="xs">
                     <Image
                       src={building.imagePath.replace('_256', '_64')}
-                      width={24}
-                      height={24}
+                      w={24}
+                      h={24}
                     />
                     {building.name}
                   </Group>
@@ -238,8 +234,8 @@ export function SolverLimitationsDrawer(
                 <Group gap="xs">
                   <Image
                     src={building.imagePath.replace('_256', '_64')}
-                    width={24}
-                    height={24}
+                    w={24}
+                    h={24}
                   />
                   {building.name}
                 </Group>
@@ -267,8 +263,8 @@ export function SolverLimitationsDrawer(
                 <Group gap="xs">
                   <Image
                     src={building.imagePath.replace('_256', '_64')}
-                    width={24}
-                    height={24}
+                    w={24}
+                    h={24}
                   />
                   {building.name}
                 </Group>
