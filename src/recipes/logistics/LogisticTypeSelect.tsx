@@ -14,8 +14,8 @@ const LogisticOptions = LogisticTypes.map(logisticType => ({
   icon: (
     <Image
       src={logisticType.imagePath}
-      width={16}
-      height={16}
+      w={16}
+      h={16}
       alt={logisticType.name}
     />
   ),
