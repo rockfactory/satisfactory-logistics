@@ -32,13 +32,12 @@ export function addOutputProductionConstraints(
 
   const byproductVar = `b${resourceItem.index}`;
 
-  // Depending on the objective, we can set the amount as a minimum
-  // or as a fixed value.
   switch (objective) {
     case 'max':
-      // Here we just add a lower bound, maximization is handled by the objective
-      // function
-      ctx.constraints.push(`${byproductVar} >= ${amount || 0}`);
+      // For maximization, don't use the user-entered amount as a lower bound —
+      // it may be infeasible. The solver will maximize this variable via the
+      // objective function; any nonzero floor just risks infeasibility.
+      ctx.constraints.push(`${byproductVar} >= 0`);
       break;
     case 'default':
     default:
