@@ -87,8 +87,8 @@ export function KofiSupportButton(props: IKofiSupportButtonProps) {
               <Image
                 alt="Ko-fi"
                 src={assetPath('/images/logo/logo-kofi@2x.png')}
-                width={20}
-                height={20}
+                w={20}
+                h={20}
               />
             }
           >
