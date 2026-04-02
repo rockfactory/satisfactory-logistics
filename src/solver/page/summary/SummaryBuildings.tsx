@@ -46,8 +46,8 @@ export function SummaryBuildings(props: ISummaryBuildingsProps) {
           <Group gap="xs" className={classes.building}>
             <Image
               src={assetPath(data[0].building.imagePath)}
-              width={24}
-              height={24}
+              w={24}
+              h={24}
             />
             <span>{sum(data.map(node => node.roundedBuildingsAmount))}x</span>
             {data[0].building.name}

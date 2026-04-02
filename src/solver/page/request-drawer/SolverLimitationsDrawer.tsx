@@ -148,8 +148,8 @@ export function SolverLimitationsDrawer(
                 <Group gap="xs">
                   <Image
                     src={assetPath(building.imagePath.replace('_256', '_64'))}
-                    width={24}
-                    height={24}
+                    w={24}
+                    h={24}
                   />
                   {building.name}
                 </Group>
@@ -183,8 +183,8 @@ export function SolverLimitationsDrawer(
                 <Group gap="xs">
                   <Image
                     src={assetPath(building.imagePath.replace('_256', '_64'))}
-                    width={24}
-                    height={24}
+                    w={24}
+                    h={24}
                   />
                   {building.name}
                 </Group>
@@ -212,8 +212,8 @@ export function SolverLimitationsDrawer(
                 <Group gap="xs">
                   <Image
                     src={assetPath(building.imagePath.replace('_256', '_64'))}
-                    width={24}
-                    height={24}
+                    w={24}
+                    h={24}
                   />
                   {building.name}
                 </Group>
