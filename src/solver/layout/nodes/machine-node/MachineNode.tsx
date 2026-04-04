@@ -14,7 +14,6 @@ import {
   Title,
   useMantineTheme,
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import {
   IconBolt,
   IconBuildingFactory2,
@@ -25,7 +24,6 @@ import {
 import { type NodeProps, useReactFlow } from '@xyflow/react';
 import { memo, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-
 import { assetPath } from '@/core/assetPath';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
@@ -39,6 +37,7 @@ import {
 } from '@/recipes/FactoryRecipe';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
+import { useNodePopover } from '@/solver/layout/nodes/utils/useNodePopover';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import { MachineNodeActions } from './MachineNodeActions';
 import { computeBestBankSize } from './planner/computeBeltFriendlyBanks';
@@ -70,7 +69,12 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
   const isAlt = recipe.name.includes('Alternate');
   const { updateNode } = useReactFlow();
 
-  const [isHovering, { close, open }] = useDisclosure(false);
+  const {
+    opened: popoverOpened,
+    hoverOpen,
+    hoverClose,
+    dropdownRef,
+  } = useNodePopover(props.selected ?? false, props.dragging ?? false);
 
   const solverId = useParams<{ id: string }>().id;
 
@@ -89,11 +93,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
   );
   const bestBank = nodeState?.selectedBankSize ?? computedBank;
   return (
-    <Popover
-      opened={(isHovering || props.selected) && !props.dragging}
-      transitionProps={{}}
-      offset={4}
-    >
+    <Popover opened={popoverOpened} transitionProps={{}} offset={4}>
       <Popover.Target>
         <Box
           p="sm"
@@ -104,8 +104,8 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
               : '1px solid transparent',
           }}
           bg={nodeState?.done ? '#304d3e' : 'dark.4'}
-          onMouseEnter={open}
-          onMouseLeave={close}
+          onMouseEnter={hoverOpen}
+          onMouseLeave={hoverClose}
         >
           <Box
             pos="absolute"
@@ -222,6 +222,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
       </Popover.Target>
       <Popover.Dropdown p={0}>
         <Flex
+          ref={dropdownRef}
           align="stretch"
           gap={0}
           direction={{
