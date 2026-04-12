@@ -3,9 +3,9 @@ import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputI
 import { ActionIcon, Button, Group, Stack, Tooltip } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { IconEye, IconEyeOff, IconTrash } from '@tabler/icons-react';
-import { useParams } from 'react-router-dom';
 import type { IResourceNodeData } from './ResourceNode';
 import { ResourceNodeInputConfig } from './ResourceNodeInputConfig';
+import { useFactoryContext } from '@/FactoryContext';
 
 export interface IResourceNodeActionsProps {
   id: string;
@@ -18,7 +18,7 @@ export function ResourceNodeActions(props: IResourceNodeActionsProps) {
     data: { resource, isRaw, value, input, inputIndex },
   } = props;
 
-  const solverId = useParams<{ id: string }>().id;
+  const solverId = useFactoryContext();
   const nodeState = useStore(
     state => state.solvers.instances[solverId ?? '']?.nodes?.[props.id],
   );

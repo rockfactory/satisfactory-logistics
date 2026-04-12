@@ -3,7 +3,6 @@ import { useStore } from '@/core/zustand';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import {
-  Box,
   Button,
   Group,
   LoadingOverlay,
@@ -11,7 +10,6 @@ import {
   Title,
 } from '@mantine/core';
 import { IconArrowLeft, IconPlus } from '@tabler/icons-react';
-import { HighsSolution } from 'highs';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
@@ -19,6 +17,9 @@ import { SolverResetButton } from './SolverResetButton';
 import { useSolverSolution } from '@/solver/page/useSolverSolution';
 import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
 import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
+import { FactoryContext } from '@/FactoryContext';
+
+import { FullHeightContainer } from '@/layout/FullHeightContainer';
 
 const logger = loglev.getLogger('solver:page');
 
@@ -48,7 +49,7 @@ export function SolverPage(props: ISolverPageProps) {
   } = useSolverSolution(currentSolverId, 'standalone');
 
   return (
-    <Box w="100%" pos="relative">
+    <FactoryContext.Provider value={currentSolverId}>
       <LoadingOverlay visible={loading || !instance} />
 
       <AfterHeaderSticky>
@@ -111,14 +112,17 @@ export function SolverPage(props: ISolverPageProps) {
           </Group>
         </Group>
       </AfterHeaderSticky>
-      {instance && (
-        <SolverSolutionFragment
-          solverId={currentSolverId}
-          suggestions={suggestions}
-          solution={solution!}
-          instance={instance}
-        />
-      )}
-    </Box>
+
+      <FullHeightContainer>
+        {instance && (
+          <SolverSolutionFragment
+            solverId={currentSolverId}
+            suggestions={suggestions}
+            solution={solution!}
+            instance={instance}
+          />
+        )}
+      </FullHeightContainer>
+    </FactoryContext.Provider>
   );
 }

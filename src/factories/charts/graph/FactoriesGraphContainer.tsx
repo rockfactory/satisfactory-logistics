@@ -8,13 +8,8 @@ export interface IFactoriesGraphContainer {}
 export function FactoriesGraphContainer(props: IFactoriesGraphContainer) {
   const { nodes, edges } = useFactoriesGraph();
   return (
-    <Stack gap="md">
-      <ReactFlowProvider>
-        <FactoriesGraphLayout
-          nodes={nodes}
-          edges={edges}
-        ></FactoriesGraphLayout>
-      </ReactFlowProvider>
-    </Stack>
+    <ReactFlowProvider>
+      <FactoriesGraphLayout nodes={nodes} edges={edges}></FactoriesGraphLayout>
+    </ReactFlowProvider>
   );
 }

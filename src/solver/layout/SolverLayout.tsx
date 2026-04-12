@@ -382,79 +382,71 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   // );
 
   return (
-    <Box w={'100%'} h={'80vh'} opacity={opacity}>
-      <ReactFlow
-        ref={ref}
-        minZoom={0.2}
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        onNodesChange={handleNodesChange}
-        onEdgesChange={onEdgesChange}
-        connectionLineType={ConnectionLineType.SmoothStep}
-        selectNodesOnDrag={false}
-        // onNodeContextMenu={onNodeContextMenu}
-        fitView
-        snapToGrid
-        colorMode="dark"
-        proOptions={{
-          hideAttribution: true,
-        }}
-        snapGrid={[10, 10]}
-      >
-        <Controls showFitView>
-          <ControlButton
-            onClick={handleToggleFullscreen}
-            aria-label="toggle fullscreen"
-            title="toggle fullscreen"
-            className={classes.fullscreenButton}
+    <ReactFlow
+      ref={ref}
+      minZoom={0.2}
+      nodes={nodes}
+      edges={edges}
+      nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
+      onNodesChange={handleNodesChange}
+      onEdgesChange={onEdgesChange}
+      connectionLineType={ConnectionLineType.SmoothStep}
+      selectNodesOnDrag={false}
+      // onNodeContextMenu={onNodeContextMenu}
+      fitView
+      snapToGrid
+      colorMode="dark"
+      proOptions={{
+        hideAttribution: true,
+      }}
+      snapGrid={[10, 10]}
+    >
+      <Controls showFitView>
+        <ControlButton
+          onClick={handleToggleFullscreen}
+          aria-label="toggle fullscreen"
+          title="toggle fullscreen"
+          className={classes.fullscreenButton}
+        >
+          {isFullscreen ? <IconMaximizeOff /> : <IconArrowsMaximize />}
+        </ControlButton>
+      </Controls>
+      <MiniMap pannable={true} nodeStrokeWidth={3} />
+
+      <svg>
+        <defs>
+          <linearGradient id="edge-gradient">
+            <stop offset="0%" stopColor="var(--mantine-color-gray-7)" />
+            <stop offset="100%" stopColor="var(--mantine-color-gray-4)" />
+          </linearGradient>
+          <linearGradient id="edge-gradient-reverse">
+            <stop offset="0%" stopColor="var(--mantine-color-gray-4)" />
+            <stop offset="100%" stopColor="var(--mantine-color-gray-7)" />
+          </linearGradient>
+
+          <marker
+            id="edge-circle"
+            viewBox="-5 -5 10 10"
+            refX="0"
+            refY="0"
+            markerUnits="strokeWidth"
+            markerWidth="10"
+            markerHeight="10"
+            orient="auto"
           >
-            {isFullscreen ? <IconMaximizeOff /> : <IconArrowsMaximize />}
-          </ControlButton>
-        </Controls>
-        <MiniMap pannable={true} nodeStrokeWidth={3} />
-
-        <svg>
-          <defs>
-            <linearGradient id="edge-gradient">
-              <stop offset="0%" stopColor="var(--mantine-color-gray-7)" />
-              <stop offset="100%" stopColor="var(--mantine-color-gray-4)" />
-            </linearGradient>
-            <linearGradient id="edge-gradient-reverse">
-              <stop offset="0%" stopColor="var(--mantine-color-gray-4)" />
-              <stop offset="100%" stopColor="var(--mantine-color-gray-7)" />
-            </linearGradient>
-
-            <marker
-              id="edge-circle"
-              viewBox="-5 -5 10 10"
-              refX="0"
-              refY="0"
-              markerUnits="strokeWidth"
-              markerWidth="10"
-              markerHeight="10"
-              orient="auto"
-            >
-              <circle
-                stroke="#2a8af6"
-                strokeOpacity="0.75"
-                r="2"
-                cx="0"
-                cy="0"
-              />
-            </marker>
-          </defs>
-        </svg>
-        <Background
-          bgColor="var(--mantine-color-dark-7)"
-          color="var(--mantine-color-dark-4)"
-          variant={BackgroundVariant.Dots}
-          gap={[10, 10]}
-        />
-        {props.children}
-        {/* <Panel>{/* <Button onClick={onLayout}>Layout</Button> </Panel> */}
-      </ReactFlow>
-    </Box>
+            <circle stroke="#2a8af6" strokeOpacity="0.75" r="2" cx="0" cy="0" />
+          </marker>
+        </defs>
+      </svg>
+      <Background
+        bgColor="var(--mantine-color-dark-7)"
+        color="var(--mantine-color-dark-4)"
+        variant={BackgroundVariant.Dots}
+        gap={[10, 10]}
+      />
+      {props.children}
+      {/* <Panel>{/* <Button onClick={onLayout}>Layout</Button> </Panel> */}
+    </ReactFlow>
   );
 };
