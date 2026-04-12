@@ -8,9 +8,9 @@ import { IconDeviceFloppy, IconTrash } from '@tabler/icons-react';
 import { produce, type WritableDraft } from 'immer';
 import { isEqual } from 'lodash';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import type { IByproductNodeData } from './ByproductNode';
 import { ByproductNodeOutputConfig } from './ByproductNodeInputConfig';
+import { useFactoryContext } from '@/FactoryContext';
 
 export interface IByproductNodeActionsProps {
   id: string;
@@ -22,7 +22,7 @@ export function ByproductNodeActions(props: IByproductNodeActionsProps) {
     id,
     data: { value, output, outputIndex },
   } = props;
-  const solverId = useParams<{ id: string }>().id;
+  const solverId = useFactoryContext();
 
   // Editable values
   const [temporaryOutput, setTemporaryOutput] = useState<FactoryOutput>(
