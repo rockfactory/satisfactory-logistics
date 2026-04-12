@@ -17,6 +17,7 @@ export default defineConfig({
         {
           src: 'node_modules/highs/build/highs.wasm',
           dest: 'highs',
+          rename: { stripBase: true },
         },
       ],
     }),
