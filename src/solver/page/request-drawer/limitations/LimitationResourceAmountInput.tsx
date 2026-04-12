@@ -3,7 +3,7 @@ import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { getWorldResourceMax } from '@/recipes/WorldResources';
 import { useSolverResourcesAmount } from '@/solver/store/solverSelectors';
 import { NumberInput } from '@mantine/core';
-import { useParams } from 'react-router-dom';
+import { useFactoryContext } from '@/FactoryContext';
 
 export interface ILimitationResourceAmountInputProps {
   resource: string;
@@ -13,7 +13,7 @@ export function LimitationResourceAmountInput(
   props: ILimitationResourceAmountInputProps,
 ) {
   const { resource } = props;
-  const solverId = useParams<{ id: string }>().id;
+  const solverId = useFactoryContext();
   const resourceAmount = useSolverResourcesAmount(solverId)?.[resource];
   const resourceItem = AllFactoryItemsMap[resource];
 

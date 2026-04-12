@@ -4,7 +4,6 @@ import { useSolverSolution } from '@/solver/layout/solution-context/SolverSoluti
 import { ActionIcon, Button, Group, Stack, Tooltip } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { IconCircleCheckFilled, IconTrash } from '@tabler/icons-react';
-import { useParams } from 'react-router-dom';
 import type { IMachineNodeData } from './MachineNode';
 import { MachineNodeProductionConfig } from './MachineNodeProductionConfig';
 import {
@@ -12,6 +11,7 @@ import {
   useRecipeAlternatesInputState,
 } from './SwitchRecipeAction';
 import { showConfettiWhenFactoryBuilt } from './showConfettiWhenFactoryBuilt';
+import { useFactoryContext } from '@/FactoryContext';
 
 export interface IMachineNodeActionsProps {
   id: string;
@@ -28,7 +28,7 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
   const { data, buildingsAmount } = props;
   const { recipe, value } = data;
 
-  const solverId = useParams<{ id: string }>().id;
+  const solverId = useFactoryContext();
   const { solution } = useSolverSolution();
 
   const nodeState = useStore(

@@ -42,7 +42,7 @@ async function parseSavegame(file: File) {
 
 function inspectSavegame(save: SatisfactorySave) {
   // All objects in the savegame
-  const objects = save.levels.flatMap(level => level.objects);
+  const objects = Object.values(save.levels).flatMap(level => level.objects);
 
   // Search for the recipe manager
   const recipeManager = objects.find(

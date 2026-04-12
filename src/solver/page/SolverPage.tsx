@@ -3,7 +3,6 @@ import { useStore } from '@/core/zustand';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import {
-  Box,
   Button,
   Group,
   LoadingOverlay,
@@ -19,6 +18,7 @@ import { SolverResetButton } from './SolverResetButton';
 import { useSolverSolution } from '@/solver/page/useSolverSolution';
 import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
 import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
+import { FactoryContext } from '@/FactoryContext';
 
 import { FullHeightContainer } from '@/layout/FullHeightContainer';
 
@@ -50,7 +50,7 @@ export function SolverPage(props: ISolverPageProps) {
   } = useSolverSolution(currentSolverId, 'standalone');
 
   return (
-    <>
+    <FactoryContext.Provider value={currentSolverId}>
       <LoadingOverlay visible={loading || !instance} />
 
       <AfterHeaderSticky>
@@ -124,6 +124,6 @@ export function SolverPage(props: ISolverPageProps) {
           />
         )}
       </FullHeightContainer>
-    </>
+    </FactoryContext.Provider>
   );
 }

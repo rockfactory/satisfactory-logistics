@@ -11,13 +11,13 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconTransformFilled } from '@tabler/icons-react';
 import { NodeProps } from '@xyflow/react';
 import { memo } from 'react';
-import { useParams } from 'react-router-dom';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import { useSolverSolution } from '@/solver/layout/solution-context/SolverSolutionContext';
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { ResourceNodeActions } from './ResourceNodeActions';
 import { ResourceNodeExtractorDetail } from './ResourceNodeExtractorDetail';
 import { ResourceNodeInput } from './ResourceNodeInput';
+import { useFactoryContext } from '@/FactoryContext';
 
 export type IResourceNodeData = {
   resource: FactoryItem;
@@ -48,7 +48,7 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
 
   const [isHovering, { close, open }] = useDisclosure(false);
 
-  const solverId = useParams<{ id: string }>().id;
+  const solverId = useFactoryContext();
 
   // If this is an input to the solver, we need to show the factory
   const sourceFactory = useShallowStore(state => {

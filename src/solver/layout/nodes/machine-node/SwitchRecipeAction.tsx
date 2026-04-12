@@ -1,6 +1,5 @@
 import { Checkbox, Group, ScrollArea, Stack } from '@mantine/core';
 import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
 
 import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
 import { xor } from 'lodash';
@@ -10,6 +9,7 @@ import {
   type FactoryRecipe,
 } from '@/recipes/FactoryRecipe';
 import { useSolverAllowedRecipes } from '@/solver/store/solverSelectors';
+import { useFactoryContext } from '@/FactoryContext';
 
 export interface ISwitchRecipeActionProps {
   recipeId: string;
@@ -20,7 +20,7 @@ export interface ISwitchRecipeActionProps {
 }
 
 export function useRecipeAlternatesInputState(recipeId: string) {
-  const solverId = useParams<{ id: string }>().id;
+  const solverId = useFactoryContext();
   const allAllowedRecipes = useSolverAllowedRecipes(solverId);
 
   const recipe = AllFactoryRecipesMap[recipeId];
