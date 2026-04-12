@@ -57,7 +57,7 @@ export const solversSlice = createSlice({
       ) =>
       state => {
         // If allowedBuildings is provided, block all buildings not in the list
-        const blockedBuildings = options?.allowedBuildings
+        const blockedBuildings = options?.allowedBuildings?.length
           ? FactoryBuildingsForRecipes.filter(
               b => !options.allowedBuildings!.includes(b.id),
             ).map(b => b.id)

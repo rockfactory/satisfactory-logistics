@@ -32,7 +32,6 @@ export const gamesSlice = createSlice({
         createdAt: dayjs().toISOString(),
         ...game,
         factoriesIds: [],
-        allowedBuildings: [],
         settings: {
           noHighlight100PercentUsage: false,
           highlight100PercentColor: '#339af0',
