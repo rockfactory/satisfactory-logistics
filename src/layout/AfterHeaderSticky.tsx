@@ -1,28 +1,10 @@
 import { Box, Container } from '@mantine/core';
-import { useEffect, useState } from 'react';
 
 export interface IAfterHeaderStickyProps {}
-
-function useHeaderTop() {
-  const [headerTop, setHeaderTop] = useState(0);
-
-  useEffect(() => {
-    const header = document.querySelector('header');
-    if (!header) return;
-    const resizeObserver = new ResizeObserver(() => {
-      setHeaderTop(header.offsetHeight);
-    });
-    resizeObserver.observe(header);
-    return () => resizeObserver.disconnect();
-  }, []);
-
-  return headerTop;
-}
 
 export function AfterHeaderSticky(
   props: React.PropsWithChildren<IAfterHeaderStickyProps>,
 ) {
-  // const headerTop = useHeaderTop();
   return (
     <Box
       bg="dark.7"

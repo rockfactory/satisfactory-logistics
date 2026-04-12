@@ -10,7 +10,6 @@ import {
   Title,
 } from '@mantine/core';
 import { IconArrowLeft, IconPlus } from '@tabler/icons-react';
-import { HighsSolution } from 'highs';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
