@@ -3,7 +3,6 @@ import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { NumberInput, SimpleGrid } from '@mantine/core';
 import type { IMachineNodeData } from './MachineNode';
-import { useFactoryContext } from '@/FactoryContext';
 
 export interface IMachineNodeProductionConfigProps {
   id: string;
@@ -31,7 +30,6 @@ export function MachineNodeProductionConfig(
   } = props;
 
   const building = AllFactoryBuildingsMap[machine.recipe.producedIn];
-  const solverId = useFactoryContext();
 
   const maxSlots =
     Math.ceil(buildingsAmount - 0.0001) * building.somersloopSlots;
