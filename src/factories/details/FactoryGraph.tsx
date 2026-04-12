@@ -10,23 +10,21 @@ export const FactoryGraph = ({ id }: { id: string }) => {
 
   return (
     <FactoryContext.Provider value={id}>
-      <Box h="80vh" pos={'relative'}>
-        <Box pos={'absolute'} right={0} top={0} style={{ zIndex: 99 }} p="md">
-          <SolverRequestDrawer
-            factoryId={id}
-            solution={solution}
-            onSolverChangeHandler={onChangeHandler}
-          />
-        </Box>
-        {!loading && instance && (
-          <SolverSolutionFragment
-            solverId={id}
-            suggestions={suggestions}
-            solution={solution!}
-            instance={instance}
-          />
-        )}
+      <Box pos={'absolute'} right={0} top={0} style={{ zIndex: 99 }} p="md">
+        <SolverRequestDrawer
+          factoryId={id}
+          solution={solution}
+          onSolverChangeHandler={onChangeHandler}
+        />
       </Box>
+      {!loading && instance && (
+        <SolverSolutionFragment
+          solverId={id}
+          suggestions={suggestions}
+          solution={solution!}
+          instance={instance}
+        />
+      )}
     </FactoryContext.Provider>
   );
 };

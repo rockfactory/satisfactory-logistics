@@ -3,7 +3,6 @@ import { useStore } from '@/core/zustand';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import {
-  Box,
   Button,
   Group,
   LoadingOverlay,
@@ -11,7 +10,6 @@ import {
   Title,
 } from '@mantine/core';
 import { IconArrowLeft, IconPlus } from '@tabler/icons-react';
-import { HighsSolution } from 'highs';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
@@ -20,6 +18,8 @@ import { useSolverSolution } from '@/solver/page/useSolverSolution';
 import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
 import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
 import { FactoryContext } from '@/FactoryContext';
+
+import { FullHeightContainer } from '@/layout/FullHeightContainer';
 
 const logger = loglev.getLogger('solver:page');
 
@@ -50,69 +50,70 @@ export function SolverPage(props: ISolverPageProps) {
 
   return (
     <FactoryContext.Provider value={currentSolverId}>
-      <Box w="100%" pos="relative">
-        <LoadingOverlay visible={loading || !instance} />
+      <LoadingOverlay visible={loading || !instance} />
 
-        <AfterHeaderSticky>
-          <Group gap="sm" justify="space-between">
-            <Group gap="sm">
-              {solverGameId && (
-                <>
-                  <Button
-                    component={Link}
-                    to="/factories"
-                    variant="light"
-                    color="gray"
-                    leftSection={<IconArrowLeft size={16} />}
-                  >
-                    All Factories
-                  </Button>
-                </>
-              )}
-              <Title order={4}>
-                <TextInput
-                  value={factory.name ?? undefined}
-                  placeholder="Factory Name"
-                  onChange={e => {
-                    useStore
-                      .getState()
-                      .updateFactory(
-                        currentSolverId,
-                        f => (f.name = e.currentTarget.value),
-                      );
-                  }}
-                />
-              </Title>
-              {!solverGameId && (
+      <AfterHeaderSticky>
+        <Group gap="sm" justify="space-between">
+          <Group gap="sm">
+            {solverGameId && (
+              <>
                 <Button
-                  variant="filled"
-                  onClick={() => {
-                    useStore
-                      .getState()
-                      .addFactoryIdToGame(undefined, currentSolverId);
-
-                    useStore.getState().setCurrentSolver(null);
-
-                    navigate(`/factories/${currentSolverId}/calculator`);
-                  }}
-                  leftSection={<IconPlus size={16} />}
+                  component={Link}
+                  to="/factories"
+                  variant="light"
+                  color="gray"
+                  leftSection={<IconArrowLeft size={16} />}
                 >
-                  Add to Game
+                  All Factories
                 </Button>
-              )}
-              <SolverResetButton id={currentSolverId} factory={factory} />
-            </Group>
-            <Group gap="sm">
-              <SolverRequestDrawer
-                factoryId={currentSolverId}
-                solution={solution}
-                onSolverChangeHandler={onChangeHandler}
+              </>
+            )}
+            <Title order={4}>
+              <TextInput
+                value={factory.name ?? undefined}
+                placeholder="Factory Name"
+                onChange={e => {
+                  useStore
+                    .getState()
+                    .updateFactory(
+                      currentSolverId,
+                      f => (f.name = e.currentTarget.value),
+                    );
+                }}
               />
+            </Title>
+            {!solverGameId && (
+              <Button
+                variant="filled"
+                onClick={() => {
+                  useStore
+                    .getState()
+                    .addFactoryIdToGame(undefined, currentSolverId);
 
-              <GameSettingsModal />
-            </Group>
+                  useStore.getState().setCurrentSolver(null);
+
+                  navigate(`/factories/${currentSolverId}/calculator`);
+                }}
+                leftSection={<IconPlus size={16} />}
+              >
+                Add to Game
+              </Button>
+            )}
+            <SolverResetButton id={currentSolverId} factory={factory} />
           </Group>
-        </AfterHeaderSticky>
+          <Group gap="sm">
+            <SolverRequestDrawer
+              factoryId={currentSolverId}
+              solution={solution}
+              onSolverChangeHandler={onChangeHandler}
+            />
+
+            <GameSettingsModal />
+          </Group>
+        </Group>
+      </AfterHeaderSticky>
+
+      <FullHeightContainer>
         {instance && (
           <SolverSolutionFragment
             solverId={currentSolverId}
@@ -121,7 +122,7 @@ export function SolverPage(props: ISolverPageProps) {
             instance={instance}
           />
         )}
-      </Box>
+      </FullHeightContainer>
     </FactoryContext.Provider>
   );
 }
