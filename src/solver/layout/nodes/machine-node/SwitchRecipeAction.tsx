@@ -1,6 +1,5 @@
 import { Checkbox, Group, ScrollArea, Stack } from '@mantine/core';
 import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
 
 import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
 import { xor } from 'lodash';

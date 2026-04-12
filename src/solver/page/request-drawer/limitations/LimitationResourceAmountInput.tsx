@@ -3,7 +3,6 @@ import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { getWorldResourceMax } from '@/recipes/WorldResources';
 import { useSolverResourcesAmount } from '@/solver/store/solverSelectors';
 import { NumberInput } from '@mantine/core';
-import { useParams } from 'react-router-dom';
 import { useFactoryContext } from '@/FactoryContext';
 
 export interface ILimitationResourceAmountInputProps {

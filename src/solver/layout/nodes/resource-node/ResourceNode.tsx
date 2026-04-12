@@ -11,7 +11,6 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconTransformFilled } from '@tabler/icons-react';
 import { NodeProps } from '@xyflow/react';
 import { memo } from 'react';
-import { useParams } from 'react-router-dom';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import { useSolverSolution } from '@/solver/layout/solution-context/SolverSolutionContext';
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';

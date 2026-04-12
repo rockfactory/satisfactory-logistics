@@ -23,7 +23,6 @@ import {
 } from '@tabler/icons-react';
 import { NodeProps, useReactFlow } from '@xyflow/react';
 import { memo } from 'react';
-import { useParams } from 'react-router-dom';
 
 import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';

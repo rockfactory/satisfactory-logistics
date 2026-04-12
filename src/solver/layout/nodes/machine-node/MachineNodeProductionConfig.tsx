@@ -2,7 +2,6 @@ import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { NumberInput, SimpleGrid } from '@mantine/core';
-import { useParams } from 'react-router-dom';
 import type { IMachineNodeData } from './MachineNode';
 import { useFactoryContext } from '@/FactoryContext';
 
