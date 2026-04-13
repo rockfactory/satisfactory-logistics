@@ -17,5 +17,6 @@ jobs:
           node-version: 22
           cache: 'npm'
       - run: npm ci
+      - run: npx biome ci src
       - run: npm run check-types
       - run: npm test

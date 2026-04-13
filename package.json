@@ -8,7 +8,7 @@
     "test": "vitest",
     "build": "tsc && vite build",
     "check-types": "tsc --noEmit",
-    "format": "biome format --write src",
+    "format": "biome check --write src",
     "lint": "biome check src",
     "preview": "vite preview",
     "supabase:types": "npx supabase gen types typescript --project-id nymrtujjmzbhxcimjsci > ./src/core/database.types.ts",
