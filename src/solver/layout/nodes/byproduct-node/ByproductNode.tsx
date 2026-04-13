@@ -39,6 +39,7 @@ export const ByproductNode = memo((props: IByproductNodeProps) => {
       disabled={isByproduct}
       opened={(isHovering || props.selected) && !props.dragging}
       transitionProps={{}}
+      hideDetached={false}
     >
       <Popover.Target>
         <Box

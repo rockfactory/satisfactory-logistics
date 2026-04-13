@@ -159,7 +159,6 @@ export function SolverLimitationsDrawer(
                 const override = e.currentTarget.checked;
                 setUseFactoryOverride(override);
                 if (override) {
-                  // Initialize with current game settings
                   useStore
                     .getState()
                     .setFactoryAllowedBuildings(
@@ -207,8 +206,8 @@ export function SolverLimitationsDrawer(
                   <Group gap="xs">
                     <Image
                       src={building.imagePath.replace('_256', '_64')}
-                      width={24}
-                      height={24}
+                      w={24}
+                      h={24}
                     />
                     {building.name}
                   </Group>
@@ -256,8 +255,8 @@ export function SolverLimitationsDrawer(
                 <Group gap="xs">
                   <Image
                     src={building.imagePath.replace('_256', '_64')}
-                    width={24}
-                    height={24}
+                    w={24}
+                    h={24}
                   />
                   {building.name}
                 </Group>
@@ -285,8 +284,8 @@ export function SolverLimitationsDrawer(
                 <Group gap="xs">
                   <Image
                     src={building.imagePath.replace('_256', '_64')}
-                    width={24}
-                    height={24}
+                    w={24}
+                    h={24}
                   />
                   {building.name}
                 </Group>

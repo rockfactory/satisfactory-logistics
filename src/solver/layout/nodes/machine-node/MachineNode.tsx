@@ -80,6 +80,7 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
       opened={(isHovering || props.selected) && !props.dragging}
       transitionProps={{}}
       offset={4}
+      hideDetached={false}
     >
       <Popover.Target>
         <Box
