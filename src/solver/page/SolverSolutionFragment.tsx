@@ -1,5 +1,9 @@
 import { Button, Container, Group, Space, Stack, Text } from '@mantine/core';
-import { IconArrowsDiff, IconListDetails, IconZoomExclamation } from '@tabler/icons-react';
+import {
+  IconArrowsDiff,
+  IconListDetails,
+  IconZoomExclamation,
+} from '@tabler/icons-react';
 import { Panel, ReactFlowProvider } from '@xyflow/react';
 import { useFactoryContext } from '@/FactoryContext';
 import { useFactoryInputsOutputs } from '@/factories/store/factoriesSelectors';
