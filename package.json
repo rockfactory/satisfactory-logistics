@@ -25,7 +25,7 @@
     "@mantine/hooks": "^9.0.0",
     "@mantine/modals": "^9.0.0",
     "@mantine/notifications": "^9.0.0",
-    "@nivo/sankey": "^0.87.0",
+    "@nivo/sankey": "^0.99.0",
     "@sentry/react": "^8.37.1",
     "@sentry/vite-plugin": "^5.2.0",
     "@supabase/auth-ui-react": "^0.4.7",
