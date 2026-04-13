@@ -36,9 +36,9 @@ export function addOutputProductionConstraints(
   // or as a fixed value.
   switch (objective) {
     case 'max':
-      // Here we just add a lower bound, maximization is handled by the objective
-      // function
-      ctx.constraints.push(`${byproductVar} >= ${amount || 0}`);
+      // No lower bound needed — amount holds the solver-computed result,
+      // not a user constraint. Maximization is handled by the objective function.
+      ctx.constraints.push(`${byproductVar} >= 0`);
       break;
     case 'default':
     default:

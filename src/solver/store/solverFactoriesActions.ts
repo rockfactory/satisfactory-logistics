@@ -153,13 +153,6 @@ export const solverFactoriesActions = createActions({
 
       if (output.objective !== undefined) {
         factoryOutput.objective = output.objective;
-        if (output.objective !== 'max') {
-          factoryOutput.computedAmount = null;
-        }
-      }
-
-      if (output.computedAmount !== undefined) {
-        factoryOutput.computedAmount = output.computedAmount;
       }
     },
   /**

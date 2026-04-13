@@ -63,7 +63,8 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
         label={
           isMaximized ? (
             <span>
-              Amount is calculated by the solver to maximize production
+              Amount is calculated by the solver to maximize production.
+              Change the objective in the calculator to set a fixed amount.
             </span>
           ) : null
         }
@@ -72,11 +73,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
           className={cx(classes.factoryOutputAmount, {
             [classes.factoryOutputAmountSomersloops]: !!output.somersloops,
           })}
-          value={
-            isMaximized && output.computedAmount != null
-              ? output.computedAmount
-              : (output.amount ?? 0)
-          }
+          value={output.amount ?? 0}
           w={100}
           min={0}
           readOnly={isMaximized}

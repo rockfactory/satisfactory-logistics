@@ -36,8 +36,6 @@ export interface FactoryOutput {
   amount: number | null;
   somersloops?: number | null;
   objective?: FactoryOutputObjective;
-  /** Solver-computed amount when objective is 'max'. Not used as a constraint. */
-  computedAmount?: number | null;
 }
 
 export type FactoryOutputObjective = 'default' | 'max';
