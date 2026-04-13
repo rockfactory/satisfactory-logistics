@@ -39,6 +39,7 @@ import { useStore } from './core/zustand';
 import { GamesRoutes } from './games/page/GamesRoutes';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
 import { theme } from './theme';
+
 const basename = import.meta.env.BASE_URL.replace(/\/+$/, '') || '/';
 
 function SpotlightLayout() {
