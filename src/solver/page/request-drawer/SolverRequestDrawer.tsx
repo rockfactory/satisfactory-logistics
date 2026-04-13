@@ -15,10 +15,18 @@ import { SolverLimitationsDrawer } from './SolverLimitationsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';
 import classes from './SolverRequestDrawer.module.css';
 
+export type SolverRequestTab =
+  | 'inputs-outputs'
+  | 'recipes'
+  | 'limitations'
+  | null;
+
 export interface ISolverRequestDrawerProps {
   factoryId: string;
   solution: ISolverSolution | null;
   onSolverChangeHandler: FormOnChangeHandler<SolverInstance>;
+  tab?: SolverRequestTab;
+  onTabChange?: (tab: SolverRequestTab) => void;
 }
 
 const SolverRequestTabs = [
@@ -41,11 +49,11 @@ const SolverRequestTabs = [
 export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
   const { solution, onSolverChangeHandler } = props;
 
-  const [tab, setTab] = useState<
-    'inputs-outputs' | 'recipes' | 'limitations' | null
-  >(null);
+  const [internalTab, setInternalTab] = useState<SolverRequestTab>(null);
+  const tab = props.tab ?? internalTab;
+  const setTab = props.onTabChange ?? setInternalTab;
 
-  const close = useCallback(() => setTab(null), []);
+  const close = useCallback(() => setTab(null), [setTab]);
 
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 

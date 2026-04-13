@@ -1,5 +1,6 @@
 import { Button, Group, LoadingOverlay, TextInput, Title } from '@mantine/core';
 import { IconArrowLeft, IconPlus } from '@tabler/icons-react';
+import { useCallback, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { loglev } from '@/core/logger/log';
@@ -10,7 +11,10 @@ import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import { FullHeightContainer } from '@/layout/FullHeightContainer';
 import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
 import { useSolverSolution } from '@/solver/page/useSolverSolution';
-import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
+import {
+  SolverRequestDrawer,
+  type SolverRequestTab,
+} from './request-drawer/SolverRequestDrawer';
 import { SolverResetButton } from './SolverResetButton';
 
 const logger = loglev.getLogger('solver:page');
@@ -39,6 +43,11 @@ export function SolverPage(props: ISolverPageProps) {
     suggestions,
     instance,
   } = useSolverSolution(currentSolverId, 'standalone');
+  const [drawerTab, setDrawerTab] = useState<SolverRequestTab>(null);
+  const openInputsOutputs = useCallback(
+    () => setDrawerTab('inputs-outputs'),
+    [],
+  );
 
   return (
     <FactoryContext.Provider value={currentSolverId}>
@@ -96,6 +105,8 @@ export function SolverPage(props: ISolverPageProps) {
               factoryId={currentSolverId}
               solution={solution}
               onSolverChangeHandler={onChangeHandler}
+              tab={drawerTab}
+              onTabChange={setDrawerTab}
             />
           </Group>
         </Group>
@@ -108,6 +119,7 @@ export function SolverPage(props: ISolverPageProps) {
             suggestions={suggestions}
             solution={solution!}
             instance={instance}
+            onOpenInputsOutputs={openInputsOutputs}
           />
         )}
       </FullHeightContainer>
