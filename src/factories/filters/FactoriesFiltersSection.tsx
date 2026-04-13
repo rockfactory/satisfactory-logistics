@@ -12,7 +12,6 @@ import {
   IconTextGrammar,
 } from '@tabler/icons-react';
 import { useStore } from '@/core/zustand';
-import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
 import { FactoryViewSlice } from '@/factories/store/factoryViewSlice';
 import { v4 } from 'uuid';
@@ -96,7 +95,6 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
         </Menu>
       </Group>
       <Group>
-        <GameSettingsModal />
         {/* <FactoryUndoButtons /> */}
         <Button
           onClick={e => {

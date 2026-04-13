@@ -2,7 +2,6 @@ import { Button, Group, SegmentedControl, Title } from '@mantine/core';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
 import { IconArrowLeft } from '@tabler/icons-react';
-import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import { FactoryDeleteButton } from '@/factories/details/FactoryDeleteButton';
 import { ProductionView } from '@/factories/details/ProductionView';
@@ -55,7 +54,6 @@ export const FactoryPage = ({
                 }
               }}
             />
-            <GameSettingsModal />
             <FactoryDeleteButton id={id} />
           </Group>
         </Group>

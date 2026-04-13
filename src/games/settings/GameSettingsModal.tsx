@@ -21,13 +21,10 @@ import {
   Stack,
   Switch,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconCheck, IconSettings } from '@tabler/icons-react';
-
-export interface IGameSettingsModalProps {
-  withLabel?: boolean;
-}
 
 const updateGameSettings = (path: Path<GameSettings>, value: any) => {
   useStore.getState().updateGameSettings(state => {
@@ -55,7 +52,7 @@ const PipelinesOptions = FactoryPipelinesExclAlternates.map(
     }) as const,
 );
 
-export function GameSettingsModal(props: IGameSettingsModalProps) {
+export function GameSettingsModal() {
   const [opened, { open, close }] = useDisclosure(false);
   const settings = useGameSettings();
   const allowedBuildings = useGameAllowedBuildings();
@@ -63,10 +60,10 @@ export function GameSettingsModal(props: IGameSettingsModalProps) {
 
   return (
     <>
-      <Modal size="md" title="Settings" onClose={close} opened={opened}>
+      <Modal size="md" title="Game Settings" onClose={close} opened={opened}>
         <Stack gap="xs">
-          <Title order={3} mb="md">
-            Usage
+          <Title order={4} mb="md">
+            Usage Highlighting
           </Title>
           <Checkbox
             label="Do not highlight 100% usage"
@@ -97,6 +94,9 @@ export function GameSettingsModal(props: IGameSettingsModalProps) {
               '#fd7e14',
             ]}
           />
+          <Title order={4} mt="md" mb="md">
+            Transport Limits
+          </Title>
           <SelectIconInput
             label="Max Belt Level"
             data={BeltsOptions}
@@ -208,20 +208,11 @@ export function GameSettingsModal(props: IGameSettingsModalProps) {
         </Stack>
         <Space h={50} />
       </Modal>
-      {props.withLabel ? (
-        <Button
-          onClick={open}
-          variant="default"
-          size="sm"
-          leftSection={<IconSettings size={16} />}
-        >
-          Settings
-        </Button>
-      ) : (
-        <Button onClick={open} variant="default" size="sm" pl="xs" pr="xs">
+      <Tooltip label="Game settings: highlights, transport limits & buildings">
+        <Button onClick={open} variant="light" color="gray" px="xs">
           <IconSettings size={16} />
         </Button>
-      )}
+      </Tooltip>
     </>
   );
 }

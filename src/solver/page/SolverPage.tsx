@@ -1,6 +1,5 @@
 import { loglev } from '@/core/logger/log';
 import { useStore } from '@/core/zustand';
-import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import {
   Button,
@@ -108,7 +107,6 @@ export function SolverPage(props: ISolverPageProps) {
               onSolverChangeHandler={onChangeHandler}
             />
 
-            <GameSettingsModal />
           </Group>
         </Group>
       </AfterHeaderSticky>
