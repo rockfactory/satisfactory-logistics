@@ -34,9 +34,9 @@ export function calculateMachineNodeBuildings(
   const buildingsAmount = value / perBuilding / overclock / amplifiedRate;
 
   const fullBuildingsAmount = Math.floor(buildingsAmount);
-  const reminder = buildingsAmount - fullBuildingsAmount - Number.EPSILON;
-  const partialBuildingAmount = reminder > 0.0001 ? Math.ceil(reminder) : 0;
-  const partialBuildingOverclock = reminder * overclock;
+  const remainder = buildingsAmount - fullBuildingsAmount;
+  const partialBuildingAmount = remainder > 0.0001 ? Math.ceil(remainder) : 0;
+  const partialBuildingOverclock = remainder * overclock;
 
   const roundedBuildingsAmount = fullBuildingsAmount + partialBuildingAmount;
 
