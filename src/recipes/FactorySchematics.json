@@ -1,5 +1,31 @@
 [
   {
+    "id": "ResourceSink_CyberWagon_Unlock_C",
+    "name": "Cyber Wagon available in the AWESOME Shop",
+    "unlockName": "Cyber Wagon available in the AWESOME Shop",
+    "description": "",
+    "tier": 1,
+    "type": "Custom",
+    "imagePath": null,
+    "dependencies": [],
+    "hiddenUntilDependeciesMet": false,
+    "cost": [],
+    "unlocks": []
+  },
+  {
+    "id": "ResourceSink_GoldenCart_Unlock_C",
+    "name": "Golden Cart available in the AWESOME Shop",
+    "unlockName": "Golden Cart available in the AWESOME Shop",
+    "description": "",
+    "tier": 1,
+    "type": "Custom",
+    "imagePath": null,
+    "dependencies": [],
+    "hiddenUntilDependeciesMet": false,
+    "cost": [],
+    "unlocks": []
+  },
+  {
     "id": "Schematic_StartingRecipes_C",
     "name": "Starting Blueprints",
     "unlockName": "Starting Blueprints",
@@ -55,6 +81,28 @@
         ]
       }
     ]
+  },
+  {
+    "id": "ResourceSink_Checkmark_C",
+    "name": "FICSIT Checkmark™",
+    "unlockName": "FICSIT Checkmark™",
+    "description": "The FICSIT Checkmark™ is a way for pioneers to truly distinguish themselves as Verified pioneers. It's an opt-in, paid subscription that adds an orange checkmark to your player ID in online sessions and offers no other beneficial features. \r\n\r\nThe goal of the FICSIT Checkmark™ is to increase trust in FICSIT Inc. by providing a visual signifier that notable pioneers are the real deal and not just impostors or parody pioneers that can’t afford the coupons.  \r\n\r\nThe FICSIT Checkmark™ will only be visible in online sessions for other pioneers to witness your certification status within FICSIT. The knowledge of purchase is its own reward.",
+    "tier": null,
+    "type": "ResourceSink",
+    "imagePath": null,
+    "dependencies": [
+      "ResourceSink_CyberWagon_Unlock_C"
+    ],
+    "hiddenUntilDependeciesMet": false,
+    "cost": [
+      {
+        "resource": "Desc_ResourceSinkCoupon_C",
+        "amount": 8,
+        "displayAmount": 8,
+        "originalAmount": 8
+      }
+    ],
+    "unlocks": []
   },
   {
     "id": "CustomizerUnlock_ColourSwatches_C",
@@ -2884,8 +2932,8 @@
   },
   {
     "id": "Schematic_Alternate_IronIngot_Leached_C",
-    "name": "Alternate: Leached Iron Ingot",
-    "unlockName": "Alternate: Leached Iron Ingot",
+    "name": "Alternate: Leached Iron ingot",
+    "unlockName": "Alternate: Leached Iron ingot",
     "description": "",
     "tier": null,
     "type": "Alternate",
@@ -3372,8 +3420,8 @@
   },
   {
     "id": "Schematic_Alternate_Screw2_C",
-    "name": "Alternate: Steel Screws",
-    "unlockName": "Alternate: Steel Screws",
+    "name": "Alternate: Steel Screw",
+    "unlockName": "Alternate: Steel Screw",
     "description": "",
     "tier": 4,
     "type": "Alternate",
@@ -3394,8 +3442,8 @@
   },
   {
     "id": "Schematic_Alternate_Screw_C",
-    "name": "Alternate: Cast Screws",
-    "unlockName": "Alternate: Cast Screws",
+    "name": "Alternate: Cast Screw",
+    "unlockName": "Alternate: Cast Screw",
     "description": "",
     "tier": 1,
     "type": "Alternate",
@@ -4183,19 +4231,6 @@
     "unlocks": []
   },
   {
-    "id": "Schematic_Skin_Buildgun_Neon_C",
-    "name": "Neon Build Gun",
-    "unlockName": "Neon Build Gun",
-    "description": "",
-    "tier": null,
-    "type": "Customization",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [],
-    "unlocks": []
-  },
-  {
     "id": "Schematic_Skin_Buildgun_HalfNHalf_C",
     "name": "FICSIT Half 'n' Half Build Gun",
     "unlockName": "FICSIT Half 'n' Half Build Gun",
@@ -4287,61 +4322,9 @@
     "unlocks": []
   },
   {
-    "id": "Schematic_Helmet_Scarf_C",
-    "name": "Neko Helmet",
-    "unlockName": "Neko Helmet",
-    "description": "",
-    "tier": null,
-    "type": "Customization",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [],
-    "unlocks": []
-  },
-  {
-    "id": "Schematic_Helmet_Neon_C",
-    "name": "Neon Helmet",
-    "unlockName": "Neon Helmet",
-    "description": "",
-    "tier": null,
-    "type": "Customization",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [],
-    "unlocks": []
-  },
-  {
-    "id": "Schematic_Helmet_Neko_C",
-    "name": "Neko Helmet",
-    "unlockName": "Neko Helmet",
-    "description": "",
-    "tier": null,
-    "type": "Customization",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [],
-    "unlocks": []
-  },
-  {
     "id": "Schematic_Helmet_Golden_C",
     "name": "Golden Helmet",
     "unlockName": "Golden Helmet",
-    "description": "",
-    "tier": null,
-    "type": "Customization",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [],
-    "unlocks": []
-  },
-  {
-    "id": "Schematic_Helmet_Ficsmas_C",
-    "name": "FICSMAS Hat",
-    "unlockName": "FICSMAS Hat",
     "description": "",
     "tier": null,
     "type": "Customization",
@@ -4430,32 +4413,6 @@
     "unlocks": []
   },
   {
-    "id": "Schematic_Trinket_FicsmasStar_C",
-    "name": "Wonder Star Trinket",
-    "unlockName": "Wonder Star Trinket",
-    "description": "",
-    "tier": null,
-    "type": "Customization",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [],
-    "unlocks": []
-  },
-  {
-    "id": "Schematic_Trinket_FicsmasBall_C",
-    "name": "Red Ornament Trinket",
-    "unlockName": "Red Ornament Trinket",
-    "description": "",
-    "tier": null,
-    "type": "Customization",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [],
-    "unlocks": []
-  },
-  {
     "id": "Schematic_Trinket_FicsitCoupon_C",
     "name": "Coupon Trinket",
     "unlockName": "Coupon Trinket",
@@ -4485,32 +4442,6 @@
     "id": "Schematic_Trinket_Checkit_C",
     "name": "Checkit Trinket",
     "unlockName": "Checkit Trinket",
-    "description": "",
-    "tier": null,
-    "type": "Customization",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [],
-    "unlocks": []
-  },
-  {
-    "id": "Schematic_Trinket_Alpaca_C",
-    "name": "Alpaca Trinket",
-    "unlockName": "Alpaca Trinket",
-    "description": "",
-    "tier": null,
-    "type": "Customization",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [],
-    "unlocks": []
-  },
-  {
-    "id": "Schematic_Trinket_AirFreshener_C",
-    "name": "Fresh Factory Trinket",
-    "unlockName": "Fresh Factory Trinket",
     "description": "",
     "tier": null,
     "type": "Customization",
@@ -4918,8 +4849,7 @@
           "Recipe_TrainDockingStation_C",
           "Recipe_TrainDockingStationLiquid_C",
           "Recipe_TrainPlatformEmpty_C",
-          "Recipe_TrainPlatformEmpty_02_C",
-          "Recipe_RailroadEndStop_C"
+          "Recipe_TrainPlatformEmpty_02_C"
         ]
       }
     ]
@@ -5201,9 +5131,7 @@
           "Recipe_PipeHyperStart_C",
           "Recipe_PipeHyper_C",
           "Recipe_PipeHyperSupport_C",
-          "Recipe_HyperPoleStackable_C",
-          "Recipe_HyperTubeJunction_C",
-          "Recipe_HyperTubeTJunction_C"
+          "Recipe_HyperPoleStackable_C"
         ]
       }
     ]
@@ -5679,6 +5607,26 @@
         ]
       }
     ]
+  },
+  {
+    "id": "Research_HardDrive_0_C",
+    "name": "Hard Drives",
+    "unlockName": "Hard Drives",
+    "description": "",
+    "tier": null,
+    "type": "HardDrive",
+    "imagePath": null,
+    "dependencies": [],
+    "hiddenUntilDependeciesMet": false,
+    "cost": [
+      {
+        "resource": "Desc_HardDrive_C",
+        "amount": 1,
+        "displayAmount": 1,
+        "originalAmount": 1
+      }
+    ],
+    "unlocks": []
   },
   {
     "id": "Schematic_1-3_C",
@@ -6277,6 +6225,45 @@
     "unlocks": []
   },
   {
+    "id": "Research_Alien_BoosterFuel_C",
+    "name": "Alien Power Matrix",
+    "unlockName": "Alien Power Matrix",
+    "description": "",
+    "tier": null,
+    "type": "MAM",
+    "imagePath": null,
+    "dependencies": [],
+    "hiddenUntilDependeciesMet": false,
+    "cost": [
+      {
+        "resource": "Desc_SingularityCell_C",
+        "amount": 50,
+        "displayAmount": 50,
+        "originalAmount": 50
+      },
+      {
+        "resource": "Desc_CrystalShard_C",
+        "amount": 100,
+        "displayAmount": 100,
+        "originalAmount": 100
+      },
+      {
+        "resource": "Desc_SAMFluctuator_C",
+        "amount": 500,
+        "displayAmount": 500,
+        "originalAmount": 500
+      }
+    ],
+    "unlocks": [
+      {
+        "type": "Recipe",
+        "scripts": [
+          "Recipe_AlienPowerFuel_C"
+        ]
+      }
+    ]
+  },
+  {
     "id": "Research_Alien_PowerBooster_C",
     "name": "Power Augmenter",
     "unlockName": "Power Augmenter",
@@ -6607,45 +6594,6 @@
       }
     ],
     "unlocks": []
-  },
-  {
-    "id": "Research_Alien_BoosterFuel_C",
-    "name": "Alien Power Matrix",
-    "unlockName": "Alien Power Matrix",
-    "description": "",
-    "tier": null,
-    "type": "MAM",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_SingularityCell_C",
-        "amount": 50,
-        "displayAmount": 50,
-        "originalAmount": 50
-      },
-      {
-        "resource": "Desc_CrystalShard_C",
-        "amount": 100,
-        "displayAmount": 100,
-        "originalAmount": 100
-      },
-      {
-        "resource": "Desc_SAMFluctuator_C",
-        "amount": 500,
-        "displayAmount": 500,
-        "originalAmount": 500
-      }
-    ],
-    "unlocks": [
-      {
-        "type": "Recipe",
-        "scripts": [
-          "Recipe_AlienPowerFuel_C"
-        ]
-      }
-    ]
   },
   {
     "id": "Research_Alien_BoosterBlocker_C",
@@ -7111,26 +7059,6 @@
     ]
   },
   {
-    "id": "Research_HardDrive_0_C",
-    "name": "Hard Drives",
-    "unlockName": "Hard Drives",
-    "description": "",
-    "tier": null,
-    "type": "HardDrive",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_HardDrive_C",
-        "amount": 1,
-        "displayAmount": 1,
-        "originalAmount": 1
-      }
-    ],
-    "unlocks": []
-  },
-  {
     "id": "Research_Mycelia_GasMask_C",
     "name": "Gas Mask",
     "unlockName": "Gas Mask",
@@ -7208,32 +7136,6 @@
         ]
       }
     ]
-  },
-  {
-    "id": "Research_Mycelia_7_C",
-    "name": "Expanded Toolbelt",
-    "unlockName": "Expanded Toolbelt",
-    "description": "",
-    "tier": 3,
-    "type": "MAM",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_Fabric_C",
-        "amount": 50,
-        "displayAmount": 50,
-        "originalAmount": 50
-      },
-      {
-        "resource": "Desc_Rotor_C",
-        "amount": 100,
-        "displayAmount": 100,
-        "originalAmount": 100
-      }
-    ],
-    "unlocks": []
   },
   {
     "id": "Research_Nutrients_2_C",
@@ -7451,6 +7353,32 @@
         ]
       }
     ]
+  },
+  {
+    "id": "Research_Mycelia_7_C",
+    "name": "Expanded Toolbelt",
+    "unlockName": "Expanded Toolbelt",
+    "description": "",
+    "tier": 3,
+    "type": "MAM",
+    "imagePath": null,
+    "dependencies": [],
+    "hiddenUntilDependeciesMet": false,
+    "cost": [
+      {
+        "resource": "Desc_Fabric_C",
+        "amount": 50,
+        "displayAmount": 50,
+        "originalAmount": 50
+      },
+      {
+        "resource": "Desc_Rotor_C",
+        "amount": 100,
+        "displayAmount": 100,
+        "originalAmount": 100
+      }
+    ],
+    "unlocks": []
   },
   {
     "id": "Research_Nutrients_4_C",
@@ -7691,39 +7619,6 @@
       }
     ],
     "unlocks": []
-  },
-  {
-    "id": "Research_Quartz_PriorityMerger_C",
-    "name": "Material Resonance Screening",
-    "unlockName": "Material Resonance Screening",
-    "description": "",
-    "tier": 3,
-    "type": "MAM",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_CrystalOscillator_C",
-        "amount": 15,
-        "displayAmount": 15,
-        "originalAmount": 15
-      },
-      {
-        "resource": "Desc_IronPlateReinforced_C",
-        "amount": 100,
-        "displayAmount": 100,
-        "originalAmount": 100
-      }
-    ],
-    "unlocks": [
-      {
-        "type": "Recipe",
-        "scripts": [
-          "Recipe_ConveyorAttachmentMergerPriority_C"
-        ]
-      }
-    ]
   },
   {
     "id": "Research_Quartz_4_C",
@@ -8490,13 +8385,13 @@
     "hiddenUntilDependeciesMet": false,
     "cost": [
       {
-        "resource": "Desc_XmasDataCartridge4_C",
+        "resource": "Desc_XmasStar_C",
         "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       },
       {
-        "resource": "Desc_XmasBranch_C",
+        "resource": "Desc_XmasWreath_C",
         "amount": 200,
         "displayAmount": 200,
         "originalAmount": 200
@@ -8513,12 +8408,6 @@
         "type": "Schematic",
         "scripts": [
           "Schematic_XMassTree_T3_C"
-        ]
-      },
-      {
-        "type": "Recipe",
-        "scripts": [
-          "Recipe_XmasWreath_C"
         ]
       }
     ]
@@ -8564,8 +8453,8 @@
   },
   {
     "id": "Research_XMas_4-1_C",
-    "name": "FICSMAS Decoration",
-    "unlockName": "FICSMAS Decoration",
+    "name": "FICSMAS Wreath",
+    "unlockName": "FICSMAS Wreath",
     "description": "",
     "tier": 3,
     "type": "MAM",
@@ -8627,28 +8516,22 @@
     "hiddenUntilDependeciesMet": false,
     "cost": [
       {
-        "resource": "Desc_XmasDataCartridge3_C",
+        "resource": "Desc_XmasBallCluster_C",
         "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
       },
       {
-        "resource": "Desc_XmasBall1_C",
+        "resource": "Desc_XmasBall3_C",
         "amount": 200,
         "displayAmount": 200,
         "originalAmount": 200
       },
       {
-        "resource": "Desc_XmasBall2_C",
+        "resource": "Desc_XmasBall4_C",
         "amount": 200,
         "displayAmount": 200,
         "originalAmount": 200
-      },
-      {
-        "resource": "Desc_Gift_C",
-        "amount": 100,
-        "displayAmount": 100,
-        "originalAmount": 100
       }
     ],
     "unlocks": [
@@ -8656,13 +8539,6 @@
         "type": "Schematic",
         "scripts": [
           "Schematic_XMassTree_T2_C"
-        ]
-      },
-      {
-        "type": "Recipe",
-        "scripts": [
-          "Recipe_XmasBall3_C",
-          "Recipe_XmasBall4_C"
         ]
       }
     ]
@@ -8679,28 +8555,22 @@
     "hiddenUntilDependeciesMet": false,
     "cost": [
       {
+        "resource": "Desc_XmasBallCluster_C",
+        "amount": 10,
+        "displayAmount": 10,
+        "originalAmount": 10
+      },
+      {
         "resource": "Desc_Snow_C",
         "amount": 100,
         "displayAmount": 100,
         "originalAmount": 100
       },
       {
-        "resource": "Desc_XmasBall3_C",
-        "amount": 200,
-        "displayAmount": 200,
-        "originalAmount": 200
-      },
-      {
-        "resource": "Desc_XmasBall4_C",
-        "amount": 200,
-        "displayAmount": 200,
-        "originalAmount": 200
-      },
-      {
-        "resource": "Desc_CandyCane_C",
-        "amount": 200,
-        "displayAmount": 200,
-        "originalAmount": 200
+        "resource": "Desc_XmasBranch_C",
+        "amount": 500,
+        "displayAmount": 500,
+        "originalAmount": 500
       }
     ],
     "unlocks": [
@@ -8708,7 +8578,7 @@
         "type": "Recipe",
         "scripts": [
           "Recipe_SnowDispenser_C",
-          "Recipe_SnowCannon_C"
+          "Recipe_XmasWreath_C"
         ]
       }
     ]
@@ -8784,7 +8654,7 @@
     "hiddenUntilDependeciesMet": false,
     "cost": [
       {
-        "resource": "Desc_XmasDataCartridge2_C",
+        "resource": "Desc_XmasBall1_C",
         "amount": 1,
         "displayAmount": 1,
         "originalAmount": 1
@@ -8852,7 +8722,9 @@
       {
         "type": "Recipe",
         "scripts": [
-          "Recipe_TreeGiftProducer_C"
+          "Recipe_TreeGiftProducer_C",
+          "Recipe_XmasBall3_C",
+          "Recipe_XmasBall4_C"
         ]
       }
     ]
@@ -8903,10 +8775,10 @@
     "hiddenUntilDependeciesMet": false,
     "cost": [
       {
-        "resource": "Desc_XmasDataCartridge1_C",
-        "amount": 1,
-        "displayAmount": 1,
-        "originalAmount": 1
+        "resource": "Desc_Gift_C",
+        "amount": 100,
+        "displayAmount": 100,
+        "originalAmount": 100
       }
     ],
     "unlocks": [
@@ -10708,19 +10580,6 @@
     ]
   },
   {
-    "id": "ResourceSink_CyberWagon_Unlock_C",
-    "name": "Cyber Wagon available in the AWESOME Shop",
-    "unlockName": "Cyber Wagon available in the AWESOME Shop",
-    "description": "",
-    "tier": 1,
-    "type": "Custom",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [],
-    "unlocks": []
-  },
-  {
     "id": "ResourceSink_FactoryCart_C",
     "name": "FICSIT Factory Cart™",
     "unlockName": "FICSIT Factory Cart™",
@@ -11222,9 +11081,9 @@
     "cost": [
       {
         "resource": "Desc_ResourceSinkCoupon_C",
-        "amount": 5,
-        "displayAmount": 5,
-        "originalAmount": 5
+        "amount": 3,
+        "displayAmount": 3,
+        "originalAmount": 3
       }
     ],
     "unlocks": [
@@ -11232,8 +11091,7 @@
         "type": "Recipe",
         "scripts": [
           "Recipe_Wall_Gate_8x4_01_C",
-          "Recipe_Gate_Automated_8x4_C",
-          "Recipe_BigGarageDoor_16x8_C"
+          "Recipe_Gate_Automated_8x4_C"
         ]
       },
       {
@@ -11263,8 +11121,7 @@
       {
         "type": "Recipe",
         "scripts": [
-          "Recipe_Wall_Concrete_Gate_8x4_C",
-          "Recipe_BigGarageDoor_16x8_Concrete_C"
+          "Recipe_Wall_Concrete_Gate_8x4_C"
         ]
       }
     ]
@@ -11287,8 +11144,7 @@
       {
         "type": "Recipe",
         "scripts": [
-          "Recipe_SteelWall_8x4_Gate_01_C",
-          "Recipe_BigGarageDoor_16x8_Steel_C"
+          "Recipe_SteelWall_8x4_Gate_01_C"
         ]
       }
     ]
@@ -11656,34 +11512,6 @@
     ]
   },
   {
-    "id": "ResourceSink_VentilationBundle_C",
-    "name": "Ventilation Bundle",
-    "unlockName": "Ventilation Bundle",
-    "description": "",
-    "tier": 1,
-    "type": "ResourceSink",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_ResourceSinkCoupon_C",
-        "amount": 3,
-        "displayAmount": 3,
-        "originalAmount": 3
-      }
-    ],
-    "unlocks": [
-      {
-        "type": "Recipe",
-        "scripts": [
-          "Recipe_LargeFan_C",
-          "Recipe_LargeVent_C"
-        ]
-      }
-    ]
-  },
-  {
     "id": "ResourceSink_CeilingLight_C",
     "name": "Indoor Lighting",
     "unlockName": "Indoor Lighting",
@@ -11912,33 +11740,6 @@
       }
     ],
     "unlocks": []
-  },
-  {
-    "id": "ResourceSink_StackableShelf_C",
-    "name": "Basic Shelf Unit",
-    "unlockName": "Basic Shelf Unit",
-    "description": "",
-    "tier": 1,
-    "type": "ResourceSink",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_ResourceSinkCoupon_C",
-        "amount": 3,
-        "displayAmount": 3,
-        "originalAmount": 3
-      }
-    ],
-    "unlocks": [
-      {
-        "type": "Recipe",
-        "scripts": [
-          "Recipe_StackableShelf_C"
-        ]
-      }
-    ]
   },
   {
     "id": "ResourceSink_Customizer_GlassRoofMaterial_C",
@@ -12283,37 +12084,6 @@
     ]
   },
   {
-    "id": "ResourceSink_PersonnelElevator_C",
-    "name": "Personnel Elevator",
-    "unlockName": "Personnel Elevator",
-    "description": "",
-    "tier": 1,
-    "type": "ResourceSink",
-    "imagePath": null,
-    "dependencies": [
-      "Research_Quartz_1_2_C",
-      "Schematic_4-1_C"
-    ],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_ResourceSinkCoupon_C",
-        "amount": 10,
-        "displayAmount": 10,
-        "originalAmount": 10
-      }
-    ],
-    "unlocks": [
-      {
-        "type": "Recipe",
-        "scripts": [
-          "Recipe_Elevator_C",
-          "Recipe_ElevatorFloorStop_C"
-        ]
-      }
-    ]
-  },
-  {
     "id": "ResourceSink_NoIndicator_PipelineMK2_C",
     "name": "Clean Pipeline Mk.2",
     "unlockName": "Clean Pipeline Mk.2",
@@ -12536,19 +12306,6 @@
     "unlocks": []
   },
   {
-    "id": "ResourceSink_GoldenCart_Unlock_C",
-    "name": "Golden Cart available in the AWESOME Shop",
-    "unlockName": "Golden Cart available in the AWESOME Shop",
-    "description": "",
-    "tier": 1,
-    "type": "Custom",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [],
-    "unlocks": []
-  },
-  {
     "id": "ResourceSink_GoldenCart_C",
     "name": "Golden FICSIT Factory Cart™",
     "unlockName": "Golden FICSIT Factory Cart™",
@@ -12708,8 +12465,8 @@
   },
   {
     "id": "ResourceSink_FactoryBarrier_C",
-    "name": "Road Barriers",
-    "unlockName": "Road Barriers",
+    "name": "Road Barrier",
+    "unlockName": "Road Barrier",
     "description": "",
     "tier": 1,
     "type": "ResourceSink",
@@ -12728,8 +12485,7 @@
       {
         "type": "Recipe",
         "scripts": [
-          "Recipe_Concrete_Barrier_01_C",
-          "Recipe_Barrier_Corner_C"
+          "Recipe_Concrete_Barrier_01_C"
         ]
       }
     ]
@@ -12762,62 +12518,6 @@
           "Recipe_StandaloneWidgetSign_Portrait_C",
           "Recipe_StandaloneWidgetSign_Square_Small_C",
           "Recipe_StandaloneWidgetSign_Square_C"
-        ]
-      }
-    ]
-  },
-  {
-    "id": "ResourceSink_ConveyorWallHole_C",
-    "name": "Conveyor Wall Hole",
-    "unlockName": "Conveyor Wall Hole",
-    "description": "",
-    "tier": 1,
-    "type": "ResourceSink",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_ResourceSinkCoupon_C",
-        "amount": 1,
-        "displayAmount": 1,
-        "originalAmount": 1
-      }
-    ],
-    "unlocks": [
-      {
-        "type": "Recipe",
-        "scripts": [
-          "Recipe_ConveyorWallHole_C"
-        ]
-      }
-    ]
-  },
-  {
-    "id": "ResourceSink_ConveyorMonitor_C",
-    "name": "Conveyor Throughput Monitor",
-    "unlockName": "Conveyor Throughput Monitor",
-    "description": "",
-    "tier": 1,
-    "type": "ResourceSink",
-    "imagePath": null,
-    "dependencies": [
-      "Research_Quartz_2_C"
-    ],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_ResourceSinkCoupon_C",
-        "amount": 5,
-        "displayAmount": 5,
-        "originalAmount": 5
-      }
-    ],
-    "unlocks": [
-      {
-        "type": "Recipe",
-        "scripts": [
-          "Recipe_ConveyorMonitor_C"
         ]
       }
     ]
@@ -12878,28 +12578,6 @@
         ]
       }
     ]
-  },
-  {
-    "id": "ResourceSink_Checkmark_C",
-    "name": "FICSIT Checkmark™",
-    "unlockName": "FICSIT Checkmark™",
-    "description": "The FICSIT Checkmark™ is a way for pioneers to truly distinguish themselves as Verified pioneers. It's an opt-in, paid subscription that adds an orange checkmark to your player ID in online sessions and offers no other beneficial features. \r\n\r\nThe goal of the FICSIT Checkmark™ is to increase trust in FICSIT Inc. by providing a visual signifier that notable pioneers are the real deal and not just impostors or parody pioneers that can’t afford the Coupons.  \r\n\r\nThe FICSIT Checkmark™ will only be visible in online sessions for other pioneers to witness your certification status within FICSIT. The knowledge of purchase is its own reward.",
-    "tier": null,
-    "type": "ResourceSink",
-    "imagePath": null,
-    "dependencies": [
-      "ResourceSink_CyberWagon_Unlock_C"
-    ],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_ResourceSinkCoupon_C",
-        "amount": 8,
-        "displayAmount": 8,
-        "originalAmount": 8
-      }
-    ],
-    "unlocks": []
   },
   {
     "id": "ResourceSink_Catwalks_C",
@@ -12980,70 +12658,6 @@
         "scripts": [
           "Recipe_StandaloneWidgetSign_Large_C",
           "Recipe_StandaloneWidgetSign_Huge_C"
-        ]
-      }
-    ]
-  },
-  {
-    "id": "ResourceSink_BeamSet_Cables_C",
-    "name": "Structural Cable Pack",
-    "unlockName": "Structural Cable Pack",
-    "description": "",
-    "tier": 1,
-    "type": "ResourceSink",
-    "imagePath": null,
-    "dependencies": [
-      "Schematic_3-4_C"
-    ],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_ResourceSinkCoupon_C",
-        "amount": 4,
-        "displayAmount": 4,
-        "originalAmount": 4
-      }
-    ],
-    "unlocks": [
-      {
-        "type": "Recipe",
-        "scripts": [
-          "Recipe_Beam_Cable_C",
-          "Recipe_Beam_Cable_Cluster_C",
-          "Recipe_Beam_Support_C",
-          "Recipe_Beam_Connector_C",
-          "Recipe_Beam_Connector_Double_C"
-        ]
-      }
-    ]
-  },
-  {
-    "id": "ResourceSink_BeamSet2_C",
-    "name": "Beam Expansion Pack",
-    "unlockName": "Beam Expansion Pack",
-    "description": "",
-    "tier": 1,
-    "type": "ResourceSink",
-    "imagePath": null,
-    "dependencies": [
-      "Schematic_3-4_C"
-    ],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_ResourceSinkCoupon_C",
-        "amount": 4,
-        "displayAmount": 4,
-        "originalAmount": 4
-      }
-    ],
-    "unlocks": [
-      {
-        "type": "Recipe",
-        "scripts": [
-          "Recipe_Beam_Concrete_C",
-          "Recipe_Beam_H_C",
-          "Recipe_Beam_Shelf_C"
         ]
       }
     ]
@@ -13455,8 +13069,8 @@
   },
   {
     "id": "ResourceSink_Screw_C",
-    "name": "Screws",
-    "unlockName": "Screws",
+    "name": "Screw",
+    "unlockName": "Screw",
     "description": "",
     "tier": 1,
     "type": "ResourceSink",
@@ -15252,39 +14866,6 @@
     "unlocks": []
   },
   {
-    "id": "Schematic_FicsmasHits_C",
-    "name": "FICSMAS Greatest Hits",
-    "unlockName": "FICSMAS Greatest Hits",
-    "description": "",
-    "tier": null,
-    "type": "Custom",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [],
-    "unlocks": []
-  },
-  {
-    "id": "Schematic_Ficsday2025_C",
-    "name": "FICSIT Anniversary Boombox Tape",
-    "unlockName": "FICSIT Anniversary Boombox Tape",
-    "description": "",
-    "tier": null,
-    "type": "ResourceSink",
-    "imagePath": null,
-    "dependencies": [],
-    "hiddenUntilDependeciesMet": false,
-    "cost": [
-      {
-        "resource": "Desc_ResourceSinkCoupon_C",
-        "amount": 1,
-        "displayAmount": 1,
-        "originalAmount": 1
-      }
-    ],
-    "unlocks": []
-  },
-  {
     "id": "Schematic_DeepRockGalactic_C",
     "name": "Deep Rock Galactic Boombox Tape",
     "unlockName": "Deep Rock Galactic Boombox Tape",
@@ -15578,8 +15159,8 @@
   },
   {
     "id": "Ficsmas_Schematic_SkinBundle_2_C",
-    "name": "Premium FICSMAS Skins",
-    "unlockName": "Premium FICSMAS Skins",
+    "name": "Customizer: Premium FICSMAS Skin",
+    "unlockName": "Customizer: Premium FICSMAS Skin",
     "description": "",
     "tier": 1,
     "type": "Custom",
@@ -15599,8 +15180,8 @@
   },
   {
     "id": "Ficsmas_Schematic_SkinBundle_1_C",
-    "name": "Basic FICSMAS Skins",
-    "unlockName": "Basic FICSMAS Skins",
+    "name": "Customizer: Basic FICSMAS Skin",
+    "unlockName": "Customizer: Basic FICSMAS Skin",
     "description": "",
     "tier": 1,
     "type": "Custom",

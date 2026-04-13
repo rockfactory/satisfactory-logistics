@@ -24,6 +24,7 @@ export interface FactoryBuilding {
     flowRate: number;
   } | null;
   imagePath: string;
+  buildCost: Array<{ resource: string; amount: number }>;
   powerGenerator: PowerGenerator | null;
   extractor: Extractor | null;
 }
