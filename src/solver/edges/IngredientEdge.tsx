@@ -101,16 +101,11 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
   const neededPipelines =
     Math.ceil((data?.value ?? 0) / usedPipeline.pipeline!.flowRate) ?? null;
 
-  const usedLogistic =
+  const isLiquidOrGas =
     data?.resource?.form === FactoryItemForm.Gas ||
-    data?.resource?.form === FactoryItemForm.Liquid
-      ? usedPipeline
-      : usedBelt;
-  const usedLogisticMax =
-    data?.resource?.form === FactoryItemForm.Gas ||
-    data?.resource?.form === FactoryItemForm.Liquid
-      ? neededPipelines
-      : neededBelts;
+    data?.resource?.form === FactoryItemForm.Liquid;
+  const usedLogistic = isLiquidOrGas ? usedPipeline : usedBelt;
+  const usedLogisticMax = isLiquidOrGas ? neededPipelines : neededBelts;
 
   return (
     <>

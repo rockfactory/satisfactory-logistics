@@ -25,6 +25,13 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconCheck, IconSettings } from '@tabler/icons-react';
+import { useEffect } from 'react';
+
+const gameSettingsModalListeners = new Set<() => void>();
+
+export function openGameSettingsModal() {
+  gameSettingsModalListeners.forEach(fn => fn());
+}
 
 const updateGameSettings = (path: Path<GameSettings>, value: any) => {
   useStore.getState().updateGameSettings(state => {
@@ -54,6 +61,14 @@ const PipelinesOptions = FactoryPipelinesExclAlternates.map(
 
 export function GameSettingsModal() {
   const [opened, { open, close }] = useDisclosure(false);
+
+  useEffect(() => {
+    gameSettingsModalListeners.add(open);
+    return () => {
+      gameSettingsModalListeners.delete(open);
+    };
+  }, [open]);
+
   const settings = useGameSettings();
   const allowedBuildings = useGameAllowedBuildings();
   const onChangeHandler = useFormOnChange<GameSettings>(updateGameSettings);

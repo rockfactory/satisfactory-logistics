@@ -12,6 +12,7 @@ import {
   IconList,
   IconPencil,
   IconPlus,
+  IconSettings,
 } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -20,6 +21,7 @@ import { v4 } from 'uuid';
 import { loadRemoteGame } from '@/games/save/loadRemoteGame';
 import { loadRemoteGamesList } from '@/games/save/loadRemoteGamesList';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
+import { openGameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { GameDetailModal } from './GameDetailModal';
 import classes from './GameMenu.module.css';
 
@@ -149,6 +151,14 @@ export function GameMenu(props: IGameMenuProps) {
               }}
             >
               Edit game
+            </Menu.Item>
+            <Menu.Item
+              leftSection={
+                <IconSettings color="var(--mantine-color-gray-5)" size={16} />
+              }
+              onClick={openGameSettingsModal}
+            >
+              Game settings
             </Menu.Item>
             <Menu.Item
               leftSection={<IconDeviceFloppy size={16} />}
