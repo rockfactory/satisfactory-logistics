@@ -1,10 +1,11 @@
-import { useStore } from '@/core/zustand';
-import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
-import { useSolverSolution } from '@/solver/layout/solution-context/SolverSolutionContext';
 import { ActionIcon, Button, Group, Stack, Tooltip } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { IconCircleCheckFilled, IconTrash } from '@tabler/icons-react';
-import { useParams } from 'react-router-dom';
+import { useStore } from '@/core/zustand';
+import { useFactoryContext } from '@/FactoryContext';
+import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
+import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
+import { useSolverSolution } from '@/solver/layout/solution-context/SolverSolutionContext';
 import type { IMachineNodeData } from './MachineNode';
 import { MachineNodeProductionConfig } from './MachineNodeProductionConfig';
 import {
@@ -28,12 +29,16 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
   const { data, buildingsAmount } = props;
   const { recipe, value } = data;
 
-  const solverId = useParams<{ id: string }>().id;
+  const solverId = useFactoryContext();
   const { solution } = useSolverSolution();
 
   const nodeState = useStore(
     state => state.solvers.instances[solverId ?? '']?.nodes?.[props.id],
   );
+
+  const building = AllFactoryBuildingsMap[recipe.producedIn];
+  const slotsPerBuilding = building.somersloopSlots;
+  const roundedBuildings = Math.ceil(buildingsAmount - 0.0001);
 
   // 1. Edit alternate recipes
   const {
@@ -43,17 +48,25 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
     changed: recipesChanged,
   } = useRecipeAlternatesInputState(data.recipe.id);
 
-  // 2. Somersloops and overclock
+  // 2. Somersloops (stored per-machine, displayed per-machine) and overclock
+  // Clamp stored value to slotsPerBuilding for backward compat with old saves
+  // where the stored value was a total (0..buildings*slots).
+  const storedPerMachine = nodeState?.somersloops
+    ? Math.min(nodeState.somersloops, slotsPerBuilding)
+    : undefined;
   const [somersloopsValue, setSomersloopsValue] = useInputState(
-    nodeState?.somersloops as number | string,
+    (storedPerMachine ?? '') as number | string,
   );
   const [overclockValue, setOverclockValue] = useInputState(
     nodeState?.overclock as number | string,
   );
 
+  const perMachineSomersloops = Number(somersloopsValue) || 0;
+  const totalSomersloops = perMachineSomersloops * roundedBuildings;
+
   const isApplyDisabled =
     !recipesChanged &&
-    somersloopsValue === nodeState?.somersloops &&
+    perMachineSomersloops === (storedPerMachine ?? 0) &&
     overclockValue === nodeState?.overclock;
 
   const handleApply = () => {
@@ -69,26 +82,25 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
     }
 
     // 2. Update somersloops
-    if (somersloopsValue !== nodeState?.somersloops) {
+    // nodeState.somersloops = per-machine (0..slots) — used by LP solver
+    // nodeState.somersloopsTotal = total across buildings — used for factory output display
+    if (perMachineSomersloops !== (storedPerMachine ?? 0)) {
       useStore
         .getState()
         .updateSolverSomersloops(
           solution.graph,
           solverId!,
           props.id,
-          Number(somersloopsValue),
+          perMachineSomersloops,
+          totalSomersloops,
         );
     }
 
     // 3. Update overclock
     if (overclockValue !== nodeState?.overclock)
       useStore.getState().updateSolverNode(solverId!, props.id, node => {
-        node.somersloops = somersloopsValue
-          ? Number(somersloopsValue)
-          : undefined;
-        // node.amplification = node.somersloops
-        //   ? node.somersloops / maxSlots
-        //   : undefined;
+        node.somersloops = perMachineSomersloops || undefined;
+        node.somersloopsTotal = totalSomersloops || undefined;
         node.overclock = overclockValue ? Number(overclockValue) : undefined;
       });
   };

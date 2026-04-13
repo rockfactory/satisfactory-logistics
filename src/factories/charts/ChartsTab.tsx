@@ -1,8 +1,9 @@
-import { useStore } from '@/core/zustand';
-import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import { Box, Container, Group, SegmentedControl, Text } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
+import { useStore } from '@/core/zustand';
 import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
+import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
+import { FullHeightContainer } from '@/layout/FullHeightContainer';
 import { FactoriesGraphContainer } from './graph/FactoriesGraphContainer';
 import { FactoriesGraphSettingsModal } from './graph/settings/FactoriesGraphSettingsModal';
 import { FactoriesSankeyChart } from './sankey/FactoriesSankeyChart';
@@ -30,11 +31,12 @@ export function ChartsTab(_props: IChartsTabProps) {
   }
 
   return (
-    <div>
+    <>
       <AfterHeaderSticky>
         <Group gap="xs">
           <SegmentedControl
             value={view}
+            radius="md"
             onChange={value => useStore.getState().setChartView(value as any)}
             data={[
               { value: 'graph', label: 'Graph' },
@@ -44,8 +46,10 @@ export function ChartsTab(_props: IChartsTabProps) {
           {view === 'graph' && <FactoriesGraphSettingsModal />}
         </Group>
       </AfterHeaderSticky>
-      {view === 'graph' && <FactoriesGraphContainer />}
-      {view === 'sankey' && <FactoriesSankeyChart />}
-    </div>
+      <FullHeightContainer>
+        {view === 'graph' && <FactoriesGraphContainer />}
+        {view === 'sankey' && <FactoriesSankeyChart />}
+      </FullHeightContainer>
+    </>
   );
 }

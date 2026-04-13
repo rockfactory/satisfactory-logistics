@@ -1,14 +1,16 @@
-import { useParams } from 'react-router-dom';
-import { useShallowStore, useStore, type RootState } from '@/core/zustand';
+import { type RootState, useShallowStore, useStore } from '@/core/zustand';
+import { useFactoryContext } from '@/FactoryContext';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
+import type { SolverInstance } from '@/solver/store/Solver';
 
-export const usePathSolverInstance = () => {
-  const id = useParams<{ id: string }>().id;
-  return useStore(state => state.solvers.instances[id ?? '']);
+export const usePathSolverInstance = (
+  id: string,
+): SolverInstance | undefined => {
+  return useStore(state => state.solvers.instances[id]);
 };
 
 export const usePathSolverRequest = () => {
-  const id = useParams<{ id: string }>().id;
+  const id = useFactoryContext();
   return useStore(state => state.solvers.instances[id ?? '']?.request);
 };
 
@@ -44,7 +46,6 @@ export const useCurrentSolverId = () => {
   return useStore(state => state.solvers.current);
 };
 
-export const usePathSolverLayout = () => {
-  const id = useParams<{ id: string }>().id;
-  return useStore(state => state.solvers.instances[id ?? '']?.layout);
+export const usePathSolverLayout = (id: string) => {
+  return useStore(state => state.solvers.instances[id]?.layout);
 };

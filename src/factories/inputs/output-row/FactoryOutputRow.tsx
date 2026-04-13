@@ -1,12 +1,3 @@
-import { useStore } from '@/core/zustand';
-import { FactoryOutputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
-import { OutputDependenciesPeekModal } from '@/factories/components/peek/OutputDependenciesPeekModal';
-import { FactoryUsage } from '@/factories/components/usage/FactoryUsage';
-import { FactoryOutput } from '@/factories/Factory';
-import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
-import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
-import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import {
   ActionIcon,
   Group,
@@ -18,6 +9,15 @@ import {
 import { IconTrash } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
+import { useStore } from '@/core/zustand';
+import { FactoryOutputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
+import { OutputDependenciesPeekModal } from '@/factories/components/peek/OutputDependenciesPeekModal';
+import { FactoryUsage } from '@/factories/components/usage/FactoryUsage';
+import type { FactoryOutput } from '@/factories/Factory';
+import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
+import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
+import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { FactoryOutputObjectiveSelect } from './FactoryOutputObjectiveSelect';
 import classes from './FactoryOutputRow.module.css';
 
@@ -41,6 +41,8 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
   // are synced with solvers
   const onChangeHandler = useFactoryOnChangeHandler(factoryId);
 
+  const isMaximized = output.objective === 'max';
+
   const isVisible = useIsFactoryVisible(factoryId, false, output.resource);
   if (!isVisible && displayMode === 'factory') return null;
 
@@ -57,12 +59,12 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       />
 
       <Tooltip
-        disabled={output.objective !== 'max'}
+        disabled={!isMaximized}
         label={
-          output.objective === 'max' ? (
+          isMaximized ? (
             <span>
-              In this mode, the amount will be used as a minimum amount to
-              produce
+              Amount is calculated by the solver to maximize production. Change
+              the objective in the calculator to set a fixed amount.
             </span>
           ) : null
         }
@@ -74,6 +76,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
           value={output.amount ?? 0}
           w={100}
           min={0}
+          readOnly={isMaximized}
           rightSection={
             item?.unit ? (
               <Text c="dimmed" size={'10'} pr={4}>
@@ -89,6 +92,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
           onBlur={() => setAmountFocused(false)}
           onFocus={() => setAmountFocused(true)}
           onChange={value => {
+            if (isMaximized) return;
             useStore.getState().updateFactoryOutput(factoryId, index, {
               amount: Number(value),
             });
@@ -125,8 +129,8 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
             <Image
               src="/images/game/wat-1_256.png"
               alt="Somerloops"
-              width={20}
-              height={20}
+              w={20}
+              h={20}
             />
           }
         />
@@ -150,7 +154,6 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       >
         <IconTrash size={16} stroke={1.5} />
       </ActionIcon>
-
       <OutputDependenciesPeekModal factoryId={factoryId} output={output} />
 
       <FactoryUsage factoryId={factoryId} output={output.resource} />

@@ -1,6 +1,7 @@
 import { useStore } from '@/core/zustand';
 import { createSlice } from '@/core/zustand-helpers/slices';
-import { Factory } from '@/factories/Factory';
+import type { Factory } from '@/factories/Factory';
+
 interface FactoriesSlice {
   factories: Record<string, Factory>;
 }
@@ -11,6 +12,9 @@ export const factoriesSlice = createSlice({
     factories: {},
   } as FactoriesSlice,
   actions: {
+    updateFactories: (fn: (factory: Factory) => void) => state => {
+      Object.values(state.factories).forEach(factory => fn(factory));
+    },
     updateFactory: (id: string, fn: (factory: Factory) => void) => state => {
       fn(state.factories[id]);
     },
@@ -21,9 +25,10 @@ export const factoriesSlice = createSlice({
       (id: string, factory?: Partial<Omit<Factory, 'id'>>) => state => {
         state.factories[id] = {
           inputs: [],
-          outputs: [],
+          outputs: [{ resource: null, amount: null }],
           ...factory,
           id,
+          progress: 'draft',
         };
       },
     updateFactoryInputAmount:
@@ -33,6 +38,32 @@ export const factoriesSlice = createSlice({
     updateFactoryOutputAmount:
       (factoryId: string, outputIndex: number, amount: number) => state => {
         state.factories[factoryId].outputs[outputIndex].amount = amount;
+      },
+    setFactoryAllowedBuildings:
+      (factoryId: string, allowedBuildings: string[] | null) => state => {
+        state.factories[factoryId].allowedBuildings = allowedBuildings;
+      },
+    toggleFactoryBuilding:
+      (factoryId: string, buildingId: string, enabled?: boolean) => state => {
+        const factory = state.factories[factoryId];
+        if (!factory) return;
+
+        // Initialize with empty array if not set
+        if (
+          factory.allowedBuildings === undefined ||
+          factory.allowedBuildings === null
+        ) {
+          factory.allowedBuildings = [];
+        }
+
+        const index = factory.allowedBuildings.indexOf(buildingId);
+        const shouldAdd = enabled ?? index === -1;
+
+        if (shouldAdd && index === -1) {
+          factory.allowedBuildings.push(buildingId);
+        } else if (!shouldAdd && index !== -1) {
+          factory.allowedBuildings.splice(index, 1);
+        }
       },
   },
 });

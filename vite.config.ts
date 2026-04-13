@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+import pkg from './package.json' with { type: 'json' };
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,21 +18,22 @@ export default defineConfig({
         {
           src: 'node_modules/highs/build/highs.wasm',
           dest: 'highs',
+          rename: { stripBase: true },
         },
       ],
     }),
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src/'),
+      '@': path.resolve(import.meta.dirname, './src/'),
     },
   },
   define: {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    APP_VERSION: JSON.stringify(require('./package.json').version),
+    APP_VERSION: JSON.stringify(pkg.version),
     SENTRY_DSN: JSON.stringify(process.env.SENTRY_DSN),
   },
   build: {
     sourcemap: true,
+    cssMinify: 'esbuild',
   },
 });

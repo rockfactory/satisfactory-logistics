@@ -1,5 +1,3 @@
-import { useSession } from '@/auth/authSelectors';
-import { useShallowStore, useStore } from '@/core/zustand';
 import {
   Badge,
   Button,
@@ -14,6 +12,8 @@ import {
 import { IconCalendar, IconPlayerPlay } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import { useSession } from '@/auth/authSelectors';
+import { useShallowStore, useStore } from '@/core/zustand';
 import { ImportExportGameModal } from '@/games/import/ImportFactoriesModal';
 import { ImportFromToolsModal } from '@/games/import/ImportFromToolsModal';
 import { GameDeleteButton } from './detail/GameDeleteButton';

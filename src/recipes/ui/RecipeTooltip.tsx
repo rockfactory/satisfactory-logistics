@@ -1,7 +1,7 @@
-import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { Stack, Table, Text, Tooltip } from '@mantine/core';
-import * as React from 'react';
+import type * as React from 'react';
 import { useCallback, useState } from 'react';
+import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { AllFactoryRecipesMap } from '@/recipes/FactoryRecipe';
 import { FactoryItemImage } from './FactoryItemImage';

@@ -1,7 +1,7 @@
+import { describe, expect, test } from 'vitest';
 import { itemId, recipeId } from '@/recipes/itemId';
 import { isResourceNode } from '@/solver/algorithm/getSolutionNodes';
 import { loadHighs, solveProduction } from '@/solver/algorithm/solveProduction';
-import { describe, expect, test } from 'vitest';
 
 describe('inputConstraints', async () => {
   const highs = await loadHighs();

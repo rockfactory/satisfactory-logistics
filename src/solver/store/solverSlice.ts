@@ -1,3 +1,4 @@
+import { uniq, without } from 'lodash';
 import { toggleAsSet } from '@/core/state-utils/toggleAsSet';
 import { createSlice } from '@/core/zustand-helpers/slices';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
@@ -6,11 +7,11 @@ import {
   getAllConverterRecipeIds,
   getAllDefaultRecipesIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
-import { uniq, without } from 'lodash';
-import {
+import { allowedToBlockedBuildings } from './allowedToBlockedBuildings';
+import type {
   SolverInstance,
-  type SolverLayoutState,
-  type SolverNodeState,
+  SolverLayoutState,
+  SolverNodeState,
 } from './Solver';
 
 export interface SolversSlice {
@@ -51,9 +52,14 @@ export const solversSlice = createSlice({
         id: string,
         options?: {
           allowedRecipes?: string[];
+          allowedBuildings?: string[];
         },
       ) =>
       state => {
+        const blockedBuildings = allowedToBlockedBuildings(
+          options?.allowedBuildings,
+        );
+
         state.instances[id] = {
           id,
           isFactory: false,
@@ -61,6 +67,7 @@ export const solversSlice = createSlice({
           request: {
             allowedRecipes:
               options?.allowedRecipes ?? getAllDefaultRecipesIds(),
+            blockedBuildings,
             objective: 'minimize_resources',
           },
         };

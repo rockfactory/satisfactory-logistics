@@ -1,7 +1,7 @@
 import { useStore } from '@/core/zustand';
-import { getWorldResourceMax } from '@/recipes/WorldResources';
 import { WORLD_SOURCE_ID } from '@/factories/Factory';
-import { IFactoryUsageProps } from './FactoryUsage';
+import { getWorldResourceMax } from '@/recipes/WorldResources';
+import type { IFactoryUsageProps } from './FactoryUsage';
 
 export function useOutputUsage(
   options: Pick<IFactoryUsageProps, 'factoryId' | 'output'>,

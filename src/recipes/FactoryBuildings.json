@@ -28,7 +28,7 @@
     "id": "Build_PipelinePump_C",
     "name": "Pipeline Pump Mk.1",
     "index": 1,
-    "description": "Attaches to a Pipeline to apply Head Lift.\r\nMaximum Head Lift: 20 m\r\n(Allows fluids to be transported 20 m upwards.)\r\n\r\nNOTE: Arrows and holograms when building indicate Head Lift direction.\r\nNOTE: Head Lift does not stack, so space between Pumps is recommended.",
+    "description": "Can be attached to a Pipeline to apply Head Lift.\r\nMaximum Head Lift: 20 m\r\n(Allows fluids to be transported 20 meters upwards.)\r\n\r\nNOTE: Arrows and holograms when building indicate Head Lift direction.\r\nNOTE: Head Lift does not stack, so space between Pumps is recommended.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
     "averagePowerConsumption": 4,
@@ -357,106 +357,6 @@
     }
   },
   {
-    "id": "Build_PipelineSupport_C",
-    "name": "Pipeline Support",
-    "index": 12,
-    "description": "Connects Pipeline segments. Support height can be adjusted.\r\nUseful for routing Pipelines more precisely and across long distances.",
-    "minimumPowerConsumption": null,
-    "maximumPowerConsumption": null,
-    "averagePowerConsumption": null,
-    "powerConsumption": null,
-    "powerConsumptionExponent": null,
-    "somersloopPowerConsumptionExponent": null,
-    "somersloopSlots": null,
-    "clearance": {
-      "width": null,
-      "length": null,
-      "height": null
-    },
-    "imagePath": "/images/game/null",
-    "conveyor": null,
-    "pipeline": {
-      "isPipeline": true,
-      "flowRate": null
-    },
-    "extractor": null
-  },
-  {
-    "id": "Build_PipeSupportStackable_C",
-    "name": "Stackable Pipeline Support",
-    "index": 13,
-    "description": "Supports Pipelines. Can be stacked on other stackable supports.",
-    "minimumPowerConsumption": null,
-    "maximumPowerConsumption": null,
-    "averagePowerConsumption": null,
-    "powerConsumption": null,
-    "powerConsumptionExponent": null,
-    "somersloopPowerConsumptionExponent": null,
-    "somersloopSlots": null,
-    "clearance": {
-      "width": 1,
-      "length": 2.4,
-      "height": 2
-    },
-    "imagePath": "/images/game/null",
-    "conveyor": null,
-    "pipeline": {
-      "isPipeline": true,
-      "flowRate": null
-    },
-    "extractor": null
-  },
-  {
-    "id": "Build_HyperPoleStackable_C",
-    "name": "Stackable Hypertube Support",
-    "index": 14,
-    "description": "Supports Hypertubes. Can be stacked on other stackable supports.",
-    "minimumPowerConsumption": null,
-    "maximumPowerConsumption": null,
-    "averagePowerConsumption": null,
-    "powerConsumption": null,
-    "powerConsumptionExponent": null,
-    "somersloopPowerConsumptionExponent": null,
-    "somersloopSlots": null,
-    "clearance": {
-      "width": 1,
-      "length": 2.4,
-      "height": 2
-    },
-    "imagePath": "/images/game/null",
-    "conveyor": null,
-    "pipeline": {
-      "isPipeline": true,
-      "flowRate": null
-    },
-    "extractor": null
-  },
-  {
-    "id": "Build_PipeHyperSupport_C",
-    "name": "Hypertube Support",
-    "index": 15,
-    "description": "Supports Hypertubes, allowing them to stretch over longer distances.",
-    "minimumPowerConsumption": null,
-    "maximumPowerConsumption": null,
-    "averagePowerConsumption": null,
-    "powerConsumption": null,
-    "powerConsumptionExponent": null,
-    "somersloopPowerConsumptionExponent": null,
-    "somersloopSlots": null,
-    "clearance": {
-      "width": null,
-      "length": null,
-      "height": null
-    },
-    "imagePath": "/images/game/null",
-    "conveyor": null,
-    "pipeline": {
-      "isPipeline": true,
-      "flowRate": null
-    },
-    "extractor": null
-  },
-  {
     "id": "Build_Pipeline_C",
     "name": "Pipeline Mk.1",
     "index": 16,
@@ -570,7 +470,7 @@
     "somersloopSlots": 0,
     "clearance": {
       "width": 2.4,
-      "length": 1.5,
+      "length": 2.4,
       "height": 1.5
     },
     "imagePath": "/images/game/pipeline-junction_256.png",
@@ -810,7 +710,7 @@
     "id": "Build_OilRefinery_C",
     "name": "Refinery",
     "index": 29,
-    "description": "Refines fluid and/or solid parts into other parts.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nContains both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
+    "description": "Refines fluid and/or solid parts into other parts.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nHas both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
     "averagePowerConsumption": 30,
@@ -854,7 +754,7 @@
     "id": "Build_Packager_C",
     "name": "Packager",
     "index": 31,
-    "description": "Packages and unpackages fluids.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nContains both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
+    "description": "Packages and unpackages fluids.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nHas both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
     "averagePowerConsumption": 10,

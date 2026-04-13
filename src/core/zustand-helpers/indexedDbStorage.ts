@@ -1,5 +1,5 @@
 import { del, get, set } from 'idb-keyval';
-import { StateStorage } from 'zustand/middleware';
+import type { StateStorage } from 'zustand/middleware';
 
 // Custom storage object
 export const indexedDbStorage: StateStorage = {

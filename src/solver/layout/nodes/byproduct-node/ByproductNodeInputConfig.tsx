@@ -1,9 +1,9 @@
+import { Group, NumberInput, Stack, Text } from '@mantine/core';
 import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
 import { FactoryOutputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
 import type { FactoryOutput } from '@/factories/Factory';
 import { FactoryOutputObjectiveSelect } from '@/factories/inputs/output-row/FactoryOutputObjectiveSelect';
-import { type FactoryItem } from '@/recipes/FactoryItem';
-import { Group, NumberInput, Stack, Text } from '@mantine/core';
+import type { FactoryItem } from '@/recipes/FactoryItem';
 
 export interface IByproductNodeOutputConfigProps {
   resource: FactoryItem | undefined;

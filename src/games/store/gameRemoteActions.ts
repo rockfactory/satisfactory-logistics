@@ -1,6 +1,7 @@
 import { loglev } from '@/core/logger/log';
 import { migrateSerializedGameWithPlan } from '@/core/migrations/planner/StoreMigrationPlan';
 import { storeMigrationV2 } from '@/core/migrations/v2';
+import { storeMigrationV4 } from '@/core/migrations/v4';
 import type { RootState } from '@/core/zustand';
 import { createActions } from '@/core/zustand-helpers/actions';
 import type { GameRemoteData } from '@/games/Game';
@@ -59,7 +60,10 @@ function loadSerializedGameIntoState(
   // Migrations
   serialized = applyGameMigrations(serialized);
 
-  logger.info(`Fully loaded game "${serialized.game.name}" (id=${serialized.game.id})`, serialized); // prettier-ignore
+  logger.info(
+    `Fully loaded game "${serialized.game.name}" (id=${serialized.game.id})`,
+    serialized,
+  ); // prettier-ignore
   state.games.games[serialized.game.id] = { ...serialized.game };
   state.games.games[serialized.game.id].authorId = data.author_id;
   state.games.games[serialized.game.id].createdAt = data.created_at;
@@ -79,6 +83,10 @@ function applyGameMigrations(serializedGame: SerializedGame) {
   if ((game.game.version ?? 1) === 1) {
     logger.info('Migrating game from version 1 to 2');
     game = migrateSerializedGameWithPlan(storeMigrationV2, game);
+  }
+  if (game.game.version === 3) {
+    logger.info('Migrating game from version 3 to 4');
+    game = migrateSerializedGameWithPlan(storeMigrationV4, game);
   }
   return game;
 }

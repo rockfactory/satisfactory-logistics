@@ -1,8 +1,8 @@
+import { Checkbox } from '@mantine/core';
+import * as React from 'react';
 import { useStore } from '@/core/zustand';
 import type { FactoryRecipe } from '@/recipes/FactoryRecipe';
 import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
-import { Checkbox } from '@mantine/core';
-import * as React from 'react';
 
 export interface ISolveRecipeCheckboxProps {
   recipe: FactoryRecipe;

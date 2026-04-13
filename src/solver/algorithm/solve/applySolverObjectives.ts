@@ -1,10 +1,15 @@
 import { log } from '@/core/logger/log';
 import { getWorldResourceMax, isWorldResource } from '@/recipes/WorldResources';
-import type { SolverProductionRequest } from '@/solver/algorithm/solveProduction';
 import type { SolverContext } from '@/solver/algorithm/SolverContext';
+import type { SolverProductionRequest } from '@/solver/algorithm/solveProduction';
 
 const logger = log.getLogger('solver:production');
 logger.setLevel('info');
+
+/** Weight bonus for world resources, slightly penalizes extraction vs factory inputs */
+const WORLD_RESOURCE_WEIGHT_OFFSET = 100;
+/** Base weight for non-world factory inputs high enough to be cheaper than most world resources */
+const FACTORY_INPUT_BASE_WEIGHT = 100_000;
 
 export function applySolverObjective(
   ctx: SolverContext,
@@ -35,18 +40,19 @@ export function applySolverObjective(
         )
         .join(' + ')}`;
 
-      // World inputs should be minimized too.
-      // For now, we are only considering _WORLD_ resources
       const inputs = ctx.getWorldInputVars();
-      const worldInputs = inputs.filter(v => isWorldResource(v.resource.id));
-      if (worldInputs.length > 0) {
-        ctx.objective += ` + ${worldInputs
+      if (inputs.length > 0) {
+        ctx.objective += ` + ${inputs
           .map(v => {
-            // We make it _slightly_ more favorable to use Inputs
-            // than world resources. This way, the solver will try to
-            // use inputs first.
-            const inputResourceWeight =
-              getWorldResourceMax(v.resource.id, 'weight') + 100;
+            const isWorld = isWorldResource(v.resource.id);
+            // World resources use their global availability as weight.
+            // Non-world factory inputs use a uniform weight slightly
+            // cheaper than world resources, so the solver prefers them
+            // equally and minimizes total factory input consumption.
+            const inputResourceWeight = isWorld
+              ? getWorldResourceMax(v.resource.id, 'weight') +
+                WORLD_RESOURCE_WEIGHT_OFFSET
+              : FACTORY_INPUT_BASE_WEIGHT;
 
             return `${1 / inputResourceWeight} ${v.variable}`;
           })

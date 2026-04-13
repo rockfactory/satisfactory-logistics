@@ -1,14 +1,13 @@
 import { Checkbox, Group, ScrollArea, Stack } from '@mantine/core';
-import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
-
-import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
 import { xor } from 'lodash';
+import { useEffect, useMemo, useState } from 'react';
+import { useFactoryContext } from '@/FactoryContext';
 import {
   AllFactoryRecipes,
   AllFactoryRecipesMap,
   type FactoryRecipe,
 } from '@/recipes/FactoryRecipe';
+import { RecipeTooltip } from '@/recipes/ui/RecipeTooltip';
 import { useSolverAllowedRecipes } from '@/solver/store/solverSelectors';
 
 export interface ISwitchRecipeActionProps {
@@ -20,7 +19,7 @@ export interface ISwitchRecipeActionProps {
 }
 
 export function useRecipeAlternatesInputState(recipeId: string) {
-  const solverId = useParams<{ id: string }>().id;
+  const solverId = useFactoryContext();
   const allAllowedRecipes = useSolverAllowedRecipes(solverId);
 
   const recipe = AllFactoryRecipesMap[recipeId];
@@ -48,6 +47,7 @@ export function useRecipeAlternatesInputState(recipeId: string) {
 
   // TODO We can probably remove this effect, since the input is re-rendered
   // when applying the changes.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional
   useEffect(() => {
     setAllowedRecipes(defaultAllowedRecipes);
   }, [defaultAllowedRecipes, recipes]);

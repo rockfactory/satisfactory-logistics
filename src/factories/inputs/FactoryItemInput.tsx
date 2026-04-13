@@ -1,10 +1,9 @@
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import {
   CloseButton,
   Combobox,
   Group,
   Input,
-  InputWrapperProps,
+  type InputWrapperProps,
   ScrollArea,
   Text,
   useCombobox,
@@ -13,8 +12,9 @@ import { useMemo, useState } from 'react';
 import {
   AllFactoryItemsMap,
   AllProducibleFactoryItems,
-  FactoryItem,
+  type FactoryItem,
 } from '@/recipes/FactoryItem';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 
 export interface IFactoryItemInputProps
   extends Omit<InputWrapperProps, 'value' | 'onChange'> {
@@ -102,96 +102,94 @@ export function FactoryItemInput(props: IFactoryItemInputProps) {
   }
 
   return (
-    <>
-      <Combobox
-        store={combobox}
-        // Not accessible, but it's faster
-        keepMounted={false}
-        width={300}
-        position="bottom-start"
-        withArrow
-        onOptionSubmit={val => {
-          if (val === selectedItem) {
-            setSelectedItem(null);
-            onChange?.(null);
-            combobox.closeDropdown();
-            return;
-          }
-
-          setSelectedItem(val);
-          onChange?.(val);
+    <Combobox
+      store={combobox}
+      // Not accessible, but it's faster
+      keepMounted={false}
+      width={300}
+      position="bottom-start"
+      withArrow
+      onOptionSubmit={val => {
+        if (val === selectedItem) {
+          setSelectedItem(null);
+          onChange?.(null);
           combobox.closeDropdown();
-        }}
-      >
-        <Input.Wrapper {...inputProps}>
-          <Combobox.Target withAriaAttributes={false}>
-            <Input
-              component="button"
-              onClick={() => combobox.toggleDropdown()}
-              variant={variant}
-              ta={'left'}
-              size={size}
-              w={width}
-              onKeyDown={event => {
-                if (event.key === 'Backspace' || event.key === 'Delete') {
-                  combobox.closeDropdown();
-                  setSelectedItem(null);
-                  onChange?.(null);
-                }
-              }}
-              // justify="space-between"
-              rightSectionPointerEvents={
-                !selectedItem || !clearable ? 'none' : 'all'
+          return;
+        }
+
+        setSelectedItem(val);
+        onChange?.(val);
+        combobox.closeDropdown();
+      }}
+    >
+      <Input.Wrapper {...inputProps}>
+        <Combobox.Target withAriaAttributes={false}>
+          <Input
+            component="button"
+            onClick={() => combobox.toggleDropdown()}
+            variant={variant}
+            ta={'left'}
+            size={size}
+            w={width}
+            onKeyDown={event => {
+              if (event.key === 'Backspace' || event.key === 'Delete') {
+                combobox.closeDropdown();
+                setSelectedItem(null);
+                onChange?.(null);
               }
-              rightSection={
-                selectedItem && clearable ? (
-                  <CloseButton
-                    size="sm"
-                    variant="transparent"
-                    onMouseDown={event => event.preventDefault()}
-                    onClick={() => {
-                      setSelectedItem(null);
-                      onChange?.(null);
-                    }}
-                    aria-label="Clear value"
-                  />
-                ) : (
-                  <Combobox.Chevron />
-                )
-              }
-            >
-              {selectedItem ? (
-                <FactoryItemOption
-                  item={AllFactoryItemsMap[selectedItem]}
-                  size={size}
-                  width={width - 80}
+            }}
+            // justify="space-between"
+            rightSectionPointerEvents={
+              !selectedItem || !clearable ? 'none' : 'all'
+            }
+            rightSection={
+              selectedItem && clearable ? (
+                <CloseButton
+                  size="sm"
+                  variant="transparent"
+                  onMouseDown={event => event.preventDefault()}
+                  onClick={() => {
+                    setSelectedItem(null);
+                    onChange?.(null);
+                  }}
+                  aria-label="Clear value"
                 />
               ) : (
-                <Text c="dimmed" size="sm">
-                  {placeholder}
-                </Text>
-              )}
-            </Input>
-          </Combobox.Target>
-        </Input.Wrapper>
+                <Combobox.Chevron />
+              )
+            }
+          >
+            {selectedItem ? (
+              <FactoryItemOption
+                item={AllFactoryItemsMap[selectedItem]}
+                size={size}
+                width={width - 80}
+              />
+            ) : (
+              <Text c="dimmed" size="sm">
+                {placeholder}
+              </Text>
+            )}
+          </Input>
+        </Combobox.Target>
+      </Input.Wrapper>
 
-        <Combobox.Dropdown>
-          <Combobox.Search
-            value={search}
-            onChange={event => setSearch(event.currentTarget.value)}
-            placeholder="Search items"
-          />
-          <ScrollArea.Autosize type="scroll" mah={200}>
-            <Combobox.Options>
-              {options.length > 0 ? (
-                options
-              ) : (
-                <Combobox.Empty>Nothing found</Combobox.Empty>
-              )}
-            </Combobox.Options>
-          </ScrollArea.Autosize>
-        </Combobox.Dropdown>
-      </Combobox>
-    </>
+      <Combobox.Dropdown>
+        <Combobox.Search
+          value={search}
+          onChange={event => setSearch(event.currentTarget.value)}
+          placeholder="Search items"
+        />
+        <ScrollArea.Autosize type="scroll" mah={200}>
+          <Combobox.Options>
+            {options.length > 0 ? (
+              options
+            ) : (
+              <Combobox.Empty>Nothing found</Combobox.Empty>
+            )}
+          </Combobox.Options>
+        </ScrollArea.Autosize>
+      </Combobox.Dropdown>
+    </Combobox>
   );
 }

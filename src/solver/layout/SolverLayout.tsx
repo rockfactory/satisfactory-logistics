@@ -1,13 +1,4 @@
-import { log } from '@/core/logger/log';
-import { useStore } from '@/core/zustand';
-import type { SolutionNode } from '@/solver/algorithm/solveProduction';
-import { FloatingEdge } from '@/solver/edges/FloatingEdge';
-import { IngredientEdge } from '@/solver/edges/IngredientEdge';
-import type { SolverLayoutState, SolverNodeState } from '@/solver/store/Solver';
-import { usePathSolverLayout } from '@/solver/store/solverSelectors';
-import { toggleFullscreen } from '@/utils/toggleFullscreen.tsx';
 import dagre from '@dagrejs/dagre';
-import { Box } from '@mantine/core';
 import { IconArrowsMaximize, IconMaximizeOff } from '@tabler/icons-react';
 import {
   Background,
@@ -15,23 +6,30 @@ import {
   ConnectionLineType,
   ControlButton,
   Controls,
-  Edge,
-  InternalNode,
+  type Edge,
+  type InternalNode,
   MiniMap,
-  Node,
+  type Node,
+  type OnNodesChange,
   Position,
   ReactFlow,
   useEdgesState,
   useNodesInitialized,
   useNodesState,
   useReactFlow,
-  type OnNodesChange,
   type XYPosition,
 } from '@xyflow/react';
+import { log } from '@/core/logger/log';
+import { useStore } from '@/core/zustand';
+import type { SolutionNode } from '@/solver/algorithm/solveProduction';
+import { FloatingEdge } from '@/solver/edges/FloatingEdge';
+import { IngredientEdge } from '@/solver/edges/IngredientEdge';
+import type { SolverLayoutState, SolverNodeState } from '@/solver/store/Solver';
+import { usePathSolverLayout } from '@/solver/store/solverSelectors';
+import { toggleFullscreen } from '@/utils/toggleFullscreen';
 import '@xyflow/react/dist/style.css';
 import { isEqual } from 'lodash';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ByproductNode } from './nodes/byproduct-node/ByproductNode';
 import { MachineNode } from './nodes/machine-node/MachineNode';
 import { ResourceNode } from './nodes/resource-node/ResourceNode';
@@ -95,7 +93,7 @@ const GraphLayoutOptions = {
 
 function getNodeComputedPosition(
   dagreNode: dagre.Node,
-  node: SolutionNode,
+  node: Pick<SolutionNode, 'measured'>,
   nodeSavedPosition: XYPosition | undefined,
 ): XYPosition {
   if (nodeSavedPosition) {
@@ -132,7 +130,9 @@ const getLayoutedElements = (
   const isHorizontal = GraphLayoutOptions.rankdir === 'LR';
   dagreGraph.setGraph(GraphLayoutOptions);
 
-  logger.debug(`getLayouted: nodes[0] width: ${nodes[0].measured?.width ?? '<null>'}, height: ${nodes[0].measured?.height ?? '<null>'}`); // prettier-ignore
+  logger.debug(
+    `getLayouted: nodes[0] width: ${nodes[0].measured?.width ?? '<null>'}, height: ${nodes[0].measured?.height ?? '<null>'}`,
+  ); // prettier-ignore
   (nodes as (InternalNode | Node)[]).forEach(node => {
     dagreGraph.setNode(node.id, {
       width: snapSizeToGrid(node.measured?.width ?? 0),
@@ -186,6 +186,7 @@ const getLayoutedElements = (
 };
 
 interface SolverLayoutProps {
+  id: string;
   nodes: SolutionNode[];
   edges: Edge[];
   children?: React.ReactNode;
@@ -203,8 +204,7 @@ const edgeTypes = {
 };
 
 export const SolverLayout = (props: SolverLayoutProps) => {
-  const solverId = useParams<{ id: string }>().id;
-  const savedLayout = usePathSolverLayout();
+  const savedLayout = usePathSolverLayout(props.id);
   const { fitView, getNodes, getEdges } = useReactFlow<SolutionNode, Edge>();
 
   const [nodes, setNodes, onNodesChange] = useNodesState(props.nodes);
@@ -224,6 +224,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     setIsFullscreen(document.fullscreenElement === ref.current);
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional
   useEffect(() => {
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => {
@@ -234,6 +235,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   const previousFittedWithNodes = useRef(false);
 
   // When nodes change, we need to re-layout them.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional
   useEffect(() => {
     logger.debug('Initializing nodes...');
 
@@ -255,12 +257,12 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     setInitialFitViewFinished(false);
 
     // setTimeout(() => {}, 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.edges, props.nodes, setEdges, setNodes]);
 
   const { getCompatiblePreviousLayout, cachePreviousLayout } =
     usePreviousSolverLayoutStates();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional
   useEffect(() => {
     // We can't trust `nodesInitialized` to be true, because it's updated later in the loop.
     // We need to check if the nodes have real measurements.
@@ -307,7 +309,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
       const computedLayout = computeSolverLayout(layouted.nodes);
       if (!areSolverLayoutsEqual(savedLayout, computedLayout)) {
         logger.debug('-> Updating saved layout');
-        useStore.getState().setSolverLayout(solverId!, computedLayout);
+        useStore.getState().setSolverLayout(props.id!, computedLayout);
       }
     }
 
@@ -325,7 +327,6 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         setOpacity(1);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     nodesInitialized,
     savedLayout,
@@ -352,13 +353,13 @@ export const SolverLayout = (props: SolverLayoutProps) => {
 
       if (!isEqual(updatedLayout, savedLayout)) {
         if (areSavedLayoutsCompatible(updatedLayout, savedLayout)) {
-          useStore.getState().setSolverLayout(solverId!, updatedLayout);
+          useStore.getState().setSolverLayout(props.id!, updatedLayout);
         } else if (savedLayout != null) {
           cachePreviousLayout(savedLayout);
         }
       }
     },
-    [cachePreviousLayout, getNodes, onNodesChange, savedLayout, solverId],
+    [cachePreviousLayout, getNodes, onNodesChange, savedLayout, props.id],
   );
 
   // Context menu
@@ -383,79 +384,71 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   // );
 
   return (
-    <Box w={'100%'} h={'80vh'} opacity={opacity}>
-      <ReactFlow
-        ref={ref}
-        minZoom={0.2}
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        onNodesChange={handleNodesChange}
-        onEdgesChange={onEdgesChange}
-        connectionLineType={ConnectionLineType.SmoothStep}
-        selectNodesOnDrag={false}
-        // onNodeContextMenu={onNodeContextMenu}
-        fitView
-        snapToGrid
-        colorMode="dark"
-        proOptions={{
-          hideAttribution: true,
-        }}
-        snapGrid={[10, 10]}
-      >
-        <Controls showFitView>
-          <ControlButton
-            onClick={handleToggleFullscreen}
-            aria-label="toggle fullscreen"
-            title="toggle fullscreen"
-            className={classes.fullscreenButton}
+    <ReactFlow
+      ref={ref}
+      minZoom={0.2}
+      nodes={nodes}
+      edges={edges}
+      nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
+      onNodesChange={handleNodesChange}
+      onEdgesChange={onEdgesChange}
+      connectionLineType={ConnectionLineType.SmoothStep}
+      selectNodesOnDrag={false}
+      // onNodeContextMenu={onNodeContextMenu}
+      fitView
+      snapToGrid
+      colorMode="dark"
+      proOptions={{
+        hideAttribution: true,
+      }}
+      snapGrid={[10, 10]}
+    >
+      <Controls showFitView>
+        <ControlButton
+          onClick={handleToggleFullscreen}
+          aria-label="toggle fullscreen"
+          title="toggle fullscreen"
+          className={classes.fullscreenButton}
+        >
+          {isFullscreen ? <IconMaximizeOff /> : <IconArrowsMaximize />}
+        </ControlButton>
+      </Controls>
+      <MiniMap pannable={true} nodeStrokeWidth={3} />
+
+      <svg>
+        <defs>
+          <linearGradient id="edge-gradient">
+            <stop offset="0%" stopColor="var(--mantine-color-gray-7)" />
+            <stop offset="100%" stopColor="var(--mantine-color-gray-4)" />
+          </linearGradient>
+          <linearGradient id="edge-gradient-reverse">
+            <stop offset="0%" stopColor="var(--mantine-color-gray-4)" />
+            <stop offset="100%" stopColor="var(--mantine-color-gray-7)" />
+          </linearGradient>
+
+          <marker
+            id="edge-circle"
+            viewBox="-5 -5 10 10"
+            refX="0"
+            refY="0"
+            markerUnits="strokeWidth"
+            markerWidth="10"
+            markerHeight="10"
+            orient="auto"
           >
-            {isFullscreen ? <IconMaximizeOff /> : <IconArrowsMaximize />}
-          </ControlButton>
-        </Controls>
-        <MiniMap pannable={true} nodeStrokeWidth={3} />
-
-        <svg>
-          <defs>
-            <linearGradient id="edge-gradient">
-              <stop offset="0%" stopColor="var(--mantine-color-gray-7)" />
-              <stop offset="100%" stopColor="var(--mantine-color-gray-4)" />
-            </linearGradient>
-            <linearGradient id="edge-gradient-reverse">
-              <stop offset="0%" stopColor="var(--mantine-color-gray-4)" />
-              <stop offset="100%" stopColor="var(--mantine-color-gray-7)" />
-            </linearGradient>
-
-            <marker
-              id="edge-circle"
-              viewBox="-5 -5 10 10"
-              refX="0"
-              refY="0"
-              markerUnits="strokeWidth"
-              markerWidth="10"
-              markerHeight="10"
-              orient="auto"
-            >
-              <circle
-                stroke="#2a8af6"
-                strokeOpacity="0.75"
-                r="2"
-                cx="0"
-                cy="0"
-              />
-            </marker>
-          </defs>
-        </svg>
-        <Background
-          bgColor="var(--mantine-color-dark-7)"
-          color="var(--mantine-color-dark-4)"
-          variant={BackgroundVariant.Dots}
-          gap={[10, 10]}
-        />
-        {props.children}
-        {/* <Panel>{/* <Button onClick={onLayout}>Layout</Button> </Panel> */}
-      </ReactFlow>
-    </Box>
+            <circle stroke="#2a8af6" strokeOpacity="0.75" r="2" cx="0" cy="0" />
+          </marker>
+        </defs>
+      </svg>
+      <Background
+        bgColor="var(--mantine-color-dark-7)"
+        color="var(--mantine-color-dark-4)"
+        variant={BackgroundVariant.Dots}
+        gap={[10, 10]}
+      />
+      {props.children}
+      {/* <Panel>{/* <Button onClick={onLayout}>Layout</Button> </Panel> */}
+    </ReactFlow>
   );
 };

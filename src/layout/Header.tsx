@@ -1,4 +1,3 @@
-import { GameMenu } from '@/games/menu/GameMenu';
 import {
   Badge,
   Burger,
@@ -12,6 +11,9 @@ import { useDisclosure } from '@mantine/hooks';
 import { capitalize } from 'lodash';
 import { Link } from 'react-router-dom';
 import { UserMenu } from '@/auth/UserMenu';
+import { useStore } from '@/core/zustand';
+import { GameMenu } from '@/games/menu/GameMenu';
+import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import classes from './Header.module.css';
 
 interface HeaderProps {
@@ -25,6 +27,7 @@ export function Header(props: HeaderProps) {
   const { children } = props;
   const theme = useMantineTheme();
   const [opened, { toggle }] = useDisclosure(false);
+  const hasSelectedGame = useStore(state => state.games.selected !== null);
 
   return (
     <header className={classes.header}>
@@ -51,6 +54,7 @@ export function Header(props: HeaderProps) {
           <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
           <Group>
             <GameMenu />
+            {hasSelectedGame && <GameSettingsModal />}
             <UserMenu />
           </Group>
         </Group>

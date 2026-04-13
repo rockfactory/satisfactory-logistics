@@ -1,8 +1,3 @@
-import { RepeatingNumber } from '@/core/intl/NumberFormatter';
-import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
-import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
-import { WORLD_SOURCE_ID } from '@/factories/Factory';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import {
   Anchor,
   Badge,
@@ -19,6 +14,11 @@ import {
 } from '@tabler/icons-react';
 import { useReactFlow } from '@xyflow/react';
 import { Link } from 'react-router-dom';
+import { RepeatingNumber } from '@/core/intl/NumberFormatter';
+import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
+import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
+import { WORLD_SOURCE_ID } from '@/factories/Factory';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import type { IResourceNodeData } from './ResourceNode';
 
 export interface IResourceNodeInputProps {

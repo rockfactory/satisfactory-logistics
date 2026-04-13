@@ -1,7 +1,7 @@
+import type { Node } from '@xyflow/react';
 import type { IByproductNodeData } from '@/solver/layout/nodes/byproduct-node/ByproductNode';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
 import type { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
-import type { Node } from '@xyflow/react';
 import type { SolutionNode } from './solveProduction';
 
 export function isResourceNode(

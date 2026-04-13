@@ -1,20 +1,20 @@
-import { RepeatingNumber } from '@/core/intl/NumberFormatter';
-import { useShallowStore } from '@/core/zustand';
-import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
-import { WORLD_SOURCE_ID, type FactoryInput } from '@/factories/Factory';
-import type { FactoryItem } from '@/recipes/FactoryItem';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { isWorldResource } from '@/recipes/WorldResources';
-import type { SolverNodeState } from '@/solver/store/Solver';
 import { Box, Flex, Group, Popover, Stack, Text, Tooltip } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconTransformFilled } from '@tabler/icons-react';
-import { NodeProps } from '@xyflow/react';
+import type { NodeProps } from '@xyflow/react';
 import { memo } from 'react';
-import { useParams } from 'react-router-dom';
+import { RepeatingNumber } from '@/core/intl/NumberFormatter';
+import { useShallowStore } from '@/core/zustand';
+import { useFactoryContext } from '@/FactoryContext';
+import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
+import { type FactoryInput, WORLD_SOURCE_ID } from '@/factories/Factory';
+import type { FactoryItem } from '@/recipes/FactoryItem';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { isWorldResource } from '@/recipes/WorldResources';
+import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import { useSolverSolution } from '@/solver/layout/solution-context/SolverSolutionContext';
-import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
+import type { SolverNodeState } from '@/solver/store/Solver';
 import { ResourceNodeActions } from './ResourceNodeActions';
 import { ResourceNodeExtractorDetail } from './ResourceNodeExtractorDetail';
 import { ResourceNodeInput } from './ResourceNodeInput';
@@ -48,7 +48,7 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
 
   const [isHovering, { close, open }] = useDisclosure(false);
 
-  const solverId = useParams<{ id: string }>().id;
+  const solverId = useFactoryContext();
 
   // If this is an input to the solver, we need to show the factory
   const sourceFactory = useShallowStore(state => {
@@ -68,6 +68,7 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
     <Popover
       opened={(isHovering || props.selected) && !props.dragging}
       transitionProps={{}}
+      hideDetached={false}
     >
       <Popover.Target>
         <Box

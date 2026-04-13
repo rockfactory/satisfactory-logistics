@@ -1,14 +1,15 @@
 // We need to use _exactly_ these libs since they are the ones used in the original code.
-import type { Factory } from '@/factories/Factory';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { getAllDefaultRecipesIds } from '@/recipes/graph/getAllDefaultRecipes';
-import type { SolverInstance } from '@/solver/store/Solver';
+
 import * as base64 from 'base-64';
 import dayjs from 'dayjs';
 import without from 'lodash/without';
-import pako from 'pako';
+import * as pako from 'pako';
 import { v4 } from 'uuid';
+import type { Factory } from '@/factories/Factory';
 import type { SerializedGame } from '@/games/store/gameFactoriesActions';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
+import { getAllDefaultRecipesIds } from '@/recipes/graph/getAllDefaultRecipes';
+import type { SolverInstance } from '@/solver/store/Solver';
 import type {
   ToolsSerializedData,
   ToolsSerializedTab,

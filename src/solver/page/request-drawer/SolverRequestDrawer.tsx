@@ -1,5 +1,3 @@
-import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
-import type { SolverInstance } from '@/solver/store/Solver';
 import { Button, Center, Drawer, em, Stack, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
@@ -9,16 +7,26 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import { useCallback, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import type { ISolverSolution } from '@/solver/page/SolverPage';
+import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
+import type { ISolverSolution } from '@/solver/page/ISolverSolution';
+import type { SolverInstance } from '@/solver/store/Solver';
 import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
 import { SolverLimitationsDrawer } from './SolverLimitationsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';
 import classes from './SolverRequestDrawer.module.css';
 
+export type SolverRequestTab =
+  | 'inputs-outputs'
+  | 'recipes'
+  | 'limitations'
+  | null;
+
 export interface ISolverRequestDrawerProps {
+  factoryId: string;
   solution: ISolverSolution | null;
   onSolverChangeHandler: FormOnChangeHandler<SolverInstance>;
+  tab?: SolverRequestTab;
+  onTabChange?: (tab: SolverRequestTab) => void;
 }
 
 const SolverRequestTabs = [
@@ -39,12 +47,12 @@ const SolverRequestTabs = [
  * Drawer and buttons to configure the request to the solver.
  */
 export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
-  const id = useParams<{ id: string }>().id;
   const { solution, onSolverChangeHandler } = props;
 
-  const [tab, setTab] = useState<
-    'inputs-outputs' | 'recipes' | 'limitations' | null
-  >(null);
+  const [internalTab, setInternalTab] = useState<SolverRequestTab>(null);
+  const tab = props.tab ?? internalTab;
+  const setTab = props.onTabChange ?? setInternalTab;
+
   const close = useCallback(() => setTab(null), [setTab]);
 
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
@@ -126,18 +134,18 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
               onChange={value => setTab(value as any)}
             >
               <Tabs.Panel value="recipes">
-                <SolverRecipesDrawer />
+                <SolverRecipesDrawer id={props.factoryId} />
               </Tabs.Panel>
               <Tabs.Panel value="inputs-outputs">
                 <SolverInputOutputsDrawer
-                  id={id}
+                  id={props.factoryId}
                   solution={solution}
                   onSolverChangeHandler={onSolverChangeHandler}
                 />
               </Tabs.Panel>
               <Tabs.Panel value="limitations">
                 <SolverLimitationsDrawer
-                  id={id}
+                  id={props.factoryId}
                   onSolverChangeHandler={onSolverChangeHandler}
                 />
               </Tabs.Panel>

@@ -1,8 +1,8 @@
-import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
-import { useShallowStore } from '@/core/zustand';
-import { FactoryOutput } from '@/factories/Factory';
 import { Stack, Table, Text } from '@mantine/core';
 import { useMemo } from 'react';
+import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
+import { useShallowStore } from '@/core/zustand';
+import type { FactoryOutput } from '@/factories/Factory';
 
 export interface IOutputDependenciesTableProps {
   factoryId: string;

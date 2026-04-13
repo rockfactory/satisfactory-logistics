@@ -1,28 +1,37 @@
-import { SelectIconInput } from '@/core/form/SelectIconInput';
+import { type Path, setByPath } from '@clickbar/dot-diver';
 import {
-  FactoryConveyorBelts,
-  FactoryPipelinesExclAlternates,
-} from '@/recipes/FactoryBuilding';
-import { Path, setByPath } from '@clickbar/dot-diver';
-import {
+  Alert,
   Button,
   Checkbox,
   ColorInput,
+  Group,
   Image,
   Modal,
   Space,
   Stack,
+  Switch,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconSettings } from '@tabler/icons-react';
+import { IconCheck, IconSettings } from '@tabler/icons-react';
+import { useEffect } from 'react';
+import { SelectIconInput } from '@/core/form/SelectIconInput';
 import { useFormOnChange } from '@/core/form/useFormOnChange';
 import { useStore } from '@/core/zustand';
-import { GameSettings } from '@/games/Game';
-import { useGameSettings } from '@/games/gamesSlice';
+import type { GameSettings } from '@/games/Game';
+import { useGameAllowedBuildings, useGameSettings } from '@/games/gamesSlice';
+import {
+  FactoryBuildingsForRecipes,
+  FactoryConveyorBelts,
+  FactoryPipelinesExclAlternates,
+} from '@/recipes/FactoryBuilding';
 
-export interface IGameSettingsModalProps {
-  withLabel?: boolean;
+// TODO Consider using @mantine/modals manager for consistent modal patterns
+const gameSettingsModalListeners = new Set<() => void>();
+
+export function openGameSettingsModal() {
+  gameSettingsModalListeners.forEach(fn => fn());
 }
 
 const updateGameSettings = (path: Path<GameSettings>, value: any) => {
@@ -51,17 +60,26 @@ const PipelinesOptions = FactoryPipelinesExclAlternates.map(
     }) as const,
 );
 
-export function GameSettingsModal(props: IGameSettingsModalProps) {
+export function GameSettingsModal() {
   const [opened, { open, close }] = useDisclosure(false);
+
+  useEffect(() => {
+    gameSettingsModalListeners.add(open);
+    return () => {
+      gameSettingsModalListeners.delete(open);
+    };
+  }, [open]);
+
   const settings = useGameSettings();
+  const allowedBuildings = useGameAllowedBuildings();
   const onChangeHandler = useFormOnChange<GameSettings>(updateGameSettings);
 
   return (
     <>
-      <Modal size="md" title="Settings" onClose={close} opened={opened}>
+      <Modal size="md" title="Game Settings" onClose={close} opened={opened}>
         <Stack gap="xs">
-          <Title order={3} mb="md">
-            Usage
+          <Title order={4} mb="md">
+            Usage Highlighting
           </Title>
           <Checkbox
             label="Do not highlight 100% usage"
@@ -92,6 +110,9 @@ export function GameSettingsModal(props: IGameSettingsModalProps) {
               '#fd7e14',
             ]}
           />
+          <Title order={4} mt="md" mb="md">
+            Transport Limits
+          </Title>
           <SelectIconInput
             label="Max Belt Level"
             data={BeltsOptions}
@@ -110,23 +131,104 @@ export function GameSettingsModal(props: IGameSettingsModalProps) {
             onChange={onChangeHandler('maxPipeline')}
             placeholder="No pipeline selected"
           />
+          <Title order={3} mt="md" mb="md">
+            Available Buildings
+          </Title>
+          {allowedBuildings == null ? (
+            <>
+              <Alert
+                color="green"
+                icon={<IconCheck size={16} />}
+                variant="light"
+                mb="xs"
+              >
+                All buildings are available. The solver can use any building
+                without restrictions.
+              </Alert>
+              <Switch
+                label="Restrict buildings"
+                description="Enable to choose which buildings the solver can use"
+                checked={false}
+                onChange={() => {
+                  useStore.getState().enableAllGameBuildings();
+                  useStore.getState().syncGameBuildingsToFactories();
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <Switch
+                label="Restrict buildings"
+                description="Disable to allow all buildings"
+                checked={true}
+                mb="xs"
+                onChange={() => {
+                  useStore
+                    .getState()
+                    .setGameAllowedBuildings(undefined, undefined);
+                  useStore.getState().syncGameBuildingsToFactories();
+                }}
+              />
+              <Group gap="xs" mb="sm">
+                <Button
+                  size="xs"
+                  variant="light"
+                  onClick={() => {
+                    useStore.getState().enableAllGameBuildings();
+                    useStore.getState().syncGameBuildingsToFactories();
+                  }}
+                >
+                  Enable All
+                </Button>
+                <Button
+                  size="xs"
+                  variant="light"
+                  color="red"
+                  onClick={() => {
+                    useStore.getState().disableAllGameBuildings();
+                    useStore.getState().syncGameBuildingsToFactories();
+                  }}
+                >
+                  Disable All
+                </Button>
+              </Group>
+              <Stack gap="xs">
+                {FactoryBuildingsForRecipes.map(building => (
+                  <Checkbox
+                    key={building.id}
+                    label={
+                      <Group gap="xs">
+                        <Image
+                          src={building.imagePath.replace('_256', '_64')}
+                          w={24}
+                          h={24}
+                        />
+                        {building.name}
+                      </Group>
+                    }
+                    checked={allowedBuildings.includes(building.id)}
+                    onChange={e => {
+                      useStore
+                        .getState()
+                        .toggleGameBuilding(
+                          building.id,
+                          e.currentTarget.checked,
+                        );
+                      useStore.getState().syncGameBuildingsToFactories();
+                    }}
+                  />
+                ))}
+              </Stack>
+            </>
+          )}
         </Stack>
         <Space h={50} />
       </Modal>
-      {props.withLabel ? (
-        <Button
-          onClick={open}
-          variant="default"
-          size="sm"
-          leftSection={<IconSettings size={16} />}
-        >
-          Settings
-        </Button>
-      ) : (
-        <Button onClick={open} variant="default" size="sm" pl="xs" pr="xs">
+      <Tooltip label="Game settings: highlights, transport limits & buildings">
+        <Button onClick={open} variant="light" color="gray" px="xs">
           <IconSettings size={16} />
         </Button>
-      )}
+      </Tooltip>
     </>
   );
 }

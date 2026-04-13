@@ -1,21 +1,21 @@
-import { WORLD_SOURCE_ID } from '@/factories/Factory';
-import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
 import {
-  ComboboxItem,
-  ComboboxLikeRenderOptionInput,
+  type ComboboxItem,
+  type ComboboxLikeRenderOptionInput,
   Group,
   Select,
-  SelectProps,
+  type SelectProps,
   Tooltip,
 } from '@mantine/core';
 import { IconWorld } from '@tabler/icons-react';
-import React, { useCallback, useMemo } from 'react';
+import { type ReactNode, useCallback, useMemo } from 'react';
+import { WORLD_SOURCE_ID } from '@/factories/Factory';
+import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
 
 export interface IFactorySelectInputProps extends SelectProps {
   exceptId?: string;
   showOnlyIds?: string[] | null;
   /** To provide note handling */
-  worldSection?: React.ReactNode;
+  worldSection?: ReactNode;
 }
 
 export function FactorySelectInput(props: IFactorySelectInputProps) {

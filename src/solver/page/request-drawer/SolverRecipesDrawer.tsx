@@ -1,11 +1,3 @@
-import { useStore } from '@/core/zustand';
-import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
-import { ImportSavegameRecipesModal } from '@/recipes/savegame/ImportSavegameRecipesModal';
-import type { ParsedSatisfactorySave } from '@/recipes/savegame/ParseSavegameMessages';
-import {
-  usePathSolverInstance,
-  useSolverAllowedRecipes,
-} from '@/solver/store/solverSelectors';
 import {
   ActionIcon,
   Group,
@@ -29,12 +21,22 @@ import {
   IconServerOff,
 } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
+import { useStore } from '@/core/zustand';
+import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
+import { ImportSavegameRecipesModal } from '@/recipes/savegame/ImportSavegameRecipesModal';
+import type { ParsedSatisfactorySave } from '@/recipes/savegame/ParseSavegameMessages';
+import {
+  usePathSolverInstance,
+  useSolverAllowedRecipes,
+} from '@/solver/store/solverSelectors';
 import { SolverRecipesList } from './recipes/SolverRecipesList';
 
-export interface ISolverRecipesDrawerProps {}
+export interface ISolverRecipesDrawerProps {
+  id: string;
+}
 
 export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
-  const instance = usePathSolverInstance();
+  const instance = usePathSolverInstance(props.id);
 
   const allowedRecipes = useSolverAllowedRecipes(instance?.id);
   const [search, setSearch] = useState('');

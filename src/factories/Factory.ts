@@ -1,5 +1,7 @@
 import type { LogisticType } from '@/recipes/logistics/LogisticTypes';
 
+export type FactoryProgressStatus = 'draft' | 'todo' | 'in_progress' | 'done';
+
 export interface Factory {
   id: string;
   name?: string | null;
@@ -7,6 +9,10 @@ export interface Factory {
   inputs: FactoryInput[];
   outputs: FactoryOutput[];
   powerConsumption?: number | null;
+  /** Factory-specific building overrides. If set, overrides game-level allowedBuildings */
+  allowedBuildings?: string[] | null;
+  progress?: FactoryProgressStatus | null;
+  boardIndex?: number | null;
 }
 
 export interface FactoryInput {

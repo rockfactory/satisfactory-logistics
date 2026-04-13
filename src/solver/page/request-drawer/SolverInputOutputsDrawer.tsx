@@ -1,9 +1,7 @@
-import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
-import { loglev } from '@/core/logger/log';
-import type { SolverInstance } from '@/solver/store/Solver';
-import { usePathSolverRequest } from '@/solver/store/solverSelectors';
 import { Button, Grid, Portal, Select, Stack, Text } from '@mantine/core';
 import { IconFocus, IconWand } from '@tabler/icons-react';
+import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
+import { loglev } from '@/core/logger/log';
 import { useShallowStore, useStore } from '@/core/zustand';
 import {
   FactoryInputIcon,
@@ -12,7 +10,9 @@ import {
 import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
 import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
 import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
-import type { ISolverSolution } from '@/solver/page/SolverPage';
+import type { ISolverSolution } from '@/solver/page/ISolverSolution';
+import type { SolverInstance } from '@/solver/store/Solver';
+import { usePathSolverRequest } from '@/solver/store/solverSelectors';
 
 const logger = loglev.getLogger('solver:inputs-outputs');
 

@@ -1,16 +1,3 @@
-import { FormOnChangeHandler } from '@/core/form/useFormOnChange';
-import { useStore } from '@/core/zustand';
-import { useGameSetting } from '@/games/gamesSlice.ts';
-import {
-  FactoryBuildingsForRecipes,
-  FactoryConveyorBelts,
-  FactoryPipelinesExclAlternates,
-} from '@/recipes/FactoryBuilding';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { WorldResourcesList } from '@/recipes/WorldResources';
-import type { SolverInstance } from '@/solver/store/Solver';
-import { usePathSolverRequest } from '@/solver/store/solverSelectors';
 import {
   Alert,
   Checkbox,
@@ -25,6 +12,21 @@ import {
 } from '@mantine/core';
 import { IconInfoCircleFilled } from '@tabler/icons-react';
 import { useState } from 'react';
+import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
+import { useShallowStore, useStore } from '@/core/zustand';
+import { useFactory } from '@/factories/store/factoriesSlice';
+import { useGameAllowedBuildings, useGameSetting } from '@/games/gamesSlice';
+import {
+  FactoryBuildingsForRecipes,
+  FactoryConveyorBelts,
+  FactoryPipelinesExclAlternates,
+} from '@/recipes/FactoryBuilding';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { isWorldResource, WorldResourcesList } from '@/recipes/WorldResources';
+import { allowedToBlockedBuildings } from '@/solver/store/allowedToBlockedBuildings';
+import type { SolverInstance } from '@/solver/store/Solver';
+import { usePathSolverRequest } from '@/solver/store/solverSelectors';
 import { LimitationResourceAmountInput } from './limitations/LimitationResourceAmountInput';
 
 export interface ISolverLimitationsDrawerProps {
@@ -40,8 +42,21 @@ export function SolverLimitationsDrawer(
   const request = usePathSolverRequest();
   const maxPipeline = useGameSetting('maxPipeline');
   const maxBelt = useGameSetting('maxBelt');
+  const factory = useFactory(id);
+  const gameAllowedBuildings = useGameAllowedBuildings();
+
+  const inputResources = useShallowStore(
+    state =>
+      state.factories.factories[id ?? '']?.inputs
+        ?.map(i => i.resource)
+        .filter((r): r is string => r != null && isWorldResource(r)) ?? [],
+  );
 
   const [advanced, setAdvanced] = useState(false);
+  const [useFactoryOverride, setUseFactoryOverride] = useState(
+    factory?.allowedBuildings !== undefined &&
+      factory?.allowedBuildings !== null,
+  );
 
   const showAdvanced =
     advanced ||
@@ -62,11 +77,29 @@ export function SolverLimitationsDrawer(
         <Stack gap="xs">
           <Group gap="xs" justify="space-between">
             <Text size="lg">World Resources</Text>
-            <Switch
-              label="Custom Amounts"
-              checked={showAdvanced}
-              onChange={() => setShowAdvanced(!showAdvanced)}
-            />
+            <Group gap="xs">
+              {inputResources.length > 0 && (
+                <Switch
+                  label="Disable if input"
+                  checked={inputResources.every(r =>
+                    request?.blockedResources?.includes(r),
+                  )}
+                  onChange={e => {
+                    const block = e.currentTarget.checked;
+                    for (const resource of inputResources) {
+                      useStore
+                        .getState()
+                        .toggleBlockedResource(id!, resource, block);
+                    }
+                  }}
+                />
+              )}
+              <Switch
+                label="Custom Amounts"
+                checked={showAdvanced}
+                onChange={() => setShowAdvanced(!showAdvanced)}
+              />
+            </Group>
           </Group>
           {showAdvanced && (
             <Alert color="orange" icon={<IconInfoCircleFilled size={16} />}>
@@ -114,32 +147,95 @@ export function SolverLimitationsDrawer(
           })}
         </Stack>
         <Stack gap="xs">
-          <Text size="lg">Buildings</Text>
-          {FactoryBuildingsForRecipes.map(building => (
-            <Checkbox
-              key={building.id}
-              label={
-                <Group gap="xs">
-                  <Image
-                    src={building.imagePath.replace('_256', '_64')}
-                    width={24}
-                    height={24}
-                  />
-                  {building.name}
-                </Group>
-              }
-              checked={!request?.blockedBuildings?.includes(building.id)}
-              onChange={e =>
-                useStore
-                  .getState()
-                  .toggleBlockedBuilding(
-                    id!,
-                    building.id,
-                    !e.currentTarget.checked,
-                  )
-              }
+          <Group justify="space-between">
+            <Text size="lg">Buildings</Text>
+            <Switch
+              label="Factory Override"
+              size="xs"
+              checked={useFactoryOverride}
+              onChange={e => {
+                const override = e.currentTarget.checked;
+                setUseFactoryOverride(override);
+                if (override) {
+                  useStore
+                    .getState()
+                    .setFactoryAllowedBuildings(
+                      id!,
+                      gameAllowedBuildings ??
+                        FactoryBuildingsForRecipes.map(b => b.id),
+                    );
+                } else {
+                  // Clear factory override, use game settings
+                  useStore.getState().setFactoryAllowedBuildings(id!, null);
+                }
+                // Recalculate blocked buildings from fresh store state
+                const updatedFactory =
+                  useStore.getState().factories.factories[id!];
+                const blockedBuildings = allowedToBlockedBuildings(
+                  updatedFactory?.allowedBuildings ?? gameAllowedBuildings,
+                );
+                useStore.getState().updateSolver(id!, solver => {
+                  solver.request.blockedBuildings = blockedBuildings;
+                });
+              }}
             />
-          ))}
+          </Group>
+          {useFactoryOverride && (
+            <Text size="xs" c="dimmed" mb="xs">
+              This factory has custom building settings that override the global
+              game settings.
+            </Text>
+          )}
+          {!useFactoryOverride && (
+            <Text size="xs" c="dimmed" mb="xs">
+              Using global game building settings. Enable override to customize
+              for this factory.
+            </Text>
+          )}
+          {FactoryBuildingsForRecipes.map(building => {
+            const isChecked = useFactoryOverride
+              ? (factory?.allowedBuildings?.includes(building.id) ?? false)
+              : !request?.blockedBuildings?.includes(building.id);
+
+            return (
+              <Checkbox
+                key={building.id}
+                label={
+                  <Group gap="xs">
+                    <Image
+                      src={building.imagePath.replace('_256', '_64')}
+                      w={24}
+                      h={24}
+                    />
+                    {building.name}
+                  </Group>
+                }
+                checked={isChecked}
+                disabled={!useFactoryOverride}
+                onChange={e => {
+                  if (useFactoryOverride) {
+                    // Update factory's allowedBuildings
+                    useStore
+                      .getState()
+                      .toggleFactoryBuilding(
+                        id!,
+                        building.id,
+                        e.currentTarget.checked,
+                      );
+                    // Recalculate blocked buildings for solver
+                    const updatedFactory =
+                      useStore.getState().factories.factories[id!];
+                    useStore.getState().updateSolver(id!, solver => {
+                      solver.request.blockedBuildings =
+                        allowedToBlockedBuildings(
+                          updatedFactory.allowedBuildings,
+                        );
+                    });
+                  }
+                }}
+              />
+            );
+          })}
         </Stack>
         <Stack gap="sm" style={{ gridColumn: 'span 2' }}>
           <Text size="lg">Logistics</Text>
@@ -157,8 +253,8 @@ export function SolverLimitationsDrawer(
                 <Group gap="xs">
                   <Image
                     src={building.imagePath.replace('_256', '_64')}
-                    width={24}
-                    height={24}
+                    w={24}
+                    h={24}
                   />
                   {building.name}
                 </Group>
@@ -186,8 +282,8 @@ export function SolverLimitationsDrawer(
                 <Group gap="xs">
                   <Image
                     src={building.imagePath.replace('_256', '_64')}
-                    width={24}
-                    height={24}
+                    w={24}
+                    h={24}
                   />
                   {building.name}
                 </Group>

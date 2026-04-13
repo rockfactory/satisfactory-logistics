@@ -1,3 +1,7 @@
+import { alpha, Box, Flex, Group, Popover, Stack, Text } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import type { NodeProps } from '@xyflow/react';
+import { memo } from 'react';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import type { FactoryOutput } from '@/factories/Factory';
 import type { FactoryItem } from '@/recipes/FactoryItem';
@@ -5,10 +9,6 @@ import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import type { SolverNodeState } from '@/solver/store/Solver';
-import { alpha, Box, Flex, Group, Popover, Stack, Text } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { NodeProps } from '@xyflow/react';
-import { memo } from 'react';
 import { ByproductNodeActions } from './ByproductNodeActions';
 
 export type IByproductNodeData = {
@@ -39,6 +39,7 @@ export const ByproductNode = memo((props: IByproductNodeProps) => {
       disabled={isByproduct}
       opened={(isHovering || props.selected) && !props.dragging}
       transitionProps={{}}
+      hideDetached={false}
     >
       <Popover.Target>
         <Box

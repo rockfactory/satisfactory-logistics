@@ -1,5 +1,4 @@
-import { useGameFactoryIsCollapsed } from '@/games/gamesSlice';
-import { Path, setByPath } from '@clickbar/dot-diver';
+import { type Path, setByPath } from '@clickbar/dot-diver';
 import {
   ActionIcon,
   Card,
@@ -10,20 +9,21 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconCalculator, IconTrash } from '@tabler/icons-react';
-import * as React from 'react';
+import type * as React from 'react';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useFormOnChange } from '@/core/form/useFormOnChange';
 import { useStore } from '@/core/zustand';
-import { FactoryExpandActionIcon } from './components/expand/FactoryExpandActionIcon';
+import { FactoryExpandActionIcon } from '@/factories/components/expand/FactoryExpandActionIcon';
 import {
   FactoryInputIcon,
   FactoryOutputIcon,
-} from './components/peek/icons/OutputInputIcons';
-import { Factory } from './Factory';
-import { FactoryInputRow } from './inputs/input-row/FactoryInputRow';
-import { FactoryOutputRow } from './inputs/output-row/FactoryOutputRow';
-import { useIsFactoryVisible } from './useIsFactoryVisible';
+} from '@/factories/components/peek/icons/OutputInputIcons';
+import type { Factory } from '@/factories/Factory';
+import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
+import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
+import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
+import { useGameFactoryIsCollapsed } from '@/games/gamesSlice';
 
 export interface IFactoryRowProps {
   id: string;
@@ -137,7 +137,7 @@ export function FactoryRow(props: IFactoryRowProps) {
       <Collapse
         mt="sm"
         ml="-12px"
-        in={!!factory.inputs?.length && !isCollapsed}
+        expanded={!!factory.inputs?.length && !isCollapsed}
       >
         <Card bg="dark.7" p="sm" radius="sm" mb="-12">
           <Stack gap="xs">

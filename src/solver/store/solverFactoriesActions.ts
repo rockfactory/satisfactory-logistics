@@ -1,11 +1,11 @@
-import { loglev } from '@/core/logger/log';
-import { createActions } from '@/core/zustand-helpers/actions';
-import { Factory, FactoryOutput, type FactoryInput } from '@/factories/Factory';
-import type { ISolverSolution } from '@/solver/page/SolverPage';
 import { bfsFromNode } from 'graphology-traversal';
 import { v4 } from 'uuid';
-import { SolverRequest, type SolverInstance } from './Solver';
+import { loglev } from '@/core/logger/log';
+import { createActions } from '@/core/zustand-helpers/actions';
+import type { Factory, FactoryInput, FactoryOutput } from '@/factories/Factory';
+import type { ISolverSolution } from '@/solver/page/ISolverSolution';
 import { computeAutoSetInputs } from './auto-set/computeAutoSetInputs';
+import type { SolverInstance, SolverRequest } from './Solver';
 
 const logger = loglev.getLogger('store:solver-factories');
 
@@ -35,7 +35,16 @@ export const solverFactoriesActions = createActions({
         logger.info('Creating solver', factoryId);
         const gameAllowedRecipes =
           state.games.games[state.games.selected ?? '']?.allowedRecipes;
-        get().createSolver(factoryId, { allowedRecipes: gameAllowedRecipes });
+        const factory = state.factories.factories[factoryId];
+        const gameAllowedBuildings =
+          state.games.games[state.games.selected ?? '']?.allowedBuildings;
+        // Use factory-specific buildings if set, otherwise use game-level
+        const allowedBuildings =
+          factory?.allowedBuildings ?? gameAllowedBuildings;
+        get().createSolver(factoryId, {
+          allowedRecipes: gameAllowedRecipes,
+          allowedBuildings: allowedBuildings,
+        });
       }
     },
   createFactoryWithSolver:
@@ -50,7 +59,15 @@ export const solverFactoriesActions = createActions({
       get().addFactoryIdToGame(targetId, factoryId);
 
       const gameAllowedRecipes = state.games.games[targetId]?.allowedRecipes;
-      get().createSolver(factoryId, { allowedRecipes: gameAllowedRecipes });
+      const gameAllowedBuildings =
+        state.games.games[targetId]?.allowedBuildings;
+      // Use factory-specific buildings if set, otherwise use game-level
+      const allowedBuildings =
+        factory?.allowedBuildings ?? gameAllowedBuildings;
+      get().createSolver(factoryId, {
+        allowedRecipes: gameAllowedRecipes,
+        allowedBuildings: allowedBuildings,
+      });
     },
   // Input/Output should be synced
   addFactoryInput:
@@ -120,7 +137,7 @@ export const solverFactoriesActions = createActions({
     (factoryId: string, outputIndex: number, output: Partial<FactoryOutput>) =>
     state => {
       const factoryOutput =
-        state.factories.factories[factoryId]?.outputs![outputIndex];
+        state.factories.factories[factoryId]?.outputs[outputIndex];
 
       if (output.resource) {
         factoryOutput.resource = output.resource;
@@ -153,6 +170,9 @@ export const solverFactoriesActions = createActions({
    * Update the solver instance with the new somersloops value.
    * Doing this will also update the somersloops for all outputs,
    * recomputing the total somersloops.
+   *
+   * @param somersloopsPerMachine - per-machine value (0..slots), used by the LP solver
+   * @param somersloopsTotal - total across all buildings, used for factory output display
    */
   updateSolverSomersloops:
     (
@@ -160,7 +180,8 @@ export const solverFactoriesActions = createActions({
       factoryId: string,
       // nodeId is variable name
       nodeId: string,
-      somersloops: number,
+      somersloopsPerMachine: number,
+      somersloopsTotal: number,
     ) =>
     state => {
       // 1. Update the solver instance with the new somersloops value
@@ -170,7 +191,8 @@ export const solverFactoriesActions = createActions({
       if (!solvers[factoryId].nodes[nodeId])
         solvers[factoryId].nodes[nodeId] = {};
 
-      solvers[factoryId].nodes[nodeId].somersloops = somersloops;
+      solvers[factoryId].nodes[nodeId].somersloops = somersloopsPerMachine;
+      solvers[factoryId].nodes[nodeId].somersloopsTotal = somersloopsTotal;
 
       // 2. Recompute somersloops for all outputs
       const somersloopNodes = Object.entries(solvers[factoryId].nodes).filter(
@@ -191,6 +213,14 @@ export const solverFactoriesActions = createActions({
 
         let isOutputUpdated = false;
 
+        // Use somersloopsTotal for factory output display.
+        // Fall back to somersloops (per-machine) for old saves where
+        // somersloopsTotal doesn't exist yet.
+        const displayTotal =
+          somersloopNodeState.somersloopsTotal ??
+          somersloopNodeState.somersloops ??
+          0;
+
         bfsFromNode(
           graph,
           somersloopNodeId,
@@ -204,10 +234,15 @@ export const solverFactoriesActions = createActions({
               o => o.resource === attrs.resource.id,
             );
             if (output) {
-              logger.info('Adding somersloops', somersloopNodeState.somersloops, 'to output', output.resource, 'from node', somersloopNodeId); // prettier-ignore
-              output.somersloops =
-                (output.somersloops ?? 0) +
-                (somersloopNodeState.somersloops ?? 0);
+              logger.info(
+                'Adding somersloops',
+                displayTotal,
+                'to output',
+                output.resource,
+                'from node',
+                somersloopNodeId,
+              ); // prettier-ignore
+              output.somersloops = (output.somersloops ?? 0) + displayTotal;
 
               isOutputUpdated = true;
             }

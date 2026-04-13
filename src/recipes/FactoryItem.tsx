@@ -18,7 +18,6 @@ export interface FactoryItem {
   isVechicle?: boolean;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export enum FactoryItemForm {
   Solid = 'Solid',
   Liquid = 'Liquid',
@@ -28,16 +27,20 @@ export enum FactoryItemForm {
 }
 
 import { IconBolt } from '@tabler/icons-react';
-import { last } from 'lodash';
-import type React from 'react';
 import type { FactoryItemId } from './FactoryItemId';
 import RawFactoryItems from './FactoryItems.json';
+
+/**
+ * Reserved static index for the custom Power item.
+ * The parser must skip this index when assigning new items.
+ */
+export const POWER_ITEM_INDEX = 176;
 
 export const AllFactoryItems: FactoryItem[] = RawFactoryItems as FactoryItem[];
 AllFactoryItems.push({
   imagePath: '',
   id: 'Desc_Power_CX',
-  index: last(AllFactoryItems)!.index + 1,
+  index: POWER_ITEM_INDEX,
   name: 'Power',
   displayName: 'Power',
   description: 'Power',
@@ -68,7 +71,6 @@ export const AllFactoryItemsMap = AllFactoryItems.reduce(
   {} as Record<string, FactoryItem>,
 );
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function getFactoryItem(id: FactoryItemId): FactoryItem {
   const item = AllFactoryItemsMap[id];
   if (!item) {

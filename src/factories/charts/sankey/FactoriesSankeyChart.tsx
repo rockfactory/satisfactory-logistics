@@ -1,14 +1,14 @@
-import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { Alert, Box, Container, Paper, Text } from '@mantine/core';
 import {
-  ResponsiveSankey,
   type DefaultLink,
   type DefaultNode,
+  ResponsiveSankey,
 } from '@nivo/sankey';
 import { ErrorBoundary } from '@sentry/react';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useMemo } from 'react';
+import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 
 const getResourceName = (resourceId: string) => {
   return AllFactoryItemsMap[resourceId]?.name ?? 'N/A';
@@ -73,36 +73,38 @@ export function FactoriesSankeyChart(props: IFactoriesSankeyChartProps) {
   }
 
   return (
-    <Container size="lg" mt="lg" mb={100}>
-      <ErrorBoundary
-        fallback={
-          <Alert
-            title="An error occurred while rendering chart"
-            color="red"
-            icon={<IconAlertCircle />}
-            variant="light"
-          >
-            Make sure to avoid circular paths in your logistics chain.
-          </Alert>
-        }
-        showDialog
-      >
-        <Box h={400}>
-          <ResponsiveSankey
-            data={data}
-            linkTooltip={info => {
-              return (
-                <Paper shadow="sm" radius="sm" p="md">
-                  <Text size="md">
-                    {info.link.source.id} → {info.link.target.id}:{' '}
-                    {info.link.resourceLabel} ({info.link.value})
-                  </Text>
-                </Paper>
-              );
-            }}
-          />
-        </Box>
-      </ErrorBoundary>
-    </Container>
+    <ErrorBoundary
+      fallback={
+        <Alert
+          title="An error occurred while rendering chart"
+          color="red"
+          icon={<IconAlertCircle />}
+          variant="light"
+        >
+          Make sure to avoid circular paths in your logistics chain.
+        </Alert>
+      }
+      showDialog
+    >
+      <ResponsiveSankey
+        data={data}
+        margin={{
+          top: 32,
+          bottom: 32,
+          left: 32,
+          right: 32,
+        }}
+        linkTooltip={info => {
+          return (
+            <Paper shadow="sm" radius="sm" p="md">
+              <Text size="md">
+                {info.link.source.id} → {info.link.target.id}:{' '}
+                {info.link.resourceLabel} ({info.link.value})
+              </Text>
+            </Paper>
+          );
+        }}
+      />
+    </ErrorBoundary>
   );
 }

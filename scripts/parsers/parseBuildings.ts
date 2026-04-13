@@ -1,4 +1,5 @@
 import fs from 'fs';
+import sortBy from 'lodash/sortBy';
 import voca from 'voca';
 import { convertImageName } from './images/convertImageName';
 import { parseClearanceData } from './parseClearanceData';
@@ -33,11 +34,28 @@ export function parseBuildings(docsJson: any) {
       return acc;
     }, {});
 
-  const buildings = rawBuildings
-    .map((building, index) =>
-      parseBuilding(building, index, buildingDescriptorsImages),
-    )
-    .filter(Boolean);
+  const previousBuildings = JSON.parse(
+    fs.readFileSync('./src/recipes/FactoryBuildings.json').toString(),
+  );
+  const previousBuildingsIndexes = previousBuildings.reduce((acc, b) => {
+    acc[b.id] = b.index;
+    return acc;
+  }, {} as Record<string, number>);
+
+  let nextIndex = previousBuildings.length;
+
+  const buildings = sortBy(
+    rawBuildings
+      .map(building => {
+        const index =
+          previousBuildingsIndexes[building.ClassName] != null
+            ? previousBuildingsIndexes[building.ClassName]
+            : nextIndex++;
+        return parseBuilding(building, index, buildingDescriptorsImages);
+      })
+      .filter(Boolean),
+    'index',
+  );
 
   ParsingContext.buildings = buildings;
 

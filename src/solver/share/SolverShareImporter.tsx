@@ -1,13 +1,13 @@
-import { loglev } from '@/core/logger/log';
 import { Center, Container, Loader } from '@mantine/core';
 import { notifications } from '@mantine/notifications';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { v4 } from 'uuid';
+import { loglev } from '@/core/logger/log';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
 import { sharedSolverUUIDTranslator } from '@/solver/store/Solver';
-import { ISharedSolverData } from './SolverShareButton';
+import type { ISharedSolverData } from './SolverShareButton';
 
 const logger = loglev.getLogger('solver:importer');
 
@@ -54,20 +54,35 @@ export function SolverShareImporterPage(props: ISolverShareImporterPageProps) {
             )?.[1];
 
         if (existing) {
-          logger.info('Already loaded shared solver with id', existing.id, 'remote id is', sharedId); // prettier-ignore
+          logger.info(
+            'Already loaded shared solver with id',
+            existing.id,
+            'remote id is',
+            sharedId,
+          ); // prettier-ignore
           // TODO Update? Only if newer?
-          navigate(`/factories/${existing.id}/calculator`);
+          useStore.getState().solvers.current = existing.id;
+
+          navigate(`/factories/calculator`);
           return;
         }
 
-        logger.info('Loading shared solver with id', localId, 'remote id is', sharedId, { instance }); // prettier-ignore
+        logger.info(
+          'Loading shared solver with id',
+          localId,
+          'remote id is',
+          sharedId,
+          { instance },
+        ); // prettier-ignore
         useStore.getState().loadSharedSolver(instance, factory, {
           isOwner,
           localId,
           sharedId,
         });
 
-        navigate(`/factories/${localId}/calculator`);
+        useStore.getState().solvers.current = localId;
+
+        navigate(`/factories/calculator`);
       } catch (error) {
         console.error('Error loading shared solver:', error);
         notifications.show({

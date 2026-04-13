@@ -1,9 +1,9 @@
+import { type Path, setByPath } from '@clickbar/dot-diver';
+import { useCallback, useMemo } from 'react';
 import { useFormOnChange } from '@/core/form/useFormOnChange';
 import { useShallowStore, useStore } from '@/core/zustand';
-import { Factory } from '@/factories/Factory';
-import { SolverRequest } from '@/solver/store/Solver';
-import { Path, setByPath } from '@clickbar/dot-diver';
-import { useCallback, useMemo } from 'react';
+import type { Factory } from '@/factories/Factory';
+import type { SolverRequest } from '@/solver/store/Solver';
 
 export const useFactoryOnChangeHandler = (id: string | null | undefined) => {
   const updater = useCallback(
@@ -14,8 +14,8 @@ export const useFactoryOnChangeHandler = (id: string | null | undefined) => {
     },
     [id],
   );
-  const onChangeHandler = useFormOnChange<Factory | SolverRequest>(updater);
-  return onChangeHandler;
+
+  return useFormOnChange<Factory | SolverRequest>(updater);
 };
 
 export const useFactoryInputsOutputs = (id: string | null | undefined) => {
@@ -35,6 +35,8 @@ export const useFactorySimpleAttributes = (id: string | null | undefined) => {
       id: factory?.id,
       name: factory?.name,
       description: factory?.description,
+      progress: factory?.progress,
+      boardIndex: factory?.boardIndex,
     };
   });
 };

@@ -23,6 +23,7 @@ export interface RecipeIngredient {
 }
 
 import { AllFactoryItemsMap } from './FactoryItem';
+import type { FactoryItemId } from './FactoryItemId';
 import RawFactoryRecipes from './FactoryRecipes.json';
 import { isWorldResource } from './WorldResources';
 
@@ -43,6 +44,19 @@ export function isProducibleResource(resource: string) {
 
 const ProducibleItems = new Set(
   AllFactoryRecipes.flatMap(r => r.products.map(p => p.resource)),
+).union(
+  // We need to add these items manually, because they are not produced by
+  // any recipe but are still usable in recipes.
+  new Set([
+    'Desc_Leaves_C',
+    'Desc_Wood_C',
+    'Desc_Mycelia_C',
+    'Desc_StingerParts_C',
+    'Desc_HatcherParts_C',
+    'Desc_HogParts_C',
+    'Desc_SpitterParts_C',
+    'Desc_Gift_C',
+  ] as FactoryItemId[]),
 );
 export const NotProducibleItems = new Set(
   Array.from(

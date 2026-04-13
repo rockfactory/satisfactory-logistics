@@ -1,6 +1,6 @@
+import { xor } from 'lodash';
 import type { SolutionNode } from '@/solver/algorithm/solveProduction';
 import type { SolverLayoutState } from '@/solver/store/Solver';
-import { xor } from 'lodash';
 
 export function isSavedLayoutValid(
   nodes: SolutionNode[],

@@ -49,18 +49,53 @@ export function Footer({ compact }: { compact?: boolean }) {
           </Text>
           <Group className={classes.links}>{items}</Group>
         </Group>
-        <Group>
-          <KofiSupportButton />
-          <FeedbackButton />
-          <Button
-            className={classes.discordButton}
-            leftSection={<IconBrandDiscord size={20} />}
-            component="a"
-            href="https://discord.gg/Crd8r87dwY"
-          >
-            Join Discord
-          </Button>
-        </Group>
+        {compact ? (
+          <Group gap="sm">
+            <Anchor
+              c="dimmed"
+              size="sm"
+              href="https://ko-fi.com/satisfactorylogistics"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Donate
+            </Anchor>
+            <Anchor
+              c="dimmed"
+              size="sm"
+              href="https://satisfactorylogistics.featurebase.app"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Feedback
+            </Anchor>
+            <Anchor
+              c="dimmed"
+              size="sm"
+              href="https://discord.gg/Crd8r87dwY"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Group gap={4}>
+                <IconBrandDiscord size={14} />
+                Discord
+              </Group>
+            </Anchor>
+          </Group>
+        ) : (
+          <Group>
+            <KofiSupportButton />
+            <FeedbackButton />
+            <Button
+              className={classes.discordButton}
+              leftSection={<IconBrandDiscord size={20} />}
+              component="a"
+              href="https://discord.gg/Crd8r87dwY"
+            >
+              Join Discord
+            </Button>
+          </Group>
+        )}
       </Container>
 
       {!compact && (

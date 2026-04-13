@@ -1,8 +1,8 @@
-import {
-  SelectIconInput,
-  type ISelectInputProps,
-} from '@/core/form/SelectIconInput';
 import { Image } from '@mantine/core';
+import {
+  type ISelectInputProps,
+  SelectIconInput,
+} from '@/core/form/SelectIconInput';
 import { LogisticTypes } from './LogisticTypes';
 
 export interface ILogisticTypeSelectProps
@@ -12,12 +12,7 @@ const LogisticOptions = LogisticTypes.map(logisticType => ({
   value: logisticType.id,
   label: logisticType.name,
   icon: (
-    <Image
-      src={logisticType.imagePath}
-      width={16}
-      height={16}
-      alt={logisticType.name}
-    />
+    <Image src={logisticType.imagePath} w={16} h={16} alt={logisticType.name} />
   ),
 }));
 

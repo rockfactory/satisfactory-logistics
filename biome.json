@@ -1,0 +1,65 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "all",
+      "arrowParentheses": "asNeeded"
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUnusedVariables": "off",
+        "noUnusedFunctionParameters": "off",
+        "useExhaustiveDependencies": "warn"
+      },
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noEmptyInterface": "off",
+        "noArrayIndexKey": "warn",
+        "noDoubleEquals": "warn",
+        "noImplicitAnyLet": "warn",
+        "useIterableCallbackReturn": "warn",
+        "noUnknownAtRules": "warn"
+      },
+      "style": {
+        "useImportType": "warn",
+        "useTemplate": "off",
+        "noNonNullAssertion": "off",
+        "noParameterAssign": "off"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "warn",
+        "noStaticElementInteractions": "warn"
+      },
+      "complexity": {
+        "noUselessSwitchCase": "warn",
+        "noImportantStyles": "warn"
+      }
+    }
+  },
+  "files": {
+    "includes": [
+      "src/**",
+      "!src/core/database.types.ts",
+      "!src/recipes/Factory*.json",
+      "!src/recipes/FactoryItemId.ts",
+      "!src/recipes/FactoryRecipeId.ts"
+    ]
+  }
+}

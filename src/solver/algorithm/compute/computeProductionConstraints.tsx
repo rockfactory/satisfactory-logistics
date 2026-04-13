@@ -1,3 +1,4 @@
+import { last } from 'lodash';
 import { log } from '@/core/logger/log';
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
@@ -9,7 +10,6 @@ import {
   setGraphResource,
 } from '@/solver/algorithm/SolverContext';
 import type { SolverOutputNode } from '@/solver/algorithm/SolverNode';
-import { last } from 'lodash';
 
 const logger = log.getLogger('recipes:solver');
 logger.setLevel('info');
@@ -48,7 +48,10 @@ export function computeProductionConstraints(
     const mainProductItem = AllFactoryItemsMap[recipe.products[0].resource];
     const mainProductVar = `p${mainProductItem.index}r${recipe.index}`;
     const mainProductAmount = (recipe.products[0].amount * 60) / recipe.time;
-    logger.debug(' Processing recipe:', recipe.name, { mainProductItem, recipe }); // prettier-ignore
+    logger.debug(' Processing recipe:', recipe.name, {
+      mainProductItem,
+      recipe,
+    }); // prettier-ignore
 
     // const buildingsVar = `c${recipe.index}`;
     const building = AllFactoryBuildingsMap[recipe.producedIn];
@@ -66,7 +69,6 @@ export function computeProductionConstraints(
       building.averagePowerConsumption / mainProductAmount;
 
     const somersloops = ctx.request?.nodes?.[mainProductVar]?.somersloops ?? 0;
-    const overclock = ctx.request?.nodes?.[mainProductVar]?.overclock ?? 1;
 
     ctx.constraints.push(
       `${recipeEnergyVar} - ${energyConsumptionFactor} ${mainProductVar} = 0`,
@@ -140,15 +142,16 @@ export function computeProductionConstraints(
       );
 
       if (somersloops > 0) {
-        const productAmountPerSloop =
-          (productAmount / building.somersloopSlots) * overclock;
+        const sloopRatio = Math.min(somersloops / building.somersloopSlots, 1);
         ctx.constraints.push(
-          `${recipeAmplifiedProductVar} - ${recipeOriginalProductVar} <= 0`,
+          `${recipeAmplifiedProductVar} - ${sloopRatio} ${recipeOriginalProductVar} <= 0`,
         );
-        ctx.bounds.push(
-          `${recipeAmplifiedProductVar} <= ${somersloops * productAmountPerSloop}`,
-        );
-        logger.info('  Adding somersloops:', recipe.name, productAmountPerSloop, last(ctx.constraints)); // prettier-ignore
+        logger.info(
+          '  Adding somersloops:',
+          recipe.name,
+          `ratio=${sloopRatio}`,
+          last(ctx.constraints),
+        ); // prettier-ignore
       } else {
         ctx.constraints.push(`${recipeAmplifiedProductVar} = 0`);
       }

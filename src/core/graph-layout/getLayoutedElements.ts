@@ -1,6 +1,11 @@
-import { log } from '@/core/logger/log';
 import dagre from '@dagrejs/dagre';
-import { Edge, InternalNode, Node, Position } from '@xyflow/react';
+import {
+  type Edge,
+  type InternalNode,
+  type Node,
+  Position,
+} from '@xyflow/react';
+import { log } from '@/core/logger/log';
 import '@xyflow/react/dist/style.css';
 
 const logger = log.getLogger('graph-layout');
@@ -24,7 +29,9 @@ export const getLayoutedElements = (nodes: Node[], edges: Edge[]) => {
   const isHorizontal = GraphLayoutOptions.rankdir === 'LR';
   dagreGraph.setGraph(GraphLayoutOptions);
 
-  logger.debug(`getLayouted: nodes[0] width: ${nodes[0].measured?.width ?? '<null>'}, height: ${nodes[0].measured?.height ?? '<null>'}`); // prettier-ignore
+  logger.debug(
+    `getLayouted: nodes[0] width: ${nodes[0].measured?.width ?? '<null>'}, height: ${nodes[0].measured?.height ?? '<null>'}`,
+  ); // prettier-ignore
   (nodes as (InternalNode | Node)[]).forEach(node => {
     dagreGraph.setNode(node.id, {
       width: snapSizeToGrid(node.measured?.width ?? 0),

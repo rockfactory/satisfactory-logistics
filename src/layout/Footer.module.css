@@ -12,11 +12,11 @@
   padding-bottom: var(--mantine-spacing-xl);
 
   &.compact {
-    padding-top: var(--mantine-spacing-xs);
-    padding-bottom: var(--mantine-spacing-xs);
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 
-  @media (max-width: $mantine-breakpoint-xs) {
+  @mixin smaller-than xs {
     flex-direction: column;
   }
 
@@ -24,7 +24,7 @@
 }
 
 .links {
-  @media (max-width: $mantine-breakpoint-xs) {
+  @mixin smaller-than xs {
     margin-top: var(--mantine-spacing-md);
   }
 }

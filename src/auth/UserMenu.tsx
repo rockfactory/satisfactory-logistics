@@ -14,9 +14,9 @@ import cx from 'clsx';
 import { useState } from 'react';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
+import { useSession } from './authSelectors';
 import { LoginModal } from './LoginModal';
 import classes from './UserMenu.module.css';
-import { useSession } from './authSelectors';
 
 export interface IUserMenuProps {}
 

@@ -1,18 +1,3 @@
-import { FormOnChangeHandler } from '@/core/form/useFormOnChange';
-import { useShallowStore, useStore } from '@/core/zustand';
-import {
-  FactoryInputIcon,
-  FactoryOutputIcon,
-} from '@/factories/components/peek/icons/OutputInputIcons';
-import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
-import { useOutputUsage } from '@/factories/components/usage/useOutputUsage';
-import { Factory, FactoryInput, WORLD_SOURCE_ID } from '@/factories/Factory';
-import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
-import { FactorySelectInput } from '@/factories/inputs/FactorySelectInput';
-import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
-import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
-import { LogisticTypeSelect } from '@/recipes/logistics/LogisticTypeSelect';
-import { WorldResourcesList } from '@/recipes/WorldResources';
 import {
   ActionIcon,
   Group,
@@ -24,6 +9,26 @@ import {
 } from '@mantine/core';
 import { IconTrash, IconWorld } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
+import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
+import { useShallowStore, useStore } from '@/core/zustand';
+import {
+  FactoryInputIcon,
+  FactoryOutputIcon,
+} from '@/factories/components/peek/icons/OutputInputIcons';
+import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
+import { useOutputUsage } from '@/factories/components/usage/useOutputUsage';
+import {
+  type Factory,
+  type FactoryInput,
+  type FactoryOutput,
+  WORLD_SOURCE_ID,
+} from '@/factories/Factory';
+import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
+import { FactorySelectInput } from '@/factories/inputs/FactorySelectInput';
+import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
+import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
+import { LogisticTypeSelect } from '@/recipes/logistics/LogisticTypeSelect';
+import { WorldResourcesList } from '@/recipes/WorldResources';
 import { FactoryInputConstraintSelect } from './FactoryInputConstraintSelect';
 
 export interface IFactoryInputRowProps {
@@ -33,6 +38,21 @@ export interface IFactoryInputRowProps {
   onChangeHandler: FormOnChangeHandler<Factory>;
   displayMode?: 'solver' | 'factory';
 }
+
+const useAllowedItems = (
+  input: FactoryInput,
+  sourceOutputs: FactoryOutput[] | undefined,
+) => {
+  return useMemo(() => {
+    if (input.factoryId === WORLD_SOURCE_ID) {
+      return WorldResourcesList;
+    }
+
+    return (
+      sourceOutputs?.filter(o => o.resource).map(o => o.resource!) ?? undefined
+    );
+  }, [input.factoryId, sourceOutputs]);
+};
 
 export function FactoryInputRow(props: IFactoryInputRowProps) {
   const { index, input, factoryId, displayMode = 'factory' } = props;
@@ -55,12 +75,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
       : null,
   );
 
-  const allowedItems = useMemo(() => {
-    return input.factoryId === WORLD_SOURCE_ID
-      ? WorldResourcesList
-      : (sourceOutputs?.filter(o => o.resource).map(o => o.resource!) ??
-          undefined);
-  }, [input.factoryId, sourceOutputs]);
+  const allowedItems = useAllowedItems(input, sourceOutputs);
 
   const usage = useOutputUsage({
     factoryId: input.factoryId,
@@ -126,7 +141,11 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
             )}
             <Group gap="sm" align="center">
               {usage.percentage > 1 && (
-                <span>Missing {usage.usedAmount - usage.producedAmount}</span>
+                <span>
+                  Missing{' '}
+                  {Math.round((usage.usedAmount - usage.producedAmount) * 100) /
+                    100}
+                </span>
               )}
               <Text size="sm">
                 <FactoryOutputIcon size={16} /> {usage.producedAmount}
@@ -154,7 +173,11 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           onBlur={() => setFocused(false)}
           error={
             usage.percentage > 1 ? (
-              <span>Missing {usage.usedAmount - usage.producedAmount}</span>
+              <span>
+                Missing{' '}
+                {Math.round((usage.usedAmount - usage.producedAmount) * 100) /
+                  100}
+              </span>
             ) : undefined
           }
           onChange={onChangeHandler(`inputs.${index}.amount`)}

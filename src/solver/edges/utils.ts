@@ -1,4 +1,4 @@
-import { InternalNode, Position } from '@xyflow/react';
+import { type InternalNode, Position } from '@xyflow/react';
 
 // returns the position (top,right,bottom or right) passed node compared to
 function getParams(nodeA: InternalNode, nodeB: InternalNode) {

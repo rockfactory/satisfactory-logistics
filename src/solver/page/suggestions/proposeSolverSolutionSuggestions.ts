@@ -1,3 +1,4 @@
+import type { Highs } from 'highs';
 import type { Factory } from '@/factories/Factory';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import {
@@ -10,13 +11,13 @@ import { solveProduction } from '@/solver/algorithm/solveProduction';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
 import { fixSolverRoundingError } from '@/solver/store/auto-set/fixSolverRoundingError';
 import type { SolverRequest } from '@/solver/store/Solver';
-import type { Highs } from 'highs';
 
 export interface ISolverSolutionSuggestion {
   addRecipes?: string[];
   resetOutputMinimum?: { index: number; resource: string }[];
   changeInputsUsage?: { index: number; resource: string }[];
   unblockResources?: string[];
+  unblockBuildings?: string[];
 }
 
 export function proposeSolverSolutionSuggestions(
@@ -84,6 +85,26 @@ export function proposeSolverSolutionSuggestions(
           resource: node.data.resource.id,
         }));
       console.log('Solution found with unblocked resources', suggestions);
+    }
+  }
+
+  // 0B. Try to unblock buildings
+  if (request.blockedBuildings?.length) {
+    const withUnblockedBuildings = solveProduction(highs, {
+      ...request,
+      blockedBuildings: [],
+      ...inputsOutputs,
+    });
+    if (isSolutionFound(withUnblockedBuildings)) {
+      const usedBuildingIds = new Set(
+        withUnblockedBuildings.nodes
+          .filter(node => node.type === 'Machine')
+          .map(node => (node.data as IMachineNodeData).recipe.producedIn),
+      );
+      suggestions.unblockBuildings = request.blockedBuildings.filter(id =>
+        usedBuildingIds.has(id),
+      );
+      console.log('Solution found with unblocked buildings', suggestions);
     }
   }
 
