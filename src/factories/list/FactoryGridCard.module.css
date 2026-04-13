@@ -1,0 +1,18 @@
+.card {
+  overflow: hidden;
+}
+
+.cardContent {
+  min-width: 0;
+  flex: 1;
+}
+
+.outputsList {
+  min-width: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(to right, black calc(100% - 24px), transparent);
+}
+
+.progressChip {
+  flex-shrink: 0;
+}

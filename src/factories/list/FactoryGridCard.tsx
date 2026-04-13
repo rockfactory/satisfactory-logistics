@@ -7,6 +7,7 @@ import { ProgressChip } from '@/factories/components/ProgressChip';
 import type { Factory } from '@/factories/Factory';
 import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import classes from './FactoryGridCard.module.css';
 
 export interface IFactoryGridCard {
   id: string;
@@ -35,17 +36,21 @@ export function FactoryGridCard(props: IFactoryGridCard) {
   }
 
   return (
-    <Card key={id} withBorder component={Link} to={id}>
+    <Card key={id} withBorder component={Link} to={id} className={classes.card}>
       <Group justify="space-between" align="center" wrap="nowrap">
-        <Stack justify="space-between" align="stretch">
+        <Stack
+          justify="space-between"
+          align="stretch"
+          className={classes.cardContent}
+        >
           <Text fw={500} size="lg">
             {factory.name ?? 'Unnamed'}
           </Text>
           <Flex
             align="center"
-            wrap={'nowrap'}
+            wrap="nowrap"
             gap="sm"
-            style={{ textOverflow: 'ellipsis', minWidth: 0 }}
+            className={classes.outputsList}
           >
             {factory.outputs.map((output, outputIndex) => (
               <Group gap={6} wrap={'nowrap'} key={outputIndex}>
@@ -61,6 +66,7 @@ export function FactoryGridCard(props: IFactoryGridCard) {
             status={factory.progress ?? undefined}
             size="md"
             variant="light"
+            className={classes.progressChip}
           />
         )}
       </Group>
