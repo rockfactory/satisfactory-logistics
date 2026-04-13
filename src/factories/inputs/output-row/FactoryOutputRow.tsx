@@ -41,6 +41,8 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
   // are synced with solvers
   const onChangeHandler = useFactoryOnChangeHandler(factoryId);
 
+  const isMaximized = output.objective === 'max';
+
   const isVisible = useIsFactoryVisible(factoryId, false, output.resource);
   if (!isVisible && displayMode === 'factory') return null;
 
@@ -57,12 +59,12 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       />
 
       <Tooltip
-        disabled={output.objective !== 'max'}
+        disabled={!isMaximized}
         label={
-          output.objective === 'max' ? (
+          isMaximized ? (
             <span>
-              In this mode, the amount will be used as a minimum amount to
-              produce
+              Amount is calculated by the solver to maximize production.
+              Change the objective in the calculator to set a fixed amount.
             </span>
           ) : null
         }
@@ -74,6 +76,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
           value={output.amount ?? 0}
           w={100}
           min={0}
+          readOnly={isMaximized}
           rightSection={
             item?.unit ? (
               <Text c="dimmed" size={'10'} pr={4}>
@@ -89,6 +92,7 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
           onBlur={() => setAmountFocused(false)}
           onFocus={() => setAmountFocused(true)}
           onChange={value => {
+            if (isMaximized) return;
             useStore.getState().updateFactoryOutput(factoryId, index, {
               amount: Number(value),
             });
