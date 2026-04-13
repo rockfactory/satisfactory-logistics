@@ -18,7 +18,7 @@ import {
   IconClock,
 } from '@tabler/icons-react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { assetPath } from '@/core/assetPath';
+
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { AllFactoryRecipesMap } from '@/recipes/FactoryRecipe';
@@ -68,7 +68,7 @@ export function CodexRecipeDetail() {
                 w={80}
                 h={80}
                 fit="contain"
-                src={assetPath(building.imagePath)}
+                src={building.imagePath}
                 alt={building.name}
               />
             )}
@@ -167,7 +167,7 @@ export function CodexRecipeDetail() {
                     w={40}
                     h={40}
                     fit="contain"
-                    src={assetPath(building.imagePath?.replace('_256', '_64'))}
+                    src={building.imagePath?.replace('_256', '_64')}
                   />
                 </Box>
               )}

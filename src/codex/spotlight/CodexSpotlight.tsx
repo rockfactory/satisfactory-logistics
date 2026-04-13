@@ -9,7 +9,7 @@ import {
 import { Command } from 'cmdk';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { assetPath } from '@/core/assetPath';
+
 import { useShallowStore } from '@/core/zustand';
 import type { Factory } from '@/factories/Factory';
 import { AllFactoryBuildings } from '@/recipes/FactoryBuilding';
@@ -308,7 +308,7 @@ function BuildingsPage({ select }: { select: (path: string) => void }) {
                 w={24}
                 h={24}
                 fit="contain"
-                src={assetPath(b.imagePath?.replace('_256', '_64'))}
+                src={b.imagePath?.replace('_256', '_64')}
               />
             </div>
             <div className="cmdk-item-content">

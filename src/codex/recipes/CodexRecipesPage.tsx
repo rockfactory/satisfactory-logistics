@@ -14,7 +14,7 @@ import {
 import { IconSearch } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { assetPath } from '@/core/assetPath';
+
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryRecipes, type FactoryRecipe } from '@/recipes/FactoryRecipe';
 import { isDefaultRecipe, isMAMRecipe } from '@/recipes/graph/SchematicGraph';
@@ -116,9 +116,7 @@ export function CodexRecipesPage() {
                         <Image
                           w={20}
                           h={20}
-                          src={assetPath(
-                            building.imagePath?.replace('_256', '_64'),
-                          )}
+                          src={building.imagePath?.replace('_256', '_64')}
                         />
                         <Text size="xs">{building.name}</Text>
                       </Group>

@@ -25,7 +25,7 @@ import {
 } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { assetPath } from '@/core/assetPath';
+
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
@@ -93,7 +93,7 @@ export function CodexBuildingDetail() {
               w={96}
               h={96}
               fit="contain"
-              src={assetPath(building.imagePath)}
+              src={building.imagePath}
               alt={building.name}
             />
             <Stack gap="xs" style={{ flex: 1 }}>

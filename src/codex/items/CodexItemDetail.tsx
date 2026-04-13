@@ -19,7 +19,7 @@ import {
 } from '@tabler/icons-react';
 import { useMemo } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { assetPath } from '@/core/assetPath';
+
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { AllFactoryRecipes, type FactoryRecipe } from '@/recipes/FactoryRecipe';
@@ -191,9 +191,7 @@ function RecipeTable({
                     <Image
                       w={20}
                       h={20}
-                      src={assetPath(
-                        building.imagePath?.replace('_256', '_64'),
-                      )}
+                      src={building.imagePath?.replace('_256', '_64')}
                     />
                     <Text size="xs">{building.name}</Text>
                   </Group>

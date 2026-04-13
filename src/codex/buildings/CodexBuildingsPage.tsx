@@ -14,7 +14,7 @@ import {
 import { IconSearch } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { assetPath } from '@/core/assetPath';
+
 import {
   AllFactoryBuildings,
   type FactoryBuilding,
@@ -96,7 +96,7 @@ export function CodexBuildingsPage() {
                     w={64}
                     h={64}
                     fit="contain"
-                    src={assetPath(building.imagePath)}
+                    src={building.imagePath}
                     alt={building.name}
                   />
                   <Text size="sm" ta="center" fw={500} lineClamp={2}>

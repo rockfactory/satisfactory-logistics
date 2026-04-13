@@ -1,4 +1,5 @@
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import { AppContainer } from '@/layout/AppContainer';
 import { Footer } from '@/layout/Footer';
 import { Header } from '@/layout/Header';
 import { CodexBuildingDetail } from './buildings/CodexBuildingDetail';
@@ -13,22 +14,24 @@ export function CodexRoutes() {
   const navigate = useNavigate();
 
   return (
-    <>
-      <Header
-        tabs={['factories', 'charts', 'calculator', 'tools', 'codex']}
-        activeTab="codex"
-        onChangeTab={value => {
-          if (value === 'codex') {
-            navigate('/codex');
-          } else if (value === 'tools') {
-            navigate('/tools');
-          } else if (value === 'factories') {
-            navigate('/factories');
-          } else {
-            navigate(`/factories/${value}`);
-          }
-        }}
-      />
+    <AppContainer
+      header={
+        <Header
+          tabs={['factories', 'charts', 'calculator', 'codex']}
+          activeTab="codex"
+          onChangeTab={value => {
+            if (value === 'codex') {
+              navigate('/codex');
+            } else if (value === 'factories') {
+              navigate('/factories');
+            } else {
+              navigate(`/factories/${value}`);
+            }
+          }}
+        />
+      }
+      footer={<Footer compact={false} />}
+    >
       <Routes>
         <Route index element={<CodexPage />} />
         <Route path="items" element={<CodexItemsPage />} />
@@ -38,7 +41,6 @@ export function CodexRoutes() {
         <Route path="recipes" element={<CodexRecipesPage />} />
         <Route path="recipes/:id" element={<CodexRecipeDetail />} />
       </Routes>
-      <Footer compact={false} />
-    </>
+    </AppContainer>
   );
 }
