@@ -1,12 +1,17 @@
 import { useSolverSolution } from '@/solver/page/useSolverSolution';
-import { Box } from '@mantine/core';
+import { Box, Button, Container, Stack, Text } from '@mantine/core';
 import { SolverRequestDrawer } from '@/solver/page/request-drawer/SolverRequestDrawer';
 import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
 import { FactoryContext } from '@/FactoryContext';
+import { useFactoryInputsOutputs } from '@/factories/store/factoriesSelectors';
+import { IconArrowLeft, IconListDetails } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 export const FactoryGraph = ({ id }: { id: string }) => {
   const { suggestions, instance, solution, loading, onChangeHandler } =
     useSolverSolution(id, 'game');
+  const { outputs } = useFactoryInputsOutputs(id);
+  const hasConfiguredOutputs = outputs?.some(o => o.resource != null);
 
   return (
     <FactoryContext.Provider value={id}>
@@ -17,13 +22,35 @@ export const FactoryGraph = ({ id }: { id: string }) => {
           onSolverChangeHandler={onChangeHandler}
         />
       </Box>
-      {!loading && instance && (
+      {!loading && instance && hasConfiguredOutputs && (
         <SolverSolutionFragment
           solverId={id}
           suggestions={suggestions}
           solution={solution!}
           instance={instance}
         />
+      )}
+      {!loading && !hasConfiguredOutputs && (
+        <Container size="lg" mt="lg">
+          <Stack gap="xs" align="center" mih={200} mt={60} mb={90}>
+            <IconListDetails size={64} stroke={1.2} />
+            <Text fz="h2">No outputs configured</Text>
+            <Text size="sm" c="dark.2">
+              Add at least one output in the Overview to start planning your
+              production chain.
+            </Text>
+            <Button
+              component={Link}
+              to={`/factories/${id}`}
+              mt="md"
+              size="md"
+              leftSection={<IconArrowLeft size={16} />}
+              variant="light"
+            >
+              Go to Overview
+            </Button>
+          </Stack>
+        </Container>
       )}
     </FactoryContext.Provider>
   );

@@ -63,7 +63,9 @@ export const ProductionView = ({ id }: { id: string }) => {
   const hasSolverLayout = useStore(
     state => !!state.solvers.instances[id]?.layout,
   );
-  const hasConfiguredOutputs = outputs.some(o => o.resource != null);
+  const hasConfiguredOutputs = outputs.some(
+    o => o.resource != null && o.amount > 0,
+  );
   const status = factory.progress && progressProperties[factory.progress];
 
   return (
