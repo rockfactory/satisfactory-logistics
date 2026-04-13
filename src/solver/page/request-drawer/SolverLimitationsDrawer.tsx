@@ -7,6 +7,7 @@ import {
   FactoryConveyorBelts,
   FactoryPipelinesExclAlternates,
 } from '@/recipes/FactoryBuilding';
+import { allowedToBlockedBuildings } from '@/solver/store/allowedToBlockedBuildings';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { WorldResourcesList } from '@/recipes/WorldResources';
@@ -173,21 +174,12 @@ export function SolverLimitationsDrawer(
                 // Recalculate blocked buildings from fresh store state
                 const updatedFactory =
                   useStore.getState().factories.factories[id!];
-                const allowedBuildings =
-                  updatedFactory?.allowedBuildings ?? gameAllowedBuildings;
-                if (allowedBuildings == null) {
-                  // No restrictions at all, clear all blocks
-                  useStore.getState().updateSolver(id!, solver => {
-                    solver.request.blockedBuildings = undefined;
-                  });
-                } else {
-                  const blockedBuildings = FactoryBuildingsForRecipes.filter(
-                    b => !allowedBuildings.includes(b.id),
-                  ).map(b => b.id);
-                  useStore.getState().updateSolver(id!, solver => {
-                    solver.request.blockedBuildings = blockedBuildings;
-                  });
-                }
+                const blockedBuildings = allowedToBlockedBuildings(
+                  updatedFactory?.allowedBuildings ?? gameAllowedBuildings,
+                );
+                useStore.getState().updateSolver(id!, solver => {
+                  solver.request.blockedBuildings = blockedBuildings;
+                });
               }}
             />
           </Group>
@@ -236,11 +228,11 @@ export function SolverLimitationsDrawer(
                     // Recalculate blocked buildings for solver
                     const updatedFactory =
                       useStore.getState().factories.factories[id!];
-                    const blockedBuildings = FactoryBuildingsForRecipes.filter(
-                      b => !updatedFactory.allowedBuildings?.includes(b.id),
-                    ).map(b => b.id);
                     useStore.getState().updateSolver(id!, solver => {
-                      solver.request.blockedBuildings = blockedBuildings;
+                      solver.request.blockedBuildings =
+                        allowedToBlockedBuildings(
+                          updatedFactory.allowedBuildings,
+                        );
                     });
                   }
                 }}
