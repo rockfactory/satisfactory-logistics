@@ -190,9 +190,7 @@ export function simplifyRedundantMergers(
 
       // Remove the node, its outgoing link, and its incoming links from result
       result.nodes = result.nodes.filter(n => n !== node);
-      result.links = result.links.filter(
-        l => l.from !== node && l.to !== node,
-      );
+      result.links = result.links.filter(l => l.from !== node && l.to !== node);
       downstream.parents = downstream.parents.filter(l => l.from !== node);
 
       // Reroute each incoming link to point directly to downstream

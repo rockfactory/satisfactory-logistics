@@ -153,8 +153,7 @@ function getLayoutedElements(
     tgtGroups.get(edge.target)!.push(edge);
   }
 
-  const centerY = (n: Node) =>
-    n.position.y + (n.measured?.height ?? 40) / 2;
+  const centerY = (n: Node) => n.position.y + (n.measured?.height ?? 40) / 2;
 
   for (const [, group] of srcGroups) {
     if (group.length <= 1) continue;
@@ -237,15 +236,11 @@ export function SplitterGraphLayout(props: SplitterGraphLayoutProps) {
     requestAnimationFrame(() => {
       fitView().then(() => setOpacity(1));
     });
-    // biome-ignore lint/correctness/useExhaustiveDependencies: run when nodes get measured
-  }, [nodesInitialized, nodes, edges]);
+  }, [nodesInitialized, nodes, edges, layoutDone, setNodes, setEdges, fitView]);
 
-  const handleNodeClick = useCallback(
-    (_: React.MouseEvent, node: Node) => {
-      setSelectedNodeId(prev => (prev === node.id ? null : node.id));
-    },
-    [],
-  );
+  const handleNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
+    setSelectedNodeId(prev => (prev === node.id ? null : node.id));
+  }, []);
 
   const handlePaneClick = useCallback(() => {
     setSelectedNodeId(null);

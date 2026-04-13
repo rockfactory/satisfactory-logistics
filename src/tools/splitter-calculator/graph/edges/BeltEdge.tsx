@@ -4,8 +4,8 @@ import {
   type Edge,
   EdgeLabelRenderer,
   type EdgeProps,
-  Position,
   getSmoothStepPath,
+  Position,
   useInternalNode,
 } from '@xyflow/react';
 import type { FC } from 'react';
@@ -28,11 +28,11 @@ export interface IBeltEdgeData {
  * diagram is readable at a glance without text labels.
  */
 const BELT_COLORS: Record<number, string> = {
-  60: '#868e96',   // Mk.1 — gray
-  120: '#51cf66',  // Mk.2 — green
-  270: '#339af0',  // Mk.3 — blue
-  480: '#cc5de8',  // Mk.4 — purple
-  780: '#ff922b',  // Mk.5 — orange
+  60: '#868e96', // Mk.1 — gray
+  120: '#51cf66', // Mk.2 — green
+  270: '#339af0', // Mk.3 — blue
+  480: '#cc5de8', // Mk.4 — purple
+  780: '#ff922b', // Mk.5 — orange
   1200: '#ff6b6b', // Mk.6 — red
 };
 
@@ -76,14 +76,26 @@ export const BeltEdge: FC<EdgeProps<Edge<IBeltEdgeData>>> = ({
     h => h.id === targetHandleId,
   );
 
-  const sx = sourceNode.internals.positionAbsolute.x +
-    (sourceHandle ? sourceHandle.x + sourceHandle.width / 2 : sourceNode.measured.width! / 2);
-  const sy = sourceNode.internals.positionAbsolute.y +
-    (sourceHandle ? sourceHandle.y + sourceHandle.height / 2 : sourceNode.measured.height! / 2);
-  const tx = targetNode.internals.positionAbsolute.x +
-    (targetHandle ? targetHandle.x + targetHandle.width / 2 : targetNode.measured.width! / 2);
-  const ty = targetNode.internals.positionAbsolute.y +
-    (targetHandle ? targetHandle.y + targetHandle.height / 2 : targetNode.measured.height! / 2);
+  const sx =
+    sourceNode.internals.positionAbsolute.x +
+    (sourceHandle
+      ? sourceHandle.x + sourceHandle.width / 2
+      : sourceNode.measured.width! / 2);
+  const sy =
+    sourceNode.internals.positionAbsolute.y +
+    (sourceHandle
+      ? sourceHandle.y + sourceHandle.height / 2
+      : sourceNode.measured.height! / 2);
+  const tx =
+    targetNode.internals.positionAbsolute.x +
+    (targetHandle
+      ? targetHandle.x + targetHandle.width / 2
+      : targetNode.measured.width! / 2);
+  const ty =
+    targetNode.internals.positionAbsolute.y +
+    (targetHandle
+      ? targetHandle.y + targetHandle.height / 2
+      : targetNode.measured.height! / 2);
 
   const sourcePos = sourceHandle?.position ?? Position.Right;
   const targetPos = targetHandle?.position ?? Position.Left;
@@ -137,7 +149,11 @@ export const BeltEdge: FC<EdgeProps<Edge<IBeltEdgeData>>> = ({
           transition: 'opacity 0.2s, stroke-width 0.2s',
         }}
       />
-      <circle r={highlighted ? 3 : 2.5} fill={dotColor} opacity={dimmed ? 0.2 : 1}>
+      <circle
+        r={highlighted ? 3 : 2.5}
+        fill={dotColor}
+        opacity={dimmed ? 0.2 : 1}
+      >
         <animateMotion
           dur={`${duration}s`}
           repeatCount="indefinite"

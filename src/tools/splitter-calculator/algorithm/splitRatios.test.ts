@@ -349,7 +349,6 @@ describe('splitter calculator', () => {
       );
       expect(smartSplitters.length).toBe(1);
     });
-
   });
 
   describe('complexity budget and approximate solutions', () => {
@@ -813,7 +812,6 @@ describe('splitter calculator', () => {
       const mergers = result.nodes.filter(n => n.type === 'merger');
       expect(mergers.length).toBe(0);
     });
-
   });
 
   describe('independent sub-problem decomposition', () => {

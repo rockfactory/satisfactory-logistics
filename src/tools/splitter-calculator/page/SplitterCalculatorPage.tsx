@@ -138,38 +138,27 @@ function ResultsSummary(props: {
           label="Splitters"
           value={splitterCount}
           icon={
-            <IconArrowsSplit
-              size={16}
-              color="var(--mantine-color-blue-5)"
-            />
+            <IconArrowsSplit size={16} color="var(--mantine-color-blue-5)" />
           }
         />
         <SummaryStatCell
           label="Mergers"
           value={mergerCount}
           icon={
-            <IconArrowMerge
-              size={16}
-              color="var(--mantine-color-teal-5)"
-            />
+            <IconArrowMerge size={16} color="var(--mantine-color-teal-5)" />
           }
         />
         <SummaryStatCell
           label="Nodes"
           value={nodes.length}
           icon={
-            <IconTopologyStar3
-              size={16}
-              color="var(--mantine-color-gray-5)"
-            />
+            <IconTopologyStar3 size={16} color="var(--mantine-color-gray-5)" />
           }
         />
         <SummaryStatCell
           label="Edges"
           value={edges.length}
-          icon={
-            <IconRoute size={16} color="var(--mantine-color-gray-5)" />
-          }
+          icon={<IconRoute size={16} color="var(--mantine-color-gray-5)" />}
         />
         <SummaryStatCell
           label="Max Belt"
@@ -198,7 +187,8 @@ function ResultsSummary(props: {
               h={3}
               style={{
                 borderRadius: 2,
-                backgroundColor: maxBeltEntry?.color ?? 'var(--mantine-color-gray-5)',
+                backgroundColor:
+                  maxBeltEntry?.color ?? 'var(--mantine-color-gray-5)',
               }}
             />
           }
@@ -207,10 +197,7 @@ function ResultsSummary(props: {
           label="Efficiency"
           value={`${efficiency}%`}
           icon={
-            <IconCalculator
-              size={16}
-              color="var(--mantine-color-green-5)"
-            />
+            <IconCalculator size={16} color="var(--mantine-color-green-5)" />
           }
         />
       </SimpleGrid>
