@@ -5,10 +5,10 @@ import {
   Group,
   Loader,
   MantineProvider,
-  v8CssVariablesResolver,
   Modal,
   Text,
   Title,
+  v8CssVariablesResolver,
 } from '@mantine/core';
 import '@mantine/core/styles.css';
 import { Notifications } from '@mantine/notifications';
@@ -88,7 +88,11 @@ export default function App() {
   if (!hasRehydrated) {
     console.log('Waiting for rehydration');
     return (
-      <MantineProvider theme={theme} forceColorScheme="dark" cssVariablesResolver={v8CssVariablesResolver}>
+      <MantineProvider
+        theme={theme}
+        forceColorScheme="dark"
+        cssVariablesResolver={v8CssVariablesResolver}
+      >
         <Modal
           opened
           onClose={() => {}}
@@ -109,7 +113,11 @@ export default function App() {
   console.log('Rehydrated, rendering app');
 
   return (
-    <MantineProvider theme={theme} forceColorScheme="dark" cssVariablesResolver={v8CssVariablesResolver}>
+    <MantineProvider
+      theme={theme}
+      forceColorScheme="dark"
+      cssVariablesResolver={v8CssVariablesResolver}
+    >
       <ModalsProvider>
         <ErrorBoundary
           fallback={

@@ -36,6 +36,7 @@ export function ChartsTab(_props: IChartsTabProps) {
         <Group gap="xs">
           <SegmentedControl
             value={view}
+            radius="md"
             onChange={value => useStore.getState().setChartView(value as any)}
             data={[
               { value: 'graph', label: 'Graph' },

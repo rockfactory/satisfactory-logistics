@@ -40,6 +40,7 @@ export const FactoryPage = ({
           </Group>
           <Group gap="sm">
             <SegmentedControl
+              radius="md"
               data={[
                 { value: 'overview', label: 'Overview' },
                 { value: 'calculator', label: 'Calculator' },

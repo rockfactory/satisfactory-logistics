@@ -28,6 +28,7 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
     <Group justify="space-between">
       <Group>
         <SegmentedControl
+          radius="md"
           data={[
             {
               label: 'Grid',
