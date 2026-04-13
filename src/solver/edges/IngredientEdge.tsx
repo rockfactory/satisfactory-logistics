@@ -42,6 +42,12 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
   sourcePosition,
   targetPosition,
   data,
+  // Destructure to prevent forwarding to DOM
+  selectable: _selectable,
+  deletable: _deletable,
+  sourceHandleId: _sourceHandleId,
+  targetHandleId: _targetHandleId,
+  pathOptions: _pathOptions,
   ...edgeProps
 }) => {
   const sourceNode = useInternalNode(source);
