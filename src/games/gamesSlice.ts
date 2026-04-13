@@ -71,7 +71,8 @@ export const gamesSlice = createSlice({
         state.games[targetId].allowedRecipes = allowedRecipes;
       },
     setGameAllowedBuildings:
-      (gameId: string | undefined, allowedBuildings: string[]) => state => {
+      (gameId: string | undefined, allowedBuildings: string[] | undefined) =>
+      state => {
         const targetId = gameId ?? state.selected;
         if (!targetId) {
           throw new Error('No game selected');

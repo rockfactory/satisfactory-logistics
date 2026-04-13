@@ -103,7 +103,25 @@ export const gameFactoriesActions = createActions({
     const game = state.games.games[targetId];
     if (!game) return;
 
-    const allowedBuildings = game.allowedBuildings ?? [];
+    // If allowedBuildings is not set, remove restrictions from all solvers
+    if (game.allowedBuildings == null) {
+      game.factoriesIds.forEach(factoryId => {
+        const factory = state.factories.factories[factoryId];
+        const solver = state.solvers.instances[factoryId];
+        if (
+          factory?.allowedBuildings !== undefined &&
+          factory?.allowedBuildings !== null
+        ) {
+          return;
+        }
+        if (solver) {
+          solver.request.blockedBuildings = undefined;
+        }
+      });
+      return;
+    }
+
+    const allowedBuildings = game.allowedBuildings;
     const blockedBuildings = FactoryBuildingsForRecipes.filter(
       b => !allowedBuildings.includes(b.id),
     ).map(b => b.id);
