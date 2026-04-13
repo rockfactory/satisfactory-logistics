@@ -5,6 +5,7 @@ import {
   Group,
   Image,
   NumberInput,
+  Paper,
   SimpleGrid,
   Slider,
   Stack,
@@ -12,7 +13,16 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { IconArrowLeft } from '@tabler/icons-react';
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconBolt,
+  IconClock,
+  IconDroplet,
+  IconInfinity,
+  IconMathFunction,
+  IconRuler,
+} from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { assetPath } from '@/core/assetPath';
@@ -21,6 +31,7 @@ import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import { isDefaultRecipe, isMAMRecipe } from '@/recipes/graph/SchematicGraph';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { SectionCard, StatCard } from '../components/StatCard';
 
 function calcOverclockedPower(
   basePower: number,
@@ -47,10 +58,10 @@ export function CodexBuildingDetail() {
     !building.pipeline &&
     !building.extractor &&
     !building.powerGenerator;
+  const isPowerGen = !!building.powerGenerator;
   const hasOverclock =
-    building.powerConsumption > 0 &&
-    building.powerConsumptionExponent > 0 &&
-    (isProduction || !!building.extractor);
+    (isProduction || !!building.extractor || isPowerGen) &&
+    building.powerConsumptionExponent > 0;
 
   const overclockedPower = hasOverclock
     ? calcOverclockedPower(
@@ -62,6 +73,10 @@ export function CodexBuildingDetail() {
 
   const productionMultiplier = clockSpeed / 100;
 
+  const overclockedProduction = isPowerGen
+    ? building.powerGenerator!.powerProduction * productionMultiplier
+    : 0;
+
   return (
     <Container size="lg" py="xl">
       <Stack gap="lg">
@@ -72,43 +87,127 @@ export function CodexBuildingDetail() {
           </Group>
         </Anchor>
 
-        <Group gap="lg" align="flex-start">
-          <Image
-            w={96}
-            h={96}
-            fit="contain"
-            src={assetPath(building.imagePath)}
-            alt={building.name}
-          />
-          <Stack gap={4}>
-            <Title order={2}>{building.name}</Title>
-            <Group gap="xs">
-              {building.conveyor && <Badge variant="light">Logistics</Badge>}
-              {building.pipeline && <Badge variant="light">Pipeline</Badge>}
-              {building.extractor && <Badge variant="light">Extractor</Badge>}
-              {building.powerGenerator && (
-                <Badge variant="light" color="yellow">
-                  Power Generator
-                </Badge>
+        <Paper withBorder p="lg" radius="sm">
+          <Group gap="lg" align="flex-start">
+            <Image
+              w={96}
+              h={96}
+              fit="contain"
+              src={assetPath(building.imagePath)}
+              alt={building.name}
+            />
+            <Stack gap="xs" style={{ flex: 1 }}>
+              <Title order={2}>{building.name}</Title>
+              <Group gap="xs">
+                {building.conveyor && <Badge variant="light">Logistics</Badge>}
+                {building.pipeline && <Badge variant="light">Pipeline</Badge>}
+                {building.extractor && <Badge variant="light">Extractor</Badge>}
+                {building.powerGenerator && (
+                  <Badge variant="light" color="yellow">
+                    Power Generator
+                  </Badge>
+                )}
+                {isProduction && (
+                  <Badge variant="light" color="teal">
+                    Production
+                  </Badge>
+                )}
+              </Group>
+              {building.description && (
+                <Text size="sm" c="dimmed" style={{ whiteSpace: 'pre-line' }}>
+                  {building.description}
+                </Text>
               )}
-              {isProduction && (
-                <Badge variant="light" color="teal">
-                  Production
-                </Badge>
-              )}
-            </Group>
-          </Stack>
-        </Group>
+            </Stack>
+          </Group>
+        </Paper>
 
-        {building.description && (
-          <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
-            {building.description}
-          </Text>
-        )}
+        <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
+          {building.powerConsumption > 0 && (
+            <StatCard
+              label="Power Consumption"
+              value={`${overclockedPower.toFixed(2)} MW`}
+              icon={<IconBolt size={18} />}
+              color="yellow"
+              sub={
+                hasOverclock && clockSpeed !== 100
+                  ? `Base: ${building.powerConsumption} MW`
+                  : undefined
+              }
+            />
+          )}
+          {building.powerGenerator && (
+            <StatCard
+              label="Power Production"
+              value={`${overclockedProduction.toFixed(1)} MW`}
+              icon={<IconBolt size={18} />}
+              color="green"
+              sub={
+                hasOverclock && clockSpeed !== 100
+                  ? `Base: ${building.powerGenerator.powerProduction} MW`
+                  : undefined
+              }
+            />
+          )}
+          {building.somersloopSlots > 0 && (
+            <StatCard
+              label="Somersloop Slots"
+              value={`${building.somersloopSlots}`}
+              icon={<IconInfinity size={18} />}
+              color="violet"
+            />
+          )}
+          {building.conveyor && (
+            <StatCard
+              label="Belt Speed"
+              value={`${building.conveyor.speed}/min`}
+              icon={<IconArrowRight size={18} />}
+              color="blue"
+            />
+          )}
+          {building.pipeline?.flowRate != null &&
+            building.pipeline.flowRate > 0 && (
+              <StatCard
+                label="Flow Rate"
+                value={`${building.pipeline.flowRate} m³/min`}
+                icon={<IconDroplet size={18} />}
+                color="cyan"
+              />
+            )}
+          {building.extractor && (
+            <StatCard
+              label="Items/min"
+              value={`${(building.extractor.itemsPerMinute * productionMultiplier).toFixed(2)}`}
+              icon={<IconClock size={18} />}
+              color="teal"
+              sub={
+                hasOverclock && clockSpeed !== 100
+                  ? `Base: ${building.extractor.itemsPerMinute}/min`
+                  : undefined
+              }
+            />
+          )}
+          {building.clearance.width > 0 && (
+            <StatCard
+              label="Clearance (W x L x H)"
+              value={`${building.clearance.width} x ${building.clearance.length} x ${building.clearance.height}`}
+              icon={<IconRuler size={18} />}
+              color="gray"
+            />
+          )}
+          {building.powerConsumptionExponent > 0 &&
+            building.powerConsumptionExponent !== 1 && (
+              <StatCard
+                label="Power Exponent"
+                value={building.powerConsumptionExponent.toFixed(4)}
+                icon={<IconMathFunction size={18} />}
+                color="orange"
+              />
+            )}
+        </SimpleGrid>
 
         {building.buildCost.length > 0 && (
-          <Stack gap="xs">
-            <Title order={4}>Build Cost</Title>
+          <SectionCard title="Build Cost">
             <Group gap="md">
               {building.buildCost.map(cost => {
                 const item = AllFactoryItemsMap[cost.resource];
@@ -119,92 +218,30 @@ export function CodexBuildingDetail() {
                     to={`/codex/items/${cost.resource}`}
                     underline="never"
                   >
-                    <Group gap={6}>
-                      <FactoryItemImage id={cost.resource} size={28} />
-                      <Stack gap={0}>
-                        <Text size="sm" fw={500}>
-                          {item?.displayName ?? cost.resource}
-                        </Text>
-                        <Text size="xs" c="dimmed">
-                          x{cost.amount}
-                        </Text>
-                      </Stack>
-                    </Group>
+                    <Paper withBorder p="xs" radius="sm">
+                      <Group gap={8}>
+                        <FactoryItemImage id={cost.resource} size={32} />
+                        <Stack gap={0}>
+                          <Text size="sm" fw={500}>
+                            {item?.displayName ?? cost.resource}
+                          </Text>
+                          <Text size="xs" c="dimmed">
+                            x{cost.amount}
+                          </Text>
+                        </Stack>
+                      </Group>
+                    </Paper>
                   </Anchor>
                 );
               })}
             </Group>
-          </Stack>
+          </SectionCard>
         )}
 
-        <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
-          {building.powerConsumption > 0 && (
-            <StatBlock
-              label="Power Consumption"
-              value={`${overclockedPower.toFixed(2)} MW`}
-              sub={
-                hasOverclock && clockSpeed !== 100
-                  ? `Base: ${building.powerConsumption} MW`
-                  : undefined
-              }
-            />
-          )}
-          {building.powerGenerator && (
-            <StatBlock
-              label="Power Production"
-              value={`${building.powerGenerator.powerProduction} MW`}
-            />
-          )}
-          {building.somersloopSlots > 0 && (
-            <StatBlock
-              label="Somersloop Slots"
-              value={`${building.somersloopSlots}`}
-            />
-          )}
-          {building.conveyor && (
-            <StatBlock
-              label="Belt Speed"
-              value={`${building.conveyor.speed}/min`}
-            />
-          )}
-          {building.pipeline?.flowRate != null &&
-            building.pipeline.flowRate > 0 && (
-              <StatBlock
-                label="Flow Rate"
-                value={`${building.pipeline.flowRate} m³/min`}
-              />
-            )}
-          {building.extractor && (
-            <StatBlock
-              label="Items/min"
-              value={`${(building.extractor.itemsPerMinute * productionMultiplier).toFixed(2)}`}
-              sub={
-                hasOverclock && clockSpeed !== 100
-                  ? `Base: ${building.extractor.itemsPerMinute}/min`
-                  : undefined
-              }
-            />
-          )}
-          {building.clearance.width > 0 && (
-            <StatBlock
-              label="Clearance (W × L × H)"
-              value={`${building.clearance.width} × ${building.clearance.length} × ${building.clearance.height}`}
-            />
-          )}
-          {building.powerConsumptionExponent > 0 &&
-            building.powerConsumptionExponent !== 1 && (
-              <StatBlock
-                label="Power Exponent"
-                value={building.powerConsumptionExponent.toFixed(4)}
-              />
-            )}
-        </SimpleGrid>
-
         {hasOverclock && (
-          <Stack gap="xs">
-            <Title order={4}>Overclock</Title>
+          <SectionCard title="Overclock">
             <Group gap="lg" align="flex-end">
-              <Stack gap={4} style={{ flex: 1 }}>
+              <Stack gap={4} style={{ flex: 1 }} pb="md">
                 <Slider
                   value={clockSpeed}
                   onChange={setClockSpeed}
@@ -232,26 +269,43 @@ export function CodexBuildingDetail() {
                 size="sm"
               />
             </Group>
-            <SimpleGrid cols={{ base: 2, sm: 3 }} spacing="md" mt="sm">
-              <StatBlock label="Clock Speed" value={`${clockSpeed}%`} />
-              <StatBlock
-                label="Power"
-                value={`${overclockedPower.toFixed(2)} MW`}
-                sub={`${((overclockedPower / building.powerConsumption) * 100).toFixed(1)}% of base`}
-              />
-              <StatBlock
+            <SimpleGrid cols={{ base: 2, sm: 3 }} spacing="md" mt="xs">
+              <StatCard label="Clock Speed" value={`${clockSpeed}%`} />
+              {isPowerGen ? (
+                <StatCard
+                  label="Power Production"
+                  value={`${overclockedProduction.toFixed(1)} MW`}
+                  icon={<IconBolt size={18} />}
+                  color="green"
+                  sub={`${((overclockedProduction / building.powerGenerator!.powerProduction) * 100).toFixed(1)}% of base`}
+                />
+              ) : (
+                <StatCard
+                  label="Power"
+                  value={`${overclockedPower.toFixed(2)} MW`}
+                  icon={<IconBolt size={18} />}
+                  color="yellow"
+                  sub={
+                    building.powerConsumption > 0
+                      ? `${((overclockedPower / building.powerConsumption) * 100).toFixed(1)}% of base`
+                      : undefined
+                  }
+                />
+              )}
+              <StatCard
                 label="Production Rate"
                 value={`${clockSpeed}%`}
+                icon={<IconClock size={18} />}
+                color="teal"
                 sub={`${productionMultiplier.toFixed(2)}x multiplier`}
               />
             </SimpleGrid>
-          </Stack>
+          </SectionCard>
         )}
 
         {building.powerGenerator &&
           building.powerGenerator.fuels.length > 0 && (
-            <Stack gap="xs">
-              <Title order={4}>Fuels</Title>
+            <SectionCard title="Fuels">
               <Group gap="sm">
                 {building.powerGenerator.fuels.map(fuel => {
                   const item = AllFactoryItemsMap[fuel.resource];
@@ -260,24 +314,26 @@ export function CodexBuildingDetail() {
                       key={fuel.resource}
                       component={Link}
                       to={`/codex/items/${fuel.resource}`}
+                      underline="never"
                     >
-                      <Group gap={4}>
-                        <FactoryItemImage id={fuel.resource} size={24} />
-                        <Text size="sm">
-                          {item?.displayName ?? fuel.resource}
-                        </Text>
-                      </Group>
+                      <Paper withBorder p="xs" radius="sm">
+                        <Group gap={8}>
+                          <FactoryItemImage id={fuel.resource} size={28} />
+                          <Text size="sm">
+                            {item?.displayName ?? fuel.resource}
+                          </Text>
+                        </Group>
+                      </Paper>
                     </Anchor>
                   );
                 })}
               </Group>
-            </Stack>
+            </SectionCard>
           )}
 
         {recipes.length > 0 && (
-          <Stack gap="xs">
-            <Title order={4}>Recipes ({recipes.length})</Title>
-            <Table striped highlightOnHover withTableBorder>
+          <SectionCard title={`Recipes (${recipes.length})`}>
+            <Table striped highlightOnHover>
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>Recipe</Table.Th>
@@ -336,34 +392,10 @@ export function CodexBuildingDetail() {
                 })}
               </Table.Tbody>
             </Table>
-          </Stack>
+          </SectionCard>
         )}
       </Stack>
     </Container>
-  );
-}
-
-function StatBlock({
-  label,
-  value,
-  sub,
-}: {
-  label: string;
-  value: string;
-  sub?: string;
-}) {
-  return (
-    <Stack gap={2}>
-      <Text size="xs" c="dimmed">
-        {label}
-      </Text>
-      <Text fw={600}>{value}</Text>
-      {sub && (
-        <Text size="xs" c="dimmed">
-          {sub}
-        </Text>
-      )}
-    </Stack>
   );
 }
 

@@ -4,13 +4,19 @@ import {
   Container,
   Group,
   Image,
+  Paper,
   SimpleGrid,
   Stack,
   Table,
   Text,
   Title,
 } from '@mantine/core';
-import { IconArrowLeft, IconFlame, IconRadioactive } from '@tabler/icons-react';
+import {
+  IconArrowLeft,
+  IconCoin,
+  IconFlame,
+  IconRadioactive,
+} from '@tabler/icons-react';
 import { useMemo } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { assetPath } from '@/core/assetPath';
@@ -19,6 +25,7 @@ import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { AllFactoryRecipes, type FactoryRecipe } from '@/recipes/FactoryRecipe';
 import { isDefaultRecipe, isMAMRecipe } from '@/recipes/graph/SchematicGraph';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { SectionCard, StatCard } from '../components/StatCard';
 
 function getRecipeTypeBadge(recipe: FactoryRecipe) {
   if (isDefaultRecipe(recipe.id)) return { label: 'Default', color: 'teal' };
@@ -54,97 +61,78 @@ export function CodexItemDetail() {
           </Group>
         </Anchor>
 
-        <Group gap="lg" align="flex-start">
-          <FactoryItemImage id={item.id} size={96} highRes />
-          <Stack gap={4}>
-            <Title order={2}>{item.displayName}</Title>
-            <Group gap="xs">
-              <Badge variant="light" color="gray">
-                {item.form}
-              </Badge>
-              {item.isFicsmas && (
-                <Badge variant="light" color="red">
-                  FICSMAS
+        <Paper withBorder p="lg" radius="sm">
+          <Group gap="lg" align="flex-start">
+            <FactoryItemImage id={item.id} size={96} highRes />
+            <Stack gap="xs" style={{ flex: 1 }}>
+              <Title order={2}>{item.displayName}</Title>
+              <Group gap="xs">
+                <Badge variant="light" color="gray">
+                  {item.form}
                 </Badge>
+                {item.isFicsmas && (
+                  <Badge variant="light" color="red">
+                    FICSMAS
+                  </Badge>
+                )}
+              </Group>
+              {item.description && (
+                <Text size="sm" c="dimmed" style={{ whiteSpace: 'pre-line' }}>
+                  {item.description}
+                </Text>
               )}
-            </Group>
-          </Stack>
-        </Group>
+            </Stack>
+          </Group>
+        </Paper>
 
-        {item.description && (
-          <Text size="sm" style={{ whiteSpace: 'pre-line' }}>
-            {item.description}
-          </Text>
-        )}
-
-        <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
+        <SimpleGrid cols={{ base: 2, sm: 3 }} spacing="md">
           {item.sinkPoints > 0 && (
             <StatCard
               label="Sink Points"
               value={item.sinkPoints.toLocaleString()}
+              icon={<IconCoin size={18} />}
+              color="yellow"
             />
           )}
           {item.energyValue > 0 && (
             <StatCard
               label="Energy Value"
               value={`${item.energyValue} MJ`}
-              icon={<IconFlame size={16} />}
+              icon={<IconFlame size={18} />}
+              color="orange"
             />
           )}
           {item.radioactiveDecay > 0 && (
             <StatCard
               label="Radioactive Decay"
               value={item.radioactiveDecay.toString()}
-              icon={<IconRadioactive size={16} />}
+              icon={<IconRadioactive size={18} />}
+              color="red"
             />
           )}
         </SimpleGrid>
 
         {producedBy.length > 0 && (
-          <Stack gap="xs">
-            <Title order={4}>Produced By ({producedBy.length})</Title>
+          <SectionCard title={`Produced By (${producedBy.length})`}>
             <RecipeTable
               recipes={producedBy}
               highlightResource={id!}
               type="product"
             />
-          </Stack>
+          </SectionCard>
         )}
 
         {usedIn.length > 0 && (
-          <Stack gap="xs">
-            <Title order={4}>Used In ({usedIn.length})</Title>
+          <SectionCard title={`Used In (${usedIn.length})`}>
             <RecipeTable
               recipes={usedIn}
               highlightResource={id!}
               type="ingredient"
             />
-          </Stack>
+          </SectionCard>
         )}
       </Stack>
     </Container>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  icon,
-}: {
-  label: string;
-  value: string;
-  icon?: React.ReactNode;
-}) {
-  return (
-    <Stack gap={2}>
-      <Text size="xs" c="dimmed">
-        {label}
-      </Text>
-      <Group gap={4}>
-        {icon}
-        <Text fw={600}>{value}</Text>
-      </Group>
-    </Stack>
   );
 }
 
@@ -158,7 +146,7 @@ function RecipeTable({
   type: 'product' | 'ingredient';
 }) {
   return (
-    <Table striped highlightOnHover withTableBorder>
+    <Table striped highlightOnHover>
       <Table.Thead>
         <Table.Tr>
           <Table.Th>Recipe</Table.Th>

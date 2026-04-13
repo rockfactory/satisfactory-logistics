@@ -1,16 +1,22 @@
 import {
   Anchor,
   Badge,
+  Box,
   Container,
   Group,
   Image,
+  Paper,
   SimpleGrid,
   Stack,
-  Table,
   Text,
   Title,
 } from '@mantine/core';
-import { IconArrowLeft } from '@tabler/icons-react';
+import {
+  IconArrowLeft,
+  IconArrowNarrowRight,
+  IconBolt,
+  IconClock,
+} from '@tabler/icons-react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { assetPath } from '@/core/assetPath';
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
@@ -22,6 +28,7 @@ import {
 } from '@/recipes/FactorySchematic';
 import { isDefaultRecipe, isMAMRecipe } from '@/recipes/graph/SchematicGraph';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { SectionCard, StatCard } from '../components/StatCard';
 
 export function CodexRecipeDetail() {
   const { id } = useParams<{ id: string }>();
@@ -54,140 +61,155 @@ export function CodexRecipeDetail() {
           </Group>
         </Anchor>
 
-        <Group gap="lg" align="flex-start">
-          {building && (
-            <Image
-              w={80}
-              h={80}
-              fit="contain"
-              src={assetPath(building.imagePath)}
-              alt={building.name}
-            />
-          )}
-          <Stack gap={4}>
-            <Title order={2}>{recipe.name}</Title>
-            <Group gap="xs">
-              <Badge variant="light" color={badgeColor}>
-                {recipeType}
-              </Badge>
-              {building && (
-                <Anchor
-                  component={Link}
-                  to={`/codex/buildings/${building.id}`}
-                  size="sm"
-                >
-                  {building.name}
-                </Anchor>
-              )}
-            </Group>
-          </Stack>
-        </Group>
+        <Paper withBorder p="lg" radius="sm">
+          <Group gap="lg" align="flex-start">
+            {building && (
+              <Image
+                w={80}
+                h={80}
+                fit="contain"
+                src={assetPath(building.imagePath)}
+                alt={building.name}
+              />
+            )}
+            <Stack gap="xs" style={{ flex: 1 }}>
+              <Title order={2}>{recipe.name}</Title>
+              <Group gap="xs">
+                <Badge variant="light" color={badgeColor}>
+                  {recipeType}
+                </Badge>
+                {building && (
+                  <Anchor
+                    component={Link}
+                    to={`/codex/buildings/${building.id}`}
+                    size="sm"
+                  >
+                    {building.name}
+                  </Anchor>
+                )}
+              </Group>
+            </Stack>
+          </Group>
+        </Paper>
 
-        <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
-          <Stat label="Craft Time" value={`${recipe.time}s`} />
+        <SimpleGrid cols={{ base: 2, sm: 3 }} spacing="md">
+          <StatCard
+            label="Craft Time"
+            value={`${recipe.time}s`}
+            icon={<IconClock size={18} />}
+            color="blue"
+          />
           {recipe.powerConsumption > 0 && (
-            <Stat label="Power" value={`${recipe.powerConsumption} MW`} />
+            <StatCard
+              label="Power"
+              value={`${recipe.powerConsumption} MW`}
+              icon={<IconBolt size={18} />}
+              color="yellow"
+            />
           )}
           {recipe.powerConsumptionFactor > 0 &&
             recipe.powerConsumptionFactor !== 1 && (
-              <Stat
+              <StatCard
                 label="Power Factor"
                 value={recipe.powerConsumptionFactor.toFixed(2)}
+                icon={<IconBolt size={18} />}
+                color="orange"
               />
             )}
         </SimpleGrid>
 
-        <Stack gap="xs">
-          <Title order={4}>Ingredients</Title>
-          <Table withTableBorder>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>Item</Table.Th>
-                <Table.Th ta="right">Amount / Cycle</Table.Th>
-                <Table.Th ta="right">Rate / min</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
+        <SectionCard title="Recipe Flow">
+          <Group
+            gap="md"
+            align="center"
+            justify="center"
+            wrap="nowrap"
+            style={{ overflowX: 'auto' }}
+          >
+            <Stack gap="xs" align="center" miw={120}>
               {recipe.ingredients.map(ing => {
                 const item = AllFactoryItemsMap[ing.resource];
                 const rate = (ing.amount * 60) / recipe.time;
                 return (
-                  <Table.Tr key={ing.resource}>
-                    <Table.Td>
-                      <Anchor
-                        component={Link}
-                        to={`/codex/items/${ing.resource}`}
-                      >
-                        <Group gap="sm">
-                          <FactoryItemImage id={ing.resource} size={28} />
-                          <Text size="sm">
+                  <Anchor
+                    key={ing.resource}
+                    component={Link}
+                    to={`/codex/items/${ing.resource}`}
+                    underline="never"
+                  >
+                    <Paper withBorder p="xs" radius="sm" w="100%">
+                      <Group gap={8} wrap="nowrap">
+                        <FactoryItemImage id={ing.resource} size={32} />
+                        <Stack gap={0}>
+                          <Text size="sm" fw={500} lineClamp={1}>
                             {item?.displayName ?? ing.resource}
                           </Text>
-                        </Group>
-                      </Anchor>
-                    </Table.Td>
-                    <Table.Td ta="right">
-                      <Text size="sm">{ing.displayAmount}</Text>
-                    </Table.Td>
-                    <Table.Td ta="right">
-                      <Text size="sm" fw={500}>
-                        {rate % 1 === 0 ? rate : rate.toFixed(2)}
-                      </Text>
-                    </Table.Td>
-                  </Table.Tr>
+                          <Text size="xs" c="dimmed">
+                            {ing.displayAmount} (
+                            {rate % 1 === 0 ? rate : rate.toFixed(2)}/min)
+                          </Text>
+                        </Stack>
+                      </Group>
+                    </Paper>
+                  </Anchor>
                 );
               })}
-            </Table.Tbody>
-          </Table>
-        </Stack>
+            </Stack>
 
-        <Stack gap="xs">
-          <Title order={4}>Products</Title>
-          <Table withTableBorder>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>Item</Table.Th>
-                <Table.Th ta="right">Amount / Cycle</Table.Th>
-                <Table.Th ta="right">Rate / min</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
+            <Stack gap={4} align="center">
+              <IconArrowNarrowRight
+                size={28}
+                color="var(--mantine-color-dimmed)"
+              />
+              {building && (
+                <Box>
+                  <Image
+                    w={40}
+                    h={40}
+                    fit="contain"
+                    src={assetPath(building.imagePath?.replace('_256', '_64'))}
+                  />
+                </Box>
+              )}
+              <Text size="xs" c="dimmed">
+                {recipe.time}s
+              </Text>
+            </Stack>
+
+            <Stack gap="xs" align="center" miw={120}>
               {recipe.products.map(prod => {
                 const item = AllFactoryItemsMap[prod.resource];
                 const rate = (prod.amount * 60) / recipe.time;
                 return (
-                  <Table.Tr key={prod.resource}>
-                    <Table.Td>
-                      <Anchor
-                        component={Link}
-                        to={`/codex/items/${prod.resource}`}
-                      >
-                        <Group gap="sm">
-                          <FactoryItemImage id={prod.resource} size={28} />
-                          <Text size="sm">
+                  <Anchor
+                    key={prod.resource}
+                    component={Link}
+                    to={`/codex/items/${prod.resource}`}
+                    underline="never"
+                  >
+                    <Paper withBorder p="xs" radius="sm" w="100%">
+                      <Group gap={8} wrap="nowrap">
+                        <FactoryItemImage id={prod.resource} size={32} />
+                        <Stack gap={0}>
+                          <Text size="sm" fw={500} lineClamp={1}>
                             {item?.displayName ?? prod.resource}
                           </Text>
-                        </Group>
-                      </Anchor>
-                    </Table.Td>
-                    <Table.Td ta="right">
-                      <Text size="sm">{prod.displayAmount}</Text>
-                    </Table.Td>
-                    <Table.Td ta="right">
-                      <Text size="sm" fw={500}>
-                        {rate % 1 === 0 ? rate : rate.toFixed(2)}
-                      </Text>
-                    </Table.Td>
-                  </Table.Tr>
+                          <Text size="xs" c="dimmed">
+                            {prod.displayAmount} (
+                            {rate % 1 === 0 ? rate : rate.toFixed(2)}/min)
+                          </Text>
+                        </Stack>
+                      </Group>
+                    </Paper>
+                  </Anchor>
                 );
               })}
-            </Table.Tbody>
-          </Table>
-        </Stack>
+            </Stack>
+          </Group>
+        </SectionCard>
 
         {unlockedBy.length > 0 && (
-          <Stack gap="xs">
-            <Title order={4}>Unlocked By</Title>
+          <SectionCard title="Unlocked By">
             <Group gap="sm">
               {unlockedBy.map(unlock => {
                 const schematic = AllFactorySchematicsMap[unlock.id];
@@ -195,6 +217,7 @@ export function CodexRecipeDetail() {
                   <Badge
                     key={unlock.id}
                     variant="light"
+                    size="lg"
                     color={
                       unlock.type === 'Milestone'
                         ? 'blue'
@@ -210,20 +233,9 @@ export function CodexRecipeDetail() {
                 );
               })}
             </Group>
-          </Stack>
+          </SectionCard>
         )}
       </Stack>
     </Container>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <Stack gap={2}>
-      <Text size="xs" c="dimmed">
-        {label}
-      </Text>
-      <Text fw={600}>{value}</Text>
-    </Stack>
   );
 }
