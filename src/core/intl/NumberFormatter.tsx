@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { type CSSProperties, Fragment, memo } from 'react';
 
 export const NumberFormatter = new Intl.NumberFormat('en-US', {
   style: 'decimal',
@@ -6,7 +6,7 @@ export const NumberFormatter = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 3,
 });
 
-const overlineStyle: React.CSSProperties = { textDecoration: 'overline' };
+const overlineStyle: CSSProperties = { textDecoration: 'overline' };
 
 function fillRepetend(
   fraction: string,
@@ -25,6 +25,7 @@ function fillRepetend(
 /**
  * string-only version of `RepeatingNumber`.
  */
+// eslint-disable-next-line react-refresh/only-export-components
 export function formatRepeatingNumber(value = 0): string {
   const formatted = NumberFormatter.formatToParts(value);
   const repetend = getRepetend(value);
@@ -52,14 +53,14 @@ export const RepeatingNumber = memo(
             const repeatLen = value.length - repetend.index;
             const patternStr = repetend.pattern.toString();
             return (
-              <React.Fragment key={type}>
+              <Fragment key={type}>
                 <span>{value.substring(0, repetend.index)}</span>
                 <span style={overlineStyle}>
                   {patternStr
                     .repeat(Math.ceil(repeatLen / patternStr.length))
                     .substring(0, repeatLen)}
                 </span>
-              </React.Fragment>
+              </Fragment>
             );
           })}
         </>

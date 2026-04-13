@@ -1,11 +1,10 @@
-import { assetPath } from '@/core/assetPath';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { getWorldResourceMachines } from '@/recipes/algorithms/getWorldResourceMachines';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { Group, Image, Table, Text } from '@mantine/core';
 import { sortBy } from 'lodash';
-import React, { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 import type { IResourceNodeData } from './ResourceNode';
 
 const PURITIES = [
@@ -61,7 +60,7 @@ export function ResourceNodeExtractorDetail(
         </Table.Tr>
         <Table.Tr>
           {PURITIES.map(purity => (
-            <React.Fragment key={`${purity.label}-sub`}>
+            <Fragment key={`${purity.label}-sub`}>
               {CLOCK_SPEEDS.map(speed => (
                 <Table.Th
                   key={`${purity.label}-${speed}`}
@@ -78,7 +77,7 @@ export function ResourceNodeExtractorDetail(
                   </Group>
                 </Table.Th>
               ))}
-            </React.Fragment>
+            </Fragment>
           ))}
         </Table.Tr>
       </Table.Thead>
@@ -89,7 +88,7 @@ export function ResourceNodeExtractorDetail(
             <Table.Tr key={machine.id}>
               <Table.Td>
                 <Image
-                  src={assetPath(machine.imagePath.replace('_256', '_64'))}
+                  src={machine.imagePath.replace('_256', '_64')}
                   alt={machine.name}
                   w={24}
                   h={24}
