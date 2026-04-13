@@ -34,6 +34,7 @@ function useActiveTab() {
 
 export function FactoryRoutes(props: IFactoryRoutesProps) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const activeTab = useActiveTab();
 
@@ -54,7 +55,15 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
           }}
         />
       }
-      footer={<Footer compact={['calculator', 'charts'].includes(activeTab)} />}
+      footer={
+        <Footer
+          compact={
+            activeTab === 'calculator' ||
+            activeTab === 'charts' ||
+            pathname.endsWith('/calculator')
+          }
+        />
+      }
     >
       <ScrollRestoration
         getKey={(location, matches) => {
