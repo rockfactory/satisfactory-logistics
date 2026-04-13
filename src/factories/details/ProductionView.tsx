@@ -14,15 +14,19 @@ import {
 } from '@/factories/store/factoriesSelectors';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
+  Alert,
   Button,
   Container,
+  Divider,
   Group,
   Select,
   Stack,
   Text,
   TextInput,
 } from '@mantine/core';
+import { IconBulb, IconCalculator } from '@tabler/icons-react';
 import { useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import classes from './ProductionView.module.css';
 
 const progressValues: { value: FactoryProgressStatus; label: string }[] = [
@@ -56,12 +60,40 @@ export const ProductionView = ({ id }: { id: string }) => {
     [id],
   );
   const onChangeHandler = useFormOnChange<Factory>(update);
+  const hasSolverLayout = useStore(
+    state => !!state.solvers.instances[id]?.layout,
+  );
+  const hasConfiguredOutputs = outputs.some(o => o.resource != null);
   const status = factory.progress && progressProperties[factory.progress];
 
   return (
     <Container size="lg">
       <Group gap="xl" align="start" py="xl">
         <Stack gap="lg" style={{ flexGrow: 1 }}>
+          {hasConfiguredOutputs && !hasSolverLayout && (
+            <Alert
+              icon={<IconBulb size={18} />}
+              color="cyan"
+              variant="light"
+              title="Ready to plan?"
+            >
+              <Group gap="xs" align="center">
+                <Text size="sm">
+                  Use the Calculator to compute your optimal production chain.
+                </Text>
+                <Button
+                  component={Link}
+                  to={`/factories/${id}/calculator`}
+                  size="xs"
+                  color="cyan"
+                  variant="filled"
+                  leftSection={<IconCalculator size={14} />}
+                >
+                  Open Calculator
+                </Button>
+              </Group>
+            </Alert>
+          )}
           <Stack gap="sm">
             <Text size="lg">Inputs</Text>
             <Stack gap="xs">
@@ -115,6 +147,22 @@ export const ProductionView = ({ id }: { id: string }) => {
             >
               Add Output
             </Button>
+            {outputs.length > 0 && (
+              <>
+                <Divider my="xs" />
+                <Button
+                  component={Link}
+                  to={`/factories/${id}/calculator`}
+                  size="md"
+                  leftSection={<IconCalculator size={18} />}
+                  color="cyan"
+                  variant="light"
+                  fullWidth
+                >
+                  Plan Production in Calculator
+                </Button>
+              </>
+            )}
           </Stack>
         </Stack>
         <Stack

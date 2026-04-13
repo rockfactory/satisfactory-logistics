@@ -24,7 +24,7 @@ export const factoriesSlice = createSlice({
       (id: string, factory?: Partial<Omit<Factory, 'id'>>) => state => {
         state.factories[id] = {
           inputs: [],
-          outputs: [],
+          outputs: [{ resource: null, amount: null }],
           ...factory,
           id,
           progress: 'draft',
