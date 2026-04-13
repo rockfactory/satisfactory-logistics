@@ -38,6 +38,32 @@ export const factoriesSlice = createSlice({
       (factoryId: string, outputIndex: number, amount: number) => state => {
         state.factories[factoryId].outputs[outputIndex].amount = amount;
       },
+    setFactoryAllowedBuildings:
+      (factoryId: string, allowedBuildings: string[] | null) => state => {
+        state.factories[factoryId].allowedBuildings = allowedBuildings;
+      },
+    toggleFactoryBuilding:
+      (factoryId: string, buildingId: string, enabled?: boolean) => state => {
+        const factory = state.factories[factoryId];
+        if (!factory) return;
+
+        // Initialize with empty array if not set
+        if (
+          factory.allowedBuildings === undefined ||
+          factory.allowedBuildings === null
+        ) {
+          factory.allowedBuildings = [];
+        }
+
+        const index = factory.allowedBuildings.indexOf(buildingId);
+        const shouldAdd = enabled ?? index === -1;
+
+        if (shouldAdd && index === -1) {
+          factory.allowedBuildings.push(buildingId);
+        } else if (!shouldAdd && index !== -1) {
+          factory.allowedBuildings.splice(index, 1);
+        }
+      },
   },
 });
 

@@ -1,6 +1,7 @@
 import { FormOnChangeHandler } from '@/core/form/useFormOnChange';
 import { useStore } from '@/core/zustand';
-import { useGameSetting } from '@/games/gamesSlice';
+import { useFactory } from '@/factories/store/factoriesSlice';
+import { useGameAllowedBuildings, useGameSetting } from '@/games/gamesSlice.ts';
 import {
   FactoryBuildingsForRecipes,
   FactoryConveyorBelts,
@@ -40,8 +41,14 @@ export function SolverLimitationsDrawer(
   const request = usePathSolverRequest();
   const maxPipeline = useGameSetting('maxPipeline');
   const maxBelt = useGameSetting('maxBelt');
+  const factory = useFactory(id);
+  const gameAllowedBuildings = useGameAllowedBuildings();
 
   const [advanced, setAdvanced] = useState(false);
+  const [useFactoryOverride, setUseFactoryOverride] = useState(
+    factory?.allowedBuildings !== undefined &&
+      factory?.allowedBuildings !== null,
+  );
 
   const showAdvanced =
     advanced ||
@@ -114,32 +121,96 @@ export function SolverLimitationsDrawer(
           })}
         </Stack>
         <Stack gap="xs">
-          <Text size="lg">Buildings</Text>
-          {FactoryBuildingsForRecipes.map(building => (
-            <Checkbox
-              key={building.id}
-              label={
-                <Group gap="xs">
-                  <Image
-                    src={building.imagePath.replace('_256', '_64')}
-                    width={24}
-                    height={24}
-                  />
-                  {building.name}
-                </Group>
-              }
-              checked={!request?.blockedBuildings?.includes(building.id)}
-              onChange={e =>
-                useStore
-                  .getState()
-                  .toggleBlockedBuilding(
-                    id!,
-                    building.id,
-                    !e.currentTarget.checked,
-                  )
-              }
+          <Group justify="space-between">
+            <Text size="lg">Buildings</Text>
+            <Switch
+              label="Factory Override"
+              size="xs"
+              checked={useFactoryOverride}
+              onChange={e => {
+                const override = e.currentTarget.checked;
+                setUseFactoryOverride(override);
+                if (override) {
+                  // Initialize with current game settings
+                  useStore
+                    .getState()
+                    .setFactoryAllowedBuildings(
+                      id!,
+                      gameAllowedBuildings ?? [],
+                    );
+                } else {
+                  // Clear factory override, use game settings
+                  useStore.getState().setFactoryAllowedBuildings(id!, null);
+                }
+                // Recalculate blocked buildings
+                const allowedBuildings = override
+                  ? (gameAllowedBuildings ?? [])
+                  : (gameAllowedBuildings ?? []);
+                const blockedBuildings = FactoryBuildingsForRecipes.filter(
+                  b => !allowedBuildings.includes(b.id),
+                ).map(b => b.id);
+                useStore.getState().updateSolver(id!, solver => {
+                  solver.request.blockedBuildings = blockedBuildings;
+                });
+              }}
             />
-          ))}
+          </Group>
+          {useFactoryOverride && (
+            <Text size="xs" c="dimmed" mb="xs">
+              This factory has custom building settings that override the global
+              game settings.
+            </Text>
+          )}
+          {!useFactoryOverride && (
+            <Text size="xs" c="dimmed" mb="xs">
+              Using global game building settings. Enable override to customize
+              for this factory.
+            </Text>
+          )}
+          {FactoryBuildingsForRecipes.map(building => {
+            const isChecked = useFactoryOverride
+              ? (factory?.allowedBuildings?.includes(building.id) ?? false)
+              : !request?.blockedBuildings?.includes(building.id);
+
+            return (
+              <Checkbox
+                key={building.id}
+                label={
+                  <Group gap="xs">
+                    <Image
+                      src={building.imagePath.replace('_256', '_64')}
+                      width={24}
+                      height={24}
+                    />
+                    {building.name}
+                  </Group>
+                }
+                checked={isChecked}
+                disabled={!useFactoryOverride}
+                onChange={e => {
+                  if (useFactoryOverride) {
+                    // Update factory's allowedBuildings
+                    useStore
+                      .getState()
+                      .toggleFactoryBuilding(
+                        id!,
+                        building.id,
+                        e.currentTarget.checked,
+                      );
+                    // Recalculate blocked buildings for solver
+                    const updatedFactory =
+                      useStore.getState().factories.factories[id!];
+                    const blockedBuildings = FactoryBuildingsForRecipes.filter(
+                      b => !updatedFactory.allowedBuildings?.includes(b.id),
+                    ).map(b => b.id);
+                    useStore.getState().updateSolver(id!, solver => {
+                      solver.request.blockedBuildings = blockedBuildings;
+                    });
+                  }
+                }}
+              />
+            );
+          })}
         </Stack>
         <Stack gap="sm" style={{ gridColumn: 'span 2' }}>
           <Text size="lg">Logistics</Text>

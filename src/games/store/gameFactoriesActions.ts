@@ -2,6 +2,7 @@ import { useStore } from '@/core/zustand';
 import { createActions } from '@/core/zustand-helpers/actions';
 import { Factory } from '@/factories/Factory';
 import { Game } from '@/games/Game';
+import { FactoryBuildingsForRecipes } from '@/recipes/FactoryBuilding';
 import type { SolverInstance } from '@/solver/store/Solver';
 import dayjs from 'dayjs';
 import { cloneDeep, omit } from 'lodash';
@@ -91,6 +92,56 @@ export const gameFactoriesActions = createActions({
     if (state.games.selected === gameId) {
       state.games.selected = null;
     }
+  },
+  /**
+   * Syncs the game's allowedBuildings to all factory solvers' blockedBuildings
+   */
+  syncGameBuildingsToFactories: (gameId?: string | null) => state => {
+    const targetId = gameId ?? state.games.selected;
+    if (!targetId) return;
+
+    const game = state.games.games[targetId];
+    if (!game) return;
+
+    // If allowedBuildings is not set, remove restrictions from all solvers
+    if (game.allowedBuildings == null) {
+      game.factoriesIds.forEach(factoryId => {
+        const factory = state.factories.factories[factoryId];
+        const solver = state.solvers.instances[factoryId];
+        if (
+          factory?.allowedBuildings !== undefined &&
+          factory?.allowedBuildings !== null
+        ) {
+          return;
+        }
+        if (solver) {
+          solver.request.blockedBuildings = undefined;
+        }
+      });
+      return;
+    }
+
+    const allowedBuildings = game.allowedBuildings;
+    const blockedBuildings = FactoryBuildingsForRecipes.filter(
+      b => !allowedBuildings.includes(b.id),
+    ).map(b => b.id);
+
+    game.factoriesIds.forEach(factoryId => {
+      const factory = state.factories.factories[factoryId];
+      const solver = state.solvers.instances[factoryId];
+
+      // Skip if factory has its own building overrides
+      if (
+        factory?.allowedBuildings !== undefined &&
+        factory?.allowedBuildings !== null
+      ) {
+        return;
+      }
+
+      if (solver) {
+        solver.request.blockedBuildings = blockedBuildings;
+      }
+    });
   },
 });
 

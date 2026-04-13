@@ -35,7 +35,16 @@ export const solverFactoriesActions = createActions({
         logger.info('Creating solver', factoryId);
         const gameAllowedRecipes =
           state.games.games[state.games.selected ?? '']?.allowedRecipes;
-        get().createSolver(factoryId, { allowedRecipes: gameAllowedRecipes });
+        const factory = state.factories.factories[factoryId];
+        const gameAllowedBuildings =
+          state.games.games[state.games.selected ?? '']?.allowedBuildings;
+        // Use factory-specific buildings if set, otherwise use game-level
+        const allowedBuildings =
+          factory?.allowedBuildings ?? gameAllowedBuildings;
+        get().createSolver(factoryId, {
+          allowedRecipes: gameAllowedRecipes,
+          allowedBuildings: allowedBuildings,
+        });
       }
     },
   createFactoryWithSolver:
@@ -50,7 +59,15 @@ export const solverFactoriesActions = createActions({
       get().addFactoryIdToGame(targetId, factoryId);
 
       const gameAllowedRecipes = state.games.games[targetId]?.allowedRecipes;
-      get().createSolver(factoryId, { allowedRecipes: gameAllowedRecipes });
+      const gameAllowedBuildings =
+        state.games.games[targetId]?.allowedBuildings;
+      // Use factory-specific buildings if set, otherwise use game-level
+      const allowedBuildings =
+        factory?.allowedBuildings ?? gameAllowedBuildings;
+      get().createSolver(factoryId, {
+        allowedRecipes: gameAllowedRecipes,
+        allowedBuildings: allowedBuildings,
+      });
     },
   // Input/Output should be synced
   addFactoryInput:

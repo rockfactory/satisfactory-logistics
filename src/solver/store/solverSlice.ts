@@ -1,5 +1,6 @@
 import { toggleAsSet } from '@/core/state-utils/toggleAsSet';
 import { createSlice } from '@/core/zustand-helpers/slices';
+import { FactoryBuildingsForRecipes } from '@/recipes/FactoryBuilding';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import {
   getAllAlternateRecipeIds,
@@ -51,9 +52,17 @@ export const solversSlice = createSlice({
         id: string,
         options?: {
           allowedRecipes?: string[];
+          allowedBuildings?: string[];
         },
       ) =>
       state => {
+        // If allowedBuildings is provided, block all buildings not in the list
+        const blockedBuildings = options?.allowedBuildings?.length
+          ? FactoryBuildingsForRecipes.filter(
+              b => !options.allowedBuildings!.includes(b.id),
+            ).map(b => b.id)
+          : undefined;
+
         state.instances[id] = {
           id,
           isFactory: false,
@@ -61,6 +70,7 @@ export const solversSlice = createSlice({
           request: {
             allowedRecipes:
               options?.allowedRecipes ?? getAllDefaultRecipesIds(),
+            blockedBuildings,
             objective: 'minimize_resources',
           },
         };

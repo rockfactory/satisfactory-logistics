@@ -1,25 +1,29 @@
 import { SelectIconInput } from '@/core/form/SelectIconInput';
+import { useFormOnChange } from '@/core/form/useFormOnChange';
+import { useStore } from '@/core/zustand';
+import { GameSettings } from '@/games/Game';
+import { useGameAllowedBuildings, useGameSettings } from '@/games/gamesSlice';
 import {
+  FactoryBuildingsForRecipes,
   FactoryConveyorBelts,
   FactoryPipelinesExclAlternates,
 } from '@/recipes/FactoryBuilding';
 import { Path, setByPath } from '@clickbar/dot-diver';
 import {
+  Alert,
   Button,
   Checkbox,
   ColorInput,
+  Group,
   Image,
   Modal,
   Space,
   Stack,
+  Switch,
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconSettings } from '@tabler/icons-react';
-import { useFormOnChange } from '@/core/form/useFormOnChange';
-import { useStore } from '@/core/zustand';
-import { GameSettings } from '@/games/Game';
-import { useGameSettings } from '@/games/gamesSlice';
+import { IconCheck, IconSettings } from '@tabler/icons-react';
 
 export interface IGameSettingsModalProps {
   withLabel?: boolean;
@@ -54,6 +58,7 @@ const PipelinesOptions = FactoryPipelinesExclAlternates.map(
 export function GameSettingsModal(props: IGameSettingsModalProps) {
   const [opened, { open, close }] = useDisclosure(false);
   const settings = useGameSettings();
+  const allowedBuildings = useGameAllowedBuildings();
   const onChangeHandler = useFormOnChange<GameSettings>(updateGameSettings);
 
   return (
@@ -110,6 +115,96 @@ export function GameSettingsModal(props: IGameSettingsModalProps) {
             onChange={onChangeHandler('maxPipeline')}
             placeholder="No pipeline selected"
           />
+          <Title order={3} mt="md" mb="md">
+            Available Buildings
+          </Title>
+          {allowedBuildings == null ? (
+            <>
+              <Alert
+                color="green"
+                icon={<IconCheck size={16} />}
+                variant="light"
+                mb="xs"
+              >
+                All buildings are available. The solver can use any building
+                without restrictions.
+              </Alert>
+              <Switch
+                label="Restrict buildings"
+                description="Enable to choose which buildings the solver can use"
+                checked={false}
+                onChange={() => {
+                  useStore.getState().enableAllGameBuildings();
+                  useStore.getState().syncGameBuildingsToFactories();
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <Switch
+                label="Restrict buildings"
+                description="Disable to allow all buildings"
+                checked={true}
+                mb="xs"
+                onChange={() => {
+                  useStore
+                    .getState()
+                    .setGameAllowedBuildings(undefined, undefined);
+                  useStore.getState().syncGameBuildingsToFactories();
+                }}
+              />
+              <Group gap="xs" mb="sm">
+                <Button
+                  size="xs"
+                  variant="light"
+                  onClick={() => {
+                    useStore.getState().enableAllGameBuildings();
+                    useStore.getState().syncGameBuildingsToFactories();
+                  }}
+                >
+                  Enable All
+                </Button>
+                <Button
+                  size="xs"
+                  variant="light"
+                  color="red"
+                  onClick={() => {
+                    useStore.getState().disableAllGameBuildings();
+                    useStore.getState().syncGameBuildingsToFactories();
+                  }}
+                >
+                  Disable All
+                </Button>
+              </Group>
+              <Stack gap="xs">
+                {FactoryBuildingsForRecipes.map(building => (
+                  <Checkbox
+                    key={building.id}
+                    label={
+                      <Group gap="xs">
+                        <Image
+                          src={building.imagePath.replace('_256', '_64')}
+                          width={24}
+                          height={24}
+                        />
+                        {building.name}
+                      </Group>
+                    }
+                    checked={allowedBuildings.includes(building.id)}
+                    onChange={e => {
+                      useStore
+                        .getState()
+                        .toggleGameBuilding(
+                          building.id,
+                          e.currentTarget.checked,
+                        );
+                      useStore.getState().syncGameBuildingsToFactories();
+                    }}
+                  />
+                ))}
+              </Stack>
+            </>
+          )}
         </Stack>
         <Space h={50} />
       </Modal>

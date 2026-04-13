@@ -8,6 +8,7 @@ export interface Game {
   // factories: Factory[];
   settings: GameSettings;
   allowedRecipes?: string[];
+  allowedBuildings?: string[];
   collapsedFactoriesIds?: string[];
   // Only if saved
   savedId?: string;

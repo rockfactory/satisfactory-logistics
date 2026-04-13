@@ -137,4 +137,11 @@ dist
 
 # intellij idea
 .idea
+
+# User specific files
+scratch/
+*.scratch.*
+tmp/
+temp/
+playground/
 .claude/settings.local.json

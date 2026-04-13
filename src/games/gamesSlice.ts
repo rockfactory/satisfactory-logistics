@@ -1,11 +1,12 @@
+import { useStore } from '@/core/zustand';
+import { createSlice } from '@/core/zustand-helpers/slices';
 import {
+  FactoryBuildingsForRecipes,
   FactoryConveyorBelts,
   FactoryPipelinesExclAlternates,
 } from '@/recipes/FactoryBuilding';
 import dayjs from 'dayjs';
 import { useShallow } from 'zustand/shallow';
-import { useStore } from '@/core/zustand';
-import { createSlice } from '@/core/zustand-helpers/slices';
 import { Game, type GameRemoteData, GameSettings } from './Game';
 
 export interface GamesSlice {
@@ -69,6 +70,42 @@ export const gamesSlice = createSlice({
         }
         state.games[targetId].allowedRecipes = allowedRecipes;
       },
+    setGameAllowedBuildings:
+      (gameId: string | undefined, allowedBuildings: string[] | undefined) =>
+      state => {
+        const targetId = gameId ?? state.selected;
+        if (!targetId) {
+          throw new Error('No game selected');
+        }
+        state.games[targetId].allowedBuildings = allowedBuildings;
+      },
+    toggleGameBuilding: (buildingId: string, enabled?: boolean) => state => {
+      const game = state.games[state.selected ?? ''];
+      if (!game) return;
+
+      if (!game.allowedBuildings) {
+        game.allowedBuildings = [];
+      }
+
+      const index = game.allowedBuildings.indexOf(buildingId);
+      const shouldAdd = enabled ?? index === -1;
+
+      if (shouldAdd && index === -1) {
+        game.allowedBuildings.push(buildingId);
+      } else if (!shouldAdd && index !== -1) {
+        game.allowedBuildings.splice(index, 1);
+      }
+    },
+    enableAllGameBuildings: () => state => {
+      const game = state.games[state.selected ?? ''];
+      if (!game) return;
+      game.allowedBuildings = FactoryBuildingsForRecipes.map(b => b.id);
+    },
+    disableAllGameBuildings: () => state => {
+      const game = state.games[state.selected ?? ''];
+      if (!game) return;
+      game.allowedBuildings = [];
+    },
     setRemoteGameData: (gameId: string, data: GameRemoteData) => state => {
       state.games[gameId].authorId = data.author_id;
       state.games[gameId].createdAt = data.created_at;
@@ -127,6 +164,14 @@ export function useGameSettings() {
   return useStore(
     useShallow(
       state => state.games.games[state.games.selected ?? '']?.settings,
+    ),
+  );
+}
+
+export function useGameAllowedBuildings() {
+  return useStore(
+    useShallow(
+      state => state.games.games[state.games.selected ?? '']?.allowedBuildings,
     ),
   );
 }
