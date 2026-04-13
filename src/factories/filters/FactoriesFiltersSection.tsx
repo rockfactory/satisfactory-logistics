@@ -1,5 +1,6 @@
 import {
   Button,
+  Center,
   Group,
   Menu,
   SegmentedControl,
@@ -7,8 +8,11 @@ import {
 } from '@mantine/core';
 import {
   IconChevronDown,
+  IconLayoutGrid,
+  IconLayoutKanban,
   IconPlus,
   IconSearch,
+  IconTable,
   IconTextGrammar,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
@@ -31,15 +35,30 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
           radius="md"
           data={[
             {
-              label: 'Grid',
+              label: (
+                <Center style={{ gap: 6 }}>
+                  <IconLayoutGrid size={16} />
+                  <span>Grid</span>
+                </Center>
+              ),
               value: 'grid',
             },
             {
-              label: 'Kanban',
+              label: (
+                <Center style={{ gap: 6 }}>
+                  <IconLayoutKanban size={16} />
+                  <span>Kanban</span>
+                </Center>
+              ),
               value: 'kanban',
             },
             {
-              label: 'Spreadsheet',
+              label: (
+                <Center style={{ gap: 6 }}>
+                  <IconTable size={16} />
+                  <span>Spreadsheet</span>
+                </Center>
+              ),
               value: 'spreadsheet',
             },
           ]}
