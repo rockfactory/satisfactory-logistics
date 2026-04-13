@@ -31,9 +31,10 @@ export function MachineNodeProductionConfig(
 
   const slotsPerBuilding = building.somersloopSlots;
   const somersloopsNum = Number(somersloopsValue) || 0;
-  const amplificationPct = slotsPerBuilding > 0
-    ? Math.round((somersloopsNum / slotsPerBuilding) * 100 + 100)
-    : 100;
+  const amplificationPct =
+    slotsPerBuilding > 0
+      ? Math.round((somersloopsNum / slotsPerBuilding) * 100 + 100)
+      : 100;
 
   return (
     <SimpleGrid cols={2} spacing={6}>
@@ -86,9 +87,7 @@ export function MachineNodeProductionConfig(
             : Number(overclockValue) * 100
         }
         onValueChange={({ floatValue }) =>
-          setOverclockValue(
-            floatValue == null ? '' : floatValue / 100,
-          )
+          setOverclockValue(floatValue == null ? '' : floatValue / 100)
         }
         min={0}
         max={250}

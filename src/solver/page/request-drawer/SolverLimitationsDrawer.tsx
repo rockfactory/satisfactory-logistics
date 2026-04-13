@@ -46,10 +46,11 @@ export function SolverLimitationsDrawer(
   const factory = useFactory(id);
   const gameAllowedBuildings = useGameAllowedBuildings();
 
-  const inputResources = useShallowStore(state =>
-    state.factories.factories[id ?? '']?.inputs
-      ?.map(i => i.resource)
-      .filter((r): r is string => r != null && isWorldResource(r)) ?? [],
+  const inputResources = useShallowStore(
+    state =>
+      state.factories.factories[id ?? '']?.inputs
+        ?.map(i => i.resource)
+        .filter((r): r is string => r != null && isWorldResource(r)) ?? [],
   );
 
   const [advanced, setAdvanced] = useState(false);
@@ -180,10 +181,9 @@ export function SolverLimitationsDrawer(
                     solver.request.blockedBuildings = undefined;
                   });
                 } else {
-                  const blockedBuildings =
-                    FactoryBuildingsForRecipes.filter(
-                      b => !allowedBuildings.includes(b.id),
-                    ).map(b => b.id);
+                  const blockedBuildings = FactoryBuildingsForRecipes.filter(
+                    b => !allowedBuildings.includes(b.id),
+                  ).map(b => b.id);
                   useStore.getState().updateSolver(id!, solver => {
                     solver.request.blockedBuildings = blockedBuildings;
                   });

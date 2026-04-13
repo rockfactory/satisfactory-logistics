@@ -110,9 +110,7 @@ export function ResourceNodeExtractorDetail(
                     <Text size="sm" fw="bold">
                       x
                       <RepeatingNumber
-                        value={
-                          value / (baseRate * purity.multiplier * speed)
-                        }
+                        value={value / (baseRate * purity.multiplier * speed)}
                       />
                     </Text>
                   </Table.Td>

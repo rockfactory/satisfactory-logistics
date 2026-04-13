@@ -32,10 +32,7 @@ import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { useStore } from '@/core/zustand';
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap, type FactoryItem } from '@/recipes/FactoryItem';
-import {
-  FactoryRecipe,
-  getRecipeDisplayName,
-} from '@/recipes/FactoryRecipe';
+import { FactoryRecipe, getRecipeDisplayName } from '@/recipes/FactoryRecipe';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { MachineNodeActions } from './MachineNodeActions';

@@ -36,9 +36,7 @@ export function calculateMachineNodeBuildings(
 
   const roundedBuildingsAmount = fullBuildingsAmount + partialBuildingAmount;
   const boostedBuildings = Math.min(
-    somersloops > 0
-      ? Math.ceil(somersloops / building.somersloopSlots)
-      : 0,
+    somersloops > 0 ? Math.ceil(somersloops / building.somersloopSlots) : 0,
     roundedBuildingsAmount,
   );
   const normalBuildings = roundedBuildingsAmount - boostedBuildings;
