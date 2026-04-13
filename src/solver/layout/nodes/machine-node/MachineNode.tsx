@@ -245,10 +245,23 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                   <Group gap={4} align="center">
                     <IconClockBolt size={16} /> {recipe.time}s
                   </Group>
-                  <Group gap={4} align="center">
-                    <IconBuildingFactory2 size={16} /> x
-                    <RepeatingNumber value={buildingsAmount} /> {building.name}
-                  </Group>
+                  <Stack gap={0} align="flex-start">
+                    <Group gap={4} align="center">
+                      <IconBuildingFactory2 size={16} /> x
+                      <RepeatingNumber value={buildingsAmount} />{' '}
+                      {building.name}
+                    </Group>
+                    {machineCalc.partialBuildingAmount > 0 && (
+                      <Text size="xs" c="dimmed">
+                        {machineCalc.fullBuildingsAmount} at{' '}
+                        {PercentageFormatter.format(overclock)}
+                        {' + 1 at '}
+                        {PercentageFormatter.format(
+                          machineCalc.partialBuildingOverclock,
+                        )}
+                      </Text>
+                    )}
+                  </Stack>
                   <Group gap={4} align="center">
                     <IconBolt size={16} />{' '}
                     <RepeatingNumber value={machineCalc.totalPower} /> MW
