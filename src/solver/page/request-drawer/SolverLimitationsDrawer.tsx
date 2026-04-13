@@ -24,6 +24,8 @@ import {
   Switch,
   Text,
 } from '@mantine/core';
+import { useShallowStore } from '@/core/zustand';
+import { isWorldResource } from '@/recipes/WorldResources';
 import { IconInfoCircleFilled } from '@tabler/icons-react';
 import { useState } from 'react';
 import { LimitationResourceAmountInput } from './limitations/LimitationResourceAmountInput';
@@ -43,6 +45,12 @@ export function SolverLimitationsDrawer(
   const maxBelt = useGameSetting('maxBelt');
   const factory = useFactory(id);
   const gameAllowedBuildings = useGameAllowedBuildings();
+
+  const inputResources = useShallowStore(state =>
+    state.factories.factories[id ?? '']?.inputs
+      ?.map(i => i.resource)
+      .filter((r): r is string => r != null && isWorldResource(r)) ?? [],
+  );
 
   const [advanced, setAdvanced] = useState(false);
   const [useFactoryOverride, setUseFactoryOverride] = useState(
@@ -69,11 +77,29 @@ export function SolverLimitationsDrawer(
         <Stack gap="xs">
           <Group gap="xs" justify="space-between">
             <Text size="lg">World Resources</Text>
-            <Switch
-              label="Custom Amounts"
-              checked={showAdvanced}
-              onChange={() => setShowAdvanced(!showAdvanced)}
-            />
+            <Group gap="xs">
+              {inputResources.length > 0 && (
+                <Switch
+                  label="Disable if input"
+                  checked={inputResources.every(r =>
+                    request?.blockedResources?.includes(r),
+                  )}
+                  onChange={e => {
+                    const block = e.currentTarget.checked;
+                    for (const resource of inputResources) {
+                      useStore
+                        .getState()
+                        .toggleBlockedResource(id!, resource, block);
+                    }
+                  }}
+                />
+              )}
+              <Switch
+                label="Custom Amounts"
+                checked={showAdvanced}
+                onChange={() => setShowAdvanced(!showAdvanced)}
+              />
+            </Group>
           </Group>
           {showAdvanced && (
             <Alert color="orange" icon={<IconInfoCircleFilled size={16} />}>

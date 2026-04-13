@@ -27,18 +27,43 @@ export function calculateMachineNodeBuildings(
   const partialBuildingAmount = reminder > 0.0001 ? Math.ceil(reminder) : 0;
   const partialBuildingOverclock = reminder * overclock;
 
+  const roundedBuildingsAmount = fullBuildingsAmount + partialBuildingAmount;
+  const boostedBuildings = Math.min(
+    somersloops > 0
+      ? Math.ceil(somersloops / building.somersloopSlots)
+      : 0,
+    roundedBuildingsAmount,
+  );
+  const normalBuildings = roundedBuildingsAmount - boostedBuildings;
+  const normalPower =
+    normalBuildings *
+    building.powerConsumption *
+    Math.pow(overclock, building.powerConsumptionExponent);
+  const boostedPower =
+    boostedBuildings *
+    building.powerConsumption *
+    Math.pow(overclock, building.somersloopPowerConsumptionExponent);
+  const totalPower = normalPower + boostedPower;
+
+  const somersloopsPerMachine = building.somersloopSlots > 0
+    ? Math.min(somersloops, building.somersloopSlots)
+    : 0;
+
   return {
     overclock,
     somersloops,
+    somersloopsPerMachine,
     buildingsAmount,
     amplifiedRate,
     perBuilding,
     building,
     product,
     data,
-    roundedBuildingsAmount: fullBuildingsAmount + partialBuildingAmount,
+    roundedBuildingsAmount,
     fullBuildingsAmount,
     partialBuildingAmount,
     partialBuildingOverclock,
+    totalPower,
+    boostedBuildings,
   };
 }
