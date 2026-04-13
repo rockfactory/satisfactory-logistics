@@ -5,11 +5,12 @@ import * as Sentry from '@sentry/react';
 import { supabaseIntegration } from '@supabase/sentry-js-integration';
 import '@xyflow/react/dist/style.css';
 import { setAutoFreeze } from 'immer';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
 import App from './App';
 import { AuthSessionManager } from './auth/AuthSessionManager';
 import { supabaseClient } from './core/supabase';
-import { createRoot } from 'react-dom/client';
-import { StrictMode } from 'react';
+
 setAutoFreeze(false); // TODO Bug on change solver
 
 Sentry.init({

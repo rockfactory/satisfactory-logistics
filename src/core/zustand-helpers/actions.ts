@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 import type { RootState } from '@/core/zustand';
 import { ImmerActions } from './immer';
-import { Action } from './slices';
+import type { Action } from './slices';
 
 type InferActions<Actions> = Actions extends [infer ActionGroup, ...infer Rest]
   ? InferActionsGroup<ActionGroup> & InferActions<Rest>

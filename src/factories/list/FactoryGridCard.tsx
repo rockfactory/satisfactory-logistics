@@ -1,12 +1,12 @@
-import { useStore } from '@/core/zustand';
-import { ProgressChip } from '@/factories/components/ProgressChip';
-import { Factory } from '@/factories/Factory';
-import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { Path, setByPath } from '@clickbar/dot-diver';
+import { type Path, setByPath } from '@clickbar/dot-diver';
 import { Card, Flex, Group, Stack, Text } from '@mantine/core';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useStore } from '@/core/zustand';
+import { ProgressChip } from '@/factories/components/ProgressChip';
+import type { Factory } from '@/factories/Factory';
+import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 
 export interface IFactoryGridCard {
   id: string;

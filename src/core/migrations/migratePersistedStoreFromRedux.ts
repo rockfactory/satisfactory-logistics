@@ -1,7 +1,7 @@
-import { getAllDefaultRecipesIds } from '@/recipes/graph/getAllDefaultRecipes';
 import { captureException } from '@sentry/react';
 import { v4 } from 'uuid';
 import type { RootState } from '@/core/zustand';
+import { getAllDefaultRecipesIds } from '@/recipes/graph/getAllDefaultRecipes';
 
 export function migratePersistedStoreFromRedux() {
   const previous = localStorage.getItem('persist:root');

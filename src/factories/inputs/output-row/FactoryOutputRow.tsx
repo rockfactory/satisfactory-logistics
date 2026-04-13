@@ -1,12 +1,3 @@
-import { useStore } from '@/core/zustand';
-import { FactoryOutputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
-import { OutputDependenciesPeekModal } from '@/factories/components/peek/OutputDependenciesPeekModal';
-import { FactoryUsage } from '@/factories/components/usage/FactoryUsage';
-import { FactoryOutput } from '@/factories/Factory';
-import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
-import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
-import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import {
   ActionIcon,
   Group,
@@ -18,6 +9,15 @@ import {
 import { IconTrash } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
+import { useStore } from '@/core/zustand';
+import { FactoryOutputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
+import { OutputDependenciesPeekModal } from '@/factories/components/peek/OutputDependenciesPeekModal';
+import { FactoryUsage } from '@/factories/components/usage/FactoryUsage';
+import type { FactoryOutput } from '@/factories/Factory';
+import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
+import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
+import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { FactoryOutputObjectiveSelect } from './FactoryOutputObjectiveSelect';
 import classes from './FactoryOutputRow.module.css';
 
@@ -63,8 +63,8 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
         label={
           isMaximized ? (
             <span>
-              Amount is calculated by the solver to maximize production.
-              Change the objective in the calculator to set a fixed amount.
+              Amount is calculated by the solver to maximize production. Change
+              the objective in the calculator to set a fixed amount.
             </span>
           ) : null
         }

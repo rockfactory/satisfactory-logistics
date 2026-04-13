@@ -16,7 +16,7 @@
     padding-bottom: 6px;
   }
 
-  @media (max-width: $mantine-breakpoint-xs) {
+  @mixin smaller-than xs {
     flex-direction: column;
   }
 
@@ -24,7 +24,7 @@
 }
 
 .links {
-  @media (max-width: $mantine-breakpoint-xs) {
+  @mixin smaller-than xs {
     margin-top: var(--mantine-spacing-md);
   }
 }

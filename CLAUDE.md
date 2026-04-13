@@ -39,8 +39,8 @@ npm run dev        # starts Vite dev server at http://localhost:5173
 | `npm run preview` | Serve the production build locally |
 | `npm test` | Run Vitest unit tests |
 | `npm run check-types` | TypeScript type check without emitting output |
-| `npm run lint` | ESLint on `src/` — zero warnings allowed (`--max-warnings 0`) |
-| `npm run format` | Prettier auto-format (write in place) |
+| `npm run lint` | Biome check on `src/` (linting + formatting) |
+| `npm run format` | Biome auto-format `src/` (write in place) |
 | `npm run parse-docs` | Parse Satisfactory game data files into JSON (see below) |
 | `npm run supabase:types` | Regenerate `src/core/database.types.ts` from Supabase schema |
 
@@ -153,22 +153,22 @@ Savegame files (`.sav`) are parsed using `@etothepii/satisfactory-file-parser` i
 
 - Strict mode is enabled (`tsconfig.json`).
 - Path alias `@/*` maps to `src/*` — always use it for cross-directory imports.
-- `@typescript-eslint/no-explicit-any` is **off** (but avoid `any` where possible).
-- `@typescript-eslint/no-unused-vars` is **off** (TypeScript itself handles this).
+- `noExplicitAny` is **off** in Biome (but avoid `any` where possible).
+- `noUnusedVariables` is **off** in Biome (TypeScript itself handles this).
 
-### Formatting (Prettier)
+### Formatting & Linting (Biome)
+
+Biome handles both formatting and linting via [`biome.json`](biome.json):
 
 ```json
-{ "singleQuote": true, "trailingComma": "all", "arrowParens": "avoid" }
+{ "quoteStyle": "single", "trailingCommas": "all", "arrowParentheses": "asNeeded" }
 ```
 
-Run `npm run format` before committing. The CI lint step rejects any warnings.
+Run `npm run format` before committing. Run `npm run lint` to check for errors.
 
-### ESLint
-
-- `import/extensions`: file extensions must be **omitted** in imports (except `.json` which must always be included).
-- `react-hooks/recommended` rules are enforced.
-- `typescript-paths/recommended` enforces use of the `@/*` alias.
+- File extensions must be **omitted** in imports (except `.json` which must always be included).
+- `useExhaustiveDependencies` is set to **warn** — use `biome-ignore lint/correctness/useExhaustiveDependencies: <reason>` to suppress when intentional.
+- Import organization is handled automatically by Biome.
 
 ### Naming Conventions
 

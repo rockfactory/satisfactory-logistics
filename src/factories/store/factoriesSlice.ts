@@ -1,6 +1,7 @@
 import { useStore } from '@/core/zustand';
 import { createSlice } from '@/core/zustand-helpers/slices';
-import { Factory } from '@/factories/Factory';
+import type { Factory } from '@/factories/Factory';
+
 interface FactoriesSlice {
   factories: Record<string, Factory>;
 }

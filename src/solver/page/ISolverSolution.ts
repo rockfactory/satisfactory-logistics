@@ -1,9 +1,9 @@
-import { HighsSolution } from 'highs';
-import type { SolutionNode } from '@/solver/algorithm/solveProduction';
-import { Edge } from '@xyflow/react';
-import Graph from 'graphology';
-import type { SolverEdge, SolverNode } from '@/solver/algorithm/SolverNode';
+import type { Edge } from '@xyflow/react';
+import type Graph from 'graphology';
+import type { HighsSolution } from 'highs';
 import type { SolverContext } from '@/solver/algorithm/SolverContext';
+import type { SolverEdge, SolverNode } from '@/solver/algorithm/SolverNode';
+import type { SolutionNode } from '@/solver/algorithm/solveProduction';
 
 export interface ISolverSolution {
   result: HighsSolution;

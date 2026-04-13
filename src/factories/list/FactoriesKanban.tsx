@@ -1,12 +1,12 @@
-import { useStore } from '@/core/zustand';
-import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
 import {
   ControlledBoard,
-  KanbanBoard,
+  type KanbanBoard,
   moveCard,
 } from '@caldwell619/react-kanban';
-import { FactoryProgressStatus } from '@/factories/Factory';
+import { useStore } from '@/core/zustand';
 import { ProgressChip } from '@/factories/components/ProgressChip';
+import type { FactoryProgressStatus } from '@/factories/Factory';
+import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
 import './FactoriesKanban.css';
 import { FactoryGridCard } from '@/factories/list/FactoryGridCard';
 

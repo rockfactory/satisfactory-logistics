@@ -1,3 +1,4 @@
+import Graph from 'graphology';
 import { log } from '@/core/logger/log';
 import type { FactoryOutput } from '@/factories/Factory';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
@@ -6,8 +7,6 @@ import {
   getWorldResourceMax,
   WorldResourcesList,
 } from '@/recipes/WorldResources';
-import Graph from 'graphology';
-import type { SolverProductionRequest } from './solveProduction';
 import type {
   SolverAreaNode,
   SolverByproductNode,
@@ -17,6 +16,7 @@ import type {
   SolverRawInputNode,
   SolverRawNode,
 } from './SolverNode';
+import type { SolverProductionRequest } from './solveProduction';
 
 const logger = log.getLogger('recipes:solver');
 logger.setLevel('info');

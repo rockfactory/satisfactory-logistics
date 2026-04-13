@@ -1,9 +1,9 @@
-import { useStore } from '@/core/zustand';
 import { ActionIcon, Tooltip } from '@mantine/core';
 import {
   IconArrowsDiagonal,
   IconArrowsDiagonalMinimize2,
 } from '@tabler/icons-react';
+import { useStore } from '@/core/zustand';
 export interface IFactoryExpandActionIconProps {
   isCollapsed: boolean;
   factoryId: string;

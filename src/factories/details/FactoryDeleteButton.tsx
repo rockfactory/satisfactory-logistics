@@ -1,9 +1,9 @@
-import { useNavigate } from 'react-router-dom';
-import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
-import { useState } from 'react';
 import { Button, Group, Modal, Text } from '@mantine/core';
-import { useStore } from '@/core/zustand';
 import { IconTrash } from '@tabler/icons-react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useStore } from '@/core/zustand';
+import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
 
 export const FactoryDeleteButton = ({ id }: { id: string }) => {
   const navigate = useNavigate();

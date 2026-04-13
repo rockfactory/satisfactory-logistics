@@ -1,6 +1,6 @@
+import { useMemo, useRef } from 'react';
 import type { SolutionNode } from '@/solver/algorithm/solveProduction';
 import type { SolverLayoutState } from '@/solver/store/Solver';
-import { useMemo, useRef } from 'react';
 import { isSavedLayoutValid } from './savedSolverLayoutUtils';
 
 export function usePreviousSolverLayoutStates() {

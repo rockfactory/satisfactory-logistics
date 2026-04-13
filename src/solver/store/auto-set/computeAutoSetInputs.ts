@@ -1,13 +1,13 @@
+import { sortBy } from 'lodash';
 import {
-  WORLD_SOURCE_ID,
   type Factory,
   type FactoryInput,
+  WORLD_SOURCE_ID,
 } from '@/factories/Factory';
 import { isWorldResource } from '@/recipes/WorldResources';
 import { isResourceNode } from '@/solver/algorithm/getSolutionNodes';
-import { sortBy } from 'lodash';
+import type { ISolverSolution } from '@/solver/page/ISolverSolution';
 import { fixSolverRoundingError } from './fixSolverRoundingError';
-import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export function computeAutoSetInputs(
   solution: ISolverSolution,

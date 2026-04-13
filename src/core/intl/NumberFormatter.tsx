@@ -25,7 +25,6 @@ function fillRepetend(
 /**
  * string-only version of `RepeatingNumber`.
  */
-// eslint-disable-next-line react-refresh/only-export-components
 export function formatRepeatingNumber(value = 0): string {
   const formatted = NumberFormatter.formatToParts(value);
   const repetend = getRepetend(value);

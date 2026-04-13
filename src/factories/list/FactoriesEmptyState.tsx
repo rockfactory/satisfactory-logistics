@@ -1,12 +1,12 @@
-import { useStore } from '@/core/zustand';
-import { Link, useNavigate } from 'react-router-dom';
 import { Button, Divider, Stack, Text } from '@mantine/core';
 import {
   IconBuildingFactory,
   IconDeviceGamepad,
   IconPlus,
 } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
+import { useStore } from '@/core/zustand';
 import classes from '@/factories/FactoriesTab.module.css';
 
 export const FactoriesEmptyState = () => {

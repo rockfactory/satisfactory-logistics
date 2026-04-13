@@ -1,4 +1,3 @@
-import { GameMenu } from '@/games/menu/GameMenu';
 import {
   Badge,
   Burger,
@@ -12,8 +11,9 @@ import { useDisclosure } from '@mantine/hooks';
 import { capitalize } from 'lodash';
 import { Link } from 'react-router-dom';
 import { UserMenu } from '@/auth/UserMenu';
-import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { useStore } from '@/core/zustand';
+import { GameMenu } from '@/games/menu/GameMenu';
+import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import classes from './Header.module.css';
 
 interface HeaderProps {

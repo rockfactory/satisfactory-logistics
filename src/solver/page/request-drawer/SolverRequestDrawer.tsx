@@ -1,5 +1,3 @@
-import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
-import type { SolverInstance } from '@/solver/store/Solver';
 import { Button, Center, Drawer, em, Stack, Tabs } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
@@ -9,11 +7,13 @@ import {
   IconX,
 } from '@tabler/icons-react';
 import { useCallback, useState } from 'react';
+import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
+import type { ISolverSolution } from '@/solver/page/ISolverSolution';
+import type { SolverInstance } from '@/solver/store/Solver';
 import { SolverInputOutputsDrawer } from './SolverInputOutputsDrawer';
 import { SolverLimitationsDrawer } from './SolverLimitationsDrawer';
 import { SolverRecipesDrawer } from './SolverRecipesDrawer';
 import classes from './SolverRequestDrawer.module.css';
-import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export interface ISolverRequestDrawerProps {
   factoryId: string;
@@ -44,7 +44,8 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
   const [tab, setTab] = useState<
     'inputs-outputs' | 'recipes' | 'limitations' | null
   >(null);
-  const close = useCallback(() => setTab(null), [setTab]);
+
+  const close = useCallback(() => setTab(null), []);
 
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 

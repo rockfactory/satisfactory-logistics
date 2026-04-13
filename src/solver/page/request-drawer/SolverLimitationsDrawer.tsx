@@ -1,18 +1,3 @@
-import { FormOnChangeHandler } from '@/core/form/useFormOnChange';
-import { useStore } from '@/core/zustand';
-import { useFactory } from '@/factories/store/factoriesSlice';
-import { useGameAllowedBuildings, useGameSetting } from '@/games/gamesSlice';
-import {
-  FactoryBuildingsForRecipes,
-  FactoryConveyorBelts,
-  FactoryPipelinesExclAlternates,
-} from '@/recipes/FactoryBuilding';
-import { allowedToBlockedBuildings } from '@/solver/store/allowedToBlockedBuildings';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { WorldResourcesList } from '@/recipes/WorldResources';
-import type { SolverInstance } from '@/solver/store/Solver';
-import { usePathSolverRequest } from '@/solver/store/solverSelectors';
 import {
   Alert,
   Checkbox,
@@ -25,10 +10,23 @@ import {
   Switch,
   Text,
 } from '@mantine/core';
-import { useShallowStore } from '@/core/zustand';
-import { isWorldResource } from '@/recipes/WorldResources';
 import { IconInfoCircleFilled } from '@tabler/icons-react';
 import { useState } from 'react';
+import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
+import { useShallowStore, useStore } from '@/core/zustand';
+import { useFactory } from '@/factories/store/factoriesSlice';
+import { useGameAllowedBuildings, useGameSetting } from '@/games/gamesSlice';
+import {
+  FactoryBuildingsForRecipes,
+  FactoryConveyorBelts,
+  FactoryPipelinesExclAlternates,
+} from '@/recipes/FactoryBuilding';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { isWorldResource, WorldResourcesList } from '@/recipes/WorldResources';
+import { allowedToBlockedBuildings } from '@/solver/store/allowedToBlockedBuildings';
+import type { SolverInstance } from '@/solver/store/Solver';
+import { usePathSolverRequest } from '@/solver/store/solverSelectors';
 import { LimitationResourceAmountInput } from './limitations/LimitationResourceAmountInput';
 
 export interface ISolverLimitationsDrawerProps {

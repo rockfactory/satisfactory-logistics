@@ -1,14 +1,14 @@
+import { Group, Image, Stack, Table } from '@mantine/core';
+import { groupBy, sum } from 'lodash';
+import { useMemo } from 'react';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { OverclockImage } from '@/recipes/ui/OverclockImage';
 import { SomersloopImage } from '@/recipes/ui/SomsersloopImage';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
 import { calculateMachineNodeBuildings } from '@/solver/layout/nodes/machine-node/postprocess/calculateMachineNodeBuildings';
-import { Group, Image, Stack, Table } from '@mantine/core';
-import { groupBy, sum } from 'lodash';
-import { useMemo } from 'react';
+import type { ISolverSolution } from '@/solver/page/ISolverSolution';
 import classes from './SummaryBuildings.module.css';
-import { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export interface ISummaryBuildingsProps {
   solution: ISolverSolution;

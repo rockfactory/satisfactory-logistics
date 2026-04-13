@@ -1,5 +1,5 @@
-import type { RootState } from '@/core/zustand';
 import { produce } from 'immer';
+import type { RootState } from '@/core/zustand';
 
 export function removeMissingFactoriesInGames(state) {
   // Fix for missing factories in games

@@ -1,14 +1,4 @@
-import { SelectIconInput } from '@/core/form/SelectIconInput';
-import { useFormOnChange } from '@/core/form/useFormOnChange';
-import { useStore } from '@/core/zustand';
-import { GameSettings } from '@/games/Game';
-import { useGameAllowedBuildings, useGameSettings } from '@/games/gamesSlice';
-import {
-  FactoryBuildingsForRecipes,
-  FactoryConveyorBelts,
-  FactoryPipelinesExclAlternates,
-} from '@/recipes/FactoryBuilding';
-import { Path, setByPath } from '@clickbar/dot-diver';
+import { type Path, setByPath } from '@clickbar/dot-diver';
 import {
   Alert,
   Button,
@@ -26,11 +16,20 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { IconCheck, IconSettings } from '@tabler/icons-react';
 import { useEffect } from 'react';
+import { SelectIconInput } from '@/core/form/SelectIconInput';
+import { useFormOnChange } from '@/core/form/useFormOnChange';
+import { useStore } from '@/core/zustand';
+import type { GameSettings } from '@/games/Game';
+import { useGameAllowedBuildings, useGameSettings } from '@/games/gamesSlice';
+import {
+  FactoryBuildingsForRecipes,
+  FactoryConveyorBelts,
+  FactoryPipelinesExclAlternates,
+} from '@/recipes/FactoryBuilding';
 
 // TODO Consider using @mantine/modals manager for consistent modal patterns
 const gameSettingsModalListeners = new Set<() => void>();
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function openGameSettingsModal() {
   gameSettingsModalListeners.forEach(fn => fn());
 }

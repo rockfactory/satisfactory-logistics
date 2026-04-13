@@ -1,8 +1,8 @@
 .fullHeightContainer {
-    position: relative;
-    height: 0;
+  position: relative;
+  height: 0;
 
-    flex-grow: 1;
+  flex-grow: 1;
 
-    overflow-y: auto;
+  overflow-y: auto;
 }

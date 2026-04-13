@@ -1,5 +1,5 @@
-import { itemId } from '@/recipes/itemId';
 import { describe, expect, test } from 'vitest';
+import { itemId } from '@/recipes/itemId';
 import { loadHighs, solveProduction } from '@/solver/algorithm/solveProduction';
 import { computeAutoSetInputs } from '@/solver/store/auto-set/computeAutoSetInputs';
 

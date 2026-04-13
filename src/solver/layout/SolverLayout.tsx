@@ -1,13 +1,4 @@
-import { log } from '@/core/logger/log';
-import { useStore } from '@/core/zustand';
-import type { SolutionNode } from '@/solver/algorithm/solveProduction';
-import { FloatingEdge } from '@/solver/edges/FloatingEdge';
-import { IngredientEdge } from '@/solver/edges/IngredientEdge';
-import type { SolverLayoutState, SolverNodeState } from '@/solver/store/Solver';
-import { usePathSolverLayout } from '@/solver/store/solverSelectors';
-import { toggleFullscreen } from '@/utils/toggleFullscreen';
 import dagre from '@dagrejs/dagre';
-import { Box } from '@mantine/core';
 import { IconArrowsMaximize, IconMaximizeOff } from '@tabler/icons-react';
 import {
   Background,
@@ -15,10 +6,10 @@ import {
   ConnectionLineType,
   ControlButton,
   Controls,
-  Edge,
-  InternalNode,
+  type Edge,
+  type InternalNode,
   MiniMap,
-  Node,
+  type Node,
   type OnNodesChange,
   Position,
   ReactFlow,
@@ -28,6 +19,14 @@ import {
   useReactFlow,
   type XYPosition,
 } from '@xyflow/react';
+import { log } from '@/core/logger/log';
+import { useStore } from '@/core/zustand';
+import type { SolutionNode } from '@/solver/algorithm/solveProduction';
+import { FloatingEdge } from '@/solver/edges/FloatingEdge';
+import { IngredientEdge } from '@/solver/edges/IngredientEdge';
+import type { SolverLayoutState, SolverNodeState } from '@/solver/store/Solver';
+import { usePathSolverLayout } from '@/solver/store/solverSelectors';
+import { toggleFullscreen } from '@/utils/toggleFullscreen';
 import '@xyflow/react/dist/style.css';
 import { isEqual } from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -131,7 +130,9 @@ const getLayoutedElements = (
   const isHorizontal = GraphLayoutOptions.rankdir === 'LR';
   dagreGraph.setGraph(GraphLayoutOptions);
 
-  logger.debug(`getLayouted: nodes[0] width: ${nodes[0].measured?.width ?? '<null>'}, height: ${nodes[0].measured?.height ?? '<null>'}`); // prettier-ignore
+  logger.debug(
+    `getLayouted: nodes[0] width: ${nodes[0].measured?.width ?? '<null>'}, height: ${nodes[0].measured?.height ?? '<null>'}`,
+  ); // prettier-ignore
   (nodes as (InternalNode | Node)[]).forEach(node => {
     dagreGraph.setNode(node.id, {
       width: snapSizeToGrid(node.measured?.width ?? 0),
@@ -223,6 +224,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     setIsFullscreen(document.fullscreenElement === ref.current);
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional
   useEffect(() => {
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => {
@@ -233,6 +235,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
   const previousFittedWithNodes = useRef(false);
 
   // When nodes change, we need to re-layout them.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional
   useEffect(() => {
     logger.debug('Initializing nodes...');
 
@@ -254,12 +257,12 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     setInitialFitViewFinished(false);
 
     // setTimeout(() => {}, 1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.edges, props.nodes, setEdges, setNodes]);
 
   const { getCompatiblePreviousLayout, cachePreviousLayout } =
     usePreviousSolverLayoutStates();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional
   useEffect(() => {
     // We can't trust `nodesInitialized` to be true, because it's updated later in the loop.
     // We need to check if the nodes have real measurements.
@@ -324,7 +327,6 @@ export const SolverLayout = (props: SolverLayoutProps) => {
         setOpacity(1);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     nodesInitialized,
     savedLayout,

@@ -1,12 +1,11 @@
-import { loglev } from '@/core/logger/log';
-import { useStore } from '@/core/zustand';
-import { SolutionNode } from '@/solver/algorithm/solveProduction';
-import { usePathSolverInstance } from '@/solver/store/solverSelectors';
 import { Button } from '@mantine/core';
 import { IconLayout } from '@tabler/icons-react';
 import { useReactFlow } from '@xyflow/react';
 import { useCallback } from 'react';
-import { ISolverSolution } from '@/solver/page/ISolverSolution';
+import { loglev } from '@/core/logger/log';
+import { useStore } from '@/core/zustand';
+import type { SolutionNode } from '@/solver/algorithm/solveProduction';
+import type { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export interface ISolverLayoutButtonsProps {
   solution: ISolverSolution;

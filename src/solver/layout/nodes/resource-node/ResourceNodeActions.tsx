@@ -1,11 +1,11 @@
-import { useStore } from '@/core/zustand';
-import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
 import { ActionIcon, Button, Group, Stack, Tooltip } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { IconEye, IconEyeOff, IconTrash } from '@tabler/icons-react';
+import { useStore } from '@/core/zustand';
+import { useFactoryContext } from '@/FactoryContext';
+import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
 import type { IResourceNodeData } from './ResourceNode';
 import { ResourceNodeInputConfig } from './ResourceNodeInputConfig';
-import { useFactoryContext } from '@/FactoryContext';
 
 export interface IResourceNodeActionsProps {
   id: string;

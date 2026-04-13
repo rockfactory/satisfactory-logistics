@@ -1,6 +1,6 @@
-import { useShallowStore, useStore } from '@/core/zustand';
 import { Modal, TextInput } from '@mantine/core';
 import { pick } from 'lodash';
+import { useShallowStore, useStore } from '@/core/zustand';
 
 export interface IGameDetailModalProps {
   opened: boolean;

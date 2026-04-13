@@ -60,7 +60,10 @@ function loadSerializedGameIntoState(
   // Migrations
   serialized = applyGameMigrations(serialized);
 
-  logger.info(`Fully loaded game "${serialized.game.name}" (id=${serialized.game.id})`, serialized); // prettier-ignore
+  logger.info(
+    `Fully loaded game "${serialized.game.name}" (id=${serialized.game.id})`,
+    serialized,
+  ); // prettier-ignore
   state.games.games[serialized.game.id] = { ...serialized.game };
   state.games.games[serialized.game.id].authorId = data.author_id;
   state.games.games[serialized.game.id].createdAt = data.created_at;

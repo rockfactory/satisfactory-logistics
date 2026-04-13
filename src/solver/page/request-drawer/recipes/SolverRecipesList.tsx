@@ -1,10 +1,10 @@
+import { Group, Stack, Text } from '@mantine/core';
+import * as React from 'react';
+import { useMemo } from 'react';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { AllFactoryRecipes, type FactoryRecipe } from '@/recipes/FactoryRecipe';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { useSolverAllowedRecipes } from '@/solver/store/solverSelectors';
-import { Group, Stack, Text } from '@mantine/core';
-import * as React from 'react';
-import { useMemo } from 'react';
 import { SolveRecipeCheckbox } from './SolverRecipeCheckbox';
 
 export interface ISolverRecipesListProps {

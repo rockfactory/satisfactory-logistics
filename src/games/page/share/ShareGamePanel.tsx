@@ -1,5 +1,3 @@
-import { supabaseClient } from '@/core/supabase';
-import { useStore } from '@/core/zustand';
 import {
   ActionIcon,
   Box,
@@ -17,6 +15,8 @@ import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import { IconCheck, IconCopy, IconShare, IconTrash } from '@tabler/icons-react';
 import { useState } from 'react';
+import { supabaseClient } from '@/core/supabase';
+import { useStore } from '@/core/zustand';
 import { shareGame } from './shareGame';
 
 export interface IShareGamePanelProps {

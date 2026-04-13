@@ -1,6 +1,5 @@
+import type { Path, PathValue } from '@clickbar/dot-diver';
 import { useMemo, useRef } from 'react';
-
-import { Path, PathValue } from '@clickbar/dot-diver';
 
 export type Updater<Obj, P extends Path<Obj> = Path<Obj>> = (
   path: P,

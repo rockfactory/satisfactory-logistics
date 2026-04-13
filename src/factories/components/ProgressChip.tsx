@@ -1,6 +1,6 @@
-import { FactoryProgressStatus } from '@/factories/Factory';
-import { Badge, BadgeProps } from '@mantine/core';
+import { Badge, type BadgeProps } from '@mantine/core';
 import { progressProperties } from '@/factories/components/progressProperties';
+import type { FactoryProgressStatus } from '@/factories/Factory';
 
 export const ProgressChip = ({
   status,

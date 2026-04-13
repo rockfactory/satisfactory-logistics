@@ -1,21 +1,21 @@
+import { type Edge, MarkerType, type Node } from '@xyflow/react';
+import highloader, { type Highs, type HighsSolution } from 'highs';
+import { useEffect, useRef, useState } from 'react';
 import { log } from '@/core/logger/log';
 import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
-import { IIngredientEdgeData } from '@/solver/edges/IngredientEdge';
+import type { IIngredientEdgeData } from '@/solver/edges/IngredientEdge';
 import type { IByproductNodeData } from '@/solver/layout/nodes/byproduct-node/ByproductNode';
-import { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
-import { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
-import { SolverRequest, type SolverNodeState } from '@/solver/store/Solver';
-import { Edge, MarkerType, Node } from '@xyflow/react';
-import highloader, { Highs, type HighsSolution } from 'highs';
-import { useEffect, useRef, useState } from 'react';
+import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
+import type { IResourceNodeData } from '@/solver/layout/nodes/resource-node/ResourceNode';
+import type { SolverNodeState, SolverRequest } from '@/solver/store/Solver';
 import { avoidPackagedFuelIfPossible } from './consolidate/avoidPackagedFuelIfPossible';
 import { avoidUnproducibleResources } from './consolidate/avoidUnproducibleResources';
 import { consolidateProductionConstraints } from './consolidate/consolidateProductionConstraints';
 import { addInputResourceConstraints } from './request/addInputProductionConstraints';
 import { addOutputProductionConstraints } from './request/addOutputProductionConstraints';
 import { blockWorldResourcesForInputs } from './request/blockWorldResourcesForInputs';
-import { applySolverObjective } from './solve/applySolverObjectives';
 import { SolverContext } from './SolverContext';
+import { applySolverObjective } from './solve/applySolverObjectives';
 
 const logger = log.getLogger('solver:production');
 logger.setLevel('info');
@@ -243,7 +243,6 @@ export function solveProduction(
             resource: edge.resource,
           },
         });
-        continue;
       }
     }
   }

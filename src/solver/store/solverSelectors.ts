@@ -1,7 +1,7 @@
-import { useShallowStore, useStore, type RootState } from '@/core/zustand';
-import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
-import { SolverInstance } from '@/solver/store/Solver';
+import { type RootState, useShallowStore, useStore } from '@/core/zustand';
 import { useFactoryContext } from '@/FactoryContext';
+import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
+import type { SolverInstance } from '@/solver/store/Solver';
 
 export const usePathSolverInstance = (
   id: string,

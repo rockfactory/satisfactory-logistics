@@ -1,7 +1,7 @@
-import { GameDetailModal } from '@/games/menu/GameDetailModal';
 import { ActionIcon } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconPencil } from '@tabler/icons-react';
+import { GameDetailModal } from '@/games/menu/GameDetailModal';
 
 export interface IGameDetailEditButtonProps {
   gameId: string;

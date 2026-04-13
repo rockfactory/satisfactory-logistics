@@ -1,4 +1,4 @@
-import { produce, WritableDraft } from 'immer';
+import { produce, type WritableDraft } from 'immer';
 import { ImmerActions } from './immer';
 
 type InferState<Slices> = Slices extends [

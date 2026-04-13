@@ -1,11 +1,11 @@
-import { useSolverSolution } from '@/solver/page/useSolverSolution';
 import { Box, Button, Container, Stack, Text } from '@mantine/core';
-import { SolverRequestDrawer } from '@/solver/page/request-drawer/SolverRequestDrawer';
-import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
-import { FactoryContext } from '@/FactoryContext';
-import { useFactoryInputsOutputs } from '@/factories/store/factoriesSelectors';
 import { IconArrowLeft, IconListDetails } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
+import { FactoryContext } from '@/FactoryContext';
+import { useFactoryInputsOutputs } from '@/factories/store/factoriesSelectors';
+import { SolverRequestDrawer } from '@/solver/page/request-drawer/SolverRequestDrawer';
+import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
+import { useSolverSolution } from '@/solver/page/useSolverSolution';
 
 export const FactoryGraph = ({ id }: { id: string }) => {
   const { suggestions, instance, solution, loading, onChangeHandler } =

@@ -1,24 +1,17 @@
-import { loglev } from '@/core/logger/log';
-import { useStore } from '@/core/zustand';
-import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
-import {
-  Button,
-  Group,
-  LoadingOverlay,
-  TextInput,
-  Title,
-} from '@mantine/core';
+import { Button, Group, LoadingOverlay, TextInput, Title } from '@mantine/core';
 import { IconArrowLeft, IconPlus } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
+import { loglev } from '@/core/logger/log';
+import { useStore } from '@/core/zustand';
+import { FactoryContext } from '@/FactoryContext';
+import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
+import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
+import { FullHeightContainer } from '@/layout/FullHeightContainer';
+import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
+import { useSolverSolution } from '@/solver/page/useSolverSolution';
 import { SolverRequestDrawer } from './request-drawer/SolverRequestDrawer';
 import { SolverResetButton } from './SolverResetButton';
-import { useSolverSolution } from '@/solver/page/useSolverSolution';
-import { SolverSolutionFragment } from '@/solver/page/SolverSolutionFragment';
-import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
-import { FactoryContext } from '@/FactoryContext';
-
-import { FullHeightContainer } from '@/layout/FullHeightContainer';
 
 const logger = loglev.getLogger('solver:page');
 
@@ -55,17 +48,15 @@ export function SolverPage(props: ISolverPageProps) {
         <Group gap="sm" justify="space-between">
           <Group gap="sm">
             {solverGameId && (
-              <>
-                <Button
-                  component={Link}
-                  to="/factories"
-                  variant="light"
-                  color="gray"
-                  leftSection={<IconArrowLeft size={16} />}
-                >
-                  All Factories
-                </Button>
-              </>
+              <Button
+                component={Link}
+                to="/factories"
+                variant="light"
+                color="gray"
+                leftSection={<IconArrowLeft size={16} />}
+              >
+                All Factories
+              </Button>
             )}
             <Title order={4}>
               <TextInput
@@ -106,7 +97,6 @@ export function SolverPage(props: ISolverPageProps) {
               solution={solution}
               onSolverChangeHandler={onChangeHandler}
             />
-
           </Group>
         </Group>
       </AfterHeaderSticky>

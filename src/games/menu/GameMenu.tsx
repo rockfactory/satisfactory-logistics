@@ -1,5 +1,3 @@
-import { useSession } from '@/auth/authSelectors';
-import { useShallowStore, useStore } from '@/core/zustand';
 import { Button, Menu } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
@@ -18,6 +16,8 @@ import cx from 'clsx';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
+import { useSession } from '@/auth/authSelectors';
+import { useShallowStore, useStore } from '@/core/zustand';
 import { loadRemoteGame } from '@/games/save/loadRemoteGame';
 import { loadRemoteGamesList } from '@/games/save/loadRemoteGamesList';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
@@ -61,6 +61,7 @@ export function GameMenu(props: IGameMenuProps) {
 
   const gameOptions = useGameOptions();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional
   useEffect(() => {
     loadRemoteGamesList().catch(console.error);
   }, [session?.user.id]);

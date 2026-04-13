@@ -1,8 +1,8 @@
+import { Table, Text } from '@mantine/core';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import type { FactoryRecipe, RecipeIngredient } from '@/recipes/FactoryRecipe';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { Table, Text } from '@mantine/core';
 
 export const RecipeIngredientRow = ({
   index,

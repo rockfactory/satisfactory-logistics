@@ -1,7 +1,7 @@
-import type { FactoryOutputObjective } from '@/factories/Factory';
 import { ActionIcon, Menu, Tooltip } from '@mantine/core';
 import { IconArrowBarToUp, IconCheck, IconEqual } from '@tabler/icons-react';
 import { useCallback } from 'react';
+import type { FactoryOutputObjective } from '@/factories/Factory';
 
 export interface IFactoryOutputObjectiveSelectProps {
   objective: FactoryOutputObjective | null | undefined;

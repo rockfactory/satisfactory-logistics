@@ -1,18 +1,4 @@
-import { useFormOnChange } from '@/core/form/useFormOnChange';
-import { useStore } from '@/core/zustand';
-import {
-  FactoryInputIcon,
-  FactoryOutputIcon,
-} from '@/factories/components/peek/icons/OutputInputIcons';
-import { progressProperties } from '@/factories/components/progressProperties';
-import { Factory, FactoryProgressStatus } from '@/factories/Factory';
-import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
-import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
-import {
-  useFactoryInputsOutputs,
-  useFactorySimpleAttributes,
-} from '@/factories/store/factoriesSelectors';
-import { Path, setByPath } from '@clickbar/dot-diver';
+import { type Path, setByPath } from '@clickbar/dot-diver';
 import {
   Alert,
   Button,
@@ -27,6 +13,20 @@ import {
 import { IconBulb, IconCalculator } from '@tabler/icons-react';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useFormOnChange } from '@/core/form/useFormOnChange';
+import { useStore } from '@/core/zustand';
+import {
+  FactoryInputIcon,
+  FactoryOutputIcon,
+} from '@/factories/components/peek/icons/OutputInputIcons';
+import { progressProperties } from '@/factories/components/progressProperties';
+import type { Factory, FactoryProgressStatus } from '@/factories/Factory';
+import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
+import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
+import {
+  useFactoryInputsOutputs,
+  useFactorySimpleAttributes,
+} from '@/factories/store/factoriesSelectors';
 import classes from './ProductionView.module.css';
 
 const progressValues: { value: FactoryProgressStatus; label: string }[] = [

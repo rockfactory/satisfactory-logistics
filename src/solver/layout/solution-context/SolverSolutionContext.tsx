@@ -1,16 +1,15 @@
 import {
-  useMemo,
-  type PropsWithChildren,
   createContext,
+  type PropsWithChildren,
   useContext,
+  useMemo,
 } from 'react';
-import { ISolverSolution } from '@/solver/page/ISolverSolution';
+import type { ISolverSolution } from '@/solver/page/ISolverSolution';
 
 export interface SolverSolutionContextValue {
   solution: ISolverSolution;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const SolverSolutionContext =
   createContext<SolverSolutionContextValue | null>(null);
 
@@ -25,7 +24,6 @@ export const SolverSolutionProvider: React.FC<
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function useSolverSolution() {
   const context = useContext(SolverSolutionContext);
   if (!context) {

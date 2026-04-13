@@ -1,11 +1,11 @@
-import type { Factory } from '@/factories/Factory';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import { Box, Group, Stack, Text } from '@mantine/core';
 import { IconHelpHexagon } from '@tabler/icons-react';
 import type { NodeProps } from '@xyflow/react';
 import { memo, useMemo } from 'react';
+import type { Factory } from '@/factories/Factory';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 
 export interface IFactoryNodeData {
   label: string;

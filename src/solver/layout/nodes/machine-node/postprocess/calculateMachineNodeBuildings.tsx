@@ -1,8 +1,8 @@
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { getRecipeProductPerBuilding } from '@/recipes/FactoryRecipe';
-import type { SolverNodeState } from '@/solver/store/Solver';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
+import type { SolverNodeState } from '@/solver/store/Solver';
 
 export function calculateMachineNodeBuildings(
   data: IMachineNodeData,
@@ -43,17 +43,16 @@ export function calculateMachineNodeBuildings(
   // somersloops is already per-machine
   const somersloopsPerMachine = somersloops;
   // All buildings are boosted when somersloops > 0 (uniform distribution)
-  const boostedBuildings =
-    somersloops > 0 ? roundedBuildingsAmount : 0;
+  const boostedBuildings = somersloops > 0 ? roundedBuildingsAmount : 0;
   const normalBuildings = roundedBuildingsAmount - boostedBuildings;
   const normalPower =
     normalBuildings *
     building.powerConsumption *
-    Math.pow(overclock, building.powerConsumptionExponent);
+    overclock ** building.powerConsumptionExponent;
   const boostedPower =
     boostedBuildings *
     building.powerConsumption *
-    Math.pow(overclock, building.somersloopPowerConsumptionExponent);
+    overclock ** building.somersloopPowerConsumptionExponent;
   const totalPower = normalPower + boostedPower;
 
   return {

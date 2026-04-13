@@ -1,12 +1,12 @@
-import { useStore } from '@/core/zustand';
-import { createActions } from '@/core/zustand-helpers/actions';
-import { Factory } from '@/factories/Factory';
-import { Game } from '@/games/Game';
-import { allowedToBlockedBuildings } from '@/solver/store/allowedToBlockedBuildings';
-import type { SolverInstance } from '@/solver/store/Solver';
 import dayjs from 'dayjs';
 import { cloneDeep, omit } from 'lodash';
 import { v4 } from 'uuid';
+import { useStore } from '@/core/zustand';
+import { createActions } from '@/core/zustand-helpers/actions';
+import type { Factory } from '@/factories/Factory';
+import type { Game } from '@/games/Game';
+import { allowedToBlockedBuildings } from '@/solver/store/allowedToBlockedBuildings';
+import type { SolverInstance } from '@/solver/store/Solver';
 
 export const gameFactoriesActions = createActions({
   initGame: (game: Partial<Game>) => state => {
@@ -104,9 +104,7 @@ export const gameFactoriesActions = createActions({
     const game = state.games.games[targetId];
     if (!game) return;
 
-    const blockedBuildings = allowedToBlockedBuildings(
-      game.allowedBuildings,
-    );
+    const blockedBuildings = allowedToBlockedBuildings(game.allowedBuildings);
 
     game.factoriesIds.forEach(factoryId => {
       const factory = state.factories.factories[factoryId];

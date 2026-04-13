@@ -1,9 +1,9 @@
-import { getAllDefaultRecipesIds } from '@/recipes/graph/getAllDefaultRecipes';
+import { describe, expect, test } from 'vitest';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
+import { getAllDefaultRecipesIds } from '@/recipes/graph/getAllDefaultRecipes';
 import { itemId } from '@/recipes/itemId';
 import { loadHighs, solveProduction } from '@/solver/algorithm/solveProduction';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
-import { describe, expect, test } from 'vitest';
 
 describe('Somersloops', () => {
   test('slooped recipe should be preferred over unslooped when minimizing resources', async () => {
@@ -235,9 +235,7 @@ describe('Somersloops', () => {
           constraint: 'exact' as const,
         },
       ],
-      outputs: [
-        { resource: POWER_ID, amount: 0, objective: 'max' as const },
-      ],
+      outputs: [{ resource: POWER_ID, amount: 0, objective: 'max' as const }],
       allowedRecipes: [
         'Recipe_Alternate_IonizedFuel_Dark_C',
         'RecipeCustom_Build_GeneratorFuel_C_Desc_IonizedFuel_C',

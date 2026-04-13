@@ -1,14 +1,14 @@
-import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
-import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { Alert, Box, Container, Paper, Text } from '@mantine/core';
 import {
-  ResponsiveSankey,
   type DefaultLink,
   type DefaultNode,
+  ResponsiveSankey,
 } from '@nivo/sankey';
 import { ErrorBoundary } from '@sentry/react';
 import { IconAlertCircle } from '@tabler/icons-react';
 import { useMemo } from 'react';
+import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 
 const getResourceName = (resourceId: string) => {
   return AllFactoryItemsMap[resourceId]?.name ?? 'N/A';

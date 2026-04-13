@@ -1,22 +1,21 @@
-import { getLayoutedElements } from '@/core/graph-layout/getLayoutedElements';
-import { log } from '@/core/logger/log';
-import { Box } from '@mantine/core';
 import {
   Background,
   BackgroundVariant,
   ConnectionLineType,
   Controls,
-  Edge,
+  type Edge,
   MiniMap,
-  Node,
+  type Node,
   ReactFlow,
   useEdgesState,
   useNodesInitialized,
   useNodesState,
   useReactFlow,
 } from '@xyflow/react';
+import { getLayoutedElements } from '@/core/graph-layout/getLayoutedElements';
+import { log } from '@/core/logger/log';
 import '@xyflow/react/dist/style.css';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { InputEdge } from './edges/input-edge/InputEdge';
 import { FactoryNode } from './nodes/factory-node/FactoryNode';
 
@@ -62,12 +61,15 @@ export const FactoriesGraphLayout = (props: FactoriesGraphLayoutProps) => {
     setTimeout(() => {}, 1);
   }, [props.edges, props.nodes, setEdges, setNodes]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional
   useEffect(() => {
     // We can't trust `nodesInitialized` to be true, because it's updated later in the loop.
     // We need to check if the nodes have real measurements.
     const hasRealMeasurements =
       nodes[0]?.measured?.width && nodes[0]?.measured?.height;
-    logger.debug(`Check for re-layout: nodesInitialized=${nodesInitialized}, initialLayoutFinished=${initialLayoutFinished} hasRealMeasurements=${hasRealMeasurements}`); // prettier-ignore
+    logger.debug(
+      `Check for re-layout: nodesInitialized=${nodesInitialized}, initialLayoutFinished=${initialLayoutFinished} hasRealMeasurements=${hasRealMeasurements}`,
+    ); // prettier-ignore
 
     // 1. Nodes are initialized, so we can layout them.
     if (nodesInitialized && hasRealMeasurements && !initialLayoutFinished) {
@@ -89,7 +91,6 @@ export const FactoriesGraphLayout = (props: FactoriesGraphLayoutProps) => {
         logger.debug('-> Fitting view completed');
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nodesInitialized, initialLayoutFinished, initialFitViewFinished]);
 
   const ref = useRef<HTMLDivElement>(null);

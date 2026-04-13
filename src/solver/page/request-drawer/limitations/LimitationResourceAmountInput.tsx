@@ -1,9 +1,9 @@
+import { NumberInput } from '@mantine/core';
 import { useStore } from '@/core/zustand';
+import { useFactoryContext } from '@/FactoryContext';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { getWorldResourceMax } from '@/recipes/WorldResources';
 import { useSolverResourcesAmount } from '@/solver/store/solverSelectors';
-import { NumberInput } from '@mantine/core';
-import { useFactoryContext } from '@/FactoryContext';
 
 export interface ILimitationResourceAmountInputProps {
   resource: string;

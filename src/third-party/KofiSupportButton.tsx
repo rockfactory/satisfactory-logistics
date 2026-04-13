@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Image,
-  LoadingOverlay,
-  Modal,
-  Popover,
-  ScrollArea,
-} from '@mantine/core';
+import { Box, Button, Image, LoadingOverlay, Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 
@@ -64,55 +56,5 @@ export function KofiSupportButton(props: IKofiSupportButtonProps) {
         Donate
       </Button>
     </>
-  );
-
-  return (
-    <div>
-      <Popover
-        middlewares={{
-          shift: false,
-          flip: false,
-          size: true,
-        }}
-        width={200}
-        position="bottom"
-        withArrow
-        shadow="md"
-      >
-        <Popover.Target>
-          <Button
-            variant="filled"
-            leftSection={
-              <Image
-                alt="Ko-fi"
-                src="/images/logo/logo-kofi@2x.png"
-                w={20}
-                h={20}
-              />
-            }
-          >
-            Support Us
-          </Button>
-        </Popover.Target>
-        <Popover.Dropdown w="400px" bg="#f9f9f9" p={'xs'}>
-          <ScrollArea mah="90vh" type="auto">
-            <iframe
-              id="kofiframe"
-              src="https://ko-fi.com/satisfactorylogistics/?hidefeed=true&widget=true&embed=true&preview=true"
-              // style="border:none;width:100%;padding:4px;background:#f9f9f9;"
-              //   height="712"
-              style={{
-                minHeight: '350px',
-                border: 'none',
-                width: '100%',
-                padding: '4px',
-                background: '#f9f9f9',
-              }}
-              title="satisfactorylogistics"
-            ></iframe>
-          </ScrollArea>
-        </Popover.Dropdown>
-      </Popover>
-    </div>
   );
 }

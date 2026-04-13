@@ -1,3 +1,5 @@
+import { type Path, setByPath } from '@clickbar/dot-diver';
+import { useEffect, useMemo } from 'react';
 import { useFormOnChange } from '@/core/form/useFormOnChange';
 import { loglev } from '@/core/logger/log';
 import { useStore } from '@/core/zustand';
@@ -6,17 +8,15 @@ import { isByproductNode } from '@/solver/algorithm/getSolutionNodes';
 import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
 import { solveProduction, useHighs } from '@/solver/algorithm/solveProduction';
 import {
-  ISolverSolutionSuggestion,
+  type ISolverSolutionSuggestion,
   proposeSolverSolutionSuggestions,
 } from '@/solver/page/suggestions/proposeSolverSolutionSuggestions';
-import { SolverInstance } from '@/solver/store/Solver';
+import type { SolverInstance } from '@/solver/store/Solver';
 import {
   useCurrentSolverId,
   usePathSolverInstance,
   useSolverGameId,
 } from '@/solver/store/solverSelectors';
-import { Path, setByPath } from '@clickbar/dot-diver';
-import { useEffect, useMemo } from 'react';
 
 const logger = loglev.getLogger('solver:page');
 

@@ -1,4 +1,4 @@
-import { EdgeProps, getBezierPath, useInternalNode } from '@xyflow/react';
+import { type EdgeProps, getBezierPath, useInternalNode } from '@xyflow/react';
 
 import { getEdgeParams } from './utils.js';
 

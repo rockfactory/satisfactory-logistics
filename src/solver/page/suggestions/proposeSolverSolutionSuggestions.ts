@@ -1,3 +1,4 @@
+import type { Highs } from 'highs';
 import type { Factory } from '@/factories/Factory';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import {
@@ -10,7 +11,6 @@ import { solveProduction } from '@/solver/algorithm/solveProduction';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
 import { fixSolverRoundingError } from '@/solver/store/auto-set/fixSolverRoundingError';
 import type { SolverRequest } from '@/solver/store/Solver';
-import type { Highs } from 'highs';
 
 export interface ISolverSolutionSuggestion {
   addRecipes?: string[];

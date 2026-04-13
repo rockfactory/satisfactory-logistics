@@ -1,7 +1,7 @@
+import { NumberInput, SimpleGrid, Text } from '@mantine/core';
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { NumberInput, SimpleGrid, Text } from '@mantine/core';
 import type { IMachineNodeData } from './MachineNode';
 
 export interface IMachineNodeProductionConfigProps {

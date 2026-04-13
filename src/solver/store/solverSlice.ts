@@ -1,17 +1,17 @@
+import { uniq, without } from 'lodash';
 import { toggleAsSet } from '@/core/state-utils/toggleAsSet';
 import { createSlice } from '@/core/zustand-helpers/slices';
-import { allowedToBlockedBuildings } from './allowedToBlockedBuildings';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import {
   getAllAlternateRecipeIds,
   getAllConverterRecipeIds,
   getAllDefaultRecipesIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
-import { uniq, without } from 'lodash';
-import {
+import { allowedToBlockedBuildings } from './allowedToBlockedBuildings';
+import type {
   SolverInstance,
-  type SolverLayoutState,
-  type SolverNodeState,
+  SolverLayoutState,
+  SolverNodeState,
 } from './Solver';
 
 export interface SolversSlice {

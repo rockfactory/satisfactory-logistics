@@ -1,10 +1,10 @@
-import { useStore } from '@/core/zustand';
-import type { FactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
 import { ActionIcon, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
 import { IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
+import { useStore } from '@/core/zustand';
+import type { FactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
 
 export interface ISolverResetButtonProps {
   id?: string;

@@ -1,7 +1,7 @@
-import { Footer } from '@/layout/Footer';
-import { Header } from '@/layout/Header';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { GamesAtleastOneManager } from '@/games/manager/GamesAtleastOneManager';
+import { Footer } from '@/layout/Footer';
+import { Header } from '@/layout/Header';
 import { GamesPage } from './GamesPage';
 import { SharedGameImporterPage } from './share/SharedGameImporterPage';
 

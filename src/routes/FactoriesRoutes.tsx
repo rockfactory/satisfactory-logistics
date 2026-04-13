@@ -1,5 +1,3 @@
-import { ChartsTab } from '@/factories/charts/ChartsTab';
-import { GamesAtleastOneManager } from '@/games/manager/GamesAtleastOneManager';
 import {
   Route,
   Routes,
@@ -7,13 +5,15 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router-dom';
+import { ChartsTab } from '@/factories/charts/ChartsTab';
+import { FactoryPage } from '@/factories/details/FactoryPage';
 import { FactoriesTab } from '@/factories/FactoriesTab';
+import { GamesAtleastOneManager } from '@/games/manager/GamesAtleastOneManager';
+import { AppContainer } from '@/layout/AppContainer';
 import { Footer } from '@/layout/Footer';
 import { Header } from '@/layout/Header';
 import { SolverPage } from '@/solver/page/SolverPage';
 import { SolverShareImporterPage } from '@/solver/share/SolverShareImporter';
-import { FactoryPage } from '@/factories/details/FactoryPage';
-import { AppContainer } from '@/layout/AppContainer';
 
 export interface IFactoryRoutesProps {}
 

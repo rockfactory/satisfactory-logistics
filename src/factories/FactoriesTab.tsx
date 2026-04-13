@@ -1,16 +1,16 @@
 import { Container, Divider, SimpleGrid, Space, Stack } from '@mantine/core';
 import { useState } from 'react';
-import { useSession } from '@/auth/authSelectors';
 // import { loadFromRemote } from '../auth/sync/loadFromRemote';
 import { useNavigate } from 'react-router-dom';
+import { useSession } from '@/auth/authSelectors';
 import { useStore } from '@/core/zustand';
-import { useGameFactoriesIds } from '@/games/gamesSlice';
-import { FactoryGridCard } from './list/FactoryGridCard';
-import { FactoriesFiltersMenu } from './filters/FactoriesFiltersMenu';
-import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
+import { FactoriesEmptyState } from '@/factories/list/FactoriesEmptyState';
 import { FactoriesKanban } from '@/factories/list/FactoriesKanban';
 import { FactoryRow } from '@/factories/list/FactoryRow';
-import { FactoriesEmptyState } from '@/factories/list/FactoriesEmptyState';
+import { useGameFactoriesIds } from '@/games/gamesSlice';
+import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
+import { FactoriesFiltersMenu } from './filters/FactoriesFiltersMenu';
+import { FactoryGridCard } from './list/FactoryGridCard';
 
 export interface IFactoriesTabProps {}
 

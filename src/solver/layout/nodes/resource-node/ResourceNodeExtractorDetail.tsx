@@ -1,10 +1,10 @@
+import { Group, Image, Table, Text } from '@mantine/core';
+import { sortBy } from 'lodash';
+import { Fragment, useMemo } from 'react';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { getWorldResourceMachines } from '@/recipes/algorithms/getWorldResourceMachines';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { Group, Image, Table, Text } from '@mantine/core';
-import { sortBy } from 'lodash';
-import { Fragment, useMemo } from 'react';
 import type { IResourceNodeData } from './ResourceNode';
 
 const PURITIES = [

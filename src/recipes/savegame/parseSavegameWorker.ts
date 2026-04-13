@@ -1,9 +1,9 @@
-import { loglev } from '@/core/logger/log';
 import {
-  Parser,
   type ObjectArrayProperty,
+  Parser,
   type SatisfactorySave,
 } from '@etothepii/satisfactory-file-parser';
+import { loglev } from '@/core/logger/log';
 import type {
   IParseSavegameRequest,
   IParseSavegameResponse,

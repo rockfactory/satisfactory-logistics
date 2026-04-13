@@ -1,11 +1,11 @@
 import { Button, Group, SegmentedControl, Title } from '@mantine/core';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
 import { IconArrowLeft } from '@tabler/icons-react';
-import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FactoryDeleteButton } from '@/factories/details/FactoryDeleteButton';
-import { ProductionView } from '@/factories/details/ProductionView';
 import { FactoryGraph } from '@/factories/details/FactoryGraph';
+import { ProductionView } from '@/factories/details/ProductionView';
+import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
+import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import { FullHeightContainer } from '@/layout/FullHeightContainer';
 
 export const FactoryPage = ({

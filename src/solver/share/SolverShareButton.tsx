@@ -1,4 +1,3 @@
-import type { Factory } from '@/factories/Factory';
 import {
   ActionIcon,
   Alert,
@@ -17,12 +16,13 @@ import { IconCheck, IconCopy, IconShare } from '@tabler/icons-react';
 import { useCallback, useState } from 'react';
 import { useSession } from '@/auth/authSelectors';
 import { LoginModal } from '@/auth/LoginModal';
-import { Json } from '@/core/database.types';
+import type { Json } from '@/core/database.types';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
+import type { Factory } from '@/factories/Factory';
 import {
+  type SolverInstance,
   sharedSolverUUIDTranslator,
-  SolverInstance,
 } from '@/solver/store/Solver';
 import { usePathSolverInstance } from '@/solver/store/solverSelectors';
 

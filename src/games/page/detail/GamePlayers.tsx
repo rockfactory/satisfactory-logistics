@@ -1,11 +1,11 @@
-import { useSession } from '@/auth/authSelectors';
-import { supabaseClient } from '@/core/supabase';
-import { useStore } from '@/core/zustand';
 import { ActionIcon, Avatar, Group, Text } from '@mantine/core';
 import type { QueryData } from '@supabase/supabase-js';
 import { IconTrash } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useEffect, useState } from 'react';
+import { useSession } from '@/auth/authSelectors';
+import { supabaseClient } from '@/core/supabase';
+import { useStore } from '@/core/zustand';
 import classes from './GamePlayers.module.css';
 
 export interface IGamePlayersProps {
@@ -48,6 +48,7 @@ export function GamePlayers(props: IGamePlayersProps) {
   // Simple way to force refetch while not using react-query
   const [refetchCount, setRefetchCount] = useState(0);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentional
   useEffect(() => {
     const fetchPlayers = async () => {
       if (!gameSavedId) {
@@ -91,7 +92,11 @@ export function GamePlayers(props: IGamePlayersProps) {
       <GamePlayerBadge isAuthor player={players.author} />
 
       {players.shared_games.map(player => (
-        <GamePlayerBadge player={player.user} onDelete={handleDelete} />
+        <GamePlayerBadge
+          key={player.user.id}
+          player={player.user}
+          onDelete={handleDelete}
+        />
       ))}
     </Group>
   );

@@ -4,8 +4,8 @@ import {
   Box,
   CloseButton,
   Flex,
-  getGradient,
   Group,
+  getGradient,
   Image,
   Popover,
   Stack,
@@ -21,23 +21,25 @@ import {
   IconCircleCheckFilled,
   IconClockBolt,
 } from '@tabler/icons-react';
-import { NodeProps, useReactFlow } from '@xyflow/react';
+import { type NodeProps, useReactFlow } from '@xyflow/react';
 import { memo } from 'react';
-
-import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
-import { calculateMachineNodeBuildings } from './postprocess/calculateMachineNodeBuildings';
-import type { FactoryItemId } from '@/recipes/FactoryItemId';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
+import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
 import { useStore } from '@/core/zustand';
+import { useFactoryContext } from '@/FactoryContext';
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap, type FactoryItem } from '@/recipes/FactoryItem';
-import { FactoryRecipe, getRecipeDisplayName } from '@/recipes/FactoryRecipe';
-import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
+import type { FactoryItemId } from '@/recipes/FactoryItemId';
+import {
+  type FactoryRecipe,
+  getRecipeDisplayName,
+} from '@/recipes/FactoryRecipe';
+import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
+import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import { MachineNodeActions } from './MachineNodeActions';
+import { calculateMachineNodeBuildings } from './postprocess/calculateMachineNodeBuildings';
 import { RecipeIngredientRow } from './RecipeIngredientRow';
-import { useFactoryContext } from '@/FactoryContext';
 
 export interface IMachineNodeData {
   label: string;

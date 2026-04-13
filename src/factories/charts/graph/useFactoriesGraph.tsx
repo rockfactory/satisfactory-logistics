@@ -1,7 +1,7 @@
-import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
-import { type Edge, type Node } from '@xyflow/react';
+import type { Edge, Node } from '@xyflow/react';
 import { max } from 'lodash';
 import { useMemo } from 'react';
+import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
 import type { IInputEdgeData } from './edges/input-edge/InputEdge';
 import type { IFactoryNodeData } from './nodes/factory-node/FactoryNode';
 

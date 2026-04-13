@@ -11,11 +11,11 @@ import {
   IconSearch,
   IconTextGrammar,
 } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
+import { v4 } from 'uuid';
 import { useStore } from '@/core/zustand';
 import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
-import { FactoryViewSlice } from '@/factories/store/factoryViewSlice';
-import { v4 } from 'uuid';
-import { useNavigate } from 'react-router-dom';
+import type { FactoryViewSlice } from '@/factories/store/factoryViewSlice';
 
 export interface IFactoriesFiltersSectionProps {}
 

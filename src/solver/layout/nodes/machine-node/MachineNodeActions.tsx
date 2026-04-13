@@ -1,10 +1,11 @@
-import { useStore } from '@/core/zustand';
-import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
-import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
-import { useSolverSolution } from '@/solver/layout/solution-context/SolverSolutionContext';
 import { ActionIcon, Button, Group, Stack, Tooltip } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { IconCircleCheckFilled, IconTrash } from '@tabler/icons-react';
+import { useStore } from '@/core/zustand';
+import { useFactoryContext } from '@/FactoryContext';
+import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
+import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
+import { useSolverSolution } from '@/solver/layout/solution-context/SolverSolutionContext';
 import type { IMachineNodeData } from './MachineNode';
 import { MachineNodeProductionConfig } from './MachineNodeProductionConfig';
 import {
@@ -12,7 +13,6 @@ import {
   useRecipeAlternatesInputState,
 } from './SwitchRecipeAction';
 import { showConfettiWhenFactoryBuilt } from './showConfettiWhenFactoryBuilt';
-import { useFactoryContext } from '@/FactoryContext';
 
 export interface IMachineNodeActionsProps {
   id: string;

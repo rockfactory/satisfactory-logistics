@@ -1,13 +1,13 @@
-import { FactoryProgressStatus } from '@/factories/Factory';
-import { MantineColor } from '@mantine/core';
-import { ForwardRefExoticComponent, RefAttributes } from 'react';
+import type { MantineColor } from '@mantine/core';
 import {
   IconCircle,
   IconCircleCheck,
   IconProgress,
   IconProgressHelp,
-  IconProps,
+  type IconProps,
 } from '@tabler/icons-react';
+import type { ForwardRefExoticComponent, RefAttributes } from 'react';
+import type { FactoryProgressStatus } from '@/factories/Factory';
 
 export const progressProperties: Record<
   FactoryProgressStatus,

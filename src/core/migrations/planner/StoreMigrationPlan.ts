@@ -1,9 +1,9 @@
+import { produce, type WritableDraft } from 'immer';
 import type { RootState } from '@/core/zustand';
 import type { Factory } from '@/factories/Factory';
 import type { Game } from '@/games/Game';
 import type { SerializedGame } from '@/games/store/gameFactoriesActions';
 import type { SolverInstance } from '@/solver/store/Solver';
-import { produce, type WritableDraft } from 'immer';
 
 export interface StoreMigrationPlan {
   version: number;
