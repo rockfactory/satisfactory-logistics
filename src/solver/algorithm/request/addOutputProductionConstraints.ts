@@ -42,7 +42,14 @@ export function addOutputProductionConstraints(
       break;
     case 'default':
     default:
-      ctx.constraints.push(`${byproductVar} = ${amount || 0}`);
+      // `>=` Allows maximization on one byproduct in a recipe which has TWO outputs
+      // (one maximized, one not).
+      // theoretically, this could have some issues if the solver decides to produce
+      // a lot of the non-maximized output, but in practice it should not since inputs are a _cost_.
+      //
+      // We could use >= only if there is another output with a max objective, but that would
+      // add complexity and edge cases.
+      ctx.constraints.push(`${byproductVar} >= ${amount || 0}`);
   }
 
   computeProductionConstraints(ctx, resource);

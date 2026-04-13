@@ -170,6 +170,9 @@ export const solverFactoriesActions = createActions({
    * Update the solver instance with the new somersloops value.
    * Doing this will also update the somersloops for all outputs,
    * recomputing the total somersloops.
+   *
+   * @param somersloopsPerMachine - per-machine value (0..slots), used by the LP solver
+   * @param somersloopsTotal - total across all buildings, used for factory output display
    */
   updateSolverSomersloops:
     (
@@ -177,7 +180,8 @@ export const solverFactoriesActions = createActions({
       factoryId: string,
       // nodeId is variable name
       nodeId: string,
-      somersloops: number,
+      somersloopsPerMachine: number,
+      somersloopsTotal: number,
     ) =>
     state => {
       // 1. Update the solver instance with the new somersloops value
@@ -187,7 +191,8 @@ export const solverFactoriesActions = createActions({
       if (!solvers[factoryId].nodes[nodeId])
         solvers[factoryId].nodes[nodeId] = {};
 
-      solvers[factoryId].nodes[nodeId].somersloops = somersloops;
+      solvers[factoryId].nodes[nodeId].somersloops = somersloopsPerMachine;
+      solvers[factoryId].nodes[nodeId].somersloopsTotal = somersloopsTotal;
 
       // 2. Recompute somersloops for all outputs
       const somersloopNodes = Object.entries(solvers[factoryId].nodes).filter(
@@ -208,6 +213,13 @@ export const solverFactoriesActions = createActions({
 
         let isOutputUpdated = false;
 
+        // Use somersloopsTotal for factory output display.
+        // Fall back to somersloops (per-machine) for old saves where
+        // somersloopsTotal doesn't exist yet.
+        const displayTotal =
+          somersloopNodeState.somersloopsTotal ??
+          (somersloopNodeState.somersloops ?? 0);
+
         bfsFromNode(
           graph,
           somersloopNodeId,
@@ -221,10 +233,9 @@ export const solverFactoriesActions = createActions({
               o => o.resource === attrs.resource.id,
             );
             if (output) {
-              logger.info('Adding somersloops', somersloopNodeState.somersloops, 'to output', output.resource, 'from node', somersloopNodeId); // prettier-ignore
+              logger.info('Adding somersloops', displayTotal, 'to output', output.resource, 'from node', somersloopNodeId); // prettier-ignore
               output.somersloops =
-                (output.somersloops ?? 0) +
-                (somersloopNodeState.somersloops ?? 0);
+                (output.somersloops ?? 0) + displayTotal;
 
               isOutputUpdated = true;
             }

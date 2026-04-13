@@ -48,13 +48,20 @@ export function parseItems(docsJson: any) {
     }
   }
 
+  // Index 176 is reserved for the custom Power item (Desc_Power_CX)
+  // defined in FactoryItem.tsx — skip it when assigning new items.
+  const RESERVED_INDEXES = new Set([176]);
   let nextIndex = previousItems.length;
+  const getNextIndex = () => {
+    while (RESERVED_INDEXES.has(nextIndex)) nextIndex++;
+    return nextIndex++;
+  };
 
   const items = sortBy(
     rawItems.map((item, index) =>
       parseFactoryItem(
         item,
-        item.PreviousIndex != null ? item.PreviousIndex : nextIndex++,
+        item.PreviousIndex != null ? item.PreviousIndex : getNextIndex(),
       ),
     ),
     'index',

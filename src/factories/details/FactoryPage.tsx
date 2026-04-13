@@ -17,7 +17,7 @@ export const FactoryPage = ({
   const navigate = useNavigate();
 
   if (!id) {
-    throw new Error();
+    throw new Error('Factory ID is required in route params');
   }
 
   const factory = useFactorySimpleAttributes(id);
@@ -47,10 +47,10 @@ export const FactoryPage = ({
               value={currentView}
               onChange={val => {
                 if (val === 'calculator' && currentView === 'overview') {
-                  navigate(`../${id}/calculator`);
+                  navigate(`/factories/${id}/calculator`);
                 }
                 if (val === 'overview' && currentView === 'calculator') {
-                  navigate(`../${id}`);
+                  navigate(`/factories/${id}`);
                 }
               }}
             />

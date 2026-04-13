@@ -1,7 +1,7 @@
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
-import { NumberInput, SimpleGrid } from '@mantine/core';
+import { NumberInput, SimpleGrid, Text } from '@mantine/core';
 import type { IMachineNodeData } from './MachineNode';
 
 export interface IMachineNodeProductionConfigProps {
@@ -21,8 +21,6 @@ export function MachineNodeProductionConfig(
 ) {
   const {
     machine,
-    buildingsAmount,
-    id,
     overclockValue,
     setOverclockValue,
     somersloopsValue,
@@ -31,8 +29,12 @@ export function MachineNodeProductionConfig(
 
   const building = AllFactoryBuildingsMap[machine.recipe.producedIn];
 
-  const maxSlots =
-    Math.ceil(buildingsAmount - 0.0001) * building.somersloopSlots;
+  const slotsPerBuilding = building.somersloopSlots;
+  const somersloopsNum = Number(somersloopsValue) || 0;
+  const amplificationPct =
+    slotsPerBuilding > 0
+      ? Math.round((somersloopsNum / slotsPerBuilding) * 100 + 100)
+      : 100;
 
   return (
     <SimpleGrid cols={2} spacing={6}>
@@ -40,20 +42,30 @@ export function MachineNodeProductionConfig(
         styles={{
           input: {
             fontWeight: somersloopsValue ? 'bold' : 'normal',
-            // backgroundColor: somersloopsValue
-            //   ? 'var(--mantine-color-grape-5)'
-            //   : undefined,
           },
         }}
-        placeholder="Somersloops"
+        placeholder={`0/${slotsPerBuilding}`}
+        suffix={`/${slotsPerBuilding}`}
+        label={
+          <Text
+            size="xs"
+            fw="bold"
+            c="grape.4"
+            style={{
+              visibility: somersloopsNum > 0 ? 'visible' : 'hidden',
+            }}
+          >
+            {somersloopsNum > 0 ? `${amplificationPct}%` : '\u00A0'}
+          </Text>
+        }
         value={somersloopsValue}
         onChange={setSomersloopsValue}
         min={0}
-        max={maxSlots}
+        max={slotsPerBuilding}
         error={
-          Number(somersloopsValue) > maxSlots
-            ? `Max slots: ${maxSlots}`
-            : Number(somersloopsValue) < 0
+          somersloopsNum > slotsPerBuilding
+            ? `Max: ${slotsPerBuilding}`
+            : somersloopsNum < 0
               ? 'Cannot be negative'
               : null
         }
@@ -62,6 +74,11 @@ export function MachineNodeProductionConfig(
         }
       />
       <NumberInput
+        label={
+          <Text size="xs" style={{ visibility: 'hidden' }}>
+            {'\u00A0'}
+          </Text>
+        }
         placeholder="Overclock"
         suffix="%"
         value={
@@ -70,9 +87,7 @@ export function MachineNodeProductionConfig(
             : Number(overclockValue) * 100
         }
         onValueChange={({ floatValue }) =>
-          setOverclockValue(
-            floatValue == null ? '' : floatValue / 100,
-          )
+          setOverclockValue(floatValue == null ? '' : floatValue / 100)
         }
         min={0}
         max={250}
