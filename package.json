@@ -49,7 +49,7 @@
     "immer": "^10.2.0",
     "js-base64": "^3.7.8",
     "leva": "^0.9.35",
-    "lodash": "^4.17.23",
+    "lodash": "^4.18.1",
     "loglevel": "^1.9.2",
     "loglevel-plugin-prefix": "^0.8.4",
     "microdiff": "^1.5.0",
