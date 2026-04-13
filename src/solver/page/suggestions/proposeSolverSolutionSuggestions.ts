@@ -17,6 +17,7 @@ export interface ISolverSolutionSuggestion {
   resetOutputMinimum?: { index: number; resource: string }[];
   changeInputsUsage?: { index: number; resource: string }[];
   unblockResources?: string[];
+  unblockBuildings?: string[];
 }
 
 export function proposeSolverSolutionSuggestions(
@@ -84,6 +85,26 @@ export function proposeSolverSolutionSuggestions(
           resource: node.data.resource.id,
         }));
       console.log('Solution found with unblocked resources', suggestions);
+    }
+  }
+
+  // 0B. Try to unblock buildings
+  if (request.blockedBuildings?.length) {
+    const withUnblockedBuildings = solveProduction(highs, {
+      ...request,
+      blockedBuildings: [],
+      ...inputsOutputs,
+    });
+    if (isSolutionFound(withUnblockedBuildings)) {
+      const usedBuildingIds = new Set(
+        withUnblockedBuildings.nodes
+          .filter(node => node.type === 'Machine')
+          .map(node => (node.data as IMachineNodeData).recipe.producedIn),
+      );
+      suggestions.unblockBuildings = request.blockedBuildings.filter(id =>
+        usedBuildingIds.has(id),
+      );
+      console.log('Solution found with unblocked buildings', suggestions);
     }
   }
 
