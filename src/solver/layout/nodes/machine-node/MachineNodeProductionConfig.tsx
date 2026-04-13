@@ -46,11 +46,16 @@ export function MachineNodeProductionConfig(
         placeholder={`0/${slotsPerBuilding}`}
         suffix={`/${slotsPerBuilding}`}
         label={
-          somersloopsNum > 0 ? (
-            <Text size="xs" fw="bold" c="grape.4">
-              {amplificationPct}%
-            </Text>
-          ) : undefined
+          <Text
+            size="xs"
+            fw="bold"
+            c="grape.4"
+            style={{
+              visibility: somersloopsNum > 0 ? 'visible' : 'hidden',
+            }}
+          >
+            {somersloopsNum > 0 ? `${amplificationPct}%` : '\u00A0'}
+          </Text>
         }
         value={somersloopsValue}
         onChange={setSomersloopsValue}
@@ -68,6 +73,11 @@ export function MachineNodeProductionConfig(
         }
       />
       <NumberInput
+        label={
+          <Text size="xs" style={{ visibility: 'hidden' }}>
+            {'\u00A0'}
+          </Text>
+        }
         placeholder="Overclock"
         suffix="%"
         value={
