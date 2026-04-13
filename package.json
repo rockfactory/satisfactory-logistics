@@ -94,7 +94,11 @@
     "typescript": "^5.9.3",
     "typescript-plugin-css-modules": "^5.2.0",
     "vite": "^8.0.3",
+    "vite-plugin-static-copy": "^4.0.1",
     "vitest": "^4.1.4"
+  },
+  "overrides": {
+    "use-sync-external-store": "^1.4.0"
   },
   "packageManager": "npm@10.8.3"
 }
