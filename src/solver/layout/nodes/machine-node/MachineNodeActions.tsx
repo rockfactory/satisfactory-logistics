@@ -21,14 +21,6 @@ export interface IMachineNodeActionsProps {
   buildingsAmount: number;
 }
 
-function toPerMachine(
-  totalSomersloops: number | undefined,
-  slotsPerBuilding: number,
-): number | string {
-  if (!totalSomersloops || slotsPerBuilding <= 0) return '';
-  return Math.min(totalSomersloops, slotsPerBuilding);
-}
-
 /**
  * Contains all changes which can be applied to a machine node.
  * These are the ones requiring the "apply" button.
@@ -56,19 +48,25 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
     changed: recipesChanged,
   } = useRecipeAlternatesInputState(data.recipe.id);
 
-  // 2. Somersloops (stored as total, displayed as per-machine) and overclock
+  // 2. Somersloops (stored per-machine, displayed per-machine) and overclock
+  // Clamp stored value to slotsPerBuilding for backward compat with old saves
+  // where the stored value was a total (0..buildings*slots).
+  const storedPerMachine = nodeState?.somersloops
+    ? Math.min(nodeState.somersloops, slotsPerBuilding)
+    : undefined;
   const [somersloopsValue, setSomersloopsValue] = useInputState(
-    toPerMachine(nodeState?.somersloops, slotsPerBuilding),
+    (storedPerMachine ?? '') as number | string,
   );
   const [overclockValue, setOverclockValue] = useInputState(
     nodeState?.overclock as number | string,
   );
 
-  const totalSomersloops = Number(somersloopsValue) * roundedBuildings || 0;
+  const perMachineSomersloops = Number(somersloopsValue) || 0;
+  const totalSomersloops = perMachineSomersloops * roundedBuildings;
 
   const isApplyDisabled =
     !recipesChanged &&
-    totalSomersloops === (nodeState?.somersloops ?? 0) &&
+    perMachineSomersloops === (storedPerMachine ?? 0) &&
     overclockValue === nodeState?.overclock;
 
   const handleApply = () => {
@@ -83,14 +81,17 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
         );
     }
 
-    // 2. Update somersloops (convert per-machine back to total)
-    if (totalSomersloops !== (nodeState?.somersloops ?? 0)) {
+    // 2. Update somersloops
+    // nodeState.somersloops = per-machine (0..slots) — used by LP solver
+    // nodeState.somersloopsTotal = total across buildings — used for factory output display
+    if (perMachineSomersloops !== (storedPerMachine ?? 0)) {
       useStore
         .getState()
         .updateSolverSomersloops(
           solution.graph,
           solverId!,
           props.id,
+          perMachineSomersloops,
           totalSomersloops,
         );
     }
@@ -98,7 +99,8 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
     // 3. Update overclock
     if (overclockValue !== nodeState?.overclock)
       useStore.getState().updateSolverNode(solverId!, props.id, node => {
-        node.somersloops = totalSomersloops || undefined;
+        node.somersloops = perMachineSomersloops || undefined;
+        node.somersloopsTotal = totalSomersloops || undefined;
         node.overclock = overclockValue ? Number(overclockValue) : undefined;
       });
   };

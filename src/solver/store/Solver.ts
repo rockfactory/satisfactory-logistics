@@ -11,7 +11,10 @@ export interface SolverRequest {
 
 export interface SolverNodeState {
   done?: boolean;
+  /** Somersloops per machine (0 to building slots). Used by the LP solver. */
   somersloops?: number;
+  /** Total somersloops across all buildings. Used for factory output display. */
+  somersloopsTotal?: number;
   amplification?: number;
   overclock?: number;
   layoutIgnoreEdges?: boolean;

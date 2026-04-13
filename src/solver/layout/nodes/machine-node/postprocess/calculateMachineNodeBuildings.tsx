@@ -15,18 +15,22 @@ export function calculateMachineNodeBuildings(
 
   const perBuilding = getRecipeProductPerBuilding(recipe, product.id);
 
-  const somersloops = nodeState?.somersloops ?? 0;
+  // somersloops is per-machine (0..slots). Clamp for backward compat
+  // with old saves where the value was a total.
+  const somersloops = nodeState?.somersloops
+    ? Math.min(nodeState.somersloops, building.somersloopSlots)
+    : 0;
 
   // State-based values
   const overclock = nodeState?.overclock ?? 1;
-  const somersloopsPerMachine =
-    building.somersloopSlots > 0
-      ? Math.min(somersloops, building.somersloopSlots)
+
+  // Compute amplifiedRate using the same formula as the LP solver:
+  // sloopRatio = min(somersloops / slots, 1)
+  const sloopRatio =
+    building.somersloopSlots > 0 && somersloops > 0
+      ? Math.min(somersloops / building.somersloopSlots, 1)
       : 0;
-  const amplifiedRate =
-    building.somersloopSlots > 0 && somersloopsPerMachine > 0
-      ? 1 + somersloopsPerMachine / building.somersloopSlots
-      : 1;
+  const amplifiedRate = 1 + sloopRatio;
   const buildingsAmount = value / perBuilding / overclock / amplifiedRate;
 
   const fullBuildingsAmount = Math.floor(buildingsAmount);
@@ -35,10 +39,12 @@ export function calculateMachineNodeBuildings(
   const partialBuildingOverclock = reminder * overclock;
 
   const roundedBuildingsAmount = fullBuildingsAmount + partialBuildingAmount;
-  const boostedBuildings = Math.min(
-    somersloops > 0 ? Math.ceil(somersloops / building.somersloopSlots) : 0,
-    roundedBuildingsAmount,
-  );
+
+  // somersloops is already per-machine
+  const somersloopsPerMachine = somersloops;
+  // All buildings are boosted when somersloops > 0 (uniform distribution)
+  const boostedBuildings =
+    somersloops > 0 ? roundedBuildingsAmount : 0;
   const normalBuildings = roundedBuildingsAmount - boostedBuildings;
   const normalPower =
     normalBuildings *

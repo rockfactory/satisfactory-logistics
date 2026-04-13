@@ -217,6 +217,62 @@ describe('Somersloops', () => {
     expect(sloopedPower!.data.value).toBeGreaterThan(baselinePower!.data.value);
   });
 
+  test('partial somersloops (1/2 slots) should give less boost than full (2/2)', async () => {
+    const highs = await loadHighs();
+
+    const POWER_ID = 'Desc_Power_CX' as FactoryItemId;
+
+    const baseConfig = {
+      inputs: [
+        {
+          resource: itemId('Desc_PackagedRocketFuel_C'),
+          amount: 240,
+          constraint: 'exact' as const,
+        },
+        {
+          resource: itemId('Desc_DarkMatter_C'),
+          amount: 80,
+          constraint: 'exact' as const,
+        },
+      ],
+      outputs: [
+        { resource: POWER_ID, amount: 0, objective: 'max' as const },
+      ],
+      allowedRecipes: [
+        'Recipe_Alternate_IonizedFuel_Dark_C',
+        'RecipeCustom_Build_GeneratorFuel_C_Desc_IonizedFuel_C',
+      ],
+    };
+
+    // 1/2 slots per machine → 50% boost
+    const halfSlooped = solveProduction(highs, {
+      ...baseConfig,
+      nodes: { p34r118: { somersloops: 1 } },
+    });
+
+    // 2/2 slots per machine → 100% boost
+    const fullSlooped = solveProduction(highs, {
+      ...baseConfig,
+      nodes: { p34r118: { somersloops: 2 } },
+    });
+
+    expect(halfSlooped?.result.Status).toBe('Optimal');
+    expect(fullSlooped?.result.Status).toBe('Optimal');
+
+    const halfPower = halfSlooped!.nodes.find(
+      n => n.type === 'Byproduct' && n.data.resource.id === POWER_ID,
+    )!.data.value;
+    const fullPower = fullSlooped!.nodes.find(
+      n => n.type === 'Byproduct' && n.data.resource.id === POWER_ID,
+    )!.data.value;
+
+    // 1/2 should give 50% boost (1.5x), 2/2 should give 100% boost (2x)
+    expect(fullPower).toBeGreaterThan(halfPower);
+    // Verify approximate ratios: half ≈ 1.5x baseline, full ≈ 2x baseline
+    expect(halfPower).toBeCloseTo(25000, -2);
+    expect(fullPower).toBeCloseTo(33333.3, -2);
+  });
+
   test('should double byproducts', async () => {
     const highs = await loadHighs();
     const solution = solveProduction(highs, {
