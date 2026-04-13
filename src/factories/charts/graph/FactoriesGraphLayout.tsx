@@ -15,7 +15,8 @@ import {
 import { getLayoutedElements } from '@/core/graph-layout/getLayoutedElements';
 import { log } from '@/core/logger/log';
 import '@xyflow/react/dist/style.css';
-import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { InputEdge } from './edges/input-edge/InputEdge';
 import { FactoryNode } from './nodes/factory-node/FactoryNode';
 
@@ -39,6 +40,14 @@ const edgeTypes = {
 // TODO Centralize this, it's the same as in SolverLayout
 export const FactoriesGraphLayout = (props: FactoriesGraphLayoutProps) => {
   const { fitView, getNodes, getEdges } = useReactFlow();
+  const navigate = useNavigate();
+
+  const onNodeDoubleClick = useCallback(
+    (_event: React.MouseEvent, node: Node) => {
+      navigate(`/factories/${node.id}`);
+    },
+    [navigate],
+  );
 
   const [nodes, setNodes, onNodesChange] = useNodesState(props.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(props.edges);
@@ -105,6 +114,7 @@ export const FactoriesGraphLayout = (props: FactoriesGraphLayoutProps) => {
       edgeTypes={edgeTypes}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
+      onNodeDoubleClick={onNodeDoubleClick}
       connectionLineType={ConnectionLineType.SmoothStep}
       fitView
       snapToGrid

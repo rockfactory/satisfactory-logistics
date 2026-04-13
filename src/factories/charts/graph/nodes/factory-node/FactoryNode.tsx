@@ -35,6 +35,7 @@ export const FactoryNode = memo((props: IFactoryNodeProps) => {
       p="sm"
       style={{
         borderRadius: 4,
+        cursor: 'pointer',
         border: props.selected
           ? '1px solid var(--mantine-color-gray-3)'
           : '1px solid transparent',
