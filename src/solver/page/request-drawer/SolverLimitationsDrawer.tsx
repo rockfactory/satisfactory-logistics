@@ -136,22 +136,32 @@ export function SolverLimitationsDrawer(
                     .getState()
                     .setFactoryAllowedBuildings(
                       id!,
-                      gameAllowedBuildings ?? [],
+                      gameAllowedBuildings ??
+                        FactoryBuildingsForRecipes.map(b => b.id),
                     );
                 } else {
                   // Clear factory override, use game settings
                   useStore.getState().setFactoryAllowedBuildings(id!, null);
                 }
-                // Recalculate blocked buildings
-                const allowedBuildings = override
-                  ? (gameAllowedBuildings ?? [])
-                  : (gameAllowedBuildings ?? []);
-                const blockedBuildings = FactoryBuildingsForRecipes.filter(
-                  b => !allowedBuildings.includes(b.id),
-                ).map(b => b.id);
-                useStore.getState().updateSolver(id!, solver => {
-                  solver.request.blockedBuildings = blockedBuildings;
-                });
+                // Recalculate blocked buildings from fresh store state
+                const updatedFactory =
+                  useStore.getState().factories.factories[id!];
+                const allowedBuildings =
+                  updatedFactory?.allowedBuildings ?? gameAllowedBuildings;
+                if (allowedBuildings == null) {
+                  // No restrictions at all, clear all blocks
+                  useStore.getState().updateSolver(id!, solver => {
+                    solver.request.blockedBuildings = undefined;
+                  });
+                } else {
+                  const blockedBuildings =
+                    FactoryBuildingsForRecipes.filter(
+                      b => !allowedBuildings.includes(b.id),
+                    ).map(b => b.id);
+                  useStore.getState().updateSolver(id!, solver => {
+                    solver.request.blockedBuildings = blockedBuildings;
+                  });
+                }
               }}
             />
           </Group>
