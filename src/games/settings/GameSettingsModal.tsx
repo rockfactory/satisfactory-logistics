@@ -27,6 +27,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconCheck, IconSettings } from '@tabler/icons-react';
 import { useEffect } from 'react';
 
+// TODO Consider using @mantine/modals manager for consistent modal patterns
 const gameSettingsModalListeners = new Set<() => void>();
 
 // eslint-disable-next-line react-refresh/only-export-components
