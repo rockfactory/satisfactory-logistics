@@ -2,7 +2,6 @@ import { FactoryProgressStatus } from '@/factories/Factory';
 import { MantineColor } from '@mantine/core';
 import { ForwardRefExoticComponent, RefAttributes } from 'react';
 import {
-  Icon,
   IconCircle,
   IconCircleCheck,
   IconProgress,
@@ -15,7 +14,7 @@ export const progressProperties: Record<
   {
     color: MantineColor;
     label: string;
-    Icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>;
+    Icon: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
   }
 > = {
   draft: {

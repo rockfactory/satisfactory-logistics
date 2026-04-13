@@ -94,7 +94,7 @@ const GraphLayoutOptions = {
 
 function getNodeComputedPosition(
   dagreNode: dagre.Node,
-  node: SolutionNode,
+  node: Pick<SolutionNode, 'measured'>,
   nodeSavedPosition: XYPosition | undefined,
 ): XYPosition {
   if (nodeSavedPosition) {

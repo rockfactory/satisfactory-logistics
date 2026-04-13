@@ -68,6 +68,7 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
     <Popover
       opened={(isHovering || props.selected) && !props.dragging}
       transitionProps={{}}
+      hideDetached={false}
     >
       <Popover.Target>
         <Box

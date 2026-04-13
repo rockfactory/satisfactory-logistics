@@ -129,8 +129,8 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
             <Image
               src="/images/game/wat-1_256.png"
               alt="Somerloops"
-              width={20}
-              height={20}
+              w={20}
+              h={20}
             />
           }
         />
