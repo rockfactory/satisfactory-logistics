@@ -19,7 +19,7 @@
     "@clickbar/dot-diver": "^1.0.7",
     "@dagrejs/dagre": "^1.1.4",
     "@etothepii/satisfactory-file-parser": "^3.3.1",
-    "@hello-pangea/dnd": "^17.0.0",
+    "@hello-pangea/dnd": "^18.0.0",
     "@mantine/colors-generator": "^9.0.0",
     "@mantine/core": "^9.0.0",
     "@mantine/hooks": "^9.0.0",
