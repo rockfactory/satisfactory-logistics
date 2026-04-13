@@ -200,8 +200,8 @@ export function GameSettingsModal() {
                       <Group gap="xs">
                         <Image
                           src={building.imagePath.replace('_256', '_64')}
-                          width={24}
-                          height={24}
+                          w={24}
+                          h={24}
                         />
                         {building.name}
                       </Group>
