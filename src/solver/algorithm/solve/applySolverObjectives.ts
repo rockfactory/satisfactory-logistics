@@ -6,6 +6,11 @@ import type { SolverContext } from '@/solver/algorithm/SolverContext';
 const logger = log.getLogger('solver:production');
 logger.setLevel('info');
 
+/** Weight bonus for world resources, slightly penalizes extraction vs factory inputs */
+const WORLD_RESOURCE_WEIGHT_OFFSET = 100;
+/** Base weight for non-world factory inputs high enough to be cheaper than most world resources */
+const FACTORY_INPUT_BASE_WEIGHT = 100_000;
+
 export function applySolverObjective(
   ctx: SolverContext,
   request: SolverProductionRequest,
@@ -45,8 +50,9 @@ export function applySolverObjective(
             // cheaper than world resources, so the solver prefers them
             // equally and minimizes total factory input consumption.
             const inputResourceWeight = isWorld
-              ? getWorldResourceMax(v.resource.id, 'weight') + 100
-              : 100_000;
+              ? getWorldResourceMax(v.resource.id, 'weight') +
+                WORLD_RESOURCE_WEIGHT_OFFSET
+              : FACTORY_INPUT_BASE_WEIGHT;
 
             return `${1 / inputResourceWeight} ${v.variable}`;
           })
