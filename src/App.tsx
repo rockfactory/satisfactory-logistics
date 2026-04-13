@@ -39,6 +39,7 @@ import { useStore } from './core/zustand';
 import { GamesRoutes } from './games/page/GamesRoutes';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
 import { theme } from './theme';
+import { ToolsRoutes } from './tools/page/ToolsRoutes';
 
 const basename = import.meta.env.BASE_URL.replace(/\/+$/, '') || '/';
 
@@ -84,6 +85,13 @@ const router = createBrowserRouter(
         {
           path: '/login',
           element: <LoginPage />,
+        },
+        {
+          path: '/tools/*',
+          element: <ToolsRoutes />,
+          ErrorBoundary: () => {
+            throw useRouteError();
+          },
         },
         {
           path: '*',

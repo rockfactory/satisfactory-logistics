@@ -42,7 +42,7 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
     <AppContainer
       header={
         <Header
-          tabs={['factories', 'charts', 'calculator', 'codex']}
+          tabs={['factories', 'charts', 'calculator', 'tools', 'codex']}
           activeTab={
             activeTab === 'charts'
               ? 'charts'
@@ -51,7 +51,9 @@ export function FactoryRoutes(props: IFactoryRoutesProps) {
                 : 'factories'
           }
           onChangeTab={value => {
-            if (value === 'codex') {
+            if (value === 'tools') {
+              navigate('/tools');
+            } else if (value === 'codex') {
               navigate('/codex');
             } else {
               navigate(`/factories/${value === 'factories' ? '' : value}`);
