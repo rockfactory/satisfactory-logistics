@@ -497,7 +497,7 @@
       "length": null,
       "height": null
     },
-    "imagePath": "/images/game/null",
+    "imagePath": "/images/game/pipeline-support_256.png",
     "conveyor": null,
     "pipeline": {
       "isPipeline": true,
@@ -532,7 +532,7 @@
       "length": 2.4,
       "height": 2
     },
-    "imagePath": "/images/game/null",
+    "imagePath": "/images/game/stackable-pipeline-support_256.png",
     "conveyor": null,
     "pipeline": {
       "isPipeline": true,
@@ -571,7 +571,7 @@
       "length": 2.4,
       "height": 2
     },
-    "imagePath": "/images/game/null",
+    "imagePath": "/images/game/stackable-hypertube-support_256.png",
     "conveyor": null,
     "pipeline": {
       "isPipeline": true,
@@ -610,7 +610,7 @@
       "length": null,
       "height": null
     },
-    "imagePath": "/images/game/null",
+    "imagePath": "/images/game/hypertube-support_256.png",
     "conveyor": null,
     "pipeline": {
       "isPipeline": true,
