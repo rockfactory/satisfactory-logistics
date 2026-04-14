@@ -93,7 +93,7 @@ export function GameMenu(props: IGameMenuProps) {
 
   return (
     <>
-      <Button.Group>
+      <Button.Group data-tutorial-id="games-menu">
         <Menu>
           <Menu.Target>
             <Button

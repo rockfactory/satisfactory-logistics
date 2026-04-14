@@ -63,6 +63,7 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
         {SolverRequestTabs.map(({ value, label, icon }) => (
           <Button
             key={value}
+            data-tutorial-id={`calculator-${value}`}
             // variant="light"
             color="blue"
             size="sm"

@@ -32,6 +32,7 @@ export function UserMenu(props: IUserMenuProps) {
     return (
       <>
         <Button
+          data-tutorial-id="user-menu"
           rightSection={<IconLogin2 size={20} />}
           variant="subtle"
           size="sm"
@@ -55,6 +56,7 @@ export function UserMenu(props: IUserMenuProps) {
     >
       <Menu.Target>
         <UnstyledButton
+          data-tutorial-id="user-menu"
           className={cx(classes.user, {
             [classes.userActive]: userMenuOpened,
           })}

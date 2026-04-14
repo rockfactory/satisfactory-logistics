@@ -1,0 +1,105 @@
+.sl-tutorial-popover.driver-popover {
+  background-color: var(--mantine-color-dark-6);
+  color: var(--mantine-color-gray-0);
+  border: 1px solid var(--mantine-color-dark-4);
+  border-radius: var(--mantine-radius-md);
+  box-shadow: var(--mantine-shadow-lg);
+  font-family: var(--mantine-font-family);
+  padding: 1rem 1.1rem 0.85rem;
+  max-width: 340px;
+}
+
+.sl-tutorial-popover .driver-popover-title {
+  color: var(--mantine-color-gray-0);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 0.4rem;
+  padding-right: 1.5rem;
+}
+
+.sl-tutorial-popover .driver-popover-description {
+  color: var(--mantine-color-dark-1);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin-bottom: 0.85rem;
+}
+
+.sl-tutorial-popover .driver-popover-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0;
+}
+
+.sl-tutorial-popover .driver-popover-progress-text {
+  color: var(--mantine-color-dark-2);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.sl-tutorial-popover .driver-popover-close-btn {
+  color: var(--mantine-color-dark-2);
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: 1rem;
+  line-height: 1;
+  transition: color 120ms ease;
+}
+
+.sl-tutorial-popover .driver-popover-close-btn:hover {
+  color: var(--mantine-color-gray-0);
+}
+
+.sl-tutorial-popover .driver-popover-navigation-btns {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.sl-tutorial-popover .driver-popover-navigation-btns button {
+  background-color: var(--mantine-color-blue-7);
+  color: var(--mantine-color-white);
+  border: none;
+  border-radius: var(--mantine-radius-sm);
+  padding: 0.3125rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-shadow: none;
+  box-shadow: none;
+  transition: background-color 120ms ease;
+}
+
+.sl-tutorial-popover .driver-popover-navigation-btns button:hover {
+  background-color: var(--mantine-color-blue-6);
+}
+
+.sl-tutorial-popover
+  .driver-popover-navigation-btns
+  button.driver-popover-prev-btn {
+  background-color: var(--mantine-color-dark-5);
+  color: var(--mantine-color-gray-2);
+}
+
+.sl-tutorial-popover
+  .driver-popover-navigation-btns
+  button.driver-popover-prev-btn:hover {
+  background-color: var(--mantine-color-dark-4);
+  color: var(--mantine-color-gray-0);
+}
+
+.sl-tutorial-popover .driver-popover-arrow-side-bottom.driver-popover-arrow {
+  border-bottom-color: var(--mantine-color-dark-6);
+}
+.sl-tutorial-popover .driver-popover-arrow-side-top.driver-popover-arrow {
+  border-top-color: var(--mantine-color-dark-6);
+}
+.sl-tutorial-popover .driver-popover-arrow-side-left.driver-popover-arrow {
+  border-left-color: var(--mantine-color-dark-6);
+}
+.sl-tutorial-popover .driver-popover-arrow-side-right.driver-popover-arrow {
+  border-right-color: var(--mantine-color-dark-6);
+}

@@ -13,6 +13,7 @@ import { gameFactoriesActions } from '@/games/store/gameFactoriesActions';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
 import { solverFactoriesActions } from '@/solver/store/solverFactoriesActions';
 import { solversSlice } from '@/solver/store/solverSlice';
+import { tutorialSlice } from '@/tutorial/store/tutorialSlice';
 import { loglev } from './logger/log';
 import { migratePersistedStoreFromRedux } from './migrations/migratePersistedStoreFromRedux';
 import { migrateStoreWithPlan } from './migrations/planner/StoreMigrationPlan';
@@ -34,6 +35,7 @@ const slices = withSlices(
   factoryViewSlice,
   solversSlice,
   chartsSlice,
+  tutorialSlice,
 );
 
 export type RootState = ReturnType<typeof slices>;

@@ -35,6 +35,7 @@ export function ChartsTab(_props: IChartsTabProps) {
       <AfterHeaderSticky>
         <Group gap="xs">
           <SegmentedControl
+            data-tutorial-id="charts-view-switcher"
             value={view}
             radius="md"
             onChange={value => useStore.getState().setChartView(value as any)}
