@@ -50,10 +50,12 @@ export function ByproductNodeOutputConfig(
           }
           onChange={onChangeHandler('amount')}
         />
-        <FactoryOutputObjectiveSelect
-          objective={temporaryOutput.objective}
-          onChange={onChangeHandler('objective')}
-        />
+        <div data-tutorial-id="byproduct-action-objective">
+          <FactoryOutputObjectiveSelect
+            objective={temporaryOutput.objective}
+            onChange={onChangeHandler('objective')}
+          />
+        </div>
       </Group>
     </Stack>
   );

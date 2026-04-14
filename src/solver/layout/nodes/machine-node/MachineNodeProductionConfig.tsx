@@ -74,6 +74,7 @@ export function MachineNodeProductionConfig(
         }
       />
       <NumberInput
+        data-tutorial-id="machine-action-overclock"
         label={
           <Text size="xs" style={{ visibility: 'hidden' }}>
             {'\u00A0'}

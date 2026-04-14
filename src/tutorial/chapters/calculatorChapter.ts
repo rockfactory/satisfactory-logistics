@@ -1,32 +1,9 @@
-import type { Driver, DriveStep } from 'driver.js';
-import { waitForElement } from '../waitForElement';
+import {
+  clickSelector,
+  openAndRehighlight,
+  rehighlightWhenAvailable,
+} from './stepHelpers';
 import type { TutorialChapter } from './types';
-
-function clickSelector(selector: string) {
-  const el = document.querySelector<HTMLElement>(selector);
-  el?.click();
-}
-
-/**
- * Lazily re-highlights a step once its `element` selector has mounted —
- * useful when the element is inside an animated drawer that isn't in the
- * DOM yet when driver.js initializes the step. Guards against the
- * recursion `highlight → onHighlightStarted → highlight → …`.
- */
-function rehighlightWhenAvailable(selector: string) {
-  let handled = false;
-  return async (
-    _el: Element | undefined,
-    step: DriveStep,
-    opts: { driver: Driver },
-  ) => {
-    if (handled) return;
-    handled = true;
-    if (document.querySelector(selector)) return;
-    const found = await waitForElement(selector, 2000);
-    if (found) opts.driver.highlight(step);
-  };
-}
 
 export const calculatorChapter: TutorialChapter = {
   id: 'calculator',
@@ -154,9 +131,98 @@ export const calculatorChapter: TutorialChapter = {
           popover: {
             title: 'The solution graph',
             description:
-              'The solver runs automatically and draws the production chain as a graph of machines, resources and byproducts. Drag nodes, zoom, and inspect each step.',
+              'The solver runs automatically and draws the production chain as a graph of resources, machines and byproducts. Drag nodes, zoom, and inspect each step. Next I will walk you through what each node type can do.',
             side: 'top',
           },
+        },
+        // === Resource node walkthrough ===
+        {
+          element: '.react-flow__node-Resource',
+          popover: {
+            title: 'Resource nodes',
+            description:
+              'On the left of the graph: each resource the solver is pulling in. Selecting one opens a panel with details and actions — let us open this one.',
+            side: 'bottom',
+          },
+        },
+        {
+          element: '[data-tutorial-id="resource-extractors"]',
+          popover: {
+            title: 'Extractors breakdown',
+            description:
+              'For World resources the panel shows how many miners (Mk.1/Mk.2/Mk.3) you need at Impure / Normal / Pure nodes, at 100% and 250% clock. Handy to size your mining setup without leaving the planner.',
+            side: 'top',
+          },
+          onHighlightStarted: openAndRehighlight(
+            '.react-flow__node-Resource',
+            '[data-tutorial-id="resource-extractors"]',
+          ),
+        },
+
+        // === Machine node walkthrough ===
+        {
+          element: '.react-flow__node-Machine',
+          popover: {
+            title: 'Machine nodes',
+            description:
+              'Each production machine in the chain. Selecting one opens its actions — let us look at what you can change.',
+            side: 'bottom',
+          },
+        },
+        {
+          element: '[data-tutorial-id="machine-action-ignore"]',
+          popover: {
+            title: 'Ignore recipe',
+            description:
+              'Bans this specific recipe from the plan. The solver will re-plan with whatever other recipes are enabled — great to test alternates without touching the global Recipes drawer.',
+            side: 'bottom',
+          },
+          onHighlightStarted: openAndRehighlight(
+            '.react-flow__node-Machine',
+            '[data-tutorial-id="machine-action-ignore"]',
+          ),
+        },
+        {
+          element: '[data-tutorial-id="machine-action-overclock"]',
+          popover: {
+            title: 'Overclock',
+            description:
+              'Runs this machine faster (up to 250%) at the cost of more power. The solver uses this multiplier when deciding how many machines are needed — Apply to commit.',
+            side: 'top',
+          },
+        },
+        {
+          element: '[data-tutorial-id="machine-action-switch-recipe"]',
+          popover: {
+            title: 'Alternate recipes',
+            description:
+              'Pick which recipes the solver can use for this output. Uncheck the default and the plan will swap in whichever alternate you enable.',
+            side: 'top',
+          },
+        },
+
+        // === Byproduct / output node walkthrough ===
+        {
+          element: '.react-flow__node-Byproduct',
+          popover: {
+            title: 'Output & byproduct nodes',
+            description:
+              'On the right: your target outputs and any byproducts the plan generates. Selecting one opens its actions.',
+            side: 'bottom',
+          },
+        },
+        {
+          element: '[data-tutorial-id="byproduct-action-objective"]',
+          popover: {
+            title: 'Maximize output',
+            description:
+              'Switch the objective to “Maximize” and the solver will produce as much of this item as possible given your inputs — instead of sticking to a fixed target amount.',
+            side: 'top',
+          },
+          onHighlightStarted: openAndRehighlight(
+            '.react-flow__node-Byproduct',
+            '[data-tutorial-id="byproduct-action-objective"]',
+          ),
         },
       ],
     },

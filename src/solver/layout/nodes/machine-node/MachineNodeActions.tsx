@@ -111,6 +111,7 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
         <Group gap="sm">
           <Tooltip label="Ignore this recipe">
             <ActionIcon
+              data-tutorial-id="machine-action-ignore"
               color="red"
               variant="outline"
               onClick={() =>

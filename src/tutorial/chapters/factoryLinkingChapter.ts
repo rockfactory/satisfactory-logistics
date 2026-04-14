@@ -1,6 +1,12 @@
 import { v4 } from 'uuid';
 import { useStore } from '@/core/zustand';
+import { WORLD_SOURCE_ID } from '@/factories/Factory';
 import type { TutorialChapter } from './types';
+
+const DEMO_NAME = 'Iron Smelter';
+const DEMO_OUTPUT_RESOURCE = 'Desc_IronIngot_C';
+const DEMO_OUTPUT_AMOUNT = 30;
+const DEMO_INPUT_RESOURCE = 'Desc_OreIron_C';
 
 const CONSUMER_NAME = 'Iron Plates';
 const CONSUMER_OUTPUT = 'Desc_IronPlate_C';
@@ -8,21 +14,47 @@ const CONSUMER_OUTPUT_AMOUNT = 20;
 const LINKED_INPUT = 'Desc_IronIngot_C';
 const LINKED_INPUT_AMOUNT = 15;
 
+function isValidFactoryRef(id: string | null | undefined): boolean {
+  if (!id) return false;
+  const state = useStore.getState();
+  const selectedGame = state.games.selected;
+  if (!selectedGame) return false;
+  const game = state.games.games[selectedGame];
+  if (!game) return false;
+  return !!state.factories.factories[id] && game.factoriesIds.includes(id);
+}
+
+function ensureDemoFactory(): string | null {
+  const state = useStore.getState();
+  const existing = state.tutorial.demoFactoryId;
+  if (isValidFactoryRef(existing)) return existing as string;
+  if (!state.games.selected) return null;
+
+  const newId = v4();
+  state.addGameFactory(newId, null, {
+    name: DEMO_NAME,
+    inputs: [
+      {
+        resource: DEMO_INPUT_RESOURCE,
+        amount: null,
+        constraint: 'input',
+        factoryId: WORLD_SOURCE_ID,
+      },
+    ],
+    outputs: [
+      { resource: DEMO_OUTPUT_RESOURCE, amount: DEMO_OUTPUT_AMOUNT },
+    ],
+    progress: 'todo',
+  });
+  state.setDemoFactoryId(newId);
+  return newId;
+}
+
 function ensureConsumerFactory(): string | null {
   const state = useStore.getState();
   const existing = state.tutorial.consumerFactoryId;
-  const selectedGame = state.games.selected;
-  if (!selectedGame) return null;
-  const game = state.games.games[selectedGame];
-  if (!game) return null;
-
-  if (
-    existing &&
-    state.factories.factories[existing] &&
-    game.factoriesIds.includes(existing)
-  ) {
-    return existing;
-  }
+  if (isValidFactoryRef(existing)) return existing as string;
+  if (!state.games.selected) return null;
 
   const newId = v4();
   state.addGameFactory(newId, null, {
@@ -32,7 +64,7 @@ function ensureConsumerFactory(): string | null {
         resource: LINKED_INPUT,
         amount: LINKED_INPUT_AMOUNT,
         constraint: 'input',
-        factoryId: state.tutorial.demoFactoryId ?? undefined,
+        factoryId: useStore.getState().tutorial.demoFactoryId ?? undefined,
       },
     ],
     outputs: [{ resource: CONSUMER_OUTPUT, amount: CONSUMER_OUTPUT_AMOUNT }],
@@ -48,6 +80,7 @@ export const factoryLinkingChapter: TutorialChapter = {
   description: 'See how a factory can pull resources from another one.',
   nextChapterId: 'charts',
   setup: () => {
+    ensureDemoFactory();
     ensureConsumerFactory();
   },
   segments: [

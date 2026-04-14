@@ -1,15 +1,17 @@
 /*
- * Driver.js sets `.driver-active` on body and uses an extreme z-index
- * (1e9) for its overlay. Mantine's portaled overlays default to z-index
- * 200-300, so they end up hidden behind the dim layer. Bump them above
- * the overlay (still below the popover at 1e9) while a tour is running.
+ * Driver.js layer z-indexes (measured from the lib source):
+ *   - overlay: 10000
+ *   - popover: 1000000000 (1e9)
+ *
+ * Mantine Tooltips are a tutorial hint (we *want* them visible, e.g. the
+ * "Usage at a glance" demo in the Linking chapter), so lift them above
+ * the overlay. Other portaled layers (node action Popover, Menu,
+ * Select) should stay at their default z-index — we *want* them dimmed
+ * by the overlay so only the highlighted button pokes through the
+ * driver stage cut-out.
  */
-body.driver-active .mantine-Tooltip-tooltip,
-body.driver-active .mantine-Popover-dropdown,
-body.driver-active .mantine-Menu-dropdown,
-body.driver-active .mantine-Select-dropdown,
-body.driver-active .mantine-Combobox-dropdown {
-  z-index: 1000000001 !important;
+body.driver-active .mantine-Tooltip-tooltip {
+  z-index: 10001 !important;
 }
 
 .sl-tutorial-popover.driver-popover {

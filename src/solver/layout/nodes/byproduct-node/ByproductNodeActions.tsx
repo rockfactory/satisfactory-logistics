@@ -56,6 +56,7 @@ export function ByproductNodeActions(props: IByproductNodeActionsProps) {
           {output && (
             <Tooltip label="Remove this output">
               <ActionIcon
+                data-tutorial-id="byproduct-action-remove"
                 color="red"
                 variant="outline"
                 onClick={() =>
