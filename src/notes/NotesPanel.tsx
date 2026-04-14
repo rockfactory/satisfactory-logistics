@@ -63,11 +63,7 @@ export function NotesPanel() {
     >
       <div className={classes.window}>
         <div className={`${classes.header} ${DRAG_HANDLE}`}>
-          <IconNotebook
-            size={16}
-            className={classes.titleIcon}
-            stroke={1.75}
-          />
+          <IconNotebook size={16} className={classes.titleIcon} stroke={1.75} />
           {hasFactoryContext ? (
             <SegmentedControl
               size="xs"
