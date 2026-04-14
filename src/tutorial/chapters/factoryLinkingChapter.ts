@@ -92,9 +92,11 @@ export const factoryLinkingChapter: TutorialChapter = {
       autoNavigate: true,
       steps: [
         {
+          element: '[data-tutorial-id="factory-detail"]',
           popover: {
             title: 'A second factory',
             description: `I just created another factory called "${CONSUMER_NAME}". It produces Iron Plates from Iron Ingots — exactly what your first factory makes.`,
+            side: 'top',
           },
         },
         {
@@ -130,13 +132,6 @@ export const factoryLinkingChapter: TutorialChapter = {
           },
           onDeselected: () => {
             useStore.getState().setForceUsageTooltip(false);
-          },
-        },
-        {
-          popover: {
-            title: 'That is how factories link together',
-            description:
-              'Once an input points to another factory, the planner knows the two factories are connected. The Charts tour will show you what that looks like.',
           },
         },
       ],
