@@ -28,8 +28,14 @@ function isValidFactoryRef(id: string | null | undefined): boolean {
  * in the active Game. Subscribe via `useStore(hasDemoFactoriesSelector)`.
  */
 export function hasDemoFactoriesSelector(state: {
-  tutorial: { demoFactoryId?: string | null; consumerFactoryId?: string | null };
-  games: { selected: string | null; games: Record<string, { factoriesIds: string[] }> };
+  tutorial: {
+    demoFactoryId?: string | null;
+    consumerFactoryId?: string | null;
+  };
+  games: {
+    selected: string | null;
+    games: Record<string, { factoriesIds: string[] }>;
+  };
   factories: { factories: Record<string, unknown> };
 }): boolean {
   const { demoFactoryId, consumerFactoryId } = state.tutorial;
