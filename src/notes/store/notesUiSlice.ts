@@ -11,6 +11,7 @@ export interface NotesWindowRect {
 
 export interface NotesUiSlice {
   isOpen: boolean;
+  isCollapsed: boolean;
   activeTab: NotesTab;
   window: NotesWindowRect;
 }
@@ -26,12 +27,16 @@ export const notesUiSlice = createSlice({
   name: 'notesUi',
   value: {
     isOpen: false,
+    isCollapsed: false,
     activeTab: 'game',
     window: DEFAULT_NOTES_WINDOW,
   } as NotesUiSlice,
   actions: {
     toggleNotesPanel: (open?: boolean) => state => {
       state.isOpen = open ?? !state.isOpen;
+    },
+    toggleNotesCollapsed: (collapsed?: boolean) => state => {
+      state.isCollapsed = collapsed ?? !state.isCollapsed;
     },
     setNotesActiveTab: (tab: NotesTab) => state => {
       state.activeTab = tab;

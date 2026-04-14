@@ -39,6 +39,11 @@ export function NotesEditor({
     },
   });
 
+  useEffect(() => {
+    if (!editor) return;
+    editor.commands.focus('end', { scrollIntoView: false });
+  }, [editor]);
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: swap content only when the underlying entity changes
   useEffect(() => {
     if (!editor) return;

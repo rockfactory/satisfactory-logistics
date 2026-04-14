@@ -1,6 +1,9 @@
 import { ActionIcon, Center, SegmentedControl, Text } from '@mantine/core';
+import { useHotkeys } from '@mantine/hooks';
 import {
   IconBuildingFactory2,
+  IconChevronDown,
+  IconChevronUp,
   IconNotebook,
   IconWorld,
   IconX,
@@ -18,14 +21,17 @@ import { useCurrentFactoryId } from './useNotesContext';
 const DRAG_HANDLE = 'notes-window-drag-handle';
 const MIN_WIDTH = 280;
 const MIN_HEIGHT = 240;
+const COLLAPSED_HEIGHT = 44;
 
 export function NotesPanel() {
   const isOpen = useStore(state => state.notesUi.isOpen);
+  const isCollapsed = useStore(state => state.notesUi.isCollapsed ?? false);
   const activeTab = useStore(state => state.notesUi.activeTab);
   const windowRect = useStore(
     state => state.notesUi.window ?? DEFAULT_NOTES_WINDOW,
   );
   const toggleNotesPanel = useStore(state => state.toggleNotesPanel);
+  const toggleNotesCollapsed = useStore(state => state.toggleNotesCollapsed);
   const setNotesActiveTab = useStore(state => state.setNotesActiveTab);
   const setNotesWindowRect = useStore(state => state.setNotesWindowRect);
 
@@ -33,6 +39,8 @@ export function NotesPanel() {
   const factoryId = useCurrentFactoryId();
   const hasFactoryContext = factoryId != null;
   const resolvedTab = hasFactoryContext ? activeTab : 'game';
+
+  useHotkeys([['mod+j', () => toggleNotesPanel()]], [], true);
 
   useEffect(() => {
     if (!hasFactoryContext && activeTab === 'factory') {
@@ -42,14 +50,17 @@ export function NotesPanel() {
 
   if (!isOpen) return null;
 
+  const effectiveHeight = isCollapsed ? COLLAPSED_HEIGHT : windowRect.height;
+
   return (
     <Rnd
       position={{ x: windowRect.x, y: windowRect.y }}
-      size={{ width: windowRect.width, height: windowRect.height }}
+      size={{ width: windowRect.width, height: effectiveHeight }}
       minWidth={MIN_WIDTH}
-      minHeight={MIN_HEIGHT}
+      minHeight={isCollapsed ? COLLAPSED_HEIGHT : MIN_HEIGHT}
       bounds="window"
       dragHandleClassName={DRAG_HANDLE}
+      enableResizing={!isCollapsed}
       onDragStop={(_e, d) => setNotesWindowRect({ x: d.x, y: d.y })}
       onResizeStop={(_e, _dir, ref, _delta, pos) =>
         setNotesWindowRect({
@@ -59,12 +70,19 @@ export function NotesPanel() {
           height: ref.offsetHeight,
         })
       }
+      resizeHandleClasses={{
+        bottomRight: classes.resizeHandleBR,
+        right: classes.resizeHandleEdge,
+        bottom: classes.resizeHandleEdge,
+        left: classes.resizeHandleEdge,
+        top: classes.resizeHandleEdge,
+      }}
       style={{ zIndex: 300 }}
     >
       <div className={classes.window}>
         <div className={`${classes.header} ${DRAG_HANDLE}`}>
           <IconNotebook size={16} className={classes.titleIcon} stroke={1.75} />
-          {hasFactoryContext ? (
+          {hasFactoryContext && !isCollapsed ? (
             <SegmentedControl
               size="xs"
               radius="md"
@@ -99,29 +117,45 @@ export function NotesPanel() {
             variant="subtle"
             color="gray"
             size="sm"
+            onClick={() => toggleNotesCollapsed()}
+            aria-label={isCollapsed ? 'Expand notes' : 'Collapse notes'}
+          >
+            {isCollapsed ? (
+              <IconChevronUp size={16} />
+            ) : (
+              <IconChevronDown size={16} />
+            )}
+          </ActionIcon>
+          <ActionIcon
+            variant="subtle"
+            color="gray"
+            size="sm"
             onClick={() => toggleNotesPanel(false)}
             aria-label="Close notes"
           >
             <IconX size={16} />
           </ActionIcon>
         </div>
-        <div className={classes.body}>
-          {!gameId && (
-            <Text c="dimmed" size="sm">
-              Select a game to start taking notes.
-            </Text>
-          )}
-          {gameId && resolvedTab === 'game' && (
-            <div className={classes.editorWrapper}>
-              <GameNotesEditor />
-            </div>
-          )}
-          {gameId && resolvedTab === 'factory' && factoryId && (
-            <div className={classes.editorWrapper}>
-              <FactoryNotesEditor factoryId={factoryId} />
-            </div>
-          )}
-        </div>
+        {!isCollapsed && (
+          <div className={classes.body}>
+            {!gameId && (
+              <Text c="dimmed" size="sm">
+                Select a game to start taking notes.
+              </Text>
+            )}
+            {gameId && resolvedTab === 'game' && (
+              <div className={classes.editorWrapper}>
+                <GameNotesEditor />
+              </div>
+            )}
+            {gameId && resolvedTab === 'factory' && factoryId && (
+              <div className={classes.editorWrapper}>
+                <FactoryNotesEditor factoryId={factoryId} />
+              </div>
+            )}
+          </div>
+        )}
+        {!isCollapsed && <div className={classes.resizeHint} aria-hidden />}
       </div>
     </Rnd>
   );
