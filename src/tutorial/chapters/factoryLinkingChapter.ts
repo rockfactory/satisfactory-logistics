@@ -1,78 +1,12 @@
-import { v4 } from 'uuid';
 import { useStore } from '@/core/zustand';
-import { WORLD_SOURCE_ID } from '@/factories/Factory';
+import {
+  CONSUMER_NAME,
+  DEMO_NAME,
+  ensureConsumerFactory,
+  ensureDemoFactory,
+  LINKED_INPUT_AMOUNT,
+} from './demoFactories';
 import type { TutorialChapter } from './types';
-
-const DEMO_NAME = 'The Smeltery';
-const DEMO_OUTPUT_RESOURCE = 'Desc_IronIngot_C';
-const DEMO_OUTPUT_AMOUNT = 30;
-const DEMO_INPUT_RESOURCE = 'Desc_OreIron_C';
-
-const CONSUMER_NAME = 'Platey McPlateface';
-const CONSUMER_OUTPUT = 'Desc_IronPlate_C';
-const CONSUMER_OUTPUT_AMOUNT = 20;
-const LINKED_INPUT = 'Desc_IronIngot_C';
-const LINKED_INPUT_AMOUNT = 15;
-
-function isValidFactoryRef(id: string | null | undefined): boolean {
-  if (!id) return false;
-  const state = useStore.getState();
-  const selectedGame = state.games.selected;
-  if (!selectedGame) return false;
-  const game = state.games.games[selectedGame];
-  if (!game) return false;
-  return !!state.factories.factories[id] && game.factoriesIds.includes(id);
-}
-
-function ensureDemoFactory(): string | null {
-  const state = useStore.getState();
-  const existing = state.tutorial.demoFactoryId;
-  if (isValidFactoryRef(existing)) return existing as string;
-  if (!state.games.selected) return null;
-
-  const newId = v4();
-  state.addGameFactory(newId, null, {
-    name: DEMO_NAME,
-    inputs: [
-      {
-        resource: DEMO_INPUT_RESOURCE,
-        amount: null,
-        constraint: 'input',
-        factoryId: WORLD_SOURCE_ID,
-      },
-    ],
-    outputs: [
-      { resource: DEMO_OUTPUT_RESOURCE, amount: DEMO_OUTPUT_AMOUNT },
-    ],
-    progress: 'todo',
-  });
-  state.setDemoFactoryId(newId);
-  return newId;
-}
-
-function ensureConsumerFactory(): string | null {
-  const state = useStore.getState();
-  const existing = state.tutorial.consumerFactoryId;
-  if (isValidFactoryRef(existing)) return existing as string;
-  if (!state.games.selected) return null;
-
-  const newId = v4();
-  state.addGameFactory(newId, null, {
-    name: CONSUMER_NAME,
-    inputs: [
-      {
-        resource: LINKED_INPUT,
-        amount: LINKED_INPUT_AMOUNT,
-        constraint: 'input',
-        factoryId: useStore.getState().tutorial.demoFactoryId ?? undefined,
-      },
-    ],
-    outputs: [{ resource: CONSUMER_OUTPUT, amount: CONSUMER_OUTPUT_AMOUNT }],
-    progress: 'todo',
-  });
-  state.setConsumerFactoryId(newId);
-  return newId;
-}
 
 export const factoryLinkingChapter: TutorialChapter = {
   id: 'factory-linking',
