@@ -112,7 +112,7 @@ export const factoryBasicsChapter: TutorialChapter = {
           popover: {
             title: 'Inputs',
             description:
-              'Inputs are what this factory consumes. I added Iron Ore with no amount — that is fine for now: in the Calculator tour you will see the “Auto-set from Plan” button, which fills the exact amounts based on the optimal production chain.',
+              'Inputs are what this factory consumes. I added Iron Ore (no amount yet — the Calculator tour will fill it in). Each input also has a Source on the left: “World” for raw resources mined from the map, or another factory to chain them together.',
             side: 'bottom',
           },
           onHighlightStarted: () => {
@@ -139,22 +139,6 @@ export const factoryBasicsChapter: TutorialChapter = {
                 last.factoryId = WORLD_SOURCE_ID;
               }
             });
-          },
-        },
-        {
-          element: '[data-tutorial-id="factory-input-source"]',
-          popover: {
-            title: 'Source of an input',
-            description:
-              'Each input has a source. “World” means the resource comes from the map (mined ore, water, oil). Pick another factory here to chain them — the target factory will then pull from that factory’s outputs.',
-            side: 'bottom',
-          },
-        },
-        {
-          popover: {
-            title: 'That is the whole anatomy of a factory',
-            description:
-              'Name, status, outputs and inputs — that is all you need to plan a production site. Click Next to head back to the list.',
           },
         },
       ],
