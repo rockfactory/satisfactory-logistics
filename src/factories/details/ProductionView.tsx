@@ -69,7 +69,7 @@ export const ProductionView = ({ id }: { id: string }) => {
   const status = factory.progress && progressProperties[factory.progress];
 
   return (
-    <Container size="lg">
+    <Container size="lg" data-tutorial-id="factory-detail">
       <Group gap="xl" align="start" py="xl">
         <Stack gap="lg" style={{ flexGrow: 1 }}>
           {hasConfiguredOutputs && !hasSolverLayout && (
@@ -168,6 +168,7 @@ export const ProductionView = ({ id }: { id: string }) => {
           </Stack>
         </Stack>
         <Stack
+          data-tutorial-id="factory-properties"
           gap="sm"
           align="stretch"
           bg="dark"

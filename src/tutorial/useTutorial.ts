@@ -97,6 +97,12 @@ async function runSegment(
           d.moveNext();
         }
       },
+      // Default Back behavior on the first step of a driver instance is
+      // to destroy it (which would close the whole tour). Swallow it so
+      // the user just stays on the first step instead of bailing out.
+      onPrevClick: () => {
+        if (!d.isFirstStep()) d.movePrevious();
+      },
     });
 
     const unsubscribe = nextRoute

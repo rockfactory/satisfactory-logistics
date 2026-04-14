@@ -2,7 +2,7 @@ import { useStore } from '@/core/zustand';
 import { WORLD_SOURCE_ID } from '@/factories/Factory';
 import type { TutorialChapter } from './types';
 
-const DEMO_NAME = 'Iron Smelter';
+const DEMO_NAME = 'The Smeltery';
 const DEMO_OUTPUT_RESOURCE = 'Desc_IronIngot_C';
 const DEMO_OUTPUT_AMOUNT = 30;
 const DEMO_INPUT_RESOURCE = 'Desc_OreIron_C';
@@ -65,17 +65,19 @@ export const factoryBasicsChapter: TutorialChapter = {
       autoNavigate: false,
       steps: [
         {
+          element: '[data-tutorial-id="factory-detail"]',
           popover: {
             title: 'Factory created',
             description:
               'Great — this is your new factory. I will fill in a small Iron Smelter setup as we go. Use Next/Back (or the arrow keys) to step through.',
+            side: 'top',
           },
         },
         {
-          element: '[data-tutorial-id="factory-name"]',
+          element: '[data-tutorial-id="factory-properties"]',
           popover: {
-            title: 'Name',
-            description: `Every factory has a name. I named this one "${DEMO_NAME}" so it stands out in the list.`,
+            title: 'Name & build status',
+            description: `Every factory has a name and a build status. I named this one "${DEMO_NAME}" and set its status to “Todo” — the status tracks whether a factory is just planned, being built, or already running, and it is also what powers the columns in the Kanban view of the Factories list.`,
             side: 'left',
           },
           onHighlightStarted: () => {
@@ -83,21 +85,6 @@ export const factoryBasicsChapter: TutorialChapter = {
             if (!id) return;
             useStore.getState().updateFactory(id, f => {
               f.name = DEMO_NAME;
-            });
-          },
-        },
-        {
-          element: '[data-tutorial-id="factory-progress"]',
-          popover: {
-            title: 'Build status',
-            description:
-              'Use this to track whether a factory is just planned, being built, or already running in your save. I set ours to “Todo”.',
-            side: 'left',
-          },
-          onHighlightStarted: () => {
-            const id = demoId();
-            if (!id) return;
-            useStore.getState().updateFactory(id, f => {
               f.progress = 'todo';
             });
           },

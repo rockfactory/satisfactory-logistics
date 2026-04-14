@@ -1,9 +1,24 @@
 import {
+  chainHooks,
   clickSelector,
+  ensureAbsent,
+  ensurePresent,
   openAndRehighlight,
   rehighlightWhenAvailable,
 } from './stepHelpers';
 import type { TutorialChapter } from './types';
+
+// Use the in-drawer Close button as the presence sentinel — it is mounted
+// whenever ANY tab of the drawer is active, so it stays a reliable
+// "drawer is open" signal even after switching to Recipes / Limitations
+// (whose Tabs.Panel siblings unmount the Inputs/Outputs content).
+const DRAWER_PRESENCE = '[data-tutorial-id="calculator-drawer-close"]';
+const ensureDrawerOpen = ensurePresent(DRAWER_PRESENCE, () =>
+  clickSelector('[data-tutorial-id="calculator-inputs-outputs"]'),
+);
+const ensureDrawerClosed = ensureAbsent(DRAWER_PRESENCE, () =>
+  clickSelector('[data-tutorial-id="calculator-drawer-close"]'),
+);
 
 export const calculatorChapter: TutorialChapter = {
   id: 'calculator',
@@ -40,7 +55,7 @@ export const calculatorChapter: TutorialChapter = {
           popover: {
             title: 'The Calculator',
             description:
-              'The Calculator computes the optimal production chain based on what you want to produce, the resources available, and the recipes you allow. The graph here is the result for our Iron Smelter factory.',
+              'The Calculator computes the optimal production chain based on what you want to produce, the resources available, and the recipes you allow. The graph here is the result for our “The Smeltery” factory.',
             side: 'top',
             align: 'center',
           },
@@ -50,19 +65,12 @@ export const calculatorChapter: TutorialChapter = {
           popover: {
             title: 'Inputs & Outputs',
             description:
-              'The outputs and inputs you set on the factory show up in this drawer. Adjust or add new ones from here. I will open it for you.',
+              'The outputs and inputs you set on the factory show up in this drawer. Adjust or add new ones from here. I will open it for you on the next step.',
             side: 'bottom',
           },
-          // Open the drawer as we leave this step so the next step can find
-          // the calculator-inputs-block element when it initializes.
-          onDeselected: () => {
-            const drawerOpen = !!document.querySelector(
-              '[data-tutorial-id="calculator-inputs-block"]',
-            );
-            if (!drawerOpen) {
-              clickSelector('[data-tutorial-id="calculator-inputs-outputs"]');
-            }
-          },
+          // The drawer must NOT be open here, so the user can clearly see
+          // the trigger button being highlighted.
+          onHighlightStarted: ensureDrawerClosed,
         },
         {
           element: '[data-tutorial-id="calculator-inputs-block"]',
@@ -73,25 +81,25 @@ export const calculatorChapter: TutorialChapter = {
             side: 'bottom',
             align: 'end',
           },
-          // Drawer animates open while we wait — re-highlight once the
-          // element is actually mounted, so the cut-out and popover land
-          // on the right place.
-          onHighlightStarted: rehighlightWhenAvailable(
-            '[data-tutorial-id="calculator-inputs-block"]',
+          onHighlightStarted: chainHooks(
+            ensureDrawerOpen,
+            rehighlightWhenAvailable(
+              '[data-tutorial-id="calculator-inputs-block"]',
+            ),
           ),
         },
         {
-          element: '[data-tutorial-id="calculator-inputs-block"]',
+          element: '[data-tutorial-id="factory-input-amount"]',
           popover: {
-            title: 'Done — amounts filled in',
+            title: 'Done — amount filled in',
             description:
-              'I just clicked it for you: Iron Ore now has the exact amount the optimal plan needs.',
+              'I just clicked Auto-set for you: the Iron Ore input now has the exact amount the optimal plan needs.',
             side: 'bottom',
-            align: 'end',
+            align: 'start',
           },
-          onHighlightStarted: () => {
+          onHighlightStarted: chainHooks(ensureDrawerOpen, () => {
             clickSelector('[data-tutorial-id="calculator-auto-set"]');
-          },
+          }),
         },
         {
           element: '[data-tutorial-id="factory-input-constraint"]',
@@ -102,38 +110,33 @@ export const calculatorChapter: TutorialChapter = {
             side: 'bottom',
             align: 'end',
           },
-          // Close the drawer as we move on, so the Recipes/Limitations
-          // buttons (behind the drawer) become visible for the next steps.
-          onDeselected: () => {
-            clickSelector('[data-tutorial-id="calculator-drawer-close"]');
-          },
+          onHighlightStarted: ensureDrawerOpen,
         },
         {
-          element: '[data-tutorial-id="calculator-recipes"]',
+          element: '[data-tutorial-id="calculator-drawer-tab-recipes"]',
           popover: {
             title: 'Recipes',
             description:
               'Enable or disable alternate recipes. The solver freely combines any enabled recipe to reach your target output.',
             side: 'bottom',
           },
+          onHighlightStarted: chainHooks(ensureDrawerOpen, () => {
+            clickSelector('[data-tutorial-id="calculator-drawer-tab-recipes"]');
+          }),
         },
         {
-          element: '[data-tutorial-id="calculator-limitations"]',
+          element: '[data-tutorial-id="calculator-drawer-tab-limitations"]',
           popover: {
             title: 'Limitations',
             description:
-              'Cap individual resources (e.g. max 240 Iron Ore/min) to force the solver to stay within your actual in-game supply.',
+              'Limit what the solver is allowed to use: enable / disable World resources (or set custom max amounts per resource), pick which Buildings the factory can use (with optional override of the global game settings), and choose the Belt / Pipeline tier so over-capacity flows get flagged.',
             side: 'bottom',
           },
-        },
-        {
-          element: '[data-tutorial-id="solver-graph"]',
-          popover: {
-            title: 'The solution graph',
-            description:
-              'The solver runs automatically and draws the production chain as a graph of resources, machines and byproducts. Drag nodes, zoom, and inspect each step. Next I will walk you through what each node type can do.',
-            side: 'top',
-          },
+          onHighlightStarted: chainHooks(ensureDrawerOpen, () => {
+            clickSelector(
+              '[data-tutorial-id="calculator-drawer-tab-limitations"]',
+            );
+          }),
         },
         // === Resource node walkthrough ===
         {
@@ -144,6 +147,7 @@ export const calculatorChapter: TutorialChapter = {
               'On the left of the graph: each resource the solver is pulling in. Selecting one opens a panel with details and actions — let us open this one.',
             side: 'bottom',
           },
+          onHighlightStarted: ensureDrawerClosed,
         },
         {
           element: '[data-tutorial-id="resource-extractors"]',
@@ -183,11 +187,20 @@ export const calculatorChapter: TutorialChapter = {
           ),
         },
         {
-          element: '[data-tutorial-id="machine-action-overclock"]',
+          element: '[data-tutorial-id="machine-action-done"]',
           popover: {
-            title: 'Overclock',
+            title: 'Mark as built',
             description:
-              'Runs this machine faster (up to 250%) at the cost of more power. The solver uses this multiplier when deciding how many machines are needed — Apply to commit.',
+              'Tracks real-world construction progress: tick this when the machine is actually built in your save. Word on the assembly line says there might be a tiny surprise the first time you hit it… maybe try it later. 😉',
+            side: 'bottom',
+          },
+        },
+        {
+          element: '[data-tutorial-id="machine-action-overclock-somersloops"]',
+          popover: {
+            title: 'Overclock and Somersloops',
+            description:
+              'Two production tweaks side by side: Overclock runs the machine faster (up to 250%) at the cost of more power, while Somersloops slot in to amplify output (each slot adds extra throughput from the same inputs). The solver uses both when deciding how many machines you need — click Apply to commit.',
             side: 'top',
           },
         },

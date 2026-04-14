@@ -135,6 +135,7 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
             }
           >
             <ActionIcon
+              data-tutorial-id="machine-action-done"
               color="green"
               variant={nodeState?.done ? 'filled' : 'outline'}
               onClick={() => {

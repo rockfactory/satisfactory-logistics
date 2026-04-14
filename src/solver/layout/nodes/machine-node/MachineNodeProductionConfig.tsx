@@ -37,7 +37,11 @@ export function MachineNodeProductionConfig(
       : 100;
 
   return (
-    <SimpleGrid cols={2} spacing={6}>
+    <SimpleGrid
+      data-tutorial-id="machine-action-overclock-somersloops"
+      cols={2}
+      spacing={6}
+    >
       <NumberInput
         styles={{
           input: {

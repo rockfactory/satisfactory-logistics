@@ -116,7 +116,11 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
                 >
                   <Tabs.List>
                     {SolverRequestTabs.map(({ value, label, icon }) => (
-                      <Tabs.Tab key={value} value={value}>
+                      <Tabs.Tab
+                        key={value}
+                        value={value}
+                        data-tutorial-id={`calculator-drawer-tab-${value}`}
+                      >
                         <Center style={{ gap: 10 }}>
                           {icon}
                           {label}

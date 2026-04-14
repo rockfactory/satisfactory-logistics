@@ -3,12 +3,12 @@ import { useStore } from '@/core/zustand';
 import { WORLD_SOURCE_ID } from '@/factories/Factory';
 import type { TutorialChapter } from './types';
 
-const DEMO_NAME = 'Iron Smelter';
+const DEMO_NAME = 'The Smeltery';
 const DEMO_OUTPUT_RESOURCE = 'Desc_IronIngot_C';
 const DEMO_OUTPUT_AMOUNT = 30;
 const DEMO_INPUT_RESOURCE = 'Desc_OreIron_C';
 
-const CONSUMER_NAME = 'Iron Plates';
+const CONSUMER_NAME = 'Platey McPlateface';
 const CONSUMER_OUTPUT = 'Desc_IronPlate_C';
 const CONSUMER_OUTPUT_AMOUNT = 20;
 const LINKED_INPUT = 'Desc_IronIngot_C';
@@ -110,7 +110,7 @@ export const factoryLinkingChapter: TutorialChapter = {
           element: '[data-tutorial-id="factory-inputs"]',
           popover: {
             title: 'Input from another factory',
-            description: `The Iron Ingot input is sourced from your "Iron Smelter" factory — pick the source from the dropdown on the left of an input row, just like you would pick "World" for raw resources.`,
+            description: `The Iron Ingot input is sourced from your "${DEMO_NAME}" factory — pick the source from the dropdown on the left of an input row, just like you would pick "World" for raw resources.`,
             side: 'bottom',
           },
         },
