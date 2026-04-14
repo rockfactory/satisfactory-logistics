@@ -37,6 +37,7 @@ import { CodexRoutes } from './codex/CodexRoutes';
 import { CodexSpotlight } from './codex/spotlight/CodexSpotlight';
 import { useStore } from './core/zustand';
 import { GamesRoutes } from './games/page/GamesRoutes';
+import { AppLayout } from './layout/AppLayout';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
 import { theme } from './theme';
 import { ToolsRoutes } from './tools/page/ToolsRoutes';
@@ -62,40 +63,45 @@ const router = createBrowserRouter(
       element: <SpotlightLayout />,
       children: [
         {
-          path: '/factories/*',
-          element: <FactoryRoutes />,
-          ErrorBoundary: () => {
-            throw useRouteError();
-          },
-        },
-        {
-          path: '/games/*',
-          element: <GamesRoutes />,
-          ErrorBoundary: () => {
-            throw useRouteError();
-          },
-        },
-        {
-          path: '/codex/*',
-          element: <CodexRoutes />,
-          ErrorBoundary: () => {
-            throw useRouteError();
-          },
+          element: <AppLayout />,
+          children: [
+            {
+              path: '/factories/*',
+              element: <FactoryRoutes />,
+              ErrorBoundary: () => {
+                throw useRouteError();
+              },
+            },
+            {
+              path: '/games/*',
+              element: <GamesRoutes />,
+              ErrorBoundary: () => {
+                throw useRouteError();
+              },
+            },
+            {
+              path: '/codex/*',
+              element: <CodexRoutes />,
+              ErrorBoundary: () => {
+                throw useRouteError();
+              },
+            },
+            {
+              path: '/tools/*',
+              element: <ToolsRoutes />,
+              ErrorBoundary: () => {
+                throw useRouteError();
+              },
+            },
+            {
+              path: '*',
+              element: <Redirect to="/factories" />,
+            },
+          ],
         },
         {
           path: '/login',
           element: <LoginPage />,
-        },
-        {
-          path: '/tools/*',
-          element: <ToolsRoutes />,
-          ErrorBoundary: () => {
-            throw useRouteError();
-          },
-        },
-        {
-          path: '*',
-          element: <Redirect to="/factories" />,
         },
       ],
     },
