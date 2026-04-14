@@ -2,8 +2,8 @@ import { Drawer, SegmentedControl, Stack, Text } from '@mantine/core';
 import { useEffect } from 'react';
 import { useStore } from '@/core/zustand';
 import { useSelectedGameId } from '@/games/gamesSlice';
-import { FactoryNotesEditor } from './FactoryNotesEditor';
-import { GameNotesEditor } from './GameNotesEditor';
+import { FactoryNotesEditor } from './editor/FactoryNotesEditor';
+import { GameNotesEditor } from './editor/GameNotesEditor';
 import classes from './NotesPanel.module.css';
 import { useCurrentFactoryId } from './useNotesContext';
 
