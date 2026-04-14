@@ -20,6 +20,18 @@ const ensureDrawerClosed = ensureAbsent(DRAWER_PRESENCE, () =>
   clickSelector('[data-tutorial-id="calculator-drawer-close"]'),
 );
 
+/**
+ * Ensures the drawer is open AND the requested tab is active. Idempotent
+ * (clicking an already-active Mantine Tab is a no-op), so safe to fire
+ * on every step entry — protects against the user navigating Back into
+ * a step that expects a different tab than what is currently shown.
+ */
+function ensureDrawerTab(tabValue: 'inputs-outputs' | 'recipes' | 'limitations') {
+  return chainHooks(ensureDrawerOpen, () => {
+    clickSelector(`[data-tutorial-id="calculator-drawer-tab-${tabValue}"]`);
+  });
+}
+
 export const calculatorChapter: TutorialChapter = {
   id: 'calculator',
   title: 'Calculator',
@@ -61,45 +73,34 @@ export const calculatorChapter: TutorialChapter = {
           },
         },
         {
-          element: '[data-tutorial-id="calculator-inputs-outputs"]',
-          popover: {
-            title: 'Inputs & Outputs',
-            description:
-              'The outputs and inputs you set on the factory show up in this drawer. Adjust or add new ones from here. I will open it for you on the next step.',
-            side: 'bottom',
-          },
-          // The drawer must NOT be open here, so the user can clearly see
-          // the trigger button being highlighted.
-          onHighlightStarted: ensureDrawerClosed,
-        },
-        {
           element: '[data-tutorial-id="calculator-inputs-block"]',
           popover: {
-            title: 'Auto-set from Plan',
+            title: 'Inputs/Outputs drawer',
             description:
-              'Remember our Iron Ore input with no amount? The “Auto-set from Plan” button (highlighted on the right) fills inputs with the exact amounts the solver computed — no manual math needed.',
+              'I just opened the Inputs/Outputs drawer (toggle it from the button at the top right). The inputs and outputs you set on the factory show up here — adjust amounts, change constraints, or add new ones.',
             side: 'bottom',
             align: 'end',
           },
           onHighlightStarted: chainHooks(
-            ensureDrawerOpen,
+            ensureDrawerTab('inputs-outputs'),
             rehighlightWhenAvailable(
               '[data-tutorial-id="calculator-inputs-block"]',
             ),
           ),
         },
         {
-          element: '[data-tutorial-id="factory-input-amount"]',
+          element: '[data-tutorial-id="calculator-auto-set"]',
           popover: {
-            title: 'Done — amount filled in',
+            title: 'Auto-set from Plan',
             description:
-              'I just clicked Auto-set for you: the Iron Ore input now has the exact amount the optimal plan needs.',
-            side: 'bottom',
-            align: 'start',
+              'Remember our Iron Ore input with no amount? This button fills inputs with the exact amounts the solver computed — no manual math needed. I just clicked it for you: see Iron Ore on the left now reads the optimal amount.',
+            side: 'left',
           },
-          onHighlightStarted: chainHooks(ensureDrawerOpen, () => {
-            clickSelector('[data-tutorial-id="calculator-auto-set"]');
-          }),
+          onHighlightStarted: chainHooks(
+            ensureDrawerTab('inputs-outputs'),
+            rehighlightWhenAvailable('[data-tutorial-id="calculator-auto-set"]'),
+            () => clickSelector('[data-tutorial-id="calculator-auto-set"]'),
+          ),
         },
         {
           element: '[data-tutorial-id="factory-input-constraint"]',
@@ -110,7 +111,7 @@ export const calculatorChapter: TutorialChapter = {
             side: 'bottom',
             align: 'end',
           },
-          onHighlightStarted: ensureDrawerOpen,
+          onHighlightStarted: ensureDrawerTab('inputs-outputs'),
         },
         {
           element: '[data-tutorial-id="calculator-drawer-tab-recipes"]',
@@ -120,9 +121,7 @@ export const calculatorChapter: TutorialChapter = {
               'Enable or disable alternate recipes. The solver freely combines any enabled recipe to reach your target output.',
             side: 'bottom',
           },
-          onHighlightStarted: chainHooks(ensureDrawerOpen, () => {
-            clickSelector('[data-tutorial-id="calculator-drawer-tab-recipes"]');
-          }),
+          onHighlightStarted: ensureDrawerTab('recipes'),
         },
         {
           element: '[data-tutorial-id="calculator-drawer-tab-limitations"]',
@@ -132,11 +131,7 @@ export const calculatorChapter: TutorialChapter = {
               'Limit what the solver is allowed to use: enable / disable World resources (or set custom max amounts per resource), pick which Buildings the factory can use (with optional override of the global game settings), and choose the Belt / Pipeline tier so over-capacity flows get flagged.',
             side: 'bottom',
           },
-          onHighlightStarted: chainHooks(ensureDrawerOpen, () => {
-            clickSelector(
-              '[data-tutorial-id="calculator-drawer-tab-limitations"]',
-            );
-          }),
+          onHighlightStarted: ensureDrawerTab('limitations'),
         },
         // === Resource node walkthrough ===
         {
@@ -216,21 +211,13 @@ export const calculatorChapter: TutorialChapter = {
 
         // === Byproduct / output node walkthrough ===
         {
-          element: '.react-flow__node-Byproduct',
-          popover: {
-            title: 'Output & byproduct nodes',
-            description:
-              'On the right: your target outputs and any byproducts the plan generates. Selecting one opens its actions.',
-            side: 'bottom',
-          },
-        },
-        {
           element: '[data-tutorial-id="byproduct-action-objective"]',
           popover: {
-            title: 'Maximize output',
+            title: 'Output nodes — Maximize',
             description:
-              'Switch the objective to “Maximize” and the solver will produce as much of this item as possible given your inputs — instead of sticking to a fixed target amount.',
-            side: 'top',
+              'On the right: your target outputs and any byproducts the plan generates. Selecting one opens its actions. The most useful is the Objective: switch to “Maximize” and the solver will produce as much of this item as possible given your inputs — instead of sticking to a fixed target amount.',
+            side: 'left',
+            align: 'start',
           },
           onHighlightStarted: openAndRehighlight(
             '.react-flow__node-Byproduct',
