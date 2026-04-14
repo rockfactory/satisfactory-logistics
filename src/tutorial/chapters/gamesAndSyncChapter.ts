@@ -5,16 +5,46 @@ export const gamesAndSyncChapter: TutorialChapter = {
   title: 'Games & Sync',
   description:
     'Manage Games, import savegames and sync your work across devices.',
+  nextChapterId: 'codex-and-tools',
   segments: [
     {
       route: '/games',
       autoNavigate: true,
       steps: [
         {
+          element: '[data-tutorial-id="games-list"]',
           popover: {
             title: 'The Games page',
             description:
-              'Each Game is an independent set of factories. Switch between Games or create new ones for different playthroughs.',
+              'Each Game is an independent set of factories — like one Satisfactory savegame. From here you can switch between Games, create new ones for different playthroughs, or play one to jump back to its factories.',
+            side: 'top',
+          },
+        },
+        {
+          element: '[data-tutorial-id="user-menu"]',
+          popover: {
+            title: 'Login first',
+            description:
+              'Log in with Google or Discord to unlock cloud save / load / share. This is the prerequisite for everything that follows in this chapter.',
+            side: 'bottom',
+          },
+        },
+        {
+          element: '[data-tutorial-id="game-save-button"]',
+          popover: {
+            title: 'Save / Load to the cloud',
+            description:
+              'Once logged in, this button saves the active Game online. The dropdown next to it also has “Load last save” to pull the latest version from any device — your daily save / load cycle.',
+            side: 'bottom',
+          },
+        },
+        {
+          element: '[data-tutorial-id="game-share"]',
+          popover: {
+            title: 'Share with friends',
+            description:
+              'On any saved Game you get a Share button: it generates a link your friends can open to view and edit the same Game (visible only after you log in and save the Game at least once).',
+            side: 'top',
           },
         },
         {
@@ -22,17 +52,8 @@ export const gamesAndSyncChapter: TutorialChapter = {
           popover: {
             title: 'Import from other tools',
             description:
-              'Import a game exported from Satisfactory Logistics itself or from other planners, so you do not have to start from scratch.',
+              'Already have a plan in another planner (Satisfactory Tools, etc.)? Import the exported file here so you do not have to start from scratch — no login required.',
             side: 'top',
-          },
-        },
-        {
-          element: '[data-tutorial-id="user-menu"]',
-          popover: {
-            title: 'Login & cloud sync',
-            description:
-              'Log in with Google or Discord to sync your Games to the cloud, access them on other devices, and share them with other players.',
-            side: 'bottom',
           },
         },
       ],

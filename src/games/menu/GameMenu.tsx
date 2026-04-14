@@ -187,6 +187,7 @@ export function GameMenu(props: IGameMenuProps) {
           </Menu.Dropdown>
         </Menu>
         <Button
+          data-tutorial-id="game-save-button"
           className={cx(classes.gameMenuSecondaryButton)}
           variant="light"
           color="gray"

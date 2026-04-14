@@ -124,6 +124,21 @@ export const calculatorChapter: TutorialChapter = {
           onHighlightStarted: ensureDrawerTab('recipes'),
         },
         {
+          element: '[data-tutorial-id="recipes-from-savegame"]',
+          popover: {
+            title: 'Import recipes from a savegame',
+            description:
+              'Inside the Recipes tab there is a “From Save” button: drop your Satisfactory `.sav` file and it auto-enables only the alternate recipes you have actually unlocked in that game — no more guessing which alternates you have available.',
+            side: 'left',
+          },
+          onHighlightStarted: chainHooks(
+            ensureDrawerTab('recipes'),
+            rehighlightWhenAvailable(
+              '[data-tutorial-id="recipes-from-savegame"]',
+            ),
+          ),
+        },
+        {
           element: '[data-tutorial-id="calculator-drawer-tab-limitations"]',
           popover: {
             title: 'Limitations',

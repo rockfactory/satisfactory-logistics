@@ -1,5 +1,6 @@
 import { calculatorChapter } from './calculatorChapter';
 import { chartsChapter } from './chartsChapter';
+import { codexAndToolsChapter } from './codexAndToolsChapter';
 import { factoryBasicsChapter } from './factoryBasicsChapter';
 import { factoryLinkingChapter } from './factoryLinkingChapter';
 import { gamesAndSyncChapter } from './gamesAndSyncChapter';
@@ -11,6 +12,7 @@ export const tutorialChapters: TutorialChapter[] = [
   factoryLinkingChapter,
   chartsChapter,
   gamesAndSyncChapter,
+  codexAndToolsChapter,
 ];
 
 export const tutorialChaptersById: Record<string, TutorialChapter> =
