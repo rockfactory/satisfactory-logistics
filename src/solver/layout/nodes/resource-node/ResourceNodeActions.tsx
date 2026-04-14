@@ -49,6 +49,7 @@ export function ResourceNodeActions(props: IResourceNodeActionsProps) {
               label="Block this resource. Only factory inputs will be utilized, but the calculator will not attempt to allocate any additional amount"
             >
               <ActionIcon
+                data-tutorial-id="resource-action-block"
                 color="red"
                 variant="outline"
                 onClick={() =>
@@ -66,6 +67,7 @@ export function ResourceNodeActions(props: IResourceNodeActionsProps) {
           {!input && (
             <Tooltip label="Add an Input of the same amount">
               <ActionIcon
+                data-tutorial-id="resource-action-add-input"
                 color="blue"
                 variant="outline"
                 onClick={() =>

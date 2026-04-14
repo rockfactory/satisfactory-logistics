@@ -59,6 +59,7 @@ export function ImportFromToolsModal(props: IImportFromToolsModalProps) {
   return (
     <>
       <Button
+        data-tutorial-id="import-from-tools"
         onClick={open}
         variant="filled"
         color="gray"

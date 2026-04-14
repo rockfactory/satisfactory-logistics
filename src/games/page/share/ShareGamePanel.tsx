@@ -61,6 +61,7 @@ export function ShareGamePanel(props: IShareGamePanelProps) {
   return (
     <Group>
       <Button
+        data-tutorial-id="game-share"
         onClick={handleOpen}
         disabled={loading}
         color="blue"

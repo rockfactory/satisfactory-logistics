@@ -93,10 +93,11 @@ export function GameMenu(props: IGameMenuProps) {
 
   return (
     <>
-      <Button.Group>
+      <Button.Group data-tutorial-id="games-menu">
         <Menu>
           <Menu.Target>
             <Button
+              data-tutorial-id="games-menu-trigger"
               loading={isSaving}
               variant="light"
               color="gray"
@@ -151,7 +152,7 @@ export function GameMenu(props: IGameMenuProps) {
                 open();
               }}
             >
-              Edit game
+              Rename game
             </Menu.Item>
             <Menu.Item
               leftSection={
@@ -187,6 +188,7 @@ export function GameMenu(props: IGameMenuProps) {
           </Menu.Dropdown>
         </Menu>
         <Button
+          data-tutorial-id="game-save-button"
           className={cx(classes.gameMenuSecondaryButton)}
           variant="light"
           color="gray"

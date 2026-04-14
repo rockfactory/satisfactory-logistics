@@ -112,6 +112,7 @@ export const FactoriesGraphLayout = (props: FactoriesGraphLayoutProps) => {
 
   return (
     <ReactFlow
+      data-tutorial-id="charts-graph"
       ref={ref}
       minZoom={0.2}
       nodes={nodes}

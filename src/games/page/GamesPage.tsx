@@ -35,7 +35,7 @@ export function GamesPage(props: IGamesPageProps) {
         <Title order={3} mb="md" ml="xs">
           Games
         </Title>
-        <Stack gap="xs">
+        <Stack gap="xs" data-tutorial-id="games-list">
           {games.map(game => (
             <Paper
               key={game.id}

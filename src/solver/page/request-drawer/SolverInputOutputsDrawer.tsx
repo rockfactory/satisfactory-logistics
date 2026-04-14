@@ -61,7 +61,7 @@ export function SolverInputOutputsDrawer(
         />
       </Portal>
       <Stack gap="md">
-        <Stack gap="xs">
+        <Stack gap="xs" data-tutorial-id="calculator-inputs-block">
           <Text size="lg">Inputs</Text>
           {inputs?.map((input, i) => (
             <FactoryInputRow
@@ -91,6 +91,7 @@ export function SolverInputOutputsDrawer(
             {solution && (
               <Grid.Col span={4}>
                 <Button
+                  data-tutorial-id="calculator-auto-set"
                   w="100%"
                   size="sm"
                   disabled={solution.result.Status !== 'Optimal'}

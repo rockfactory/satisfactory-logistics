@@ -21,6 +21,7 @@ export const FactoriesEmptyState = () => {
         Add factories to start planning your logistics.
       </Text>
       <Button
+        data-tutorial-id="add-factory-btn"
         leftSection={<IconPlus size={16} />}
         mt="lg"
         size="lg"

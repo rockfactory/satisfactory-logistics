@@ -58,6 +58,9 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   const { index, input, factoryId, displayMode = 'factory' } = props;
 
   const [focused, setFocused] = useState(false);
+  const forceUsageTooltip = useStore(
+    state => state.tutorial.forceUsageTooltip ?? false,
+  );
 
   const sourceOutputs = useStore(
     state => state.factories.factories[input.factoryId ?? '']?.outputs,
@@ -92,6 +95,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   return (
     <Group key={index} align="flex-start" gap="sm">
       <FactorySelectInput
+        data-tutorial-id="factory-input-source"
         // exceptId={factoryId}
         value={input.factoryId}
         showOnlyIds={factoriesIdsProducingInputResource}
@@ -157,9 +161,10 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           </Group>
         }
         position="top-start"
-        opened={focused}
+        opened={focused || forceUsageTooltip}
       >
         <NumberInput
+          data-tutorial-id="factory-input-amount"
           value={input.amount ?? 0}
           w={100}
           min={0}

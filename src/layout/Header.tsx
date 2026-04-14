@@ -14,6 +14,7 @@ import { UserMenu } from '@/auth/UserMenu';
 import { useStore } from '@/core/zustand';
 import { GameMenu } from '@/games/menu/GameMenu';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
+import { TutorialMenu } from '@/tutorial/TutorialMenu';
 import classes from './Header.module.css';
 
 const TABS = ['factories', 'charts', 'calculator', 'tools', 'codex'] as const;
@@ -70,6 +71,7 @@ export function Header() {
           <Group>
             <GameMenu />
             {hasSelectedGame && <GameSettingsModal />}
+            <TutorialMenu />
             <UserMenu />
           </Group>
         </Group>
@@ -93,7 +95,11 @@ export function Header() {
         >
           <Tabs.List>
             {TABS.map(tab => (
-              <Tabs.Tab value={tab} key={tab}>
+              <Tabs.Tab
+                value={tab}
+                key={tab}
+                data-tutorial-id={`header-tab-${tab}`}
+              >
                 {capitalize(tab)}
               </Tabs.Tab>
             ))}
