@@ -1,0 +1,27 @@
+.drawerContent {
+  pointer-events: auto;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-sm);
+  height: calc(100% - 60px);
+}
+
+.editorWrapper {
+  flex: 1;
+  min-height: 0;
+}
+
+.editorWrapper > :global(.mantine-RichTextEditor-root) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.editorWrapper :global(.mantine-RichTextEditor-content) {
+  flex: 1;
+  overflow-y: auto;
+}

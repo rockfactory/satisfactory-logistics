@@ -11,6 +11,7 @@ import { gamesSlice } from '@/games/gamesSlice';
 import { gameSaveSlice } from '@/games/save/gameSaveSlice';
 import { gameFactoriesActions } from '@/games/store/gameFactoriesActions';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
+import { notesUiSlice } from '@/notes/store/notesUiSlice';
 import { solverFactoriesActions } from '@/solver/store/solverFactoriesActions';
 import { solversSlice } from '@/solver/store/solverSlice';
 import { tutorialSlice } from '@/tutorial/store/tutorialSlice';
@@ -36,6 +37,7 @@ const slices = withSlices(
   solversSlice,
   chartsSlice,
   tutorialSlice,
+  notesUiSlice,
 );
 
 export type RootState = ReturnType<typeof slices>;

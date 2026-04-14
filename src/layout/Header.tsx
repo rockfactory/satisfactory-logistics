@@ -14,6 +14,7 @@ import { UserMenu } from '@/auth/UserMenu';
 import { useStore } from '@/core/zustand';
 import { GameMenu } from '@/games/menu/GameMenu';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
+import { NotesPanelTrigger } from '@/notes/NotesPanelTrigger';
 import { TutorialMenu } from '@/tutorial/TutorialMenu';
 import classes from './Header.module.css';
 
@@ -71,6 +72,7 @@ export function Header() {
           <Group>
             <GameMenu />
             {hasSelectedGame && <GameSettingsModal />}
+            {hasSelectedGame && <NotesPanelTrigger />}
             <TutorialMenu />
             <UserMenu />
           </Group>
