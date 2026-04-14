@@ -1,3 +1,8 @@
+/**
+ * Resolves with the first element matching `selector`, or `null` after
+ * `timeoutMs`. Used to wait for elements inside animated drawers/popovers
+ * that aren't mounted yet when a tutorial step initializes.
+ */
 export function waitForElement(
   selector: string,
   timeoutMs = 3000,
@@ -12,11 +17,11 @@ export function waitForElement(
     let timer: ReturnType<typeof setTimeout> | null = null;
 
     const observer = new MutationObserver(() => {
-      const el = document.querySelector(selector);
-      if (el) {
+      const element = document.querySelector(selector);
+      if (element) {
         observer.disconnect();
         if (timer) clearTimeout(timer);
-        resolve(el);
+        resolve(element);
       }
     });
 

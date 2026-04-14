@@ -2,7 +2,7 @@ import type { Driver, DriveStep } from 'driver.js';
 import { waitForElement } from '../waitForElement';
 
 type DriverHook = (
-  el: Element | undefined,
+  element: Element | undefined,
   step: DriveStep,
   opts: { driver: Driver },
 ) => void | Promise<void>;
@@ -13,8 +13,8 @@ type DriverHook = (
  * before highlighting elements that only mount as a consequence.
  */
 export function clickSelector(selector: string) {
-  const el = document.querySelector<HTMLElement>(selector);
-  el?.click();
+  const element = document.querySelector<HTMLElement>(selector);
+  element?.click();
 }
 
 /**
@@ -33,7 +33,7 @@ export function ensurePresent(
 }
 
 /**
- * Inverse of {@link ensurePresent} — runs `fix` if `presenceSelector`
+ * Inverse of {@link ensurePresent}: runs `fix` if `presenceSelector`
  * IS mounted. Useful to close a drawer/popover whose presence would
  * cover the next step's target.
  */
@@ -48,8 +48,8 @@ export function ensureAbsent(
 
 /** Compose multiple driver hooks into one. */
 export function chainHooks(...hooks: DriverHook[]): DriverHook {
-  return async (el, step, opts) => {
-    for (const h of hooks) await h(el, step, opts);
+  return async (element, step, opts) => {
+    for (const h of hooks) await h(element, step, opts);
   };
 }
 
@@ -64,7 +64,7 @@ export function chainHooks(...hooks: DriverHook[]): DriverHook {
  * persistent flag, so re-entering the step (Back then Next) works too.
  */
 export function rehighlightWhenAvailable(selector: string): DriverHook {
-  return async (_el, step, opts) => {
+  return async (_element, step, opts) => {
     if (document.querySelector(selector)) return;
     const found = await waitForElement(selector, 2000);
     if (found) opts.driver.highlight(step);
@@ -82,7 +82,7 @@ export function openAndRehighlight(
   nodeSelector: string,
   actionSelector: string,
 ): DriverHook {
-  return async (_el, step, opts) => {
+  return async (_element, step, opts) => {
     if (document.querySelector(actionSelector)) return;
     clickSelector(nodeSelector);
     const found = await waitForElement(actionSelector, 2000);

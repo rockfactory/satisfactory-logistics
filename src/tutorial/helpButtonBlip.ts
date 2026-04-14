@@ -10,21 +10,21 @@
  * animation cleanly.
  */
 const BLIP_CLASS = 'sl-tutorial-blip';
-const BLIP_DURATION_MS = 3000;
+const BLIP_DURATION_MS = 2000;
 
 export function blipHelpButton(): void {
-  const el = document.querySelector<HTMLElement>(
+  const element = document.querySelector<HTMLElement>(
     '[data-tutorial-id="tutorial-menu"]',
   );
-  if (!el) return;
+  if (!element) return;
 
-  el.classList.remove(BLIP_CLASS);
+  element.classList.remove(BLIP_CLASS);
   // Force reflow so removing + re-adding restarts the animation even if
   // the class is re-added within the same frame.
-  void el.offsetWidth;
-  el.classList.add(BLIP_CLASS);
+  void element.offsetWidth;
+  element.classList.add(BLIP_CLASS);
 
   setTimeout(() => {
-    el.classList.remove(BLIP_CLASS);
+    element.classList.remove(BLIP_CLASS);
   }, BLIP_DURATION_MS);
 }
