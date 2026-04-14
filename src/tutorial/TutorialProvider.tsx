@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useStore } from '@/core/zustand';
 import { tutorialChapters } from './chapters';
+import { publishLocation } from './locationBus';
 import { useTutorial } from './useTutorial';
 import { WelcomeModal } from './WelcomeModal';
 import './driver-theme.css';
@@ -11,6 +13,11 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
     state => state.gameSave.hasRehydratedLocalData,
   );
   const { startChapter } = useTutorial();
+  const location = useLocation();
+
+  useEffect(() => {
+    publishLocation(location.pathname);
+  }, [location.pathname]);
 
   const [welcomeOpen, setWelcomeOpen] = useState(false);
 

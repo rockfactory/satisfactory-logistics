@@ -94,6 +94,7 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
         <Drawer.Content>
           <Drawer.Header>
             <Button
+              data-tutorial-id="calculator-drawer-close"
               variant="unstyled"
               onClick={close}
               className={classes.closeBanner}

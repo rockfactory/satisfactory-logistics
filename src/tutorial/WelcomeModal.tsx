@@ -60,10 +60,7 @@ export function WelcomeModal({ opened, onStart, onSkip }: IWelcomeModalProps) {
           >
             I'll figure it out
           </Button>
-          <Button
-            leftSection={<IconPlayerPlay size={16} />}
-            onClick={onStart}
-          >
+          <Button leftSection={<IconPlayerPlay size={16} />} onClick={onStart}>
             Show me around
           </Button>
         </Group>

@@ -93,6 +93,7 @@ export function FactoryInputConstraintSelect(
           position="top"
         >
           <ActionIcon
+            data-tutorial-id="factory-input-constraint"
             mt={3}
             variant={constraint === 'max' ? 'default' : 'filled'}
             aria-label="Usage"

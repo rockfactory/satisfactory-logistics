@@ -96,7 +96,7 @@ export const ProductionView = ({ id }: { id: string }) => {
               </Group>
             </Alert>
           )}
-          <Stack gap="sm">
+          <Stack gap="sm" data-tutorial-id="factory-inputs">
             <Text size="lg">Inputs</Text>
             <Stack gap="xs">
               {inputs?.map((input, i) => (
@@ -123,7 +123,7 @@ export const ProductionView = ({ id }: { id: string }) => {
               Add Input
             </Button>
           </Stack>
-          <Stack gap="sm">
+          <Stack gap="sm" data-tutorial-id="factory-outputs">
             <Text size="lg">Outputs</Text>
 
             <Stack gap="xs">
@@ -176,12 +176,14 @@ export const ProductionView = ({ id }: { id: string }) => {
         >
           <Text size="lg">Properties</Text>
           <TextInput
+            data-tutorial-id="factory-name"
             value={factory?.name ?? undefined}
             placeholder="Factory Name"
             label="Name"
             onChange={onChangeHandler('name')}
           />
           <Select
+            data-tutorial-id="factory-progress"
             variant="filled"
             label="Progress"
             placeholder={'Select a value'}

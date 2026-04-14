@@ -1,51 +1,198 @@
+import { useStore } from '@/core/zustand';
+import { WORLD_SOURCE_ID } from '@/factories/Factory';
 import type { TutorialChapter } from './types';
+
+const DEMO_NAME = 'Iron Smelter';
+const DEMO_OUTPUT_RESOURCE = 'Desc_IronIngot_C';
+const DEMO_OUTPUT_AMOUNT = 30;
+const DEMO_INPUT_RESOURCE = 'Desc_OreIron_C';
+
+function demoId(): string | null {
+  return useStore.getState().tutorial.demoFactoryId ?? null;
+}
 
 export const factoryBasicsChapter: TutorialChapter = {
   id: 'factory-basics',
   title: 'Factory basics',
-  description: 'Create factories and organize their inputs and outputs.',
-  route: '/factories',
-  steps: [
+  description: 'Guided walk through creating your first factory.',
+  nextChapterId: 'calculator',
+  segments: [
     {
-      popover: {
-        title: 'Welcome to the Factories tab',
-        description:
-          'This is where you plan your Satisfactory factories. Each factory represents a production site with its own inputs and outputs.',
-      },
+      route: '/factories',
+      autoNavigate: true,
+      steps: [
+        {
+          element: '[data-tutorial-id="games-menu"]',
+          popover: {
+            title: 'Start with a Game',
+            description:
+              'Everything in the planner lives inside a Game — like a savegame. You can create several Games and switch between them from here.',
+            side: 'bottom',
+          },
+        },
+        {
+          element: '[data-tutorial-id="header-tab-factories"]',
+          popover: {
+            title: 'The Factories tab',
+            description:
+              'Inside a Game you organize your work into factories. This is the section we will use for the rest of the tour.',
+            side: 'bottom',
+          },
+        },
+        {
+          element: '[data-tutorial-id="add-factory-btn"]',
+          popover: {
+            title: 'Create your first factory',
+            description:
+              'Click “Add Factory” (or “Add first factory” in the empty state) — or just press Next and I will do it for you. We are going to build a small Iron Smelter together.',
+            side: 'bottom',
+            // Pressing Next (or Enter / right arrow) clicks the Add Factory
+            // button for the user; navigation triggers the next segment.
+            onNextClick: () => {
+              document
+                .querySelector<HTMLElement>(
+                  '[data-tutorial-id="add-factory-btn"]',
+                )
+                ?.click();
+            },
+          },
+        },
+      ],
     },
     {
-      element: '[data-tutorial-id="games-menu"]',
-      popover: {
-        title: 'Your active Game',
-        description:
-          'A Game groups a set of factories together (like a savegame). You can create multiple Games, switch between them and sync them online.',
-        side: 'bottom',
-      },
+      // /factories/:id — factory detail page
+      route: /^\/factories\/[^/]+$/,
+      autoNavigate: false,
+      steps: [
+        {
+          popover: {
+            title: 'Factory created',
+            description:
+              'Great — this is your new factory. I will fill in a small Iron Smelter setup as we go. Use Next/Back (or the arrow keys) to step through.',
+          },
+        },
+        {
+          element: '[data-tutorial-id="factory-name"]',
+          popover: {
+            title: 'Name',
+            description: `Every factory has a name. I named this one "${DEMO_NAME}" so it stands out in the list.`,
+            side: 'left',
+          },
+          onHighlightStarted: () => {
+            const id = demoId();
+            if (!id) return;
+            useStore.getState().updateFactory(id, f => {
+              f.name = DEMO_NAME;
+            });
+          },
+        },
+        {
+          element: '[data-tutorial-id="factory-progress"]',
+          popover: {
+            title: 'Build status',
+            description:
+              'Use this to track whether a factory is just planned, being built, or already running in your save. I set ours to “Todo”.',
+            side: 'left',
+          },
+          onHighlightStarted: () => {
+            const id = demoId();
+            if (!id) return;
+            useStore.getState().updateFactory(id, f => {
+              f.progress = 'todo';
+            });
+          },
+        },
+        {
+          element: '[data-tutorial-id="factory-outputs"]',
+          popover: {
+            title: 'Outputs',
+            description: `Outputs are what this factory produces. I added Iron Ingot at ${DEMO_OUTPUT_AMOUNT} /min — your target throughput.`,
+            side: 'top',
+          },
+          onHighlightStarted: () => {
+            const id = demoId();
+            if (!id) return;
+            useStore.getState().updateFactory(id, f => {
+              if (!f.outputs?.length)
+                f.outputs = [{ resource: null, amount: null }];
+              f.outputs[0].resource = DEMO_OUTPUT_RESOURCE;
+              f.outputs[0].amount = DEMO_OUTPUT_AMOUNT;
+            });
+          },
+        },
+        {
+          element: '[data-tutorial-id="factory-inputs"]',
+          popover: {
+            title: 'Inputs',
+            description:
+              'Inputs are what this factory consumes. I added Iron Ore with no amount — that is fine for now: in the Calculator tour you will see the “Auto-set from Plan” button, which fills the exact amounts based on the optimal production chain.',
+            side: 'bottom',
+          },
+          onHighlightStarted: () => {
+            const id = demoId();
+            if (!id) return;
+            const factory = useStore.getState().factories.factories[id];
+            const alreadyHas = factory?.inputs?.some(
+              i => i.resource === DEMO_INPUT_RESOURCE,
+            );
+            if (alreadyHas) return;
+            useStore.getState().addFactoryInput(id, {
+              resource: DEMO_INPUT_RESOURCE,
+              amount: null,
+            });
+            // Default constraint is "max" (<= amount). With amount 0 that
+            // would force the solver to skip iron entirely, so we flip it
+            // to "input" (minimum, extra from world allowed). Also mark
+            // the source as World so the solver knows it is pulled from
+            // map extractors rather than another factory.
+            useStore.getState().updateFactory(id, f => {
+              const last = f.inputs?.[f.inputs.length - 1];
+              if (last && last.resource === DEMO_INPUT_RESOURCE) {
+                last.constraint = 'input';
+                last.factoryId = WORLD_SOURCE_ID;
+              }
+            });
+          },
+        },
+        {
+          element: '[data-tutorial-id="factory-input-source"]',
+          popover: {
+            title: 'Source of an input',
+            description:
+              'Each input has a source. “World” means the resource comes from the map (mined ore, water, oil). Pick another factory here to chain them — the target factory will then pull from that factory’s outputs.',
+            side: 'bottom',
+          },
+        },
+        {
+          popover: {
+            title: 'That is the whole anatomy of a factory',
+            description:
+              'Name, status, outputs and inputs — that is all you need to plan a production site. Click Next to head back to the list.',
+          },
+        },
+      ],
     },
     {
-      element: '[data-tutorial-id="add-factory-btn"]',
-      popover: {
-        title: 'Add a factory',
-        description:
-          'Click here to create a new factory. From the empty state you can also import an existing game.',
-        side: 'bottom',
-      },
-    },
-    {
-      element: '[data-tutorial-id="view-switcher"]',
-      popover: {
-        title: 'Three ways to view factories',
-        description:
-          'Switch between Grid (cards), Kanban (status columns) and Spreadsheet (compact rows) depending on what you need.',
-        side: 'bottom',
-      },
-    },
-    {
-      popover: {
-        title: 'Inputs, outputs, progress',
-        description:
-          'Inside each factory you set its outputs (what it produces) and inputs (which can be sourced from another factory). You can also mark the build progress to keep track of what is actually built in your save.',
-      },
+      route: '/factories',
+      autoNavigate: true,
+      steps: [
+        {
+          element: '[data-tutorial-id="view-switcher"]',
+          popover: {
+            title: 'Three ways to view factories',
+            description:
+              'Grid, Kanban and Spreadsheet — pick whichever fits what you are doing. The factory you just built appears in all three.',
+            side: 'bottom',
+          },
+        },
+        {
+          popover: {
+            title: 'Factory basics — done!',
+            description:
+              'Nice work. Next up: the Calculator will compute the full production chain for this factory. Click Next to continue.',
+          },
+        },
+      ],
     },
   ],
 };

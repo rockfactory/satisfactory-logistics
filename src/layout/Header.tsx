@@ -95,7 +95,11 @@ export function Header() {
         >
           <Tabs.List>
             {TABS.map(tab => (
-              <Tabs.Tab value={tab} key={tab}>
+              <Tabs.Tab
+                value={tab}
+                key={tab}
+                data-tutorial-id={`header-tab-${tab}`}
+              >
                 {capitalize(tab)}
               </Tabs.Tab>
             ))}
