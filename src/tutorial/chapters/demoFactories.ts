@@ -24,6 +24,23 @@ function isValidFactoryRef(id: string | null | undefined): boolean {
 }
 
 /**
+ * Reactive selector — true if any tutorial demo factory currently exists
+ * in the active Game. Subscribe via `useStore(hasDemoFactoriesSelector)`.
+ */
+export function hasDemoFactoriesSelector(state: {
+  tutorial: { demoFactoryId?: string | null; consumerFactoryId?: string | null };
+  games: { selected: string | null; games: Record<string, { factoriesIds: string[] }> };
+  factories: { factories: Record<string, unknown> };
+}): boolean {
+  const { demoFactoryId, consumerFactoryId } = state.tutorial;
+  const game = state.games.games[state.games.selected ?? ''];
+  if (!game) return false;
+  const has = (id: string | null | undefined): boolean =>
+    !!id && !!state.factories.factories[id] && game.factoriesIds.includes(id);
+  return has(demoFactoryId) || has(consumerFactoryId);
+}
+
+/**
  * Idempotent: returns the existing demo factory id if still valid in the
  * current Game, otherwise creates a fresh "The Smeltery" factory and
  * stores its id in `tutorial.demoFactoryId`. Returns null if no Game is
@@ -51,6 +68,27 @@ export function ensureDemoFactory(): string | null {
   });
   state.setDemoFactoryId(newId);
   return newId;
+}
+
+/**
+ * Removes any tutorial demo factories the user still has in the current
+ * Game and clears the matching ids from the tutorial slice. Safe to call
+ * when nothing was created — it just no-ops on missing references. Used
+ * by `useTutorial` whenever the tour ends (completion, opt-out, or
+ * mid-chapter close) so we do not leave orphan factories behind.
+ */
+export function removeDemoFactories(): void {
+  const state = useStore.getState();
+  const { demoFactoryId, consumerFactoryId } = state.tutorial;
+
+  if (consumerFactoryId && isValidFactoryRef(consumerFactoryId)) {
+    state.removeGameFactory(consumerFactoryId);
+  }
+  if (demoFactoryId && isValidFactoryRef(demoFactoryId)) {
+    state.removeGameFactory(demoFactoryId);
+  }
+  state.setDemoFactoryId(null);
+  state.setConsumerFactoryId(null);
 }
 
 /**

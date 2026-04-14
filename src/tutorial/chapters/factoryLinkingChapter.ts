@@ -29,7 +29,7 @@ export const factoryLinkingChapter: TutorialChapter = {
           element: '[data-tutorial-id="factory-detail"]',
           popover: {
             title: 'A second factory',
-            description: `I just created another factory called "${CONSUMER_NAME}". It produces Iron Plates from Iron Ingots — exactly what your first factory makes.`,
+            description: `I just created another factory called "${CONSUMER_NAME}". It produces Iron Plates from Iron Ingots, exactly what your first factory makes.`,
             side: 'top',
           },
         },
@@ -38,7 +38,7 @@ export const factoryLinkingChapter: TutorialChapter = {
           popover: {
             title: 'Its output',
             description:
-              'This factory outputs Iron Plate at 20 /min. Same shape as before — resource and amount.',
+              'This factory outputs Iron Plate at 20 /min. Same shape as before: resource and amount.',
             side: 'top',
           },
         },
@@ -46,7 +46,7 @@ export const factoryLinkingChapter: TutorialChapter = {
           element: '[data-tutorial-id="factory-inputs"]',
           popover: {
             title: 'Input from another factory',
-            description: `The Iron Ingot input is sourced from your "${DEMO_NAME}" factory — pick the source from the dropdown on the left of an input row, just like you would pick "World" for raw resources.`,
+            description: `The Iron Ingot input is sourced from your "${DEMO_NAME}" factory. Pick the source from the dropdown on the left of an input row, just like you would pick "World" for raw resources.`,
             side: 'bottom',
           },
         },
@@ -54,7 +54,7 @@ export const factoryLinkingChapter: TutorialChapter = {
           element: '[data-tutorial-id="factory-input-amount"]',
           popover: {
             title: 'Usage at a glance',
-            description: `When you focus the amount of an input that points to another factory, a tooltip shows the usage: how much that source produces vs how much you are using. Right now we use ${LINKED_INPUT_AMOUNT} of 30 Iron Ingot/min — 50%.`,
+            description: `When you focus the amount of an input that points to another factory, a tooltip shows the usage: how much that source produces vs how much you are using. Right now we use ${LINKED_INPUT_AMOUNT} of 30 Iron Ingot/min, so 50%.`,
             side: 'bottom',
             align: 'start',
           },

@@ -23,7 +23,7 @@ export const chartsChapter: TutorialChapter = {
           popover: {
             title: 'Your factory network',
             description:
-              'This page shows the whole network of factories at once. Each card is a factory and each edge is a resource exchange between them — here you can see the Smeltery → Platey McPlateface chain we just built.',
+              'This page shows the whole network of factories at once. Each card is a factory and each edge is a resource exchange between them. Here you can see the Smeltery → Platey McPlateface chain we just built.',
             side: 'top',
           },
         },

@@ -4,13 +4,19 @@ import {
   IconHelp,
   IconPlayerPlay,
   IconRefresh,
+  IconTrash,
 } from '@tabler/icons-react';
-import { useShallowStore } from '@/core/zustand';
+import { useShallowStore, useStore } from '@/core/zustand';
 import { tutorialChapters } from './chapters';
+import {
+  hasDemoFactoriesSelector,
+  removeDemoFactories,
+} from './chapters/demoFactories';
 import { useTutorial } from './useTutorial';
 
 export function TutorialMenu() {
   const completed = useShallowStore(state => state.tutorial.completedChapters);
+  const hasDemoFactories = useStore(hasDemoFactoriesSelector);
   const { startChapter, resetProgress } = useTutorial();
 
   return (
@@ -65,6 +71,16 @@ export function TutorialMenu() {
         >
           Restart from beginning
         </Menu.Item>
+        {hasDemoFactories && (
+          <Menu.Item
+            leftSection={
+              <IconTrash size={16} color="var(--mantine-color-red-5)" />
+            }
+            onClick={() => removeDemoFactories()}
+          >
+            Remove tutorial factories
+          </Menu.Item>
+        )}
       </Menu.Dropdown>
     </Menu>
   );

@@ -17,7 +17,7 @@ export const factoryBasicsChapter: TutorialChapter = {
   description: 'Guided walk through creating your first factory.',
   nextChapterId: 'calculator',
   outroBody:
-    'Nice work — you now have a factory with a name, a status, an output and a sourced input. That is the whole anatomy of a production site in the planner.',
+    'Nice work. You now have a factory with a name, a status, an output and a sourced input. That is the whole anatomy of a production site in the planner.',
   segments: [
     {
       route: '/factories',
@@ -28,7 +28,7 @@ export const factoryBasicsChapter: TutorialChapter = {
           popover: {
             title: 'Start with a Game',
             description:
-              'Everything in the planner lives inside a Game — like a savegame. You can create several Games and switch between them from here.',
+              'Everything in the planner lives inside a Game (like a savegame). You can create several Games and switch between them from here.',
             side: 'bottom',
           },
         },
@@ -46,7 +46,7 @@ export const factoryBasicsChapter: TutorialChapter = {
           popover: {
             title: 'Create your first factory',
             description:
-              'Click “Add Factory” (or “Add first factory” in the empty state) — or just press Next and I will do it for you. We are going to build a small Iron Smelter together.',
+              'Click “Add Factory” (or “Add first factory” in the empty state), or just press Next and I will do it for you. We are going to build a small Iron Smelter together.',
             side: 'bottom',
             // Pressing Next (or Enter / right arrow) clicks the Add Factory
             // button for the user; navigation triggers the next segment.
@@ -71,7 +71,7 @@ export const factoryBasicsChapter: TutorialChapter = {
           popover: {
             title: 'Factory created',
             description:
-              'Great — this is your new factory. I will fill in a small Iron Smelter setup as we go. Use Next/Back (or the arrow keys) to step through.',
+              'Great, this is your new factory. I will fill in a small Iron Smelter setup as we go. Use Next/Back (or the arrow keys) to step through.',
             side: 'top',
           },
         },
@@ -79,7 +79,7 @@ export const factoryBasicsChapter: TutorialChapter = {
           element: '[data-tutorial-id="factory-properties"]',
           popover: {
             title: 'Name & build status',
-            description: `Every factory has a name and a build status. I named this one "${DEMO_NAME}" and set its status to “Todo” — the status tracks whether a factory is just planned, being built, or already running, and it is also what powers the columns in the Kanban view of the Factories list.`,
+            description: `Every factory has a name and a build status. I named this one "${DEMO_NAME}" and set its status to “Todo”. The status tracks whether a factory is just planned, being built, or already running, and it is also what powers the columns in the Kanban view of the Factories list.`,
             side: 'left',
           },
           onHighlightStarted: () => {
@@ -95,7 +95,7 @@ export const factoryBasicsChapter: TutorialChapter = {
           element: '[data-tutorial-id="factory-outputs"]',
           popover: {
             title: 'Outputs',
-            description: `Outputs are what this factory produces. I added Iron Ingot at ${DEMO_OUTPUT_AMOUNT} /min — your target throughput.`,
+            description: `Outputs are what this factory produces. I added Iron Ingot at ${DEMO_OUTPUT_AMOUNT} /min, your target throughput.`,
             side: 'top',
           },
           onHighlightStarted: () => {
@@ -114,7 +114,7 @@ export const factoryBasicsChapter: TutorialChapter = {
           popover: {
             title: 'Inputs',
             description:
-              'Inputs are what this factory consumes. I added Iron Ore (no amount yet — the Calculator tour will fill it in). Each input also has a Source on the left: “World” for raw resources mined from the map, or another factory to chain them together.',
+              'Inputs are what this factory consumes. I added Iron Ore (no amount yet, the Calculator tour will fill it in). Each input also has a Source on the left: “World” for raw resources mined from the map, or another factory to chain them together.',
             side: 'bottom',
           },
           onHighlightStarted: () => {
@@ -154,7 +154,7 @@ export const factoryBasicsChapter: TutorialChapter = {
           popover: {
             title: 'Three ways to view factories',
             description:
-              'Grid, Kanban and Spreadsheet — pick whichever fits what you are doing. The factory you just built appears in all three.',
+              'Grid, Kanban and Spreadsheet: pick whichever fits what you are doing. The factory you just built appears in all three.',
             side: 'bottom',
           },
         },

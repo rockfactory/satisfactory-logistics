@@ -2,8 +2,14 @@ import { Button, Group, Modal, Stack, Text, Title } from '@mantine/core';
 import {
   IconCircleCheckFilled,
   IconPlayerPlay,
+  IconTrash,
   IconX,
 } from '@tabler/icons-react';
+import { useStore } from '@/core/zustand';
+import {
+  hasDemoFactoriesSelector,
+  removeDemoFactories,
+} from './chapters/demoFactories';
 import type { OutroRequest } from './outroBus';
 
 export interface IChapterOutroModalProps {
@@ -19,9 +25,12 @@ export function ChapterOutroModal({
   onContinue,
   onDone,
 }: IChapterOutroModalProps) {
+  const hasDemoFactories = useStore(hasDemoFactoriesSelector);
+
   if (!request) return null;
 
   const hasNext = !!request.nextChapterId;
+  const showCleanup = !hasNext && hasDemoFactories;
 
   return (
     <Modal
@@ -35,7 +44,7 @@ export function ChapterOutroModal({
             size={20}
             color="var(--mantine-color-green-5)"
           />
-          <Title order={4}>{request.chapterTitle} — done</Title>
+          <Title order={4}>{request.chapterTitle}: done</Title>
         </Group>
       }
     >
@@ -52,32 +61,46 @@ export function ChapterOutroModal({
               {request.nextChapterTitle}
             </Text>
             {request.nextChapterDescription
-              ? ` — ${request.nextChapterDescription}`
+              ? `. ${request.nextChapterDescription}`
               : ''}
           </Text>
         ) : (
           <Text size="sm" c="dark.1" lh={1.55}>
-            That was the last chapter — you have seen the whole tour. You can
+            That was the last chapter, you have seen the whole tour. You can
             re-run any chapter from the help menu in the header.
           </Text>
         )}
-        <Group justify="flex-end" mt="xs" gap="sm">
-          <Button
-            variant="subtle"
-            color="gray"
-            leftSection={<IconX size={16} />}
-            onClick={onDone}
-          >
-            I'm done for now
-          </Button>
-          {hasNext && (
+        <Group justify="space-between" mt="xs" gap="sm">
+          {showCleanup ? (
             <Button
-              leftSection={<IconPlayerPlay size={16} />}
-              onClick={onContinue}
+              variant="subtle"
+              color="red"
+              leftSection={<IconTrash size={16} />}
+              onClick={() => removeDemoFactories()}
             >
-              Continue to {request.nextChapterTitle}
+              Remove tutorial factories
             </Button>
+          ) : (
+            <span />
           )}
+          <Group gap="sm">
+            <Button
+              variant="subtle"
+              color="gray"
+              leftSection={<IconX size={16} />}
+              onClick={onDone}
+            >
+              I'm done for now
+            </Button>
+            {hasNext && (
+              <Button
+                leftSection={<IconPlayerPlay size={16} />}
+                onClick={onContinue}
+              >
+                Continue to {request.nextChapterTitle}
+              </Button>
+            )}
+          </Group>
         </Group>
       </Stack>
     </Modal>

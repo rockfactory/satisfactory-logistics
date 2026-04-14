@@ -27,7 +27,7 @@ export const gamesAndSyncChapter: TutorialChapter = {
           popover: {
             title: 'The Games page',
             description:
-              'Each Game is an independent set of factories — like one Satisfactory savegame. From here you can switch between Games, create new ones for different playthroughs, or play one to jump back to its factories.',
+              'Each Game is an independent set of factories, like one Satisfactory savegame. From here you can switch between Games, create new ones for different playthroughs, or play one to jump back to its factories.',
             side: 'top',
           },
         },
@@ -58,7 +58,7 @@ export const gamesAndSyncChapter: TutorialChapter = {
           popover: {
             title: 'Save / Load to the cloud',
             description:
-              'Once logged in, this button saves the active Game online. The dropdown next to it also has “Load last save” to pull the latest version from any device — your daily save / load cycle.',
+              'Once logged in, this button saves the active Game online. The dropdown next to it also has “Load last save” to pull the latest version from any device. Your daily save / load cycle.',
             side: 'bottom',
           },
         },
@@ -76,7 +76,7 @@ export const gamesAndSyncChapter: TutorialChapter = {
           popover: {
             title: 'Import from other tools',
             description:
-              'Already have a plan in another planner (Satisfactory Tools, etc.)? Import the exported file here so you do not have to start from scratch — no login required.',
+              'Already have a plan in another planner (Satisfactory Tools, etc.)? Import the exported file here so you do not have to start from scratch. No login required.',
             side: 'top',
           },
         },

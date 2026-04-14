@@ -51,7 +51,7 @@ export const calculatorChapter: TutorialChapter = {
           popover: {
             title: 'Open the Calculator from a factory',
             description:
-              'Every factory has two views: Overview (the page you are on) and Calculator. Switch with these tabs — I will jump us into the Calculator next.',
+              'Every factory has two views: Overview (the page you are on) and Calculator. Switch with these tabs. I will jump us into the Calculator next.',
             side: 'bottom',
           },
         },
@@ -79,7 +79,7 @@ export const calculatorChapter: TutorialChapter = {
           popover: {
             title: 'Inputs/Outputs drawer',
             description:
-              'I just opened the Inputs/Outputs drawer (toggle it from the button at the top right). The inputs and outputs you set on the factory show up here — adjust amounts, change constraints, or add new ones.',
+              'I just opened the Inputs/Outputs drawer (toggle it from the button at the top right). The inputs and outputs you set on the factory show up here, ready to be adjusted: change amounts, swap constraints, or add new ones.',
             side: 'bottom',
             align: 'end',
           },
@@ -95,7 +95,7 @@ export const calculatorChapter: TutorialChapter = {
           popover: {
             title: 'Auto-set from Plan',
             description:
-              'Remember our Iron Ore input with no amount? This button fills inputs with the exact amounts the solver computed — no manual math needed. I just clicked it for you: see Iron Ore on the left now reads the optimal amount.',
+              'Remember our Iron Ore input with no amount? This button fills inputs with the exact amounts the solver computed, no manual math needed. I just clicked it for you: see Iron Ore on the left now reads the optimal amount.',
             side: 'left',
           },
           onHighlightStarted: chainHooks(
@@ -132,7 +132,7 @@ export const calculatorChapter: TutorialChapter = {
           popover: {
             title: 'Import recipes from a savegame',
             description:
-              'Inside the Recipes tab there is a “From Save” button: drop your Satisfactory `.sav` file and it auto-enables only the alternate recipes you have actually unlocked in that game — no more guessing which alternates you have available.',
+              'Inside the Recipes tab there is a “From Save” button: drop your Satisfactory `.sav` file and it auto-enables only the alternate recipes you have actually unlocked in that game. No more guessing which alternates you have available.',
             side: 'left',
           },
           onHighlightStarted: chainHooks(
@@ -158,7 +158,7 @@ export const calculatorChapter: TutorialChapter = {
           popover: {
             title: 'Resource nodes',
             description:
-              'On the left of the graph: each resource the solver is pulling in. Selecting one opens a panel with details and actions — let us open this one.',
+              'On the left of the graph: each resource the solver is pulling in. Selecting one opens a panel with details and actions. Let us open this one.',
             side: 'bottom',
           },
           onHighlightStarted: ensureDrawerClosed,
@@ -183,7 +183,7 @@ export const calculatorChapter: TutorialChapter = {
           popover: {
             title: 'Machine nodes',
             description:
-              'Each production machine in the chain. Selecting one opens its actions — let us look at what you can change.',
+              'Each production machine in the chain. Selecting one opens its actions. Let us look at what you can change.',
             side: 'bottom',
           },
         },
@@ -192,7 +192,7 @@ export const calculatorChapter: TutorialChapter = {
           popover: {
             title: 'Ignore recipe',
             description:
-              'Bans this specific recipe from the plan. The solver will re-plan with whatever other recipes are enabled — great to test alternates without touching the global Recipes drawer.',
+              'Bans this specific recipe from the plan. The solver will re-plan with whatever other recipes are enabled. Great to test alternates without touching the global Recipes drawer.',
             side: 'bottom',
           },
           onHighlightStarted: openAndRehighlight(
@@ -214,7 +214,7 @@ export const calculatorChapter: TutorialChapter = {
           popover: {
             title: 'Overclock and Somersloops',
             description:
-              'Two production tweaks side by side: Overclock runs the machine faster (up to 250%) at the cost of more power, while Somersloops slot in to amplify output (each slot adds extra throughput from the same inputs). The solver uses both when deciding how many machines you need — click Apply to commit.',
+              'Two production tweaks side by side: Overclock runs the machine faster (up to 250%) at the cost of more power, while Somersloops slot in to amplify output (each slot adds extra throughput from the same inputs). The solver uses both when deciding how many machines you need. Click Apply to commit.',
             side: 'top',
           },
         },
@@ -232,9 +232,9 @@ export const calculatorChapter: TutorialChapter = {
         {
           element: '[data-tutorial-id="byproduct-action-objective"]',
           popover: {
-            title: 'Output nodes — Maximize',
+            title: 'Output nodes: Maximize',
             description:
-              'On the right: your target outputs and any byproducts the plan generates. Selecting one opens its actions. The most useful is the Objective: switch to “Maximize” and the solver will produce as much of this item as possible given your inputs — instead of sticking to a fixed target amount.',
+              'On the right: your target outputs and any byproducts the plan generates. Selecting one opens its actions. The most useful is the Objective: switch to “Maximize” and the solver will produce as much of this item as possible given your inputs, instead of sticking to a fixed target amount.',
             side: 'left',
             align: 'start',
           },
