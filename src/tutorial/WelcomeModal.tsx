@@ -47,11 +47,8 @@ export function WelcomeModal({ opened, onStart, onSkip }: IWelcomeModalProps) {
         <Text size="sm" c="dark.1" lh={1.55}>
           Shall we take a quick tour of the facility? You can always bail out
           and resume later from the{' '}
-          <IconHelp
-            size={16}
-            style={{ verticalAlign: 'text-bottom' }}
-          />{' '}
-          button in the header. Stay alert, stay productive.
+          <IconHelp size={16} style={{ verticalAlign: 'text-bottom' }} /> button
+          in the header. Stay alert, stay productive.
         </Text>
         <Group justify="flex-end" mt="xs" gap="sm">
           <Button

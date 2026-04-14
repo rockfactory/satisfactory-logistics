@@ -1,8 +1,15 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useStore } from '@/core/zustand';
+import { ChapterOutroModal } from './ChapterOutroModal';
 import { tutorialChapters } from './chapters';
+import { blipHelpButton } from './helpButtonBlip';
 import { publishLocation } from './locationBus';
+import {
+  type OutroChoice,
+  type OutroRequest,
+  setOutroListener,
+} from './outroBus';
 import { useTutorial } from './useTutorial';
 import { WelcomeModal } from './WelcomeModal';
 import './driver-theme.css';
@@ -30,6 +37,7 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
   const handleSkip = useCallback(() => {
     useStore.getState().markWelcomeSeen();
     setWelcomeOpen(false);
+    blipHelpButton();
   }, []);
 
   const handleStart = useCallback(() => {
@@ -41,6 +49,25 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
     }
   }, [startChapter]);
 
+  // === Chapter outro modal: bridged via outroBus ===
+  const [outroRequest, setOutroRequest] = useState<OutroRequest | null>(null);
+  const outroResolveRef = useRef<((choice: OutroChoice) => void) | null>(null);
+
+  useEffect(() => {
+    setOutroListener((req, resolve) => {
+      outroResolveRef.current = resolve;
+      setOutroRequest(req);
+    });
+    return () => setOutroListener(null);
+  }, []);
+
+  const resolveOutro = useCallback((choice: OutroChoice) => {
+    setOutroRequest(null);
+    const resolve = outroResolveRef.current;
+    outroResolveRef.current = null;
+    resolve?.(choice);
+  }, []);
+
   return (
     <>
       {children}
@@ -48,6 +75,12 @@ export function TutorialProvider({ children }: { children: React.ReactNode }) {
         opened={welcomeOpen}
         onStart={handleStart}
         onSkip={handleSkip}
+      />
+      <ChapterOutroModal
+        opened={outroRequest != null}
+        request={outroRequest}
+        onContinue={() => resolveOutro('continue')}
+        onDone={() => resolveOutro('done')}
       />
     </>
   );

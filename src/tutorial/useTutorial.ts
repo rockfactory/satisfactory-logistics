@@ -10,7 +10,9 @@ import type {
   TutorialChapter,
   TutorialChapterSegment,
 } from './chapters/types';
+import { blipHelpButton } from './helpButtonBlip';
 import { getCurrentPathname, subscribeLocation } from './locationBus';
+import { requestOutro } from './outroBus';
 import { waitForElement } from './waitForElement';
 
 const DEMO_FACTORY_ROUTE = /^\/factories\/([^/]+)$/;
@@ -128,7 +130,6 @@ function captureDemoFactoryFromRoute() {
 async function runChapter(
   chapter: TutorialChapter,
   navigate: (path: string) => void,
-  hasFollowupChapter: boolean,
 ): Promise<'done' | 'cancelled'> {
   if (chapter.setup) {
     await chapter.setup();
@@ -137,8 +138,7 @@ async function runChapter(
     const segment = chapter.segments[i];
     const ctx = buildContext();
     const route = resolveRoute(segment.route, ctx);
-    const isLastSegment = i === chapter.segments.length - 1;
-    const isFinalSegment = isLastSegment && !hasFollowupChapter;
+    const isFinalSegment = i === chapter.segments.length - 1;
     const nextSegment = chapter.segments[i + 1];
     const nextRoute = nextSegment ? resolveRoute(nextSegment.route, ctx) : null;
 
@@ -181,12 +181,35 @@ export function useTutorial() {
           const followup = chapter.nextChapterId
             ? tutorialChaptersById[chapter.nextChapterId]
             : undefined;
-          const result = await runChapter(chapter, navigate, !!followup);
-          if (result === 'done') {
-            useStore.getState().markChapterCompleted(chapter.id);
-            nextId = followup?.id;
-          } else {
+          // The outro modal is shown after a natural completion, so the
+          // driver tour itself never knows it is the "final" step of a
+          // multi-chapter chain — always treat as final to keep the
+          // "Done" button label clean.
+          const result = await runChapter(chapter, navigate);
+          if (result === 'cancelled') {
             useStore.getState().setLastChapter(chapter.id);
+            blipHelpButton();
+            nextId = undefined;
+            break;
+          }
+
+          useStore.getState().markChapterCompleted(chapter.id);
+
+          // Hand control to the user via the outro modal — they pick
+          // whether to chain into the next chapter or stop here.
+          const choice = await requestOutro({
+            chapterId: chapter.id,
+            chapterTitle: chapter.title,
+            outroBody: chapter.outroBody,
+            nextChapterId: followup?.id,
+            nextChapterTitle: followup?.title,
+            nextChapterDescription: followup?.description,
+          });
+
+          if (choice === 'continue' && followup) {
+            nextId = followup.id;
+          } else {
+            blipHelpButton();
             nextId = undefined;
           }
         }

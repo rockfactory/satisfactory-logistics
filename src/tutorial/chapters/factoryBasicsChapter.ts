@@ -16,6 +16,8 @@ export const factoryBasicsChapter: TutorialChapter = {
   title: 'Factory basics',
   description: 'Guided walk through creating your first factory.',
   nextChapterId: 'calculator',
+  outroBody:
+    'Nice work — you now have a factory with a name, a status, an output and a sourced input. That is the whole anatomy of a production site in the planner.',
   segments: [
     {
       route: '/factories',
@@ -154,13 +156,6 @@ export const factoryBasicsChapter: TutorialChapter = {
             description:
               'Grid, Kanban and Spreadsheet — pick whichever fits what you are doing. The factory you just built appears in all three.',
             side: 'bottom',
-          },
-        },
-        {
-          popover: {
-            title: 'Factory basics — done!',
-            description:
-              'Nice work. Next up: the Calculator will compute the full production chain for this factory. Click Next to continue.',
           },
         },
       ],

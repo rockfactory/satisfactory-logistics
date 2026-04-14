@@ -14,6 +14,43 @@ body.driver-active .mantine-Tooltip-tooltip {
   z-index: 10001 !important;
 }
 
+/*
+ * Help-button "blip": triggered after the user opts out of the tour, to
+ * draw their attention to the persistent entry point in the header.
+ * Three pulses of scale + tilt + glow over ~3s, then back to normal.
+ */
+@keyframes sl-tutorial-blip {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+    box-shadow: 0 0 0 0 transparent;
+  }
+  10%,
+  40%,
+  70% {
+    transform: scale(1.25) rotate(-8deg);
+    box-shadow: 0 0 0 6px var(--mantine-color-blue-5);
+    color: var(--mantine-color-blue-3);
+  }
+  20%,
+  50%,
+  80% {
+    transform: scale(1.25) rotate(8deg);
+    box-shadow: 0 0 0 6px transparent;
+  }
+  30%,
+  60%,
+  90% {
+    transform: scale(1) rotate(0deg);
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.sl-tutorial-blip {
+  animation: sl-tutorial-blip 3s ease-in-out;
+  border-radius: 50%;
+}
+
 .sl-tutorial-popover.driver-popover {
   background-color: var(--mantine-color-dark-6);
   color: var(--mantine-color-gray-0);

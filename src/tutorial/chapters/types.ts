@@ -39,4 +39,10 @@ export interface TutorialChapter {
    * state (e.g. create a demo entity) so segment routes can resolve.
    */
   setup?: () => void | Promise<void>;
+  /**
+   * Optional custom recap shown in the outro modal in place of the
+   * default "Up next: <next chapter>" text. Use it when the chapter
+   * has its own closing message worth showing the user.
+   */
+  outroBody?: string;
 }

@@ -1,4 +1,15 @@
+import {
+  chainHooks,
+  clickSelector,
+  ensurePresent,
+  rehighlightWhenAvailable,
+} from './stepHelpers';
 import type { TutorialChapter } from './types';
+
+const GAMES_MENU_PRESENCE = '.mantine-Menu-dropdown';
+const ensureGamesMenuOpen = ensurePresent(GAMES_MENU_PRESENCE, () =>
+  clickSelector('[data-tutorial-id="games-menu-trigger"]'),
+);
 
 export const gamesAndSyncChapter: TutorialChapter = {
   id: 'games-and-sync',
@@ -28,6 +39,19 @@ export const gamesAndSyncChapter: TutorialChapter = {
               'Log in with Google or Discord to unlock cloud save / load / share. This is the prerequisite for everything that follows in this chapter.',
             side: 'bottom',
           },
+        },
+        {
+          element: '.mantine-Menu-dropdown',
+          popover: {
+            title: 'The Game menu',
+            description:
+              'Click the active Game name in the header to open this menu. Use “New game” to start a fresh playthrough, “Rename game” to change the active Game’s name, and “Save game” to upload it to the cloud (the floppy button next to the menu does the same in one click).',
+            side: 'right',
+          },
+          onHighlightStarted: chainHooks(
+            ensureGamesMenuOpen,
+            rehighlightWhenAvailable('.mantine-Menu-dropdown'),
+          ),
         },
         {
           element: '[data-tutorial-id="game-save-button"]',

@@ -26,7 +26,9 @@ const ensureDrawerClosed = ensureAbsent(DRAWER_PRESENCE, () =>
  * on every step entry — protects against the user navigating Back into
  * a step that expects a different tab than what is currently shown.
  */
-function ensureDrawerTab(tabValue: 'inputs-outputs' | 'recipes' | 'limitations') {
+function ensureDrawerTab(
+  tabValue: 'inputs-outputs' | 'recipes' | 'limitations',
+) {
   return chainHooks(ensureDrawerOpen, () => {
     clickSelector(`[data-tutorial-id="calculator-drawer-tab-${tabValue}"]`);
   });
@@ -98,7 +100,9 @@ export const calculatorChapter: TutorialChapter = {
           },
           onHighlightStarted: chainHooks(
             ensureDrawerTab('inputs-outputs'),
-            rehighlightWhenAvailable('[data-tutorial-id="calculator-auto-set"]'),
+            rehighlightWhenAvailable(
+              '[data-tutorial-id="calculator-auto-set"]',
+            ),
             () => clickSelector('[data-tutorial-id="calculator-auto-set"]'),
           ),
         },

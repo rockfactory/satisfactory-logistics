@@ -97,6 +97,7 @@ export function GameMenu(props: IGameMenuProps) {
         <Menu>
           <Menu.Target>
             <Button
+              data-tutorial-id="games-menu-trigger"
               loading={isSaving}
               variant="light"
               color="gray"
@@ -151,7 +152,7 @@ export function GameMenu(props: IGameMenuProps) {
                 open();
               }}
             >
-              Edit game
+              Rename game
             </Menu.Item>
             <Menu.Item
               leftSection={
