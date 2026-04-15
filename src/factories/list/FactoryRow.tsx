@@ -24,7 +24,7 @@ import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
 import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
 import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
 import { useGameFactoryIsCollapsed } from '@/games/gamesSlice';
-import { FactoryPeers } from '@/games/sync/FactoryPeers';
+import { FactoryPeers } from '@/games/sync/ui/FactoryPeers';
 
 export interface IFactoryRowProps {
   id: string;

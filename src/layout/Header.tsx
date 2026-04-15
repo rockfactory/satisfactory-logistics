@@ -14,7 +14,7 @@ import { UserMenu } from '@/auth/UserMenu';
 import { useStore } from '@/core/zustand';
 import { GameMenu } from '@/games/menu/GameMenu';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
-import { OnlinePeers } from '@/games/sync/OnlinePeers';
+import { RealtimeSyncIndicator } from '@/games/sync/ui/RealtimeSyncIndicator';
 import { NotesPanelTrigger } from '@/notes/NotesPanelTrigger';
 import { TutorialMenu } from '@/tutorial/TutorialMenu';
 import classes from './Header.module.css';
@@ -68,17 +68,19 @@ export function Header() {
       )}
       <Container className={classes.globalBand} size="lg">
         <Group justify="space-between" wrap="nowrap" gap="md">
-          <Link to="/factories" className={classes.logoLink}>
-            <Image
-              h={32}
-              w="auto"
-              src="/images/logo/satisfactory-logistics-logo.png"
-              alt="Satisfactory Logistics Planner"
-            />
-          </Link>
+          <Group gap="sm" wrap="nowrap">
+            <Link to="/factories" className={classes.logoLink}>
+              <Image
+                h={32}
+                w="auto"
+                src="/images/logo/satisfactory-logistics-logo.png"
+                alt="Satisfactory Logistics Planner"
+              />
+            </Link>
+            <RealtimeSyncIndicator />
+          </Group>
           <Group gap="xs" wrap="nowrap" visibleFrom="sm">
             {hasSelectedGame && <GameMenu />}
-            <OnlinePeers />
             <TutorialMenu />
             <UserMenu />
           </Group>

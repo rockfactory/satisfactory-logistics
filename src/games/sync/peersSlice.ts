@@ -9,6 +9,7 @@ export interface PeerInfo {
   userId: string;
   avatarUrl: string | null;
   displayName: string;
+  deviceName: string;
   factoryId: string | null;
 }
 
@@ -27,21 +28,29 @@ export const peersSlice = createSlice({
   },
 });
 
-export function useOnlinePeers(): PeerInfo[] {
-  const peers = useStore(s => s.peers.peers);
-  return useMemo(
-    () => Object.values(peers).filter(p => p.senderId !== SENDER_ID),
-    [peers],
-  );
+function sortPeers(peers: PeerInfo[]): PeerInfo[] {
+  // Self first, then alphabetical by displayName, then by deviceName to keep
+  // multi-device peers of the same user adjacent and stable.
+  return [...peers].sort((a, b) => {
+    const aSelf = a.senderId === SENDER_ID ? 0 : 1;
+    const bSelf = b.senderId === SENDER_ID ? 0 : 1;
+    if (aSelf !== bSelf) return aSelf - bSelf;
+    const byName = a.displayName.localeCompare(b.displayName);
+    if (byName !== 0) return byName;
+    return a.deviceName.localeCompare(b.deviceName);
+  });
 }
 
-export function useFactoryPeers(factoryId: string): PeerInfo[] {
+export function useAllPeers(): PeerInfo[] {
+  const peers = useStore(s => s.peers.peers);
+  return useMemo(() => sortPeers(Object.values(peers)), [peers]);
+}
+
+export function useAllFactoryPeers(factoryId: string): PeerInfo[] {
   const peers = useStore(s => s.peers.peers);
   return useMemo(
     () =>
-      Object.values(peers).filter(
-        p => p.senderId !== SENDER_ID && p.factoryId === factoryId,
-      ),
+      sortPeers(Object.values(peers).filter(p => p.factoryId === factoryId)),
     [peers, factoryId],
   );
 }
