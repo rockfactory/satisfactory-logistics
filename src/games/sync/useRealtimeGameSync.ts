@@ -63,6 +63,7 @@ export function useRealtimeGameSync() {
   const channelRef = useRef<RealtimeChannel | null>(null);
   const isApplyingRemoteRef = useRef(false);
   const seqRef = useRef(0);
+  const isLeaderRef = useRef(false);
 
   useEffect(() => {
     if (!session || !savedId || !selectedGameId) {
@@ -92,18 +93,41 @@ export function useRealtimeGameSync() {
       if (dbFallbackTimer !== null) clearTimeout(dbFallbackTimer);
       dbFallbackTimer = setTimeout(async () => {
         dbFallbackTimer = null;
-        logger.info(
-          'No peer response, saving local state then loading from database',
-        );
+        logger.info('No peer response, reconciling with database');
         try {
-          await saveRemoteGame(gameId, { silent: true });
+          const localGame = useStore.getState().games.games[gameId];
+          const savedId = localGame?.savedId;
+          if (!savedId) return;
+
+          const { data, error } = await supabaseClient
+            .from('games')
+            .select('updated_at')
+            .eq('id', savedId)
+            .single();
+
+          if (error) throw error;
+
+          const dbTime = data?.updated_at
+            ? new Date(data.updated_at).getTime()
+            : 0;
+          const localTime = localGame.updatedAt
+            ? new Date(localGame.updatedAt).getTime()
+            : 0;
+
+          if (dbTime > localTime) {
+            logger.info('DB is newer, loading remote state');
+            isApplyingRemoteRef.current = true;
+            await loadRemoteGame(gameId, { override: true });
+            isApplyingRemoteRef.current = false;
+          } else if (isLeaderRef.current) {
+            logger.info('Local is newer or equal, saving to DB (leader)');
+            await saveRemoteGame(gameId, { silent: true });
+          } else {
+            logger.info('Local is newer or equal, skipping save (not leader)');
+          }
         } catch (err) {
-          logger.error('Pre-fallback save failed', err);
+          logger.error('DB fallback reconciliation failed', err);
         }
-        isApplyingRemoteRef.current = true;
-        loadRemoteGame(gameId, { override: true }).finally(() => {
-          isApplyingRemoteRef.current = false;
-        });
       }, DB_FALLBACK_MS);
     }
 
@@ -198,11 +222,31 @@ export function useRealtimeGameSync() {
           isApplyingRemoteRef.current = false;
         }
       })
-      .subscribe(status => {
+      .on('presence', { event: 'sync' }, () => {
+        const state = channel.presenceState<{ senderId: string }>();
+        const senderIds: string[] = [];
+        for (const presences of Object.values(state)) {
+          for (const p of presences) {
+            if (p.senderId) senderIds.push(p.senderId);
+          }
+        }
+        senderIds.sort();
+        const wasLeader = isLeaderRef.current;
+        isLeaderRef.current = senderIds[0] === SENDER_ID;
+        if (isLeaderRef.current !== wasLeader) {
+          logger.info(
+            isLeaderRef.current
+              ? `Elected as leader (${senderIds.length} peers)`
+              : `No longer leader (${senderIds.length} peers)`,
+          );
+        }
+      })
+      .subscribe(async status => {
         logger.info(`Realtime channel status: ${status}`);
         useStore.getState().setRealtimeSyncConnected(status === 'SUBSCRIBED');
 
         if (status === 'SUBSCRIBED') {
+          await channel.track({ senderId: SENDER_ID });
           requestFullStateWithFallback();
         }
       });
@@ -214,9 +258,11 @@ export function useRealtimeGameSync() {
     let autoSaveTimer: ReturnType<typeof setTimeout> | null = null;
 
     function scheduleAutoSave() {
+      if (!isLeaderRef.current) return;
       if (autoSaveTimer !== null) clearTimeout(autoSaveTimer);
       autoSaveTimer = setTimeout(() => {
         autoSaveTimer = null;
+        if (!isLeaderRef.current) return;
         saveRemoteGame(gameId, { silent: true }).catch(err =>
           logger.error('Auto-save failed', err),
         );
