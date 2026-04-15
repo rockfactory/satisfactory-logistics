@@ -6,8 +6,13 @@ import {
 } from './stepHelpers';
 import type { TutorialChapter } from './types';
 
-const GAMES_MENU_PRESENCE = '.mantine-Menu-dropdown';
-const ensureGamesMenuOpen = ensurePresent(GAMES_MENU_PRESENCE, () =>
+const GAMES_MENU_DROPDOWN = '[data-tutorial-id="games-menu-dropdown"]';
+const GAMES_MENU_LIST_ENTRY = '[data-tutorial-id="games-menu-list"]';
+
+const ensureGamesMenuOpen = ensurePresent(GAMES_MENU_DROPDOWN, () =>
+  clickSelector('[data-tutorial-id="games-menu-trigger"]'),
+);
+const ensureGamesListEntryVisible = ensurePresent(GAMES_MENU_LIST_ENTRY, () =>
   clickSelector('[data-tutorial-id="games-menu-trigger"]'),
 );
 
@@ -27,12 +32,12 @@ export const gamesAndSyncChapter: TutorialChapter = {
           popover: {
             title: 'Start with a Game',
             description:
-              'Everything in the planner lives inside a Game (like a Satisfactory savegame). You can create several Games — one per playthrough — and switch between them from here.',
+              'Everything in the planner lives inside a Game, like a Satisfactory save. You can create several Games (one per playthrough) and switch between them from here.',
             side: 'bottom',
           },
         },
         {
-          element: '.mantine-Menu-dropdown',
+          element: GAMES_MENU_DROPDOWN,
           popover: {
             title: 'The Game menu',
             description:
@@ -41,7 +46,7 @@ export const gamesAndSyncChapter: TutorialChapter = {
           },
           onHighlightStarted: chainHooks(
             ensureGamesMenuOpen,
-            rehighlightWhenAvailable('.mantine-Menu-dropdown'),
+            rehighlightWhenAvailable(GAMES_MENU_DROPDOWN),
           ),
         },
         {
@@ -61,6 +66,22 @@ export const gamesAndSyncChapter: TutorialChapter = {
               'Once logged in, this button saves the active Game online. The dropdown next to it also has “Load last save” to pull the latest version from any device. <br/><br/><strong>⚠️ Important:</strong> your Game is auto-saved <strong>only locally</strong> (in this browser). It is <strong>never uploaded to the cloud automatically</strong> — you must click this button (or use “Save game” from the menu) every time you want to push your changes online.',
             side: 'bottom',
           },
+        },
+        {
+          element: GAMES_MENU_LIST_ENTRY,
+          popover: {
+            title: 'Open the Games page',
+            description:
+              'This menu entry opens the full Games page, where you can manage every playthrough in one place. Press Next and I will take you there.',
+            side: 'left',
+            onNextClick: () => {
+              clickSelector(GAMES_MENU_LIST_ENTRY);
+            },
+          },
+          onHighlightStarted: chainHooks(
+            ensureGamesListEntryVisible,
+            rehighlightWhenAvailable(GAMES_MENU_LIST_ENTRY),
+          ),
         },
       ],
     },

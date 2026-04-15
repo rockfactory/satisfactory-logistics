@@ -19,6 +19,7 @@ import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 
 const categories = [
   {
+    id: 'items',
     to: '/codex/items',
     icon: IconBox,
     color: 'teal',
@@ -27,6 +28,7 @@ const categories = [
     count: AllFactoryItems.length,
   },
   {
+    id: 'buildings',
     to: '/codex/buildings',
     icon: IconBuildingFactory2,
     color: 'blue',
@@ -36,6 +38,7 @@ const categories = [
     count: AllFactoryBuildings.length,
   },
   {
+    id: 'recipes',
     to: '/codex/recipes',
     icon: IconToolsKitchen2,
     color: 'orange',
@@ -59,9 +62,10 @@ export function CodexPage() {
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
           {categories.map(cat => (
             <Card
-              key={cat.title}
+              key={cat.id}
               component={Link}
               to={cat.to}
+              data-tutorial-id={`codex-category-${cat.id}`}
               withBorder
               padding="lg"
               style={{ cursor: 'pointer' }}

@@ -107,7 +107,7 @@ export function GameMenu(props: IGameMenuProps) {
               {gameName ?? 'Select game'}
             </Button>
           </Menu.Target>
-          <Menu.Dropdown>
+          <Menu.Dropdown data-tutorial-id="games-menu-dropdown">
             <Menu.Label>Change game</Menu.Label>
             {gameOptions.map(option => (
               <Menu.Item
@@ -118,7 +118,7 @@ export function GameMenu(props: IGameMenuProps) {
                   navigate(`/factories`);
                 }}
                 rightSection={
-                  selectedId == option.value && (
+                  selectedId === option.value && (
                     <IconCircleFilled
                       size={8}
                       color="var(--mantine-color-green-7)"
@@ -178,6 +178,7 @@ export function GameMenu(props: IGameMenuProps) {
             )}
             <Menu.Divider />
             <Menu.Item
+              data-tutorial-id="games-menu-list"
               leftSection={<IconList size={16} />}
               onClick={() => {
                 navigate(`/games`);

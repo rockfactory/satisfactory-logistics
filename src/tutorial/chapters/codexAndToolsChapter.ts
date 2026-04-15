@@ -14,7 +14,34 @@ export const codexAndToolsChapter: TutorialChapter = {
           popover: {
             title: 'The Codex',
             description:
-              'Codex is your in-app reference for everything Satisfactory: items, recipes (including alternates), and buildings, each with its full stats, ingredients and producers. Open it from this tab, or hit Ctrl+K from anywhere to jump straight to the search spotlight.',
+              'Codex is your in-app reference for everything Satisfactory: items, recipes (including alternates), and buildings, each with full stats, ingredients and producers. Open it from this tab, or hit Ctrl+K from anywhere to jump straight to the search spotlight.',
+            side: 'bottom',
+          },
+        },
+        {
+          element: '[data-tutorial-id="codex-category-items"]',
+          popover: {
+            title: 'Items',
+            description:
+              'Use Items when you want the detail page for a material or resource: stack size, sink value, where it is used, and which recipes produce it.',
+            side: 'bottom',
+          },
+        },
+        {
+          element: '[data-tutorial-id="codex-category-buildings"]',
+          popover: {
+            title: 'Buildings',
+            description:
+              'Buildings is the quick reference for machines, logistics parts, extractors, and generators, including their dimensions, power use, and compatible recipes.',
+            side: 'bottom',
+          },
+        },
+        {
+          element: '[data-tutorial-id="codex-category-recipes"]',
+          popover: {
+            title: 'Recipes',
+            description:
+              'Recipes is the full recipe index: search by name, filter Default / Alternate / MAM, then open any recipe to inspect its inputs, outputs, craft time and building.',
             side: 'bottom',
           },
         },
