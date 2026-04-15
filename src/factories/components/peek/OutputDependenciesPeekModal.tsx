@@ -1,4 +1,4 @@
-import { ActionIcon, Modal } from '@mantine/core';
+import { ActionIcon, Modal, Tooltip } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconEye } from '@tabler/icons-react';
 import type { FactoryOutput } from '@/factories/Factory';
@@ -16,14 +16,17 @@ export function OutputDependenciesPeekModal(
 
   return (
     <div>
-      <ActionIcon variant="outline" color="blue.4" size="md" onClick={open}>
-        <IconEye size={16} stroke={1.5} />
-      </ActionIcon>
+      <Tooltip label="View output dependencies" withArrow>
+        <ActionIcon variant="outline" color="blue.4" size="md" onClick={open}>
+          <IconEye size={16} stroke={1.5} />
+        </ActionIcon>
+      </Tooltip>
       <Modal
         opened={opened}
         onClose={close}
         title="Output dependencies"
         centered
+        size="lg"
         keepMounted={false}
       >
         <OutputDependenciesTable {...props} />
