@@ -65,9 +65,23 @@ export function chainHooks(...hooks: DriverHook[]): DriverHook {
  */
 export function rehighlightWhenAvailable(selector: string): DriverHook {
   return async (_element, step, opts) => {
-    if (document.querySelector(selector)) return;
+    const current = opts.driver.getActiveElement();
+    // If the element is already the one driver is highlighting, nothing to
+    // do. If it's in the DOM but driver didn't latch onto it (e.g. it
+    // mounted between driver's resolve and this hook, or driver fell back
+    // to the dummy element because the target was missing at resolve
+    // time), force a refresh. Otherwise wait for it to mount.
+    const present = document.querySelector(selector);
+    if (present && current === present) return;
+    if (present) {
+      opts.driver.highlight(step);
+      return;
+    }
     const found = await waitForElement(selector, 2000);
-    if (found) opts.driver.highlight(step);
+    if (found) {
+      await new Promise(r => requestAnimationFrame(r));
+      opts.driver.highlight(step);
+    }
   };
 }
 
