@@ -86,9 +86,33 @@
   border: none;
 }
 
+.editorWrapper :global(.mantine-RichTextEditor-toolbar) {
+  padding: 4px 6px;
+  min-height: 0;
+  background: transparent;
+  border-bottom: 1px solid var(--mantine-color-dark-5);
+}
+
+.editorWrapper :global(.mantine-RichTextEditor-control) {
+  min-width: 22px;
+  width: 22px;
+  height: 22px;
+  border: none;
+}
+
+.editorWrapper :global(.mantine-RichTextEditor-control svg) {
+  width: 14px;
+  height: 14px;
+}
+
+.editorWrapper :global(.mantine-RichTextEditor-controlsGroup) {
+  gap: 2px;
+  background: transparent;
+}
+
 .editorWrapper :global(.mantine-RichTextEditor-content .ProseMirror) {
   position: relative;
-  padding: var(--mantine-spacing-xs) 0;
+  padding: var(--mantine-spacing-xs);
   flex: 1;
 }
 
@@ -101,8 +125,8 @@
   content: attr(data-placeholder);
   position: absolute;
   top: var(--mantine-spacing-xs);
-  left: 0;
-  right: 0;
+  left: var(--mantine-spacing-xs);
+  right: var(--mantine-spacing-xs);
   color: var(--mantine-color-dark-1);
   font-style: italic;
   font-size: 0.88em;
@@ -121,7 +145,6 @@
   gap: var(--mantine-spacing-xs);
   flex: 1;
   min-height: 0;
-  padding: var(--mantine-spacing-xs);
 }
 
 .editorWrapper {

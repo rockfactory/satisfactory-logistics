@@ -3,11 +3,9 @@ import { Placeholder } from '@tiptap/extension-placeholder';
 import TaskItem from '@tiptap/extension-task-item';
 import TipTapTaskList from '@tiptap/extension-task-list';
 import { type JSONContent, useEditor } from '@tiptap/react';
-import { BubbleMenu, FloatingMenu } from '@tiptap/react/menus';
 import StarterKit from '@tiptap/starter-kit';
 import { useEffect, useMemo, useRef } from 'react';
 import { getRandomAdaQuote } from './adaQuotes';
-import classes from './NotesEditor.module.css';
 
 export interface NotesEditorProps {
   entityKey: string;
@@ -83,16 +81,9 @@ export function NotesEditor({
 
   return (
     <RichTextEditor editor={editor}>
-      {editor && (
-        <BubbleMenu editor={editor} className={classes.floatingMenu}>
-          <NotesEditorControls />
-        </BubbleMenu>
-      )}
-      {editor && (
-        <FloatingMenu editor={editor} className={classes.floatingMenu}>
-          <NotesEditorControls />
-        </FloatingMenu>
-      )}
+      <RichTextEditor.Toolbar sticky stickyOffset={0}>
+        <NotesEditorControls />
+      </RichTextEditor.Toolbar>
       <RichTextEditor.Content />
     </RichTextEditor>
   );
