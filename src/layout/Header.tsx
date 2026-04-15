@@ -1,12 +1,4 @@
-import {
-  Badge,
-  Burger,
-  Container,
-  Group,
-  Image,
-  Tabs,
-  useMantineTheme,
-} from '@mantine/core';
+import { Badge, Burger, Container, Group, Image, Tabs } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { capitalize } from 'lodash';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -17,12 +9,13 @@ import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { NotesPanelTrigger } from '@/notes/NotesPanelTrigger';
 import { TutorialMenu } from '@/tutorial/TutorialMenu';
 import classes from './Header.module.css';
+import { HeaderMobileDrawer } from './HeaderMobileDrawer';
 
 const TABS = ['factories', 'charts', 'calculator', 'tools', 'codex'] as const;
 
 type HeaderTab = (typeof TABS)[number];
 
-const TAB_ROUTES: Record<HeaderTab, string> = {
+export const TAB_ROUTES: Record<HeaderTab, string> = {
   factories: '/factories',
   charts: '/factories/charts',
   calculator: '/factories/calculator',
@@ -30,17 +23,18 @@ const TAB_ROUTES: Record<HeaderTab, string> = {
   codex: '/codex',
 };
 
-function resolveActiveTab(pathname: string): HeaderTab {
+export function resolveActiveTab(pathname: string): HeaderTab | null {
   if (pathname.startsWith('/tools')) return 'tools';
   if (pathname.startsWith('/codex')) return 'codex';
   if (pathname.startsWith('/factories/charts')) return 'charts';
   if (pathname.startsWith('/factories/calculator')) return 'calculator';
-  return 'factories';
+  if (pathname.startsWith('/factories')) return 'factories';
+  return null;
 }
 
 export function Header() {
-  const theme = useMantineTheme();
-  const [opened, { toggle }] = useDisclosure(false);
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
+    useDisclosure(false);
   const hasSelectedGame = useStore(state => state.games.selected !== null);
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -55,59 +49,72 @@ export function Header() {
           </Badge>
         </div>
       )}
-      <Container className={classes.mainSection} size="lg">
-        <Group justify="space-between">
-          <Group align="flex-start">
-            <Link to="/factories">
-              <Image
-                h={32}
-                miw={200}
-                w="auto"
-                src="/images/logo/satisfactory-logistics-logo.png"
-                alt="Satisfactory Logistics Planner"
-              />
-            </Link>
-          </Group>
-          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-          <Group>
-            <GameMenu />
-            {hasSelectedGame && <GameSettingsModal />}
-            {hasSelectedGame && <NotesPanelTrigger />}
+      <Container className={classes.globalBand} size="lg">
+        <Group justify="space-between" wrap="nowrap" gap="md">
+          <Link to="/factories" className={classes.logoLink}>
+            <Image
+              h={32}
+              w="auto"
+              src="/images/logo/satisfactory-logistics-logo.png"
+              alt="Satisfactory Logistics Planner"
+            />
+          </Link>
+          <Group gap="xs" wrap="nowrap" visibleFrom="sm">
+            {hasSelectedGame && <GameMenu />}
             <TutorialMenu />
             <UserMenu />
           </Group>
+          <Burger
+            opened={drawerOpened}
+            onClick={toggleDrawer}
+            hiddenFrom="sm"
+            size="sm"
+          />
         </Group>
       </Container>
-      <Container size="lg">
-        <Tabs
-          defaultValue="factories"
-          value={activeTab}
-          variant="outline"
-          visibleFrom="sm"
-          onChange={value => {
-            if (value && value in TAB_ROUTES) {
-              navigate(TAB_ROUTES[value as HeaderTab]);
-            }
-          }}
-          classNames={{
-            root: classes.tabs,
-            list: classes.tabsList,
-            tab: classes.tab,
-          }}
-        >
-          <Tabs.List>
-            {TABS.map(tab => (
-              <Tabs.Tab
-                value={tab}
-                key={tab}
-                data-tutorial-id={`header-tab-${tab}`}
-              >
-                {capitalize(tab)}
-              </Tabs.Tab>
-            ))}
-          </Tabs.List>
-        </Tabs>
-      </Container>
+      {hasSelectedGame && (
+        <Container className={classes.gameBand} size="lg" visibleFrom="sm">
+          <Group justify="space-between" wrap="nowrap" gap="md">
+            <Tabs
+              value={activeTab ?? null}
+              variant="outline"
+              visibleFrom="sm"
+              onChange={value => {
+                if (value && value in TAB_ROUTES) {
+                  navigate(TAB_ROUTES[value as HeaderTab]);
+                }
+              }}
+              classNames={{
+                root: classes.gameTabs,
+                list: classes.tabsList,
+                tab: classes.gameTab,
+              }}
+            >
+              <Tabs.List>
+                {TABS.map(tab => (
+                  <Tabs.Tab
+                    value={tab}
+                    key={tab}
+                    data-tutorial-id={`header-tab-${tab}`}
+                  >
+                    {capitalize(tab)}
+                  </Tabs.Tab>
+                ))}
+              </Tabs.List>
+            </Tabs>
+            <Group gap="xs" wrap="nowrap" className={classes.gameActions}>
+              <NotesPanelTrigger />
+              <GameSettingsModal />
+            </Group>
+          </Group>
+        </Container>
+      )}
+      <HeaderMobileDrawer
+        opened={drawerOpened}
+        onClose={closeDrawer}
+        hasSelectedGame={hasSelectedGame}
+        activeTab={activeTab}
+      />
     </header>
   );
 }
