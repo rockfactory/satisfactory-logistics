@@ -230,7 +230,11 @@ export function useRealtimeGameSync() {
       }
       if (autoSaveTimer !== null) {
         clearTimeout(autoSaveTimer);
-        if (hasDirtySinceLastSave) {
+        // Only the leader is allowed to persist on cleanup. Leadership can
+        // change between scheduling and unmount (e.g. the timer was set while
+        // we were leader, then a new peer joined and we lost it); in that case
+        // the new leader will save and we must not stomp them with stale data.
+        if (isLeaderRef.current && hasDirtySinceLastSave) {
           hasDirtySinceLastSave = false;
           saveRemoteGame(gameId, { silent: true }).catch(err =>
             logger.error('Auto-save on cleanup failed', err),
