@@ -1,5 +1,5 @@
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import { applyPatches, type Patch } from 'immer';
+import { applyPatches } from 'immer';
 import { loglev } from '@/core/logger/log';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
@@ -163,9 +163,7 @@ export function requestFullStateWithFallback(
 
       if (error) throw error;
 
-      const dbTime = data?.updated_at
-        ? new Date(data.updated_at).getTime()
-        : 0;
+      const dbTime = data?.updated_at ? new Date(data.updated_at).getTime() : 0;
       const localTime = localGame.updatedAt
         ? new Date(localGame.updatedAt).getTime()
         : 0;
@@ -187,10 +185,7 @@ export function requestFullStateWithFallback(
   }, DB_FALLBACK_MS);
 }
 
-export function computeLeader(
-  channel: RealtimeChannel,
-  refs: SyncRefs,
-) {
+export function computeLeader(channel: RealtimeChannel, refs: SyncRefs) {
   const state = channel.presenceState<{ senderId: string }>();
   const senderIds: string[] = [];
   for (const presences of Object.values(state)) {
