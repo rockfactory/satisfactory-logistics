@@ -1,4 +1,4 @@
-import { Box, Button, Menu } from '@mantine/core';
+import { Button, Menu } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import {
@@ -55,9 +55,6 @@ export function GameMenu(props: IGameMenuProps) {
     state => !!state.games.games[selectedId ?? '']?.savedId,
   );
   const isSaving = useStore(state => state.gameSave.isSaving);
-  const isSyncConnected = useStore(
-    state => state.gameSave.isRealtimeSyncConnected,
-  );
   const navigate = useNavigate();
 
   const [opened, { toggle, open, close }] = useDisclosure();
@@ -96,122 +93,113 @@ export function GameMenu(props: IGameMenuProps) {
 
   return (
     <>
-      <Box pos="relative" style={{ display: 'inline-flex' }}>
-        <Button.Group data-tutorial-id="games-menu">
-          <Menu>
-            <Menu.Target>
-              <Button
-                data-tutorial-id="games-menu-trigger"
-                variant="light"
-                color="gray"
+      <Button.Group data-tutorial-id="games-menu">
+        <Menu>
+          <Menu.Target>
+            <Button
+              data-tutorial-id="games-menu-trigger"
+              variant="light"
+              color="gray"
+              leftSection={<IconDeviceGamepad size={16} />}
+              rightSection={<IconChevronDown size={12} stroke={1.5} />}
+            >
+              {gameName ?? 'Select game'}
+            </Button>
+          </Menu.Target>
+          <Menu.Dropdown data-tutorial-id="games-menu-dropdown">
+            <Menu.Label>Change game</Menu.Label>
+            {gameOptions.map(option => (
+              <Menu.Item
+                key={option.value}
                 leftSection={<IconDeviceGamepad size={16} />}
-                rightSection={<IconChevronDown size={12} stroke={1.5} />}
+                onClick={() => {
+                  useStore.getState().selectGame(option.value);
+                  navigate(`/factories`);
+                }}
+                rightSection={
+                  selectedId === option.value && (
+                    <IconCircleFilled
+                      size={8}
+                      color="var(--mantine-color-green-7)"
+                    />
+                  )
+                }
               >
-                {gameName ?? 'Select game'}
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown data-tutorial-id="games-menu-dropdown">
-              <Menu.Label>Change game</Menu.Label>
-              {gameOptions.map(option => (
-                <Menu.Item
-                  key={option.value}
-                  leftSection={<IconDeviceGamepad size={16} />}
-                  onClick={() => {
-                    useStore.getState().selectGame(option.value);
-                    navigate(`/factories`);
-                  }}
-                  rightSection={
-                    selectedId === option.value && (
-                      <IconCircleFilled
-                        size={8}
-                        color="var(--mantine-color-green-7)"
-                      />
-                    )
-                  }
-                >
-                  {option.label}
-                </Menu.Item>
-              ))}
+                {option.label}
+              </Menu.Item>
+            ))}
 
+            <Menu.Item
+              onClick={() => {
+                useStore.getState().createGame(v4(), {
+                  name:
+                    'New Game ' +
+                    (Object.keys(useStore.getState().games.games).length + 1),
+                });
+              }}
+              leftSection={<IconPlus color="orange" size={16} />}
+            >
+              New game
+            </Menu.Item>
+            <Menu.Divider />
+            <Menu.Label>Game actions</Menu.Label>
+            <Menu.Item
+              leftSection={
+                <IconPencil color="var(--mantine-color-blue-3)" size={16} />
+              }
+              onClick={() => {
+                open();
+              }}
+            >
+              Rename game
+            </Menu.Item>
+            <Menu.Item
+              leftSection={
+                <IconSettings color="var(--mantine-color-gray-5)" size={16} />
+              }
+              onClick={openGameSettingsModal}
+            >
+              Game settings
+            </Menu.Item>
+            <Menu.Item
+              leftSection={<IconDeviceFloppy size={16} />}
+              onClick={() => handleSaveGame(selectedId)}
+            >
+              Save game
+            </Menu.Item>
+            {selectedId && isSelectedSavedOnRemote && (
               <Menu.Item
-                onClick={() => {
-                  useStore.getState().createGame(v4(), {
-                    name:
-                      'New Game ' +
-                      (Object.keys(useStore.getState().games.games).length + 1),
-                  });
-                }}
-                leftSection={<IconPlus color="orange" size={16} />}
+                leftSection={<IconDownload size={16} />}
+                onClick={() => handleLoadGame(selectedId)}
               >
-                New game
+                Load last save
               </Menu.Item>
-              <Menu.Divider />
-              <Menu.Label>Game actions</Menu.Label>
-              <Menu.Item
-                leftSection={
-                  <IconPencil color="var(--mantine-color-blue-3)" size={16} />
-                }
-                onClick={() => {
-                  open();
-                }}
-              >
-                Rename game
-              </Menu.Item>
-              <Menu.Item
-                leftSection={
-                  <IconSettings color="var(--mantine-color-gray-5)" size={16} />
-                }
-                onClick={openGameSettingsModal}
-              >
-                Game settings
-              </Menu.Item>
-              <Menu.Item
-                leftSection={<IconDeviceFloppy size={16} />}
-                onClick={() => handleSaveGame(selectedId)}
-              >
-                Save game
-              </Menu.Item>
-              {selectedId && isSelectedSavedOnRemote && (
-                <Menu.Item
-                  leftSection={<IconDownload size={16} />}
-                  onClick={() => handleLoadGame(selectedId)}
-                >
-                  Load last save
-                </Menu.Item>
-              )}
-              <Menu.Divider />
-              <Menu.Item
-                data-tutorial-id="games-menu-list"
-                leftSection={<IconList size={16} />}
-                onClick={() => {
-                  navigate(`/games`);
-                }}
-              >
-                Games list
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-          <Button
-            data-tutorial-id="game-save-button"
-            className={cx(classes.gameMenuSecondaryButton)}
-            variant="light"
-            color="gray"
-            loading={isSaving}
-            onClick={() => {
-              handleSaveGame(selectedId);
-            }}
-          >
-            <IconDeviceFloppy size={16} />
-          </Button>
-        </Button.Group>
-        {isSyncConnected && (
-          <IconCircleFilled
-            size={8}
-            color="var(--mantine-color-green-6)"
-            style={{ position: 'absolute', top: -2, right: -2 }}
-          />
-        )}
-      </Box>
+            )}
+            <Menu.Divider />
+            <Menu.Item
+              data-tutorial-id="games-menu-list"
+              leftSection={<IconList size={16} />}
+              onClick={() => {
+                navigate(`/games`);
+              }}
+            >
+              Games list
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+        <Button
+          data-tutorial-id="game-save-button"
+          className={cx(classes.gameMenuSecondaryButton)}
+          variant="light"
+          color="gray"
+          loading={isSaving}
+          onClick={() => {
+            handleSaveGame(selectedId);
+          }}
+        >
+          <IconDeviceFloppy size={16} />
+        </Button>
+      </Button.Group>
       {selectedId && (
         <GameDetailModal opened={opened} close={close} gameId={selectedId} />
       )}

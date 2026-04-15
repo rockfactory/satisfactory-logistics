@@ -2,7 +2,7 @@ import type { Patch } from 'immer';
 import type { GameRemoteData } from '@/games/Game';
 import type { SerializedGame } from '@/games/store/gameFactoriesActions';
 
-export const SENDER_ID = crypto.randomUUID();
+export { DEVICE_NAME, SENDER_ID } from './deviceIdentity';
 export const PATCH_DEBOUNCE_MS = 150;
 export const AUTO_SAVE_DEBOUNCE_MS = 40_000;
 export const DB_FALLBACK_MS = 3_000;
@@ -32,6 +32,7 @@ export interface PresencePayload {
   userId: string;
   avatarUrl: string | null;
   displayName: string;
+  deviceName: string;
   factoryId: string | null;
 }
 

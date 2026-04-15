@@ -6,7 +6,7 @@ import { useStore } from '@/core/zustand';
 import { ProgressChip } from '@/factories/components/ProgressChip';
 import type { Factory } from '@/factories/Factory';
 import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
-import { FactoryPeers } from '@/games/sync/FactoryPeers';
+import { FactoryPeers } from '@/games/sync/ui/FactoryPeers';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import classes from './FactoryGridCard.module.css';
 

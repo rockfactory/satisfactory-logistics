@@ -211,15 +211,14 @@ export function computeLeaderAndPeers(
     for (const p of presences) {
       if (!p.senderId) continue;
       senderIds.push(p.senderId);
-      if (p.senderId !== SENDER_ID) {
-        peerMap[p.senderId] = {
-          senderId: p.senderId,
-          userId: p.userId ?? '',
-          avatarUrl: p.avatarUrl ?? null,
-          displayName: p.displayName ?? 'Unknown',
-          factoryId: p.factoryId ?? null,
-        };
-      }
+      peerMap[p.senderId] = {
+        senderId: p.senderId,
+        userId: p.userId ?? '',
+        avatarUrl: p.avatarUrl ?? null,
+        displayName: p.displayName ?? 'Unknown',
+        deviceName: p.deviceName ?? '',
+        factoryId: p.factoryId ?? null,
+      };
     }
   }
 

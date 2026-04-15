@@ -23,6 +23,7 @@ import {
   BROADCAST_EVENT,
   BROADCAST_FULL_REQUEST,
   BROADCAST_FULL_RESPONSE,
+  DEVICE_NAME,
   type FullStateRequestPayload,
   type FullStateResponsePayload,
   isBroadcastSuppressed,
@@ -65,6 +66,7 @@ export function useRealtimeGameSync() {
       avatarUrl: user.user_metadata?.avatar_url ?? null,
       displayName:
         user.user_metadata?.full_name ?? user.user_metadata?.name ?? 'Unknown',
+      deviceName: DEVICE_NAME,
       factoryId,
     };
     channelRef.current.track(payload);
@@ -215,6 +217,7 @@ export function useRealtimeGameSync() {
               user.user_metadata?.full_name ??
               user.user_metadata?.name ??
               'Unknown',
+            deviceName: DEVICE_NAME,
             factoryId: factoryIdRef.current,
           } satisfies PresencePayload);
           doRequestFullState();
