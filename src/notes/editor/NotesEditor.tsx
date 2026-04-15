@@ -70,14 +70,14 @@ export function NotesEditor({
     editor.commands.focus('end', { scrollIntoView: false });
   }, [editor]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: swap content only when the underlying entity changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: entityKey forces reset on entity switch even if content is identical
   useEffect(() => {
     if (!editor) return;
     const next = content ?? EMPTY_CONTENT;
     const current = editor.getJSON();
     if (JSON.stringify(current) === JSON.stringify(next)) return;
     editor.commands.setContent(next, { emitUpdate: false });
-  }, [entityKey, editor]);
+  }, [entityKey, editor, content]);
 
   return (
     <RichTextEditor editor={editor}>
