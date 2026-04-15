@@ -11,9 +11,11 @@ import {
 import { useEffect } from 'react';
 import { Rnd } from 'react-rnd';
 import { useStore } from '@/core/zustand';
-import { useSelectedGameId } from '@/games/gamesSlice';
+import { useFactory } from '@/factories/store/factoriesSlice';
+import { useGameNotes, useSelectedGameId } from '@/games/gamesSlice';
 import { FactoryNotesEditor } from './editor/FactoryNotesEditor';
 import { GameNotesEditor } from './editor/GameNotesEditor';
+import { hasNotesContent } from './hasNotesContent';
 import classes from './NotesPanel.module.css';
 import { DEFAULT_NOTES_WINDOW } from './store/notesUiSlice';
 import { useCurrentFactoryId } from './useNotesContext';
@@ -37,8 +39,12 @@ export function NotesPanel() {
 
   const gameId = useSelectedGameId();
   const factoryId = useCurrentFactoryId();
+  const gameNotes = useGameNotes();
+  const factory = useFactory(factoryId);
   const hasFactoryContext = factoryId != null;
   const resolvedTab = hasFactoryContext ? activeTab : 'game';
+  const hasGameNotes = hasNotesContent(gameNotes);
+  const hasFactoryNotes = hasNotesContent(factory?.notes);
 
   useHotkeys([['mod+j', () => toggleNotesPanel()]], [], true);
 
@@ -79,7 +85,7 @@ export function NotesPanel() {
       }}
       style={{ zIndex: 300 }}
     >
-      <div className={classes.window}>
+      <div className={classes.window} data-tutorial-id="notes-panel">
         <div className={`${classes.header} ${DRAG_HANDLE}`}>
           <IconNotebook size={16} className={classes.titleIcon} stroke={1.75} />
           {hasFactoryContext && !isCollapsed ? (
@@ -95,6 +101,7 @@ export function NotesPanel() {
                     <Center style={{ gap: 6 }}>
                       <IconWorld size={14} />
                       <span>Game</span>
+                      {hasGameNotes && <span className={classes.tabDot} />}
                     </Center>
                   ),
                 },
@@ -104,6 +111,7 @@ export function NotesPanel() {
                     <Center style={{ gap: 6 }}>
                       <IconBuildingFactory2 size={14} />
                       <span>Factory</span>
+                      {hasFactoryNotes && <span className={classes.tabDot} />}
                     </Center>
                   ),
                 },
@@ -119,6 +127,7 @@ export function NotesPanel() {
             size="sm"
             onClick={() => toggleNotesCollapsed()}
             aria-label={isCollapsed ? 'Expand notes' : 'Collapse notes'}
+            data-tutorial-id="notes-collapse"
           >
             {isCollapsed ? (
               <IconChevronUp size={16} />

@@ -5,7 +5,7 @@ export const chartsChapter: TutorialChapter = {
   id: 'charts',
   title: 'Charts',
   description: 'Aggregated visualizations of all your factories.',
-  nextChapterId: 'games-and-sync',
+  nextChapterId: 'notes',
   // The charts page is empty until at least two linked factories exist —
   // seed the same Smeltery → Platey McPlateface chain we use elsewhere
   // so the user always lands on a meaningful graph.

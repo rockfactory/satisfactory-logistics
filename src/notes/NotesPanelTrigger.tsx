@@ -1,4 +1,4 @@
-import { ActionIcon, Tooltip } from '@mantine/core';
+import { Button, Tooltip } from '@mantine/core';
 import { IconNotebook } from '@tabler/icons-react';
 import { useStore } from '@/core/zustand';
 
@@ -7,17 +7,17 @@ export function NotesPanelTrigger() {
   const toggle = useStore(state => state.toggleNotesPanel);
 
   return (
-    <Tooltip label="Notes" withArrow>
-      <ActionIcon
-        variant={isOpen ? 'filled' : 'subtle'}
+    <Tooltip label="Open notes (Ctrl+J)" withArrow>
+      <Button
+        variant={isOpen ? 'light' : 'subtle'}
         color={isOpen ? 'blue' : 'gray'}
-        size="lg"
-        aria-label="Toggle notes panel"
+        size="sm"
+        leftSection={<IconNotebook size={16} />}
         data-tutorial-id="notes-trigger"
         onClick={() => toggle()}
       >
-        <IconNotebook size={20} />
-      </ActionIcon>
+        Notes
+      </Button>
     </Tooltip>
   );
 }

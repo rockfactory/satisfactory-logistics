@@ -74,6 +74,14 @@
   flex: 1;
 }
 
+.tabDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mantine-color-yellow-5);
+}
+
 .editorWrapper :global(.mantine-RichTextEditor-root) {
   border: none;
 }
