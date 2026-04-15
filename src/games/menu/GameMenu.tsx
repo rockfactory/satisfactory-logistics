@@ -55,9 +55,9 @@ export function GameMenu(props: IGameMenuProps) {
     state => !!state.games.games[selectedId ?? '']?.savedId,
   );
   const isSaving = useStore(state => state.gameSave.isSaving);
-  const isSyncConnected =
-    useStore(state => state.gameSave.isRealtimeSyncConnected) ||
-    import.meta.env.DEV;
+  const isSyncConnected = useStore(
+    state => state.gameSave.isRealtimeSyncConnected,
+  );
   const navigate = useNavigate();
 
   const [opened, { toggle, open, close }] = useDisclosure();
