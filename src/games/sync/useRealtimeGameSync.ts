@@ -1,6 +1,6 @@
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import type { Patch } from 'immer';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { loglev } from '@/core/logger/log';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
@@ -8,7 +8,7 @@ import { onStorePatches } from '@/core/zustand-helpers/immer';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
 import { useCurrentFactoryId } from '@/notes/useNotesContext';
 import { flushRemoteGameOnUnload } from './flushRemoteGameOnUnload';
-import { hasOtherPeersConnected } from './peersSlice';
+import { hasOtherPeersConnectedOnChannel } from './peersSlice';
 import {
   computeLeaderAndPeers,
   handleFullStateRequest,
@@ -32,6 +32,7 @@ import {
   type PresencePayload,
   SENDER_ID,
 } from './realtimeSyncTypes';
+import { safeChannelSend } from './safeChannelSend';
 
 const logger = loglev.getLogger('games:realtime-sync');
 
@@ -50,6 +51,10 @@ export function useRealtimeGameSync() {
   const isLeaderRef = useRef(false);
   const factoryIdRef = useRef(factoryId);
   factoryIdRef.current = factoryId;
+  // Bumped to force the subscribe effect to re-run and recreate the channel
+  // after CHANNEL_ERROR / CLOSED / TIMED_OUT. Reset on successful SUBSCRIBED.
+  const [reconnectEpoch, setReconnectEpoch] = useState(0);
+  const reconnectAttemptsRef = useRef(0);
 
   useEffect(() => {
     if (!channelRef.current || !session) return;
@@ -76,7 +81,9 @@ export function useRealtimeGameSync() {
     }
 
     const channelName = `game:${savedId}`;
-    logger.info(`Joining realtime channel: ${channelName}`);
+    logger.info(
+      `Joining realtime channel: ${channelName} (epoch=${reconnectEpoch})`,
+    );
 
     const channel = supabaseClient.channel(channelName, {
       config: { private: true },
@@ -93,7 +100,29 @@ export function useRealtimeGameSync() {
     let pendingPatches: Patch[] = [];
     let flushTimer: ReturnType<typeof setTimeout> | null = null;
     let autoSaveTimer: ReturnType<typeof setTimeout> | null = null;
+    let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
     let hasDirtySinceLastSave = false;
+    // Set to true in the effect cleanup so the subscribe callback (which fires
+    // with CLOSED when we voluntarily remove the channel) does not schedule a
+    // reconnect loop. Only genuine errors while the effect is still active
+    // should trigger a retry.
+    let isCleaningUp = false;
+
+    function scheduleReconnect() {
+      if (isCleaningUp) return;
+      if (reconnectTimer !== null) return;
+      const attempt = reconnectAttemptsRef.current;
+      // Exponential backoff capped at 30s: 1s, 2s, 4s, 8s, 16s, 30s, 30s, ...
+      const delay = Math.min(1000 * 2 ** attempt, 30_000);
+      reconnectAttemptsRef.current = attempt + 1;
+      logger.warn(
+        `Scheduling realtime reconnect in ${delay}ms (attempt=${attempt + 1})`,
+      );
+      reconnectTimer = setTimeout(() => {
+        reconnectTimer = null;
+        setReconnectEpoch(e => e + 1);
+      }, delay);
+    }
 
     const doRequestFullState = () =>
       requestFullStateWithFallback(channel, gameId, refs, timers);
@@ -117,9 +146,8 @@ export function useRealtimeGameSync() {
       flushTimer = null;
       if (!channelRef.current || pendingPatches.length === 0) return;
 
-      if (!hasOtherPeersConnected()) {
+      if (!hasOtherPeersConnectedOnChannel(channelRef.current)) {
         pendingPatches = [];
-        logger.debug('Skipping broadcast: no other peers connected');
         return;
       }
 
@@ -128,8 +156,9 @@ export function useRealtimeGameSync() {
       const batch = pendingPatches;
       pendingPatches = [];
 
-      try {
-        channelRef.current.send({
+      safeChannelSend({
+        channel: channelRef.current,
+        message: {
           type: 'broadcast',
           event: BROADCAST_EVENT,
           payload: {
@@ -137,11 +166,10 @@ export function useRealtimeGameSync() {
             seq,
             patches: batch,
           } satisfies PatchBroadcastPayload,
-        });
-        logger.debug(`Broadcasted ${batch.length} patches (seq=${seq})`);
-      } catch (err) {
-        logger.error('Failed to broadcast patches', err);
-      }
+        },
+        context: `patch batch seq=${seq}`,
+      });
+      logger.debug(`Broadcasted ${batch.length} patches (seq=${seq})`);
     }
 
     channel
@@ -177,6 +205,7 @@ export function useRealtimeGameSync() {
         useStore.getState().setRealtimeSyncConnected(status === 'SUBSCRIBED');
 
         if (status === 'SUBSCRIBED') {
+          reconnectAttemptsRef.current = 0;
           const user = session.user;
           await channel.track({
             senderId: SENDER_ID,
@@ -189,6 +218,12 @@ export function useRealtimeGameSync() {
             factoryId: factoryIdRef.current,
           } satisfies PresencePayload);
           doRequestFullState();
+        } else if (
+          status === 'CHANNEL_ERROR' ||
+          status === 'CLOSED' ||
+          status === 'TIMED_OUT'
+        ) {
+          scheduleReconnect();
         }
       });
 
@@ -222,6 +257,7 @@ export function useRealtimeGameSync() {
     });
 
     return () => {
+      isCleaningUp = true;
       window.removeEventListener('beforeunload', onBeforeUnload);
       unsubscribePatches();
       if (flushTimer !== null) {
@@ -245,6 +281,10 @@ export function useRealtimeGameSync() {
         clearTimeout(timers.dbFallback);
         timers.dbFallback = null;
       }
+      if (reconnectTimer !== null) {
+        clearTimeout(reconnectTimer);
+        reconnectTimer = null;
+      }
 
       if (channelRef.current) {
         logger.info(`Leaving realtime channel: ${channelName}`);
@@ -255,5 +295,5 @@ export function useRealtimeGameSync() {
       useStore.getState().setRealtimeSyncConnected(false);
       useStore.getState().clearPeers();
     };
-  }, [session, savedId, selectedGameId]);
+  }, [session, savedId, selectedGameId, reconnectEpoch]);
 }
