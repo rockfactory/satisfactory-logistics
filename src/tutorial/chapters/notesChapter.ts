@@ -84,7 +84,7 @@ export const notesChapter: TutorialChapter = {
           popover: {
             title: 'Game-level notes',
             description:
-              'By default you are writing the Game note — shared across every factory in this Game. Great place for overall goals, the Tier you are aiming for, or a shopping list of items to unlock. Tip: type on an empty line to see the floating menu with headings, lists and checklists; select text to see the bubble menu for bold/italic/code.',
+              'By default you are writing the Game note — shared across every factory in this Game. Great place for overall goals, the Tier you are aiming for, or a shopping list of items to unlock. The toolbar at the top of the editor gives you headings, lists, checklists, and inline formatting (bold, italic, code) — all in one fixed menu.',
             side: 'left',
           },
           onHighlightStarted: chainHooks(ensureNotesOpen, () =>
