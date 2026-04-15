@@ -1,10 +1,13 @@
 import { getTaskListExtension, RichTextEditor } from '@mantine/tiptap';
+import { Placeholder } from '@tiptap/extension-placeholder';
 import TaskItem from '@tiptap/extension-task-item';
 import TipTapTaskList from '@tiptap/extension-task-list';
 import { type JSONContent, useEditor } from '@tiptap/react';
 import { BubbleMenu, FloatingMenu } from '@tiptap/react/menus';
 import StarterKit from '@tiptap/starter-kit';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import { getRandomAdaQuote } from './adaQuotes';
+import classes from './NotesEditor.module.css';
 
 export interface NotesEditorProps {
   entityKey: string;
@@ -22,9 +25,18 @@ export function NotesEditor({
   entityKey,
   content,
   onChange,
+  placeholder,
 }: NotesEditorProps) {
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
+
+  // Pick a random ADA quote per entity; falls back to the explicit
+  // placeholder prop if the caller wants to override.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: pick once per entity switch
+  const resolvedPlaceholder = useMemo(
+    () => placeholder ?? getRandomAdaQuote(),
+    [entityKey, placeholder],
+  );
 
   const editor = useEditor({
     shouldRerenderOnTransaction: true,
@@ -32,6 +44,8 @@ export function NotesEditor({
       StarterKit,
       getTaskListExtension(TipTapTaskList),
       TaskItem.configure({ nested: true }),
+      // TODO restore when height is fixed:
+      // Placeholder.configure({ placeholder: resolvedPlaceholder }),
     ],
     content: content ?? EMPTY_CONTENT,
     onUpdate: ({ editor: ed }) => {
@@ -56,7 +70,7 @@ export function NotesEditor({
   return (
     <RichTextEditor editor={editor}>
       {editor && (
-        <BubbleMenu editor={editor}>
+        <BubbleMenu editor={editor} className={classes.floatingMenu}>
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.Bold />
             <RichTextEditor.Italic />
@@ -66,7 +80,7 @@ export function NotesEditor({
         </BubbleMenu>
       )}
       {editor && (
-        <FloatingMenu editor={editor}>
+        <FloatingMenu editor={editor} className={classes.floatingMenu}>
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.H2 />
             <RichTextEditor.H3 />

@@ -1,0 +1,25 @@
+.floatingMenu {
+  background: color-mix(in srgb, var(--mantine-color-dark-6) 55%, transparent) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in srgb, var(--mantine-color-dark-4) 55%, transparent) !important;
+  border-radius: var(--mantine-radius-sm);
+  padding: 2px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.floatingMenu :global(.mantine-RichTextEditor-controlsGroup) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.floatingMenu :global(.mantine-RichTextEditor-control) {
+  background: transparent !important;
+  border: none !important;
+}
+
+.floatingMenu :global(.mantine-RichTextEditor-control:hover),
+.floatingMenu :global(.mantine-RichTextEditor-control[data-active]) {
+  background: color-mix(in srgb, var(--mantine-color-dark-4) 70%, transparent) !important;
+}
