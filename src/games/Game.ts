@@ -30,4 +30,6 @@ export interface GameSettings {
   highlight100PercentColor?: string;
   maxBelt?: string;
   maxPipeline?: string;
+  orthogonalEdges?: boolean;
+  disableEdgeAnimation?: boolean;
 }

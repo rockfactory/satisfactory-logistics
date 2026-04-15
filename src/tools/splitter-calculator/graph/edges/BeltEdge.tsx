@@ -10,6 +10,7 @@ import {
 } from '@xyflow/react';
 import type { FC } from 'react';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
+import { useEdgeAnimationEnabled } from '@/solver/edges/useEdgeAnimationEnabled';
 
 export interface IBeltEdgeData {
   carrying: number;
@@ -66,6 +67,7 @@ export const BeltEdge: FC<EdgeProps<Edge<IBeltEdgeData>>> = ({
 }) => {
   const sourceNode = useInternalNode(source);
   const targetNode = useInternalNode(target);
+  const animationEnabled = useEdgeAnimationEnabled();
 
   if (!sourceNode || !targetNode) return null;
 
@@ -149,17 +151,19 @@ export const BeltEdge: FC<EdgeProps<Edge<IBeltEdgeData>>> = ({
           transition: 'opacity 0.2s, stroke-width 0.2s',
         }}
       />
-      <circle
-        r={highlighted ? 3 : 2.5}
-        fill={dotColor}
-        opacity={dimmed ? 0.2 : 1}
-      >
-        <animateMotion
-          dur={`${duration}s`}
-          repeatCount="indefinite"
-          path={edgePath}
-        />
-      </circle>
+      {animationEnabled && (
+        <circle
+          r={highlighted ? 3 : 2.5}
+          fill={dotColor}
+          opacity={dimmed ? 0.2 : 1}
+        >
+          <animateMotion
+            dur={`${duration}s`}
+            repeatCount="indefinite"
+            path={edgePath}
+          />
+        </circle>
+      )}
       <EdgeLabelRenderer>
         <Box
           p="1px 5px"
