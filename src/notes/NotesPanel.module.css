@@ -92,7 +92,11 @@
 }
 
 .editorWrapper
-  :global(.mantine-RichTextEditor-content .ProseMirror p.is-editor-empty:first-child::before) {
+  :global(
+    .mantine-RichTextEditor-content
+    .ProseMirror
+    p.is-editor-empty:first-child::before
+  ) {
   content: attr(data-placeholder);
   position: absolute;
   top: var(--mantine-spacing-xs);
