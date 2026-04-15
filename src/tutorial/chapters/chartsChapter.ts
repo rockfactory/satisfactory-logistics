@@ -29,6 +29,15 @@ export const chartsChapter: TutorialChapter = {
           },
         },
         {
+          element: '[data-tutorial-id="chart-factory-node"]',
+          popover: {
+            title: 'Factory details on hover',
+            description:
+              'Hover any factory card to open a detail popover: you can rename the factory, see its full production/consumption table with per-output usage, and jump straight to the factory page or its calculator.',
+            side: 'right',
+          },
+        },
+        {
           element: '[data-tutorial-id="charts-view-switcher"]',
           popover: {
             title: 'Graph or Sankey',
