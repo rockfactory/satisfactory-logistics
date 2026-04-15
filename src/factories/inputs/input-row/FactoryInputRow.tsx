@@ -7,8 +7,9 @@ import {
   TextInput,
   Tooltip,
 } from '@mantine/core';
-import { IconTrash, IconWorld } from '@tabler/icons-react';
+import { IconExternalLink, IconTrash, IconWorld } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
 import { useShallowStore, useStore } from '@/core/zustand';
 import {
@@ -99,6 +100,22 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         // exceptId={factoryId}
         value={input.factoryId}
         showOnlyIds={factoriesIdsProducingInputResource}
+        factorySection={
+          input.factoryId &&
+          input.factoryId !== WORLD_SOURCE_ID && (
+            <ActionIcon
+              component={Link}
+              to={`/factories/${input.factoryId}`}
+              size="sm"
+              variant="subtle"
+              color="gray"
+              title="Open source factory"
+              aria-label="Open source factory"
+            >
+              <IconExternalLink size={16} />
+            </ActionIcon>
+          )
+        }
         worldSection={
           <Popover width={200} position="bottom-start" withArrow shadow="md">
             <Popover.Target>
