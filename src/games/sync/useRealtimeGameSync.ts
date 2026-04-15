@@ -7,6 +7,7 @@ import { useStore } from '@/core/zustand';
 import { onStorePatches } from '@/core/zustand-helpers/immer';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
 import { useCurrentFactoryId } from '@/notes/useNotesContext';
+import { hasOtherPeersConnected } from './peersSlice';
 import {
   computeLeaderAndPeers,
   handleFullStateRequest,
@@ -76,7 +77,9 @@ export function useRealtimeGameSync() {
     const channelName = `game:${savedId}`;
     logger.info(`Joining realtime channel: ${channelName}`);
 
-    const channel = supabaseClient.channel(channelName);
+    const channel = supabaseClient.channel(channelName, {
+      config: { private: true },
+    });
     const gameId = selectedGameId;
     const remoteSeqs = new Map<string, number>();
     const refs: SyncRefs = {
@@ -112,6 +115,12 @@ export function useRealtimeGameSync() {
     function flushPatches() {
       flushTimer = null;
       if (!channelRef.current || pendingPatches.length === 0) return;
+
+      if (!hasOtherPeersConnected()) {
+        pendingPatches = [];
+        logger.debug('Skipping broadcast: no other peers connected');
+        return;
+      }
 
       seqRef.current += 1;
       const seq = seqRef.current;
