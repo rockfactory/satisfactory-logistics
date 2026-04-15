@@ -31,6 +31,7 @@ import {
   type PresencePayload,
   SENDER_ID,
 } from './realtimeSyncTypes';
+import { flushRemoteGameOnUnload } from './flushRemoteGameOnUnload';
 
 const logger = loglev.getLogger('games:realtime-sync');
 
@@ -193,6 +194,19 @@ export function useRealtimeGameSync() {
 
     channelRef.current = channel;
 
+    // On abrupt tab close the React cleanup does not run and the autosave
+    // debounce timer (up to AUTO_SAVE_DEBOUNCE_MS) is simply dropped, meaning
+    // the DB stays stale until someone else saves. We flush a best-effort
+    // keepalive save here so the leader does not leave pending edits unsaved.
+    // Gated on leadership + dirtiness to avoid duplicate writes when multiple
+    // peers close simultaneously.
+    const onBeforeUnload = () => {
+      if (!isLeaderRef.current) return;
+      if (!hasDirtySinceLastSave) return;
+      flushRemoteGameOnUnload(gameId);
+    };
+    window.addEventListener('beforeunload', onBeforeUnload);
+
     const unsubscribePatches = onStorePatches(patches => {
       if (isApplyingRemoteRef.current || isBroadcastSuppressed()) return;
       if (!channelRef.current) return;
@@ -208,6 +222,7 @@ export function useRealtimeGameSync() {
     });
 
     return () => {
+      window.removeEventListener('beforeunload', onBeforeUnload);
       unsubscribePatches();
       if (flushTimer !== null) {
         clearTimeout(flushTimer);

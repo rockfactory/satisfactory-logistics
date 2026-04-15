@@ -45,9 +45,7 @@ export function useFactoryPeers(factoryId: string): PeerInfo[] {
   );
 }
 
-export function countOtherPeers(
-  peers: Record<string, PeerInfo>,
-): number {
+export function countOtherPeers(peers: Record<string, PeerInfo>): number {
   let count = 0;
   for (const senderId of Object.keys(peers)) {
     if (senderId !== SENDER_ID) count++;
