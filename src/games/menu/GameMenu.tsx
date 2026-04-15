@@ -196,6 +196,7 @@ export function GameMenu(props: IGameMenuProps) {
             className={cx(classes.gameMenuSecondaryButton)}
             variant="light"
             color="gray"
+            loading={isSaving}
             onClick={() => {
               handleSaveGame(selectedId);
             }}
