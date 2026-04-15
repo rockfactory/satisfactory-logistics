@@ -15,6 +15,7 @@ import { useGameSetting } from '@/games/gamesSlice';
 import { AllLogisticTypesMap } from '@/recipes/logistics/LogisticTypes';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { getConfigurableEdgePath } from '@/solver/edges/getConfigurableEdgePath';
+import { useEdgeAnimationEnabled } from '@/solver/edges/useEdgeAnimationEnabled';
 import { getEdgeParams, getSpecialPath } from '@/solver/edges/utils';
 
 export interface IInputEdgeData {
@@ -53,6 +54,7 @@ export const InputEdge: FC<EdgeProps<Edge<IInputEdgeData>>> = ({
   const orthogonalEdges = useGameSetting('orthogonalEdges') as
     | boolean
     | undefined;
+  const animationEnabled = useEdgeAnimationEnabled();
 
   if (!sourceNode || !targetNode) {
     return null;
@@ -95,13 +97,15 @@ export const InputEdge: FC<EdgeProps<Edge<IInputEdgeData>>> = ({
             sx < tx ? 'url(#edge-gradient)' : 'url(#edge-gradient-reverse)',
         }}
       />
-      <circle r="2" fill="var(--mantine-color-indigo-3)">
-        <animateMotion
-          dur={`${duration}s`}
-          repeatCount="indefinite"
-          path={edgePath}
-        />
-      </circle>
+      {animationEnabled && (
+        <circle r="2" fill="var(--mantine-color-indigo-3)">
+          <animateMotion
+            dur={`${duration}s`}
+            repeatCount="indefinite"
+            path={edgePath}
+          />
+        </circle>
+      )}
       <EdgeLabelRenderer>
         <Box
           p={'4px'}

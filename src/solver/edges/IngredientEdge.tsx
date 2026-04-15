@@ -22,6 +22,7 @@ import {
 import { type FactoryItem, FactoryItemForm } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { getConfigurableEdgePath } from '@/solver/edges/getConfigurableEdgePath';
+import { useEdgeAnimationEnabled } from '@/solver/edges/useEdgeAnimationEnabled';
 import { getEdgeParams, getSpecialPath } from './utils';
 
 export interface IIngredientEdgeData {
@@ -68,6 +69,7 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
   const orthogonalEdges = useGameSetting('orthogonalEdges') as
     | boolean
     | undefined;
+  const animationEnabled = useEdgeAnimationEnabled();
   const isOverMaxBelt = maxBelt && (data?.value ?? 0) > maxBelt.conveyor!.speed;
   const isOverMaxPipeline =
     maxPipeline && (data?.value ?? 0) > maxPipeline.pipeline!.flowRate;
@@ -128,13 +130,15 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
             sx < tx ? 'url(#edge-gradient)' : 'url(#edge-gradient-reverse)',
         }}
       />
-      <circle r="2" fill="var(--mantine-color-indigo-3)">
-        <animateMotion
-          dur={`${duration}s`}
-          repeatCount="indefinite"
-          path={edgePath}
-        />
-      </circle>
+      {animationEnabled && (
+        <circle r="2" fill="var(--mantine-color-indigo-3)">
+          <animateMotion
+            dur={`${duration}s`}
+            repeatCount="indefinite"
+            path={edgePath}
+          />
+        </circle>
+      )}
       <EdgeLabelRenderer>
         <Box
           p={'4px'}

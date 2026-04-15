@@ -42,8 +42,7 @@ const updateGameSettings = (path: Path<GameSettings>, value: any) => {
 
 export function GameSettingsModal() {
   const [opened, { open, close }] = useDisclosure(false);
-  const [activeSection, setActiveSection] =
-    useState<SectionId>('highlighting');
+  const [activeSection, setActiveSection] = useState<SectionId>('highlighting');
 
   const sectionRefs = useRef<Record<SectionId, HTMLDivElement | null>>({
     highlighting: null,

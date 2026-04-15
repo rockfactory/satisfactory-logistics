@@ -31,4 +31,5 @@ export interface GameSettings {
   maxBelt?: string;
   maxPipeline?: string;
   orthogonalEdges?: boolean;
+  disableEdgeAnimation?: boolean;
 }
