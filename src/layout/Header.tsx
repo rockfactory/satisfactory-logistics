@@ -1,6 +1,14 @@
 import { Badge, Burger, Container, Group, Image, Tabs } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import {
+  IconBuildingFactory,
+  IconCalculator,
+  IconChartBar,
+  IconPackages,
+  IconTools,
+} from '@tabler/icons-react';
 import { capitalize } from 'lodash';
+import type { ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { UserMenu } from '@/auth/UserMenu';
 import { useStore } from '@/core/zustand';
@@ -21,6 +29,14 @@ export const TAB_ROUTES: Record<HeaderTab, string> = {
   calculator: '/factories/calculator',
   tools: '/tools',
   codex: '/codex',
+};
+
+export const TAB_ICONS: Record<HeaderTab, ReactNode> = {
+  factories: <IconBuildingFactory size={16} />,
+  charts: <IconChartBar size={16} />,
+  calculator: <IconCalculator size={16} />,
+  tools: <IconTools size={16} />,
+  codex: <IconPackages size={16} />,
 };
 
 export function resolveActiveTab(pathname: string): HeaderTab | null {
@@ -95,6 +111,7 @@ export function Header() {
                   <Tabs.Tab
                     value={tab}
                     key={tab}
+                    leftSection={TAB_ICONS[tab]}
                     data-tutorial-id={`header-tab-${tab}`}
                   >
                     {capitalize(tab)}

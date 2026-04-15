@@ -1,13 +1,8 @@
 import { Divider, Drawer, NavLink, Stack, Text } from '@mantine/core';
 import {
-  IconBuildingFactory,
-  IconCalculator,
-  IconChartDots3,
   IconDeviceGamepad,
   IconNotebook,
-  IconPackages,
   IconSettings,
-  IconTools,
 } from '@tabler/icons-react';
 import { capitalize } from 'lodash';
 import { useNavigate } from 'react-router-dom';
@@ -15,17 +10,9 @@ import { UserMenu } from '@/auth/UserMenu';
 import { useStore } from '@/core/zustand';
 import { openGameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { TutorialMenu } from '@/tutorial/TutorialMenu';
-import { TAB_ROUTES } from './Header';
+import { TAB_ICONS, TAB_ROUTES } from './Header';
 
 type TabId = keyof typeof TAB_ROUTES;
-
-const TAB_ICONS: Record<TabId, React.ReactNode> = {
-  factories: <IconBuildingFactory size={18} />,
-  charts: <IconChartDots3 size={18} />,
-  calculator: <IconCalculator size={18} />,
-  tools: <IconTools size={18} />,
-  codex: <IconPackages size={18} />,
-};
 
 export interface HeaderMobileDrawerProps {
   opened: boolean;
