@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { loglev } from '@/core/logger/log';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
-import { onPatches } from '@/core/zustand-helpers/immer';
+import { onStorePatches } from '@/core/zustand-helpers/immer';
 import type { GameRemoteData } from '@/games/Game';
 import { loadRemoteGame } from '@/games/save/loadRemoteGame';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
@@ -17,7 +17,7 @@ const logger = loglev.getLogger('games:realtime-sync');
 
 const SENDER_ID = crypto.randomUUID();
 const PATCH_DEBOUNCE_MS = 150;
-const AUTO_SAVE_DEBOUNCE_MS = 5_000;
+const AUTO_SAVE_DEBOUNCE_MS = 60_000;
 const DB_FALLBACK_MS = 3_000;
 const BROADCAST_EVENT = 'game:patch';
 const BROADCAST_FULL_REQUEST = 'game:full-request';
@@ -25,9 +25,14 @@ const BROADCAST_FULL_RESPONSE = 'game:full-response';
 
 const GAME_SLICES = new Set(['games', 'factories', 'solvers']);
 
+const IGNORED_GAME_PATHS = new Set(['selected']);
+
 function isGamePatch(patch: Patch): boolean {
   const { path } = patch;
-  return typeof path[0] === 'string' && GAME_SLICES.has(path[0]);
+  if (typeof path[0] !== 'string' || !GAME_SLICES.has(path[0])) return false;
+  if (path[0] === 'games' && IGNORED_GAME_PATHS.has(path[1] as string))
+    return false;
+  return true;
 }
 
 interface PatchBroadcastPayload {
@@ -74,35 +79,58 @@ export function useRealtimeGameSync() {
 
     const channel = supabaseClient.channel(channelName);
     const gameId = selectedGameId;
-    let remoteSeq = -1;
+    const remoteSeqs = new Map<string, number>();
     let dbFallbackTimer: ReturnType<typeof setTimeout> | null = null;
+
+    function requestFullStateWithFallback() {
+      channel.send({
+        type: 'broadcast',
+        event: BROADCAST_FULL_REQUEST,
+        payload: { senderId: SENDER_ID } satisfies FullStateRequestPayload,
+      });
+
+      if (dbFallbackTimer !== null) clearTimeout(dbFallbackTimer);
+      dbFallbackTimer = setTimeout(async () => {
+        dbFallbackTimer = null;
+        logger.info(
+          'No peer response, saving local state then loading from database',
+        );
+        try {
+          await saveRemoteGame(gameId, { silent: true });
+        } catch (err) {
+          logger.error('Pre-fallback save failed', err);
+        }
+        isApplyingRemoteRef.current = true;
+        loadRemoteGame(gameId, { override: true }).finally(() => {
+          isApplyingRemoteRef.current = false;
+        });
+      }, DB_FALLBACK_MS);
+    }
 
     channel
       .on('broadcast', { event: BROADCAST_EVENT }, ({ payload }) => {
         const data = payload as PatchBroadcastPayload;
         if (data.senderId === SENDER_ID) return;
 
-        if (data.seq <= remoteSeq) {
+        const lastSeq = remoteSeqs.get(data.senderId) ?? -1;
+
+        if (data.seq <= lastSeq) {
           logger.debug(
-            `Ignoring out-of-order patch (seq=${data.seq}, expected>${remoteSeq})`,
+            `Ignoring out-of-order patch from ${data.senderId} (seq=${data.seq}, expected>${lastSeq})`,
           );
           return;
         }
 
-        if (remoteSeq >= 0 && data.seq !== remoteSeq + 1) {
+        if (lastSeq >= 0 && data.seq !== lastSeq + 1) {
           logger.info(
-            `Missed patches (got seq=${data.seq}, expected=${remoteSeq + 1}), requesting full state`,
+            `Missed patches from ${data.senderId} (got seq=${data.seq}, expected=${lastSeq + 1}), requesting full state`,
           );
-          channel.send({
-            type: 'broadcast',
-            event: BROADCAST_FULL_REQUEST,
-            payload: { senderId: SENDER_ID } satisfies FullStateRequestPayload,
-          });
-          remoteSeq = data.seq;
+          requestFullStateWithFallback();
+          remoteSeqs.set(data.senderId, data.seq);
           return;
         }
 
-        remoteSeq = data.seq;
+        remoteSeqs.set(data.senderId, data.seq);
         logger.debug(
           `Applying ${data.patches.length} remote patches (seq=${data.seq})`,
         );
@@ -113,11 +141,7 @@ export function useRealtimeGameSync() {
           useStore.setState(nextState);
         } catch (err) {
           logger.error('Failed to apply patches, requesting full state', err);
-          channel.send({
-            type: 'broadcast',
-            event: BROADCAST_FULL_REQUEST,
-            payload: { senderId: SENDER_ID } satisfies FullStateRequestPayload,
-          });
+          requestFullStateWithFallback();
         } finally {
           isApplyingRemoteRef.current = false;
         }
@@ -164,7 +188,7 @@ export function useRealtimeGameSync() {
         }
 
         logger.info(`Received full state response (seq=${data.seq}), applying`);
-        remoteSeq = data.seq;
+        remoteSeqs.set(data.senderId, data.seq);
         isApplyingRemoteRef.current = true;
         try {
           useStore.getState().loadRemoteGame(data.serialized, data.remoteData, {
@@ -179,20 +203,7 @@ export function useRealtimeGameSync() {
         useStore.getState().setRealtimeSyncConnected(status === 'SUBSCRIBED');
 
         if (status === 'SUBSCRIBED') {
-          channel.send({
-            type: 'broadcast',
-            event: BROADCAST_FULL_REQUEST,
-            payload: { senderId: SENDER_ID } satisfies FullStateRequestPayload,
-          });
-
-          dbFallbackTimer = setTimeout(() => {
-            dbFallbackTimer = null;
-            logger.info('No peer response, loading from database');
-            isApplyingRemoteRef.current = true;
-            loadRemoteGame(gameId, { override: true }).finally(() => {
-              isApplyingRemoteRef.current = false;
-            });
-          }, DB_FALLBACK_MS);
+          requestFullStateWithFallback();
         }
       });
 
@@ -237,7 +248,7 @@ export function useRealtimeGameSync() {
       }
     }
 
-    const unsubscribePatches = onPatches(patches => {
+    const unsubscribePatches = onStorePatches(patches => {
       if (isApplyingRemoteRef.current) return;
       if (!channelRef.current) return;
 

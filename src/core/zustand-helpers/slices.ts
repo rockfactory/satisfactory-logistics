@@ -1,5 +1,5 @@
 import { produceWithPatches, type WritableDraft } from 'immer';
-import { emitPatches, ImmerActions } from './immer';
+import { emitStorePatches, ImmerActions } from './immer';
 
 type InferState<Slices> = Slices extends [
   SliceConfig<infer Name, infer State, infer Actions>,
@@ -34,7 +34,7 @@ export function withSlices<
             const [nextState, patches] = produceWithPatches(prevState, draft =>
               action(...args)(draft[slice.name], get),
             );
-            if (patches.length > 0) emitPatches(patches);
+            if (patches.length > 0) emitStorePatches(patches);
             return nextState;
           });
         };

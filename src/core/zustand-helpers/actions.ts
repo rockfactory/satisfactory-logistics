@@ -1,6 +1,6 @@
 import { produceWithPatches } from 'immer';
 import type { RootState } from '@/core/zustand';
-import { emitPatches, ImmerActions } from './immer';
+import { emitStorePatches, ImmerActions } from './immer';
 import type { Action } from './slices';
 
 type InferActions<Actions> = Actions extends [infer ActionGroup, ...infer Rest]
@@ -53,7 +53,7 @@ export function withActions<
             const [nextState, patches] = produceWithPatches(prevState, draft =>
               action(...args)(draft as any, proxyGet(draft as any)),
             );
-            if (patches.length > 0) emitPatches(patches);
+            if (patches.length > 0) emitStorePatches(patches);
             return nextState;
           });
         };

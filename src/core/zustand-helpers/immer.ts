@@ -8,14 +8,14 @@ export type PatchListener = (patches: Patch[]) => void;
 
 const listeners = new Set<PatchListener>();
 
-export function onPatches(listener: PatchListener): () => void {
+export function onStorePatches(listener: PatchListener): () => void {
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
   };
 }
 
-export function emitPatches(patches: Patch[]): void {
+export function emitStorePatches(patches: Patch[]): void {
   for (const listener of listeners) {
     listener(patches);
   }
