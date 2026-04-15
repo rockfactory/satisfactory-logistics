@@ -8,12 +8,12 @@ import { notesChapter } from './notesChapter';
 import type { TutorialChapter } from './types';
 
 export const tutorialChapters: TutorialChapter[] = [
+  gamesAndSyncChapter,
   factoryBasicsChapter,
   calculatorChapter,
   factoryLinkingChapter,
   chartsChapter,
   notesChapter,
-  gamesAndSyncChapter,
   codexAndToolsChapter,
 ];
 

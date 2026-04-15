@@ -24,15 +24,6 @@ export const factoryBasicsChapter: TutorialChapter = {
       autoNavigate: true,
       steps: [
         {
-          element: '[data-tutorial-id="games-menu"]',
-          popover: {
-            title: 'Start with a Game',
-            description:
-              'Everything in the planner lives inside a Game (like a savegame). You can create several Games and switch between them from here.',
-            side: 'bottom',
-          },
-        },
-        {
           element: '[data-tutorial-id="header-tab-factories"]',
           popover: {
             title: 'The Factories tab',
