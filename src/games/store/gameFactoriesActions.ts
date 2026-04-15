@@ -126,7 +126,7 @@ export const gameFactoriesActions = createActions({
 });
 
 export type SerializedGame = {
-  game: Omit<Game, 'createdAt' | 'authorId' | 'savedId'>;
+  game: Omit<Game, 'createdAt' | 'updatedAt' | 'authorId' | 'savedId'>;
   factories: Factory[];
   solvers: SolverInstance[];
 };
@@ -140,7 +140,7 @@ export function serializeGame(
     throw new Error('Game not found');
   }
   return {
-    game: omit(game, ['createdAt', 'authorId', 'savedId']),
+    game: omit(game, ['createdAt', 'updatedAt', 'authorId', 'savedId']),
     factories: game?.factoriesIds.map(
       factoryId => state.factories.factories[factoryId],
     ),
