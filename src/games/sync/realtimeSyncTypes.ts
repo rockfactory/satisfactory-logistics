@@ -38,6 +38,21 @@ export interface PresencePayload {
 const GAME_SLICES = new Set(['games', 'factories', 'solvers']);
 const IGNORED_GAME_PATHS = new Set(['selected']);
 
+let _suppressBroadcast = false;
+
+export function isBroadcastSuppressed(): boolean {
+  return _suppressBroadcast;
+}
+
+export function withSuppressedBroadcast(fn: () => void): void {
+  _suppressBroadcast = true;
+  try {
+    fn();
+  } finally {
+    _suppressBroadcast = false;
+  }
+}
+
 export function isGamePatch(patch: Patch): boolean {
   const { path } = patch;
   if (typeof path[0] !== 'string' || !GAME_SLICES.has(path[0])) return false;
