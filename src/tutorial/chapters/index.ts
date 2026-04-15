@@ -8,16 +8,25 @@ import { notesChapter } from './notesChapter';
 import type { TutorialChapter } from './types';
 
 export const tutorialChapters: TutorialChapter[] = [
+  gamesAndSyncChapter,
   factoryBasicsChapter,
   calculatorChapter,
   factoryLinkingChapter,
   chartsChapter,
   notesChapter,
-  gamesAndSyncChapter,
   codexAndToolsChapter,
 ];
 
 export const tutorialChaptersById: Record<string, TutorialChapter> =
   Object.fromEntries(tutorialChapters.map(c => [c.id, c]));
+
+export const tutorialTotalMinutes = tutorialChapters.reduce(
+  (total, c) => total + c.estimatedMinutes,
+  0,
+);
+
+export function formatEstimatedMinutes(minutes: number): string {
+  return `~${minutes} min`;
+}
 
 export type { TutorialChapter };

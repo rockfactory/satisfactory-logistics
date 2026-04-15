@@ -1,3 +1,4 @@
+import { ensureDemoFactory } from './demoFactories';
 import {
   chainHooks,
   clickSelector,
@@ -20,6 +21,16 @@ const ensureDrawerClosed = ensureAbsent(DRAWER_PRESENCE, () =>
   clickSelector('[data-tutorial-id="calculator-drawer-close"]'),
 );
 
+// Deselects any ReactFlow node by clicking the pane. No-op when nothing is
+// selected. Used before steps that should show a clean graph (e.g. the
+// Limitations tab coming back from a node-action walkthrough).
+const ensureNodesDeselected: Parameters<typeof chainHooks>[number] = () => {
+  const selected = document.querySelector<HTMLElement>(
+    '.react-flow__node.selected',
+  );
+  if (selected) clickSelector('.react-flow__pane');
+};
+
 /**
  * Ensures the drawer is open AND the requested tab is active. Idempotent
  * (clicking an already-active Mantine Tab is a no-op), so safe to fire
@@ -39,7 +50,11 @@ export const calculatorChapter: TutorialChapter = {
   title: 'Calculator',
   description:
     'Compute the optimal production chain for a factory using the solver.',
+  estimatedMinutes: 7,
   nextChapterId: 'factory-linking',
+  setup: () => {
+    ensureDemoFactory();
+  },
   segments: [
     {
       route: ctx =>
@@ -71,8 +86,10 @@ export const calculatorChapter: TutorialChapter = {
             description:
               'The Calculator computes the optimal production chain based on what you want to produce, the resources available, and the recipes you allow. The graph here is the result for our “The Smeltery” factory.',
             side: 'top',
-            align: 'center',
+            align: 'start',
+            popoverClass: 'sl-tutorial-popover sl-tutorial-popover-graph-top',
           },
+          onHighlightStarted: ensureDrawerClosed,
         },
         {
           element: '[data-tutorial-id="calculator-inputs-block"]',
@@ -115,7 +132,12 @@ export const calculatorChapter: TutorialChapter = {
             side: 'bottom',
             align: 'end',
           },
-          onHighlightStarted: ensureDrawerTab('inputs-outputs'),
+          onHighlightStarted: chainHooks(
+            ensureDrawerTab('inputs-outputs'),
+            rehighlightWhenAvailable(
+              '[data-tutorial-id="factory-input-constraint"]',
+            ),
+          ),
         },
         {
           element: '[data-tutorial-id="calculator-drawer-tab-recipes"]',
@@ -125,7 +147,12 @@ export const calculatorChapter: TutorialChapter = {
               'Enable or disable alternate recipes. The solver freely combines any enabled recipe to reach your target output.',
             side: 'bottom',
           },
-          onHighlightStarted: ensureDrawerTab('recipes'),
+          onHighlightStarted: chainHooks(
+            ensureDrawerTab('recipes'),
+            rehighlightWhenAvailable(
+              '[data-tutorial-id="calculator-drawer-tab-recipes"]',
+            ),
+          ),
         },
         {
           element: '[data-tutorial-id="recipes-from-savegame"]',
@@ -150,7 +177,13 @@ export const calculatorChapter: TutorialChapter = {
               'Limit what the solver is allowed to use: enable / disable World resources (or set custom max amounts per resource), pick which Buildings the factory can use (with optional override of the global game settings), and choose the Belt / Pipeline tier so over-capacity flows get flagged.',
             side: 'bottom',
           },
-          onHighlightStarted: ensureDrawerTab('limitations'),
+          onHighlightStarted: chainHooks(
+            ensureNodesDeselected,
+            ensureDrawerTab('limitations'),
+            rehighlightWhenAvailable(
+              '[data-tutorial-id="calculator-drawer-tab-limitations"]',
+            ),
+          ),
         },
         // === Resource node walkthrough ===
         {
@@ -208,6 +241,10 @@ export const calculatorChapter: TutorialChapter = {
               'Tracks real-world construction progress: tick this when the machine is actually built in your save. Word on the assembly line says there might be a tiny surprise the first time you hit it… maybe try it later. 😉',
             side: 'bottom',
           },
+          onHighlightStarted: openAndRehighlight(
+            '.react-flow__node-Machine',
+            '[data-tutorial-id="machine-action-done"]',
+          ),
         },
         {
           element: '[data-tutorial-id="machine-action-overclock-somersloops"]',
@@ -217,6 +254,10 @@ export const calculatorChapter: TutorialChapter = {
               'Two production tweaks side by side: Overclock runs the machine faster (up to 250%) at the cost of more power, while Somersloops slot in to amplify output (each slot adds extra throughput from the same inputs). The solver uses both when deciding how many machines you need. Click Apply to commit.',
             side: 'top',
           },
+          onHighlightStarted: openAndRehighlight(
+            '.react-flow__node-Machine',
+            '[data-tutorial-id="machine-action-overclock-somersloops"]',
+          ),
         },
         {
           element: '[data-tutorial-id="machine-action-switch-recipe"]',
@@ -226,6 +267,10 @@ export const calculatorChapter: TutorialChapter = {
               'Pick which recipes the solver can use for this output. Uncheck the default and the plan will swap in whichever alternate you enable.',
             side: 'top',
           },
+          onHighlightStarted: openAndRehighlight(
+            '.react-flow__node-Machine',
+            '[data-tutorial-id="machine-action-switch-recipe"]',
+          ),
         },
 
         // === Byproduct / output node walkthrough ===

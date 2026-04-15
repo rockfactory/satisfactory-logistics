@@ -6,8 +6,13 @@ import {
 } from './stepHelpers';
 import type { TutorialChapter } from './types';
 
-const GAMES_MENU_PRESENCE = '.mantine-Menu-dropdown';
-const ensureGamesMenuOpen = ensurePresent(GAMES_MENU_PRESENCE, () =>
+const GAMES_MENU_DROPDOWN = '[data-tutorial-id="games-menu-dropdown"]';
+const GAMES_MENU_LIST_ENTRY = '[data-tutorial-id="games-menu-list"]';
+
+const ensureGamesMenuOpen = ensurePresent(GAMES_MENU_DROPDOWN, () =>
+  clickSelector('[data-tutorial-id="games-menu-trigger"]'),
+);
+const ensureGamesListEntryVisible = ensurePresent(GAMES_MENU_LIST_ENTRY, () =>
   clickSelector('[data-tutorial-id="games-menu-trigger"]'),
 );
 
@@ -16,20 +21,34 @@ export const gamesAndSyncChapter: TutorialChapter = {
   title: 'Games & Sync',
   description:
     'Manage Games, import savegames and sync your work across devices.',
-  nextChapterId: 'codex-and-tools',
+  estimatedMinutes: 3,
+  nextChapterId: 'factory-basics',
   segments: [
     {
-      route: '/games',
+      route: '/factories',
       autoNavigate: true,
       steps: [
         {
-          element: '[data-tutorial-id="games-list"]',
+          element: '[data-tutorial-id="games-menu"]',
           popover: {
-            title: 'The Games page',
+            title: 'Start with a Game',
             description:
-              'Each Game is an independent set of factories, like one Satisfactory savegame. From here you can switch between Games, create new ones for different playthroughs, or play one to jump back to its factories.',
-            side: 'top',
+              'Everything in the planner lives inside a Game, like a Satisfactory save. You can create several Games (one per playthrough) and switch between them from here.',
+            side: 'bottom',
           },
+        },
+        {
+          element: GAMES_MENU_DROPDOWN,
+          popover: {
+            title: 'The Game menu',
+            description:
+              'Click the active Game name in the header to open this menu. Use “New game” to start a fresh playthrough, “Rename game” to change the active Game’s name, and “Save game” to upload it to the cloud.',
+            side: 'right',
+          },
+          onHighlightStarted: chainHooks(
+            ensureGamesMenuOpen,
+            rehighlightWhenAvailable(GAMES_MENU_DROPDOWN),
+          ),
         },
         {
           element: '[data-tutorial-id="user-menu"]',
@@ -41,25 +60,43 @@ export const gamesAndSyncChapter: TutorialChapter = {
           },
         },
         {
-          element: '.mantine-Menu-dropdown',
-          popover: {
-            title: 'The Game menu',
-            description:
-              'Click the active Game name in the header to open this menu. Use “New game” to start a fresh playthrough, “Rename game” to change the active Game’s name, and “Save game” to upload it to the cloud (the floppy button next to the menu does the same in one click).',
-            side: 'right',
-          },
-          onHighlightStarted: chainHooks(
-            ensureGamesMenuOpen,
-            rehighlightWhenAvailable('.mantine-Menu-dropdown'),
-          ),
-        },
-        {
           element: '[data-tutorial-id="game-save-button"]',
           popover: {
             title: 'Save / Load to the cloud',
             description:
-              'Once logged in, this button saves the active Game online. The dropdown next to it also has “Load last save” to pull the latest version from any device. Your daily save / load cycle.',
+              'Once logged in, this button saves the active Game online. The dropdown next to it also has “Load last save” to pull the latest version from any device. <br/><br/><strong>⚠️ Important:</strong> your Game is auto-saved <strong>only locally</strong> (in this browser). It is <strong>never uploaded to the cloud automatically</strong> — you must click this button (or use “Save game” from the menu) every time you want to push your changes online.',
             side: 'bottom',
+          },
+        },
+        {
+          element: GAMES_MENU_LIST_ENTRY,
+          popover: {
+            title: 'Open the Games page',
+            description:
+              'This menu entry opens the full Games page, where you can manage every playthrough in one place. Press Next and I will take you there.',
+            side: 'left',
+            onNextClick: () => {
+              clickSelector(GAMES_MENU_LIST_ENTRY);
+            },
+          },
+          onHighlightStarted: chainHooks(
+            ensureGamesListEntryVisible,
+            rehighlightWhenAvailable(GAMES_MENU_LIST_ENTRY),
+          ),
+        },
+      ],
+    },
+    {
+      route: '/games',
+      autoNavigate: true,
+      steps: [
+        {
+          element: '[data-tutorial-id="games-list"]',
+          popover: {
+            title: 'The Games page',
+            description:
+              'Here you see all your Games at a glance. Switch between them, create new ones for different playthroughs, or play one to jump back to its factories.',
+            side: 'top',
           },
         },
         {

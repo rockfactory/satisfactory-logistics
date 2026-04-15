@@ -31,6 +31,12 @@ export interface TutorialChapter {
   id: string;
   title: string;
   description: string;
+  /**
+   * Estimated time to complete the chapter, in minutes. Shown in the
+   * welcome modal (summed across all chapters), the chapter menu, and
+   * next to the "Continue to…" button in the outro modal.
+   */
+  estimatedMinutes: number;
   segments: TutorialChapterSegment[];
   /** If set, this chapter is auto-started after the current one completes. */
   nextChapterId?: string;

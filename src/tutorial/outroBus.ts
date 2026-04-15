@@ -16,6 +16,7 @@ export interface OutroRequest {
   nextChapterId?: string;
   nextChapterTitle?: string;
   nextChapterDescription?: string;
+  nextChapterEstimatedMinutes?: number;
 }
 
 type Listener = (

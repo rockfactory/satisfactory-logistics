@@ -208,6 +208,7 @@ export function useTutorial() {
             nextChapterId: followup?.id,
             nextChapterTitle: followup?.title,
             nextChapterDescription: followup?.description,
+            nextChapterEstimatedMinutes: followup?.estimatedMinutes,
           });
 
           if (choice === 'continue' && followup) {

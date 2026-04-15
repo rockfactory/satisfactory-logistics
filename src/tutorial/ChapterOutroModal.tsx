@@ -1,11 +1,13 @@
 import { Button, Group, Modal, Stack, Text, Title } from '@mantine/core';
 import {
   IconCircleCheckFilled,
+  IconClock,
   IconPlayerPlay,
   IconTrash,
   IconX,
 } from '@tabler/icons-react';
 import { useStore } from '@/core/zustand';
+import { formatEstimatedMinutes } from './chapters';
 import {
   hasDemoFactoriesSelector,
   removeDemoFactories,
@@ -95,6 +97,18 @@ export function ChapterOutroModal({
             {hasNext && (
               <Button
                 leftSection={<IconPlayerPlay size={16} />}
+                rightSection={
+                  request.nextChapterEstimatedMinutes !== undefined ? (
+                    <Group gap={4} wrap="nowrap">
+                      <IconClock size={14} />
+                      <Text size="xs" fw={500}>
+                        {formatEstimatedMinutes(
+                          request.nextChapterEstimatedMinutes,
+                        )}
+                      </Text>
+                    </Group>
+                  ) : undefined
+                }
                 onClick={onContinue}
               >
                 Continue to {request.nextChapterTitle}

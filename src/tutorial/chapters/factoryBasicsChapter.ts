@@ -15,6 +15,7 @@ export const factoryBasicsChapter: TutorialChapter = {
   id: 'factory-basics',
   title: 'Factory basics',
   description: 'Guided walk through creating your first factory.',
+  estimatedMinutes: 4,
   nextChapterId: 'calculator',
   outroBody:
     'Nice work. You now have a factory with a name, a status, an output and a sourced input. That is the whole anatomy of a production site in the planner.',
@@ -23,15 +24,6 @@ export const factoryBasicsChapter: TutorialChapter = {
       route: '/factories',
       autoNavigate: true,
       steps: [
-        {
-          element: '[data-tutorial-id="games-menu"]',
-          popover: {
-            title: 'Start with a Game',
-            description:
-              'Everything in the planner lives inside a Game (like a savegame). You can create several Games and switch between them from here.',
-            side: 'bottom',
-          },
-        },
         {
           element: '[data-tutorial-id="header-tab-factories"]',
           popover: {

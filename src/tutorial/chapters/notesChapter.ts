@@ -35,7 +35,8 @@ export const notesChapter: TutorialChapter = {
   title: 'Notes',
   description:
     'Keep a floating notebook next to your plan — game-level notes, factory notes, and checklists.',
-  nextChapterId: 'games-and-sync',
+  estimatedMinutes: 2,
+  nextChapterId: 'codex-and-tools',
   outroBody:
     'Notes stay in sync with your Game, travel with cloud save, and the panel lives on top of whatever view you are working in. Press Ctrl+J anytime to reopen it.',
   setup: async () => {
