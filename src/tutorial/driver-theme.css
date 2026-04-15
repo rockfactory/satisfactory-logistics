@@ -144,6 +144,23 @@ body.driver-active .mantine-Tooltip-tooltip {
   color: var(--mantine-color-gray-0);
 }
 
+/*
+ * Force-position override for the opening "The Calculator" step: the
+ * solver-graph element fills the full canvas, so driver.js's auto-flip
+ * places the popover at the bottom. Pin it to the top of the graph area
+ * instead, where there's empty space above the nodes. !important is
+ * required to defeat driver.js's inline positioning.
+ */
+.sl-tutorial-popover-graph-top.driver-popover {
+  top: 90px !important;
+  left: 50% !important;
+  bottom: auto !important;
+  transform: translateX(-50%) !important;
+}
+.sl-tutorial-popover-graph-top .driver-popover-arrow {
+  display: none !important;
+}
+
 .sl-tutorial-popover .driver-popover-arrow-side-bottom.driver-popover-arrow {
   border-bottom-color: var(--mantine-color-dark-6);
 }

@@ -1,3 +1,4 @@
+import { ensureDemoFactory } from './demoFactories';
 import {
   chainHooks,
   clickSelector,
@@ -40,6 +41,9 @@ export const calculatorChapter: TutorialChapter = {
   description:
     'Compute the optimal production chain for a factory using the solver.',
   nextChapterId: 'factory-linking',
+  setup: () => {
+    ensureDemoFactory();
+  },
   segments: [
     {
       route: ctx =>
@@ -71,7 +75,8 @@ export const calculatorChapter: TutorialChapter = {
             description:
               'The Calculator computes the optimal production chain based on what you want to produce, the resources available, and the recipes you allow. The graph here is the result for our “The Smeltery” factory.',
             side: 'top',
-            align: 'center',
+            align: 'start',
+            popoverClass: 'sl-tutorial-popover sl-tutorial-popover-graph-top',
           },
         },
         {
