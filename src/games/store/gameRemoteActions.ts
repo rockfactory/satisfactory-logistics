@@ -54,6 +54,9 @@ function loadSerializedGameIntoState(
     state.games.games[serialized.game.id].createdAt = data.created_at;
     state.games.games[serialized.game.id].savedId = data.id;
     state.games.games[serialized.game.id].shareToken = data.share_token;
+    if (data.updated_at) {
+      state.games.games[serialized.game.id].updatedAt = data.updated_at;
+    }
     return;
   }
 
@@ -64,11 +67,28 @@ function loadSerializedGameIntoState(
     `Fully loaded game "${serialized.game.name}" (id=${serialized.game.id})`,
     serialized,
   ); // prettier-ignore
+
+  if (options.override) {
+    const existingGame = state.games.games[serialized.game.id];
+    if (existingGame) {
+      const incomingFactoryIds = new Set(serialized.game.factoriesIds);
+      for (const oldFactoryId of existingGame.factoriesIds) {
+        if (!incomingFactoryIds.has(oldFactoryId)) {
+          delete state.factories.factories[oldFactoryId];
+          delete state.solvers.instances[oldFactoryId];
+        }
+      }
+    }
+  }
+
   state.games.games[serialized.game.id] = { ...serialized.game };
   state.games.games[serialized.game.id].authorId = data.author_id;
   state.games.games[serialized.game.id].createdAt = data.created_at;
   state.games.games[serialized.game.id].savedId = data.id;
   state.games.games[serialized.game.id].shareToken = data.share_token;
+  if (data.updated_at) {
+    state.games.games[serialized.game.id].updatedAt = data.updated_at;
+  }
 
   serialized.factories.forEach(factory => {
     state.factories.factories[factory.id] = factory;

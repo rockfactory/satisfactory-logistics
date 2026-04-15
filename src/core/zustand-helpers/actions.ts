@@ -1,6 +1,6 @@
-import { produce } from 'immer';
+import { produceWithPatches } from 'immer';
 import type { RootState } from '@/core/zustand';
-import { ImmerActions } from './immer';
+import { emitStorePatches, ImmerActions } from './immer';
 import type { Action } from './slices';
 
 type InferActions<Actions> = Actions extends [infer ActionGroup, ...infer Rest]
@@ -49,11 +49,13 @@ export function withActions<
     for (const group of actions) {
       for (const [name, action] of Object.entries(group)) {
         state[name] = (...args: any[]) => {
-          set(
-            produce(prevState =>
-              action(...args)(prevState, proxyGet(prevState)),
-            ),
-          );
+          set(prevState => {
+            const [nextState, patches] = produceWithPatches(prevState, draft =>
+              action(...args)(draft as any, proxyGet(draft as any)),
+            );
+            if (patches.length > 0) emitStorePatches(patches);
+            return nextState;
+          });
         };
         (state[name] as any)[ImmerActions] = (state: State, ...args: any[]) => {
           action(...args)(state, get);

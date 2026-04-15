@@ -6,6 +6,7 @@ export const gameSaveSlice = createSlice({
     hasRehydratedLocalData: false,
     isSaving: false,
     isLoading: false,
+    isRealtimeSyncConnected: false,
   },
   actions: {
     setIsSaving: (isSaving: boolean) => state => {
@@ -16,6 +17,9 @@ export const gameSaveSlice = createSlice({
     },
     setHasRehydratedLocalData: (hasRehydratedLocalData: boolean) => state => {
       state.hasRehydratedLocalData = hasRehydratedLocalData;
+    },
+    setRealtimeSyncConnected: (isRealtimeSyncConnected: boolean) => state => {
+      state.isRealtimeSyncConnected = isRealtimeSyncConnected;
     },
   },
 });

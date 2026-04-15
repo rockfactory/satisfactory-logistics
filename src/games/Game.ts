@@ -17,11 +17,12 @@ export interface Game {
   shareToken?: string | null;
   authorId?: string;
   createdAt?: string;
+  updatedAt?: string;
 }
 
 export type GameRemoteData = Pick<
   Tables<'games'>,
-  'author_id' | 'created_at' | 'id' | 'share_token'
+  'author_id' | 'created_at' | 'id' | 'share_token' | 'updated_at'
 >;
 
 export interface GameSettings {
