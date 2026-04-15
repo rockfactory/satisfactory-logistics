@@ -23,6 +23,7 @@ import {
   BROADCAST_FULL_RESPONSE,
   type FullStateRequestPayload,
   type FullStateResponsePayload,
+  isBroadcastSuppressed,
   isGamePatch,
   PATCH_DEBOUNCE_MS,
   type PatchBroadcastPayload,
@@ -184,7 +185,7 @@ export function useRealtimeGameSync() {
     channelRef.current = channel;
 
     const unsubscribePatches = onStorePatches(patches => {
-      if (isApplyingRemoteRef.current) return;
+      if (isApplyingRemoteRef.current || isBroadcastSuppressed()) return;
       if (!channelRef.current) return;
 
       const gamePatches = patches.filter(isGamePatch);

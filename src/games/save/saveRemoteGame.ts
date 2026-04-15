@@ -3,6 +3,7 @@ import type { Json } from '@/core/database.types';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
 import { serializeGame } from '@/games/store/gameFactoriesActions';
+import { withSuppressedBroadcast } from '@/games/sync/realtimeSyncTypes';
 
 export async function saveRemoteGame(
   gameId?: string | null,
@@ -53,7 +54,9 @@ export async function saveRemoteGame(
     }
 
     console.log('Saved game to remote:', data);
-    useStore.getState().setRemoteGameData(game.id, data);
+    withSuppressedBroadcast(() => {
+      useStore.getState().setRemoteGameData(game.id, data);
+    });
   } catch (error: any) {
     console.error('Error saving game:', error);
     notifications.show({
