@@ -3,11 +3,13 @@ import {
   IconBuildingFactory,
   IconCalculator,
   IconChartBar,
+  IconClock,
   IconDeviceGamepad,
   IconHelp,
   IconPlayerPlay,
   IconX,
 } from '@tabler/icons-react';
+import { formatEstimatedMinutes, tutorialChapters } from './chapters';
 
 export interface IWelcomeModalProps {
   opened: boolean;
@@ -16,6 +18,7 @@ export interface IWelcomeModalProps {
 }
 
 export function WelcomeModal({ opened, onStart, onSkip }: IWelcomeModalProps) {
+  const firstChapter = tutorialChapters[0];
   return (
     <Modal
       opened={opened}
@@ -45,8 +48,12 @@ export function WelcomeModal({ opened, onStart, onSkip }: IWelcomeModalProps) {
           </List.Item>
         </List>
         <Text size="sm" c="dark.1" lh={1.55}>
-          Shall we take a quick tour of the facility? You can always bail out
-          and resume later from the{' '}
+          Shall we take a quick tour of the facility? The first chapter runs
+          about{' '}
+          <Text span fw={600} c="gray.0">
+            {formatEstimatedMinutes(firstChapter.estimatedMinutes)}
+          </Text>
+          , and you can pause or resume at any time from the{' '}
           <IconHelp size={16} style={{ verticalAlign: 'text-bottom' }} /> button
           in the header. Stay alert, stay productive.
         </Text>
@@ -59,7 +66,18 @@ export function WelcomeModal({ opened, onStart, onSkip }: IWelcomeModalProps) {
           >
             I'll figure it out
           </Button>
-          <Button leftSection={<IconPlayerPlay size={16} />} onClick={onStart}>
+          <Button
+            leftSection={<IconPlayerPlay size={16} />}
+            rightSection={
+              <Group gap={4} wrap="nowrap">
+                <IconClock size={14} />
+                <Text size="xs" fw={500}>
+                  {formatEstimatedMinutes(firstChapter.estimatedMinutes)}
+                </Text>
+              </Group>
+            }
+            onClick={onStart}
+          >
             Show me around
           </Button>
         </Group>

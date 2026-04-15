@@ -4,6 +4,7 @@ export const codexAndToolsChapter: TutorialChapter = {
   id: 'codex-and-tools',
   title: 'Codex & Tools',
   description: 'Browse game data and the standalone Splitter calculator.',
+  estimatedMinutes: 2,
   segments: [
     {
       route: '/codex',

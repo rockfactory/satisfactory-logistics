@@ -15,6 +15,7 @@ export const factoryBasicsChapter: TutorialChapter = {
   id: 'factory-basics',
   title: 'Factory basics',
   description: 'Guided walk through creating your first factory.',
+  estimatedMinutes: 4,
   nextChapterId: 'calculator',
   outroBody:
     'Nice work. You now have a factory with a name, a status, an output and a sourced input. That is the whole anatomy of a production site in the planner.',

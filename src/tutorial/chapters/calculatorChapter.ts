@@ -50,6 +50,7 @@ export const calculatorChapter: TutorialChapter = {
   title: 'Calculator',
   description:
     'Compute the optimal production chain for a factory using the solver.',
+  estimatedMinutes: 7,
   nextChapterId: 'factory-linking',
   setup: () => {
     ensureDemoFactory();

@@ -21,6 +21,7 @@ export const gamesAndSyncChapter: TutorialChapter = {
   title: 'Games & Sync',
   description:
     'Manage Games, import savegames and sync your work across devices.',
+  estimatedMinutes: 3,
   nextChapterId: 'factory-basics',
   segments: [
     {

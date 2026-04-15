@@ -1,13 +1,14 @@
-import { ActionIcon, Menu, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Group, Menu, Text, Tooltip } from '@mantine/core';
 import {
   IconCircleCheckFilled,
+  IconClock,
   IconHelp,
   IconPlayerPlay,
   IconRefresh,
   IconTrash,
 } from '@tabler/icons-react';
 import { useShallowStore, useStore } from '@/core/zustand';
-import { tutorialChapters } from './chapters';
+import { formatEstimatedMinutes, tutorialChapters } from './chapters';
 import {
   hasDemoFactoriesSelector,
   removeDemoFactories,
@@ -55,9 +56,17 @@ export function TutorialMenu() {
                 void startChapter(chapter.id);
               }}
             >
-              <Text size="sm" fw={500}>
-                {chapter.title}
-              </Text>
+              <Group gap="xs" wrap="nowrap" justify="space-between">
+                <Text size="sm" fw={500}>
+                  {chapter.title}
+                </Text>
+                <Group gap={4} wrap="nowrap" c="dark.2">
+                  <IconClock size={12} />
+                  <Text size="xs">
+                    {formatEstimatedMinutes(chapter.estimatedMinutes)}
+                  </Text>
+                </Group>
+              </Group>
               <Text size="xs" c="dark.2">
                 {chapter.description}
               </Text>

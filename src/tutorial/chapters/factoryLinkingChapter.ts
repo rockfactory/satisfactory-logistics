@@ -12,6 +12,7 @@ export const factoryLinkingChapter: TutorialChapter = {
   id: 'factory-linking',
   title: 'Linking factories',
   description: 'See how a factory can pull resources from another one.',
+  estimatedMinutes: 2,
   nextChapterId: 'charts',
   setup: () => {
     ensureDemoFactory();
