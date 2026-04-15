@@ -74,7 +74,7 @@ export function PeerAvatar({
   if (!withTooltip) return content;
 
   return (
-    <Tooltip label={tooltipLabel} withArrow color="dark">
+    <Tooltip label={tooltipLabel} withArrow>
       {content}
     </Tooltip>
   );

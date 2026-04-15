@@ -88,7 +88,6 @@ export function FactoryInputConstraintSelect(
     <Menu withinPortal loop returnFocus>
       <Menu.Target>
         <Tooltip
-          color="dark.8"
           label={getTooltipLabel(constraint)}
           position="top"
         >

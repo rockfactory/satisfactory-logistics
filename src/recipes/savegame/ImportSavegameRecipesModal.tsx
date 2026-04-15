@@ -59,7 +59,7 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
 
   return (
     <>
-      <Tooltip color="dark.8" label="Import available recipes from a Savegame">
+      <Tooltip label="Import available recipes from a Savegame">
         <Button
           data-tutorial-id="recipes-from-savegame"
           onClick={toggle}

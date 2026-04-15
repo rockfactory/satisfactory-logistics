@@ -27,7 +27,6 @@ export function RealtimeSyncIndicator() {
       <Tooltip
         label={isConnected ? 'Realtime sync active' : 'Realtime sync offline'}
         withArrow
-        color="dark"
       >
         <Box pos="relative" style={{ display: 'inline-flex' }}>
           {isConnected ? (

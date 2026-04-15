@@ -73,7 +73,7 @@ export function RecipeTooltip(props: IRecipeTooltipProps) {
 
   if (label) {
     return (
-      <Tooltip color="dark.8" label={label}>
+      <Tooltip label={label}>
         <span>{props.children}</span>
       </Tooltip>
     );

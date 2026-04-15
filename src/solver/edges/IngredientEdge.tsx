@@ -147,7 +147,6 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
           className="nodrag"
         >
           <Tooltip
-            color="dark.8"
             label={
               <Group>
                 <Image

@@ -9,7 +9,6 @@ export function NotesPanelTrigger() {
 
   return (
     <Tooltip
-      color="dark"
       position="bottom"
       label={
         <Group gap={6} align="center" wrap="nowrap">

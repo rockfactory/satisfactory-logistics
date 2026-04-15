@@ -103,7 +103,6 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       <Tooltip
         label="Somersloops tracking for this output. Will automatically be set here if you add some somersloops in the calculator"
         position="top"
-        color="dark.8"
         withArrow
       >
         <NumberInput

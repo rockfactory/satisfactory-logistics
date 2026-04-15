@@ -225,7 +225,6 @@ export function GameSettingsModal() {
         <Space h={50} />
       </Modal>
       <Tooltip
-        color="dark"
         position="bottom"
         label="Game settings: highlights, transport limits & buildings"
       >
