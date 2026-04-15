@@ -87,10 +87,7 @@ export function FactoryInputConstraintSelect(
   return (
     <Menu withinPortal loop returnFocus>
       <Menu.Target>
-        <Tooltip
-          label={getTooltipLabel(constraint)}
-          position="top"
-        >
+        <Tooltip label={getTooltipLabel(constraint)} position="top">
           <ActionIcon
             data-tutorial-id="factory-input-constraint"
             mt={3}
