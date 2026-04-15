@@ -6,8 +6,9 @@ import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
 import { onStorePatches } from '@/core/zustand-helpers/immer';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
+import { useCurrentFactoryId } from '@/notes/useNotesContext';
 import {
-  computeLeader,
+  computeLeaderAndPeers,
   handleFullStateRequest,
   handleFullStateResponse,
   handleIncomingPatches,
@@ -25,6 +26,7 @@ import {
   isGamePatch,
   PATCH_DEBOUNCE_MS,
   type PatchBroadcastPayload,
+  type PresencePayload,
   SENDER_ID,
 } from './realtimeSyncTypes';
 
@@ -37,11 +39,28 @@ export function useRealtimeGameSync() {
     selectedGameId ? s.games.games[selectedGameId] : null,
   );
   const savedId = game?.savedId;
+  const factoryId = useCurrentFactoryId();
 
   const channelRef = useRef<RealtimeChannel | null>(null);
   const isApplyingRemoteRef = useRef(false);
   const seqRef = useRef(0);
   const isLeaderRef = useRef(false);
+  const factoryIdRef = useRef(factoryId);
+  factoryIdRef.current = factoryId;
+
+  useEffect(() => {
+    if (!channelRef.current || !session) return;
+    const user = session.user;
+    const payload: PresencePayload = {
+      senderId: SENDER_ID,
+      userId: user.id,
+      avatarUrl: user.user_metadata?.avatar_url ?? null,
+      displayName:
+        user.user_metadata?.full_name ?? user.user_metadata?.name ?? 'Unknown',
+      factoryId,
+    };
+    channelRef.current.track(payload);
+  }, [factoryId, session]);
 
   useEffect(() => {
     if (!session || !savedId || !selectedGameId) {
@@ -136,14 +155,24 @@ export function useRealtimeGameSync() {
         );
       })
       .on('presence', { event: 'sync' }, () => {
-        computeLeader(channel, refs);
+        computeLeaderAndPeers(channel, refs);
       })
       .subscribe(async status => {
         logger.info(`Realtime channel status: ${status}`);
         useStore.getState().setRealtimeSyncConnected(status === 'SUBSCRIBED');
 
         if (status === 'SUBSCRIBED') {
-          await channel.track({ senderId: SENDER_ID });
+          const user = session.user;
+          await channel.track({
+            senderId: SENDER_ID,
+            userId: user.id,
+            avatarUrl: user.user_metadata?.avatar_url ?? null,
+            displayName:
+              user.user_metadata?.full_name ??
+              user.user_metadata?.name ??
+              'Unknown',
+            factoryId: factoryIdRef.current,
+          } satisfies PresencePayload);
           doRequestFullState();
         }
       });
@@ -188,6 +217,7 @@ export function useRealtimeGameSync() {
       }
 
       useStore.getState().setRealtimeSyncConnected(false);
+      useStore.getState().clearPeers();
     };
   }, [session, savedId, selectedGameId]);
 }

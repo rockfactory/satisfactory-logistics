@@ -14,6 +14,7 @@ import { UserMenu } from '@/auth/UserMenu';
 import { useStore } from '@/core/zustand';
 import { GameMenu } from '@/games/menu/GameMenu';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
+import { OnlinePeers } from '@/games/sync/OnlinePeers';
 import { NotesPanelTrigger } from '@/notes/NotesPanelTrigger';
 import { TutorialMenu } from '@/tutorial/TutorialMenu';
 import classes from './Header.module.css';
@@ -77,6 +78,7 @@ export function Header() {
           </Link>
           <Group gap="xs" wrap="nowrap" visibleFrom="sm">
             {hasSelectedGame && <GameMenu />}
+            <OnlinePeers />
             <TutorialMenu />
             <UserMenu />
           </Group>

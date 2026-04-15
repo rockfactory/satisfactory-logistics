@@ -11,6 +11,7 @@ import { gamesSlice } from '@/games/gamesSlice';
 import { gameSaveSlice } from '@/games/save/gameSaveSlice';
 import { gameFactoriesActions } from '@/games/store/gameFactoriesActions';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
+import { peersSlice } from '@/games/sync/peersSlice';
 import { notesUiSlice } from '@/notes/store/notesUiSlice';
 import { solverFactoriesActions } from '@/solver/store/solverFactoriesActions';
 import { solversSlice } from '@/solver/store/solverSlice';
@@ -38,6 +39,7 @@ const slices = withSlices(
   chartsSlice,
   tutorialSlice,
   notesUiSlice,
+  peersSlice,
 );
 
 export type RootState = ReturnType<typeof slices>;
@@ -53,7 +55,7 @@ export const useStore = create(
   devtools(
     persist(slicesWithActions, {
       name: 'zustand:persist',
-      partialize: state => omit(state, ['gameSave']),
+      partialize: state => omit(state, ['gameSave', 'peers']),
       version: 4,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
