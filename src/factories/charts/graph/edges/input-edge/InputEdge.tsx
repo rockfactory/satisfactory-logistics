@@ -4,7 +4,6 @@ import {
   type Edge,
   EdgeLabelRenderer,
   type EdgeProps,
-  getBezierPath,
   useInternalNode,
   useStore,
 } from '@xyflow/react';
@@ -12,8 +11,10 @@ import type { FC } from 'react';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { useChartSetting } from '@/factories/charts/store/chartsSlice';
 import type { FactoryInput } from '@/factories/Factory';
+import { useGameSetting } from '@/games/gamesSlice';
 import { AllLogisticTypesMap } from '@/recipes/logistics/LogisticTypes';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { getConfigurableEdgePath } from '@/solver/edges/getConfigurableEdgePath';
 import { getEdgeParams, getSpecialPath } from '@/solver/edges/utils';
 
 export interface IInputEdgeData {
@@ -49,6 +50,9 @@ export const InputEdge: FC<EdgeProps<Edge<IInputEdgeData>>> = ({
   });
 
   const widthMatchesInputAmount = useChartSetting('widthMatchesInputAmount');
+  const orthogonalEdges = useGameSetting('orthogonalEdges') as
+    | boolean
+    | undefined;
 
   if (!sourceNode || !targetNode) {
     return null;
@@ -73,7 +77,7 @@ export const InputEdge: FC<EdgeProps<Edge<IInputEdgeData>>> = ({
 
   const [edgePath, labelX, labelY] = isBiDirectionEdge
     ? getSpecialPath(edgePathParams)
-    : getBezierPath(edgePathParams);
+    : getConfigurableEdgePath(edgePathParams, !!orthogonalEdges);
 
   const duration = 60 / (data?.input.amount ?? 1);
 

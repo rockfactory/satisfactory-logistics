@@ -131,6 +131,15 @@ export function GameSettingsModal() {
             onChange={onChangeHandler('maxPipeline')}
             placeholder="No pipeline selected"
           />
+          <Title order={4} mt="md" mb="md">
+            Graph Display
+          </Title>
+          <Checkbox
+            label="Orthogonal edges"
+            description="Draw graph edges as straight lines with 90° turns instead of curves. Easier to follow splits and paths between machines."
+            checked={settings?.orthogonalEdges}
+            onChange={onChangeHandler('orthogonalEdges')}
+          />
           <Title order={3} mt="md" mb="md">
             Available Buildings
           </Title>
