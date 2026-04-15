@@ -88,16 +88,20 @@ export function useRealtimeGameSync() {
     let pendingPatches: Patch[] = [];
     let flushTimer: ReturnType<typeof setTimeout> | null = null;
     let autoSaveTimer: ReturnType<typeof setTimeout> | null = null;
+    let hasDirtySinceLastSave = false;
 
     const doRequestFullState = () =>
       requestFullStateWithFallback(channel, gameId, refs, timers);
 
     function scheduleAutoSave() {
       if (!isLeaderRef.current) return;
+      hasDirtySinceLastSave = true;
       if (autoSaveTimer !== null) clearTimeout(autoSaveTimer);
       autoSaveTimer = setTimeout(() => {
         autoSaveTimer = null;
         if (!isLeaderRef.current) return;
+        if (!hasDirtySinceLastSave) return;
+        hasDirtySinceLastSave = false;
         saveRemoteGame(gameId, { silent: true }).catch(err =>
           logger.error('Auto-save failed', err),
         );
@@ -201,9 +205,12 @@ export function useRealtimeGameSync() {
       }
       if (autoSaveTimer !== null) {
         clearTimeout(autoSaveTimer);
-        saveRemoteGame(gameId, { silent: true }).catch(err =>
-          logger.error('Auto-save on cleanup failed', err),
-        );
+        if (hasDirtySinceLastSave) {
+          hasDirtySinceLastSave = false;
+          saveRemoteGame(gameId, { silent: true }).catch(err =>
+            logger.error('Auto-save on cleanup failed', err),
+          );
+        }
       }
       if (timers.dbFallback !== null) {
         clearTimeout(timers.dbFallback);
