@@ -4,7 +4,7 @@ import type { SerializedGame } from '@/games/store/gameFactoriesActions';
 
 export const SENDER_ID = crypto.randomUUID();
 export const PATCH_DEBOUNCE_MS = 150;
-export const AUTO_SAVE_DEBOUNCE_MS = 60_000;
+export const AUTO_SAVE_DEBOUNCE_MS = 40_000;
 export const DB_FALLBACK_MS = 3_000;
 export const BROADCAST_EVENT = 'game:patch';
 export const BROADCAST_FULL_REQUEST = 'game:full-request';

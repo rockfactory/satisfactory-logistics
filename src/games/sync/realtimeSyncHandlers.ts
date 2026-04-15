@@ -1,5 +1,4 @@
 import type { RealtimeChannel } from '@supabase/supabase-js';
-import { applyPatches } from 'immer';
 import { loglev } from '@/core/logger/log';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
@@ -17,7 +16,9 @@ import {
   type PatchBroadcastPayload,
   type PresencePayload,
   SENDER_ID,
+  withSuppressedBroadcast,
 } from './realtimeSyncTypes';
+import { safeChannelSend } from './safeChannelSend';
 
 const logger = loglev.getLogger('games:realtime-sync');
 
@@ -63,9 +64,12 @@ export function handleIncomingPatches(
   );
   refs.isApplyingRemote.current = true;
   try {
-    const currentState = useStore.getState();
-    const nextState = applyPatches(currentState, data.patches);
-    useStore.setState(nextState);
+    // Go through the dedicated action so the wrapper preserves the immer
+    // frozen invariant. withSuppressedBroadcast prevents the action's own
+    // emitted patches from being broadcast back to the sender.
+    withSuppressedBroadcast(() => {
+      useStore.getState().applyRemotePatches(data.patches);
+    });
   } catch (err) {
     logger.error('Failed to apply patches, requesting full state', err);
     requestFullState();
@@ -96,15 +100,19 @@ export function handleFullStateRequest(
       share_token: latestGame.shareToken,
     };
 
-    channel.send({
-      type: 'broadcast',
-      event: BROADCAST_FULL_RESPONSE,
-      payload: {
-        senderId: SENDER_ID,
-        seq: refs.seq.current,
-        serialized,
-        remoteData,
-      } satisfies FullStateResponsePayload,
+    safeChannelSend({
+      channel,
+      message: {
+        type: 'broadcast',
+        event: BROADCAST_FULL_RESPONSE,
+        payload: {
+          senderId: SENDER_ID,
+          seq: refs.seq.current,
+          serialized,
+          remoteData,
+        } satisfies FullStateResponsePayload,
+      },
+      context: 'full state response',
     });
   } catch (err) {
     logger.error('Failed to send full state response', err);
@@ -142,10 +150,14 @@ export function requestFullStateWithFallback(
   refs: SyncRefs,
   timers: SyncTimers,
 ) {
-  channel.send({
-    type: 'broadcast',
-    event: BROADCAST_FULL_REQUEST,
-    payload: { senderId: SENDER_ID } satisfies FullStateRequestPayload,
+  safeChannelSend({
+    channel,
+    message: {
+      type: 'broadcast',
+      event: BROADCAST_FULL_REQUEST,
+      payload: { senderId: SENDER_ID } satisfies FullStateRequestPayload,
+    },
+    context: 'full state request',
   });
 
   if (timers.dbFallback !== null) clearTimeout(timers.dbFallback);
