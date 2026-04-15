@@ -1,4 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
+import { NotesPanel } from '@/notes/NotesPanel';
 import { TutorialProvider } from '@/tutorial/TutorialProvider';
 import { AppContainer } from './AppContainer';
 import { Footer } from './Footer';
@@ -18,6 +19,7 @@ export function AppLayout() {
       >
         <Outlet />
       </AppContainer>
+      <NotesPanel />
     </TutorialProvider>
   );
 }

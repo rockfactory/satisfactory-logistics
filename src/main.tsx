@@ -1,6 +1,7 @@
 import 'core-js/stable/object/has-own';
 import 'core-js/stable/set/difference';
 
+import '@mantine/tiptap/styles.css';
 import * as Sentry from '@sentry/react';
 import { supabaseIntegration } from '@supabase/sentry-js-integration';
 import '@xyflow/react/dist/style.css';

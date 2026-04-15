@@ -1,3 +1,4 @@
+import type { JSONContent } from '@tiptap/react';
 import type { Tables } from '@/core/database.types';
 
 export interface Game {
@@ -10,6 +11,7 @@ export interface Game {
   allowedRecipes?: string[];
   allowedBuildings?: string[];
   collapsedFactoriesIds?: string[];
+  notes?: JSONContent | null;
   // Only if saved
   savedId?: string;
   shareToken?: string | null;

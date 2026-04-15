@@ -224,9 +224,19 @@ export function GameSettingsModal() {
         </Stack>
         <Space h={50} />
       </Modal>
-      <Tooltip label="Game settings: highlights, transport limits & buildings">
-        <Button onClick={open} variant="light" color="gray" px="xs">
-          <IconSettings size={16} />
+      <Tooltip
+        color="dark"
+        position="bottom"
+        label="Game settings: highlights, transport limits & buildings"
+      >
+        <Button
+          onClick={open}
+          variant="subtle"
+          color="gray"
+          size="xs"
+          leftSection={<IconSettings size={14} />}
+        >
+          Settings
         </Button>
       </Tooltip>
     </>

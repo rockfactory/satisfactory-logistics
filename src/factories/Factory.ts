@@ -1,3 +1,4 @@
+import type { JSONContent } from '@tiptap/react';
 import type { LogisticType } from '@/recipes/logistics/LogisticTypes';
 
 export type FactoryProgressStatus = 'draft' | 'todo' | 'in_progress' | 'done';
@@ -6,6 +7,7 @@ export interface Factory {
   id: string;
   name?: string | null;
   description?: string | null;
+  notes?: JSONContent | null;
   inputs: FactoryInput[];
   outputs: FactoryOutput[];
   powerConsumption?: number | null;

@@ -131,6 +131,10 @@ async function runChapter(
   chapter: TutorialChapter,
   navigate: (path: string) => void,
 ): Promise<'done' | 'cancelled'> {
+  // Floating notes panel overlaps tutorial highlights, so ensure it is
+  // closed before any chapter starts. Chapters that want to show it
+  // (e.g. the Notes chapter) reopen it from their own steps.
+  useStore.getState().toggleNotesPanel(false);
   if (chapter.setup) {
     await chapter.setup();
   }

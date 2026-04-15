@@ -1,3 +1,4 @@
+import type { JSONContent } from '@tiptap/react';
 import dayjs from 'dayjs';
 import { useShallow } from 'zustand/shallow';
 import { useStore } from '@/core/zustand';
@@ -54,6 +55,10 @@ export const gamesSlice = createSlice({
       },
     setGameName: (gameId: string, name: string) => state => {
       state.games[gameId].name = name;
+    },
+    setGameNotes: (gameId: string, notes: JSONContent | null) => state => {
+      if (!state.games[gameId]) return;
+      state.games[gameId].notes = notes;
     },
     setSharedGameToken: (gameId: string, token: string) => state => {
       state.games[gameId].shareToken = token;
@@ -166,6 +171,16 @@ export function useGameSettings() {
       state => state.games.games[state.games.selected ?? '']?.settings,
     ),
   );
+}
+
+export function useGameNotes() {
+  return useStore(
+    state => state.games.games[state.games.selected ?? '']?.notes ?? null,
+  );
+}
+
+export function useSelectedGameId() {
+  return useStore(state => state.games.selected);
 }
 
 export function useGameAllowedBuildings() {
