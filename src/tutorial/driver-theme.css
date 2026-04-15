@@ -16,39 +16,42 @@ body.driver-active .mantine-Tooltip-tooltip {
 
 /*
  * Help-button "blip": triggered after the user opts out of the tour, to
- * draw their attention to the persistent entry point in the header.
- * Three pulses of scale + tilt + glow over ~3s, then back to normal.
+ * draw their attention to the persistent entry point in the header. A
+ * Tailwind-style "ping" — concentric rings expand and fade out from the
+ * icon. The icon itself stays still; only the ring pulses.
  */
 @keyframes sl-tutorial-blip {
-  0%,
+  0% {
+    box-shadow:
+      0 0 0 0 var(--mantine-color-blue-5),
+      0 0 0 0 rgba(34, 139, 230, 0.7);
+    background-color: var(--mantine-color-blue-7);
+    color: var(--mantine-color-white);
+  }
+  60% {
+    box-shadow:
+      0 0 0 14px transparent,
+      0 0 0 24px rgba(34, 139, 230, 0);
+    background-color: var(--mantine-color-blue-7);
+    color: var(--mantine-color-white);
+  }
   100% {
-    transform: scale(1) rotate(0deg);
-    box-shadow: 0 0 0 0 transparent;
-  }
-  10%,
-  40%,
-  70% {
-    transform: scale(1.25) rotate(-8deg);
-    box-shadow: 0 0 0 6px var(--mantine-color-blue-5);
-    color: var(--mantine-color-blue-3);
-  }
-  20%,
-  50%,
-  80% {
-    transform: scale(1.25) rotate(8deg);
-    box-shadow: 0 0 0 6px transparent;
-  }
-  30%,
-  60%,
-  90% {
-    transform: scale(1) rotate(0deg);
-    box-shadow: 0 0 0 0 transparent;
+    box-shadow:
+      0 0 0 0 transparent,
+      0 0 0 0 rgba(34, 139, 230, 0);
+    background-color: transparent;
+    color: inherit;
   }
 }
 
 .sl-tutorial-blip {
-  animation: sl-tutorial-blip 3s ease-in-out;
   border-radius: 50%;
+  animation: sl-tutorial-blip 1.2s cubic-bezier(0, 0, 0.2, 1) 3;
+}
+
+.sl-tutorial-blip-soft {
+  border-radius: 50%;
+  animation: sl-tutorial-blip 1.2s cubic-bezier(0, 0, 0.2, 1) 1;
 }
 
 .sl-tutorial-popover.driver-popover {
