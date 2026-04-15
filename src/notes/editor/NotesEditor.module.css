@@ -4,8 +4,8 @@
     var(--mantine-color-dark-6) 55%,
     transparent
   ) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   border: 1px solid
     color-mix(in srgb, var(--mantine-color-dark-4) 55%, transparent) !important;
   border-radius: var(--mantine-radius-sm);

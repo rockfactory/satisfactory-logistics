@@ -21,6 +21,21 @@ const EMPTY_CONTENT: JSONContent = {
   content: [{ type: 'paragraph' }],
 };
 
+function NotesEditorControls() {
+  return (
+    <RichTextEditor.ControlsGroup>
+      <RichTextEditor.Bold />
+      <RichTextEditor.Italic />
+      <RichTextEditor.Strikethrough />
+      <RichTextEditor.Code />
+      <RichTextEditor.H2 />
+      <RichTextEditor.BulletList />
+      <RichTextEditor.OrderedList />
+      <RichTextEditor.TaskList />
+    </RichTextEditor.ControlsGroup>
+  );
+}
+
 export function NotesEditor({
   entityKey,
   content,
@@ -34,7 +49,7 @@ export function NotesEditor({
   // placeholder prop if the caller wants to override.
   // biome-ignore lint/correctness/useExhaustiveDependencies: pick once per entity switch
   const resolvedPlaceholder = useMemo(
-    () => placeholder ?? getRandomAdaQuote(),
+    () => placeholder ?? `${getRandomAdaQuote()}  — ADA`,
     [entityKey, placeholder],
   );
 
@@ -44,8 +59,7 @@ export function NotesEditor({
       StarterKit,
       getTaskListExtension(TipTapTaskList),
       TaskItem.configure({ nested: true }),
-      // TODO restore when height is fixed:
-      // Placeholder.configure({ placeholder: resolvedPlaceholder }),
+      Placeholder.configure({ placeholder: resolvedPlaceholder }),
     ],
     content: content ?? EMPTY_CONTENT,
     onUpdate: ({ editor: ed }) => {
@@ -71,23 +85,12 @@ export function NotesEditor({
     <RichTextEditor editor={editor}>
       {editor && (
         <BubbleMenu editor={editor} className={classes.floatingMenu}>
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.Bold />
-            <RichTextEditor.Italic />
-            <RichTextEditor.Strikethrough />
-            <RichTextEditor.Code />
-          </RichTextEditor.ControlsGroup>
+          <NotesEditorControls />
         </BubbleMenu>
       )}
       {editor && (
         <FloatingMenu editor={editor} className={classes.floatingMenu}>
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.H2 />
-            <RichTextEditor.H3 />
-            <RichTextEditor.BulletList />
-            <RichTextEditor.OrderedList />
-            <RichTextEditor.TaskList />
-          </RichTextEditor.ControlsGroup>
+          <NotesEditorControls />
         </FloatingMenu>
       )}
       <RichTextEditor.Content />
