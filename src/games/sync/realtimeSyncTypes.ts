@@ -27,6 +27,14 @@ export interface FullStateResponsePayload {
   remoteData: Partial<GameRemoteData>;
 }
 
+export interface PresencePayload {
+  senderId: string;
+  userId: string;
+  avatarUrl: string | null;
+  displayName: string;
+  factoryId: string | null;
+}
+
 const GAME_SLICES = new Set(['games', 'factories', 'solvers']);
 const IGNORED_GAME_PATHS = new Set(['selected']);
 

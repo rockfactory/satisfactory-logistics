@@ -7,6 +7,7 @@ import type { GameRemoteData } from '@/games/Game';
 import { loadRemoteGame } from '@/games/save/loadRemoteGame';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
 import { serializeGame } from '@/games/store/gameFactoriesActions';
+import type { PeerInfo } from './peersSlice';
 import {
   BROADCAST_FULL_REQUEST,
   BROADCAST_FULL_RESPONSE,
@@ -14,6 +15,7 @@ import {
   type FullStateRequestPayload,
   type FullStateResponsePayload,
   type PatchBroadcastPayload,
+  type PresencePayload,
   SENDER_ID,
 } from './realtimeSyncTypes';
 
@@ -185,14 +187,30 @@ export function requestFullStateWithFallback(
   }, DB_FALLBACK_MS);
 }
 
-export function computeLeader(channel: RealtimeChannel, refs: SyncRefs) {
-  const state = channel.presenceState<{ senderId: string }>();
+export function computeLeaderAndPeers(
+  channel: RealtimeChannel,
+  refs: SyncRefs,
+) {
+  const state = channel.presenceState<PresencePayload>();
   const senderIds: string[] = [];
+  const peerMap: Record<string, PeerInfo> = {};
+
   for (const presences of Object.values(state)) {
     for (const p of presences) {
-      if (p.senderId) senderIds.push(p.senderId);
+      if (!p.senderId) continue;
+      senderIds.push(p.senderId);
+      if (p.senderId !== SENDER_ID) {
+        peerMap[p.senderId] = {
+          senderId: p.senderId,
+          userId: p.userId ?? '',
+          avatarUrl: p.avatarUrl ?? null,
+          displayName: p.displayName ?? 'Unknown',
+          factoryId: p.factoryId ?? null,
+        };
+      }
     }
   }
+
   senderIds.sort();
   const wasLeader = refs.isLeader.current;
   refs.isLeader.current = senderIds[0] === SENDER_ID;
@@ -203,4 +221,6 @@ export function computeLeader(channel: RealtimeChannel, refs: SyncRefs) {
         : `No longer leader (${senderIds.length} peers)`,
     );
   }
+
+  useStore.getState().setPeers(peerMap);
 }
