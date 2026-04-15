@@ -17,11 +17,7 @@ import { Link } from 'react-router-dom';
 import { useStore } from '@/core/zustand';
 import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
 import { useOutputUsage } from '@/factories/components/usage/useOutputUsage';
-import type {
-  Factory,
-  FactoryInput,
-  FactoryOutput,
-} from '@/factories/Factory';
+import type { Factory, FactoryInput, FactoryOutput } from '@/factories/Factory';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
@@ -106,12 +102,13 @@ export const FactoryNode = memo((props: IFactoryNodeProps) => {
         onClick={e => e.stopPropagation()}
       >
         <Stack gap={0}>
-          <Box
-            p="sm"
-            bg="dark.5"
-            style={{ borderRadius: '4px 4px 0 0' }}
-          >
-            <Group justify="space-between" align="center" wrap="nowrap" gap="sm">
+          <Box p="sm" bg="dark.5" style={{ borderRadius: '4px 4px 0 0' }}>
+            <Group
+              justify="space-between"
+              align="center"
+              wrap="nowrap"
+              gap="sm"
+            >
               <TextInput
                 variant="unstyled"
                 size="md"
@@ -120,11 +117,9 @@ export const FactoryNode = memo((props: IFactoryNodeProps) => {
                 onBlur={e => {
                   const value = e.currentTarget.value.trim();
                   if (value === (factory.name ?? '')) return;
-                  useStore
-                    .getState()
-                    .updateFactory(factory.id, f => {
-                      f.name = value || null;
-                    });
+                  useStore.getState().updateFactory(factory.id, f => {
+                    f.name = value || null;
+                  });
                 }}
                 onKeyDown={e => {
                   if (e.key === 'Enter') {
