@@ -7,6 +7,7 @@ import { useStore } from '@/core/zustand';
 import { onStorePatches } from '@/core/zustand-helpers/immer';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
 import { useCurrentFactoryId } from '@/notes/useNotesContext';
+import { flushRemoteGameOnUnload } from './flushRemoteGameOnUnload';
 import { hasOtherPeersConnected } from './peersSlice';
 import {
   computeLeaderAndPeers,
@@ -31,7 +32,6 @@ import {
   type PresencePayload,
   SENDER_ID,
 } from './realtimeSyncTypes';
-import { flushRemoteGameOnUnload } from './flushRemoteGameOnUnload';
 
 const logger = loglev.getLogger('games:realtime-sync');
 
