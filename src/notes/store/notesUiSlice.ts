@@ -66,16 +66,16 @@ export const notesUiSlice = createSlice({
   } as NotesUiSlice,
   actions: {
     toggleNotesPanel: (open?: boolean) => state => {
-      const next = open ?? !state.isOpen;
+      const nextIsOpen = open ?? !state.isOpen;
       // Re-clamp the stored rect against the current viewport so a window
       // saved from a larger screen (or before a browser resize) can still
       // be reached when reopened.
-      if (next && !state.isOpen) {
+      if (nextIsOpen && !state.isOpen) {
         state.window = clampNotesRectToViewport(
           state.window ?? DEFAULT_NOTES_WINDOW,
         );
       }
-      state.isOpen = next;
+      state.isOpen = nextIsOpen;
     },
     toggleNotesCollapsed: (collapsed?: boolean) => state => {
       state.isCollapsed = collapsed ?? !state.isCollapsed;
