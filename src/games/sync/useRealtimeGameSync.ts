@@ -245,6 +245,26 @@ export function useRealtimeGameSync() {
     };
     window.addEventListener('beforeunload', onBeforeUnload);
 
+    // Supabase's channel heartbeat can take 30s+ to detect a dead WebSocket,
+    // so we flip the sync-connected flag off immediately when the browser
+    // reports offline, and force an early reconnect attempt when it comes back.
+    const onOffline = () => {
+      logger.warn('Browser went offline: marking sync disconnected');
+      useStore.getState().setRealtimeSyncConnected(false);
+    };
+
+    const onOnline = () => {
+      logger.info('Browser back online: forcing reconnect');
+      reconnectAttemptsRef.current = 0;
+      if (reconnectTimer !== null) {
+        clearTimeout(reconnectTimer);
+        reconnectTimer = null;
+      }
+      setReconnectEpoch(e => e + 1);
+    };
+    window.addEventListener('offline', onOffline);
+    window.addEventListener('online', onOnline);
+
     const unsubscribePatches = onStorePatches(patches => {
       if (isApplyingRemoteRef.current || isBroadcastSuppressed()) return;
       if (!channelRef.current) return;
@@ -262,6 +282,8 @@ export function useRealtimeGameSync() {
     return () => {
       isCleaningUp = true;
       window.removeEventListener('beforeunload', onBeforeUnload);
+      window.removeEventListener('offline', onOffline);
+      window.removeEventListener('online', onOnline);
       unsubscribePatches();
       if (flushTimer !== null) {
         clearTimeout(flushTimer);

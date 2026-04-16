@@ -1,0 +1,22 @@
+.wrap {
+  position: relative;
+  display: inline-flex;
+  width: var(--peer-avatar-size);
+  height: var(--peer-avatar-size);
+  vertical-align: middle;
+}
+
+.badge {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: var(--peer-avatar-badge-size);
+  height: var(--peer-avatar-badge-size);
+  border-radius: 50%;
+  border: 2px solid var(--mantine-color-dark-7);
+  background: var(--mantine-color-dark-5);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

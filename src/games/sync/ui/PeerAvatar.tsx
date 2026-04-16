@@ -1,7 +1,9 @@
 import { Avatar, Box, Tooltip } from '@mantine/core';
+import type { CSSProperties } from 'react';
 import type { PeerInfo } from '../peersSlice';
 import { SENDER_ID } from '../realtimeSyncTypes';
 import { DeviceIdenticon } from './DeviceIdenticon';
+import classes from './PeerAvatar.module.css';
 
 export interface PeerAvatarProps {
   peer: PeerInfo;
@@ -35,31 +37,16 @@ export function PeerAvatar({
   const content =
     showDeviceBadge && peer.deviceName ? (
       <Box
-        pos="relative"
-        style={{
-          display: 'inline-flex',
-          width: size,
-          height: size,
-          verticalAlign: 'middle',
-        }}
+        className={classes.wrap}
+        style={
+          {
+            '--peer-avatar-size': `${size}px`,
+            '--peer-avatar-badge-size': `${badgeSize}px`,
+          } as CSSProperties
+        }
       >
         {avatar}
-        <Box
-          pos="absolute"
-          style={{
-            bottom: -2,
-            right: -2,
-            width: badgeSize,
-            height: badgeSize,
-            borderRadius: '50%',
-            border: '2px solid var(--mantine-color-dark-7)',
-            background: 'var(--mantine-color-dark-5)',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <Box className={classes.badge}>
           <DeviceIdenticon
             seed={peer.deviceName}
             size={badgeSize - 4}
