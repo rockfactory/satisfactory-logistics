@@ -37,7 +37,14 @@ export function FactoryGridCard(props: IFactoryGridCard) {
   }
 
   return (
-    <Card key={id} withBorder component={Link} to={id} className={classes.card}>
+    <Card
+      key={id}
+      withBorder
+      component={Link}
+      to={id}
+      className={classes.card}
+      style={{ opacity: factory.progress === 'disabled' ? 0.55 : 1 }}
+    >
       <Group justify="space-between" align="center" wrap="nowrap">
         <Stack
           justify="space-between"

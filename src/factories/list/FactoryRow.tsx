@@ -62,7 +62,11 @@ export function FactoryRow(props: IFactoryRowProps) {
   }
 
   return (
-    <Card key={id} withBorder>
+    <Card
+      key={id}
+      withBorder
+      style={{ opacity: factory.progress === 'disabled' ? 0.55 : 1 }}
+    >
       <Group gap="sm" align="flex-start" justify="space-between">
         <Group gap="sm" align="flex-start">
           <Group gap={2}>

@@ -6,6 +6,7 @@ export interface FactoryViewSlice {
   filterResource: string | null;
   sortBy: 'name';
   viewMode: 'spreadsheet' | 'kanban' | 'grid';
+  readyToPlanHintDismissed?: boolean;
 }
 
 export const factoryViewSlice = createSlice({
@@ -15,6 +16,7 @@ export const factoryViewSlice = createSlice({
     filterResource: null,
     sortBy: 'name',
     viewMode: 'spreadsheet',
+    readyToPlanHintDismissed: false,
   } as FactoryViewSlice,
   actions: {
     updateFactoryView:

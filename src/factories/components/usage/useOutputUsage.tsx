@@ -6,21 +6,26 @@ import type { IFactoryUsageProps } from './FactoryUsage';
 export function useOutputUsage(
   options: Pick<IFactoryUsageProps, 'factoryId' | 'output'>,
 ) {
-  const producedAmount = useStore(state =>
-    options.factoryId === WORLD_SOURCE_ID
-      ? getWorldResourceMax(options.output)
-      : Math.max(
-          state.factories.factories[options.factoryId ?? '']?.outputs
-            ?.filter(o => o?.resource === options.output)
-            .reduce((sum, o) => sum + (o?.amount ?? 0), 0) ?? 0,
-          0,
-        ),
-  );
+  const producedAmount = useStore(state => {
+    if (options.factoryId === WORLD_SOURCE_ID) {
+      return getWorldResourceMax(options.output);
+    }
+    const source = state.factories.factories[options.factoryId ?? ''];
+    if (source?.progress === 'disabled') return 0;
+    return Math.max(
+      source?.outputs
+        ?.filter(o => o?.resource === options.output)
+        .reduce((sum, o) => sum + (o?.amount ?? 0), 0) ?? 0,
+      0,
+    );
+  });
 
   const usedAmount = useStore(
     state =>
       state.games.games[state.games.selected ?? '']?.factoriesIds
-        .flatMap(id => state.factories.factories[id]?.inputs)
+        .map(id => state.factories.factories[id])
+        .filter(f => f && f.progress !== 'disabled')
+        .flatMap(f => f!.inputs)
         .filter(
           i =>
             i?.resource === options.output &&

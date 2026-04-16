@@ -1,7 +1,16 @@
 import type { JSONContent } from '@tiptap/react';
 import type { LogisticType } from '@/recipes/logistics/LogisticTypes';
 
-export type FactoryProgressStatus = 'draft' | 'todo' | 'in_progress' | 'done';
+export type FactoryProgressStatus =
+  | 'draft'
+  | 'todo'
+  | 'in_progress'
+  | 'done'
+  | 'disabled';
+
+export const isFactoryDisabled = (
+  factory: Pick<Factory, 'progress'> | null | undefined,
+) => factory?.progress === 'disabled';
 
 export interface Factory {
   id: string;

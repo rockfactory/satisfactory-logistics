@@ -1,5 +1,6 @@
 import { type Path, setByPath } from '@clickbar/dot-diver';
 import {
+  ActionIcon,
   Alert,
   Button,
   Container,
@@ -10,7 +11,7 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { IconBulb, IconCalculator } from '@tabler/icons-react';
+import { IconBulb, IconCalculator, IconX } from '@tabler/icons-react';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useFormOnChange } from '@/core/form/useFormOnChange';
@@ -46,6 +47,10 @@ const progressValues: { value: FactoryProgressStatus; label: string }[] = [
     value: 'done',
     label: 'Done',
   },
+  {
+    value: 'disabled',
+    label: 'Disabled',
+  },
 ];
 
 export const ProductionView = ({ id }: { id: string }) => {
@@ -63,6 +68,9 @@ export const ProductionView = ({ id }: { id: string }) => {
   const hasSolverLayout = useStore(
     state => !!state.solvers.instances[id]?.layout,
   );
+  const readyToPlanHintDismissed = useStore(
+    state => state.factoryView.readyToPlanHintDismissed ?? false,
+  );
   const hasConfiguredOutputs = outputs.some(
     o => o.resource != null && (o.amount ?? 0) > 0,
   );
@@ -72,30 +80,49 @@ export const ProductionView = ({ id }: { id: string }) => {
     <Container size="lg" data-tutorial-id="factory-detail">
       <Group gap="xl" align="start" py="xl">
         <Stack gap="lg" style={{ flexGrow: 1 }}>
-          {hasConfiguredOutputs && !hasSolverLayout && (
-            <Alert
-              icon={<IconBulb size={18} />}
-              color="cyan"
-              variant="light"
-              title="Ready to plan?"
-            >
-              <Group gap="xs" align="center">
-                <Text size="sm">
-                  Use the Calculator to compute your optimal production chain.
-                </Text>
-                <Button
-                  component={Link}
-                  to={`/factories/${id}/calculator`}
-                  size="xs"
-                  color="cyan"
-                  variant="filled"
-                  leftSection={<IconCalculator size={14} />}
-                >
-                  Open Calculator
-                </Button>
-              </Group>
-            </Alert>
-          )}
+          {hasConfiguredOutputs &&
+            !hasSolverLayout &&
+            !readyToPlanHintDismissed && (
+              <Alert
+                icon={<IconBulb size={18} />}
+                color="cyan"
+                variant="light"
+                title="Ready to plan?"
+                withCloseButton={false}
+              >
+                <Group gap="xs" align="center" justify="space-between" wrap="nowrap">
+                  <Group gap="xs" align="center">
+                    <Text size="sm">
+                      Use the Calculator to compute your optimal production chain.
+                    </Text>
+                    <Button
+                      component={Link}
+                      to={`/factories/${id}/calculator`}
+                      size="xs"
+                      color="cyan"
+                      variant="filled"
+                      leftSection={<IconCalculator size={14} />}
+                    >
+                      Open Calculator
+                    </Button>
+                  </Group>
+                  <ActionIcon
+                    variant="subtle"
+                    color="cyan"
+                    aria-label="Dismiss"
+                    onClick={() =>
+                      useStore
+                        .getState()
+                        .updateFactoryView(s => {
+                          s.readyToPlanHintDismissed = true;
+                        })
+                    }
+                  >
+                    <IconX size={16} />
+                  </ActionIcon>
+                </Group>
+              </Alert>
+            )}
           <Stack gap="sm" data-tutorial-id="factory-inputs">
             <Text size="lg">Inputs</Text>
             <Stack gap="xs">
