@@ -71,7 +71,7 @@ export const factoryBasicsChapter: TutorialChapter = {
           element: '[data-tutorial-id="factory-properties"]',
           popover: {
             title: 'Name & build status',
-            description: `Every factory has a name and a build status. I named this one "${DEMO_NAME}" and set its status to “Todo”. The status tracks whether a factory is just planned, being built, or already running, and it is also what powers the columns in the Kanban view of the Factories list.`,
+            description: `Every factory has a name and a build status. I named this one "${DEMO_NAME}" and set its status to “Todo”. The status tracks whether a factory is just planned, being built, or already running, and it is also what powers the columns in the Kanban view of the Factories list. Set a factory to “Disabled” to temporarily power it down — it stays here but is excluded from global usage totals and charts, and is hidden from the Kanban board.`,
             side: 'left',
           },
           onHighlightStarted: () => {

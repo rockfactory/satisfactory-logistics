@@ -43,8 +43,12 @@ export function FactoriesSankeyChart(props: IFactoriesSankeyChartProps) {
     nodes: SankeyNode[];
     links: SankeyLink[];
   } = useMemo(() => {
+    const disabledIds = new Set(
+      factories.filter(f => f.progress === 'disabled').map(f => f.id),
+    );
+
     const nodes: SankeyNode[] = factories
-      .filter(f => f.name)
+      .filter(f => f.name && f.progress !== 'disabled')
       .map(f => ({
         id: f.name!,
         _originalId: f.id,
@@ -55,17 +59,22 @@ export function FactoriesSankeyChart(props: IFactoriesSankeyChartProps) {
       _originalId: 'WORLD',
     });
 
-    const links: SankeyLink[] = factories.flatMap(target => {
-      return (target.inputs ?? [])
-        .filter(i => i.factoryId && target.name)
-        .map(input => ({
-          source: nodes.find(n => n._originalId === input.factoryId)?.id ?? '',
-          target: target.name!,
-          value: input.amount ?? 0,
-          resourceLabel: getResourceName(input.resource ?? ''),
-        }))
-        .filter(l => l.source !== l.target);
-    });
+    const links: SankeyLink[] = factories
+      .filter(target => target.progress !== 'disabled')
+      .flatMap(target => {
+        return (target.inputs ?? [])
+          .filter(
+            i => i.factoryId && target.name && !disabledIds.has(i.factoryId),
+          )
+          .map(input => ({
+            source:
+              nodes.find(n => n._originalId === input.factoryId)?.id ?? '',
+            target: target.name!,
+            value: input.amount ?? 0,
+            resourceLabel: getResourceName(input.resource ?? ''),
+          }))
+          .filter(l => l.source !== l.target);
+      });
 
     return { nodes, links };
   }, [factories]);

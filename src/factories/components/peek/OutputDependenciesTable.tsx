@@ -17,10 +17,12 @@ export function OutputDependenciesTable(props: IOutputDependenciesTableProps) {
   const factoriesUsingOutput = useShallowStore(state =>
     state.games.games[state.games.selected ?? '']?.factoriesIds
       .map(id => state.factories.factories[id])
-      .filter(factory =>
-        factory?.inputs?.some(
-          i => i.resource === output.resource && i.factoryId === factoryId,
-        ),
+      .filter(
+        factory =>
+          factory?.progress !== 'disabled' &&
+          factory?.inputs?.some(
+            i => i.resource === output.resource && i.factoryId === factoryId,
+          ),
       ),
   );
 
