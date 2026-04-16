@@ -19,6 +19,7 @@ import { v4 } from 'uuid';
 import { useSession } from '@/auth/authSelectors';
 import { LoginModal } from '@/auth/LoginModal';
 import { useShallowStore, useStore } from '@/core/zustand';
+import { generateGameName } from '@/games/gameNameGenerator';
 import { ShareGameModal } from '@/games/page/share/ShareGameModal';
 import { loadRemoteGame } from '@/games/save/loadRemoteGame';
 import { loadRemoteGamesList } from '@/games/save/loadRemoteGamesList';
@@ -142,9 +143,7 @@ export function GameMenu(props: IGameMenuProps) {
             <Menu.Item
               onClick={() => {
                 useStore.getState().createGame(v4(), {
-                  name:
-                    'New Game ' +
-                    (Object.keys(useStore.getState().games.games).length + 1),
+                  name: generateGameName(),
                 });
               }}
               leftSection={<IconPlus color="orange" size={16} />}
