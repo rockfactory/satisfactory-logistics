@@ -8,7 +8,13 @@
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--mantine-color-dark-4);
   border-radius: var(--mantine-radius-md);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  /* Layered shadow: on a dark background a single wide blur bands at
+     1440p+, so stack short falloffs. Each layer stays ≤12px and the
+     outer one's opacity is kept low to smear the gradient edge. */
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 2px 5px rgba(0, 0, 0, 0.32),
+    0 4px 9px rgba(0, 0, 0, 0.18);
   overflow: hidden;
 }
 
