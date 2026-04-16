@@ -295,11 +295,20 @@ export function useRealtimeGameSync() {
         // change between scheduling and unmount (e.g. the timer was set while
         // we were leader, then a new peer joined and we lost it); in that case
         // the new leader will save and we must not stomp them with stale data.
+        // Also skip if the game was deleted while the timer was pending, since
+        // saveRemoteGame would fail on a missing game.
         if (isLeaderRef.current && hasDirtySinceLastSave) {
           hasDirtySinceLastSave = false;
-          saveRemoteGame(gameId, { silent: true }).catch(err =>
-            logger.error('Auto-save on cleanup failed', err),
-          );
+          const gameStillExists = !!useStore.getState().games.games[gameId];
+          if (gameStillExists) {
+            saveRemoteGame(gameId, { silent: true }).catch(err =>
+              logger.error('Auto-save on cleanup failed', err),
+            );
+          } else {
+            logger.info(
+              `Skipping cleanup save: game ${gameId} no longer exists`,
+            );
+          }
         }
       }
       if (timers.dbFallback !== null) {
