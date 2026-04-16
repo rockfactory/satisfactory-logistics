@@ -6,14 +6,12 @@ import {
 } from './stepHelpers';
 import type { TutorialChapter } from './types';
 
+const GAMES_MENU_TRIGGER = '[data-tutorial-id="games-menu-trigger"]';
 const GAMES_MENU_DROPDOWN = '[data-tutorial-id="games-menu-dropdown"]';
 const GAMES_MENU_LIST_ENTRY = '[data-tutorial-id="games-menu-list"]';
 
 const ensureGamesMenuOpen = ensurePresent(GAMES_MENU_DROPDOWN, () =>
-  clickSelector('[data-tutorial-id="games-menu-trigger"]'),
-);
-const ensureGamesListEntryVisible = ensurePresent(GAMES_MENU_LIST_ENTRY, () =>
-  clickSelector('[data-tutorial-id="games-menu-trigger"]'),
+  clickSelector(GAMES_MENU_TRIGGER),
 );
 
 export const gamesAndSyncChapter: TutorialChapter = {
@@ -42,7 +40,7 @@ export const gamesAndSyncChapter: TutorialChapter = {
           popover: {
             title: 'The Game menu',
             description:
-              'Click the active Game name in the header to open this menu. Use “New game” to start a fresh playthrough, “Rename game” to change the active Game’s name, and “Save game” to upload it to the cloud.',
+              'Click the active Game name in the header to open this menu. From here you can create a new playthrough, rename the active Game, jump to the <strong>Games list</strong>, or <strong>Share</strong> the Game with friends via a link. Your Game is saved automatically once you log in — the “Save game” entry is only a manual fallback.',
             side: 'right',
           },
           onHighlightStarted: chainHooks(
@@ -51,20 +49,20 @@ export const gamesAndSyncChapter: TutorialChapter = {
           ),
         },
         {
-          element: '[data-tutorial-id="user-menu"]',
+          element: '[data-tutorial-id="realtime-sync-indicator"]',
           popover: {
-            title: 'Login first',
+            title: 'Realtime sync indicator',
             description:
-              'Log in with Google or Discord to unlock cloud save / load / share. This is the prerequisite for everything that follows in this chapter.',
+              'This icon next to the logo tells you whether your Game is synced online. When logged in it turns green and shows the other devices / friends currently editing the same Game. While logged out it stays grey — click it to log in and unlock cloud save, multi-device sync, and sharing.',
             side: 'bottom',
           },
         },
         {
-          element: '[data-tutorial-id="game-save-button"]',
+          element: '[data-tutorial-id="user-menu"]',
           popover: {
-            title: 'Save / Load to the cloud',
+            title: 'Login to save online',
             description:
-              'Once logged in, this button saves the active Game online. The dropdown next to it also has “Load last save” to pull the latest version from any device. <br/><br/><strong>⚠️ Important:</strong> your Game is auto-saved <strong>only locally</strong> (in this browser). It is <strong>never uploaded to the cloud automatically</strong> — you must click this button (or use “Save game” from the menu) every time you want to push your changes online.',
+              'Log in with Google or Discord and your active Game is uploaded to the cloud automatically — no manual save needed. From that moment every change you make is synced in realtime to the other devices and friends you share the Game with.',
             side: 'bottom',
           },
         },
@@ -80,7 +78,7 @@ export const gamesAndSyncChapter: TutorialChapter = {
             },
           },
           onHighlightStarted: chainHooks(
-            ensureGamesListEntryVisible,
+            ensureGamesMenuOpen,
             rehighlightWhenAvailable(GAMES_MENU_LIST_ENTRY),
           ),
         },
@@ -104,7 +102,7 @@ export const gamesAndSyncChapter: TutorialChapter = {
           popover: {
             title: 'Share with friends',
             description:
-              'On any saved Game you get a Share button: it generates a link your friends can open to view and edit the same Game (visible only after you log in and save the Game at least once).',
+              'On any saved Game you get a Share button: it generates a link your friends can open to view and edit the same Game (visible only after you log in and the Game has been saved at least once — once logged in, this happens automatically).',
             side: 'top',
           },
         },

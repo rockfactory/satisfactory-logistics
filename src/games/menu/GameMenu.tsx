@@ -1,4 +1,4 @@
-import { Button, Menu } from '@mantine/core';
+import { Box, Button, Menu } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import {
@@ -11,19 +11,20 @@ import {
   IconPencil,
   IconPlus,
   IconSettings,
+  IconShare,
 } from '@tabler/icons-react';
-import cx from 'clsx';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { useSession } from '@/auth/authSelectors';
+import { LoginModal } from '@/auth/LoginModal';
 import { useShallowStore, useStore } from '@/core/zustand';
+import { ShareGameModal } from '@/games/page/share/ShareGameModal';
 import { loadRemoteGame } from '@/games/save/loadRemoteGame';
 import { loadRemoteGamesList } from '@/games/save/loadRemoteGamesList';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
 import { openGameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { GameDetailModal } from './GameDetailModal';
-import classes from './GameMenu.module.css';
 
 export interface IGameMenuProps {}
 
@@ -54,10 +55,11 @@ export function GameMenu(props: IGameMenuProps) {
   const isSelectedSavedOnRemote = useStore(
     state => !!state.games.games[selectedId ?? '']?.savedId,
   );
-  const isSaving = useStore(state => state.gameSave.isSaving);
   const navigate = useNavigate();
 
-  const [opened, { toggle, open, close }] = useDisclosure();
+  const [editOpened, { open: openEdit, close: closeEdit }] = useDisclosure();
+  const [shareOpened, { open: openShare, close: closeShare }] = useDisclosure();
+  const [loginOpened, { open: openLogin, close: closeLogin }] = useDisclosure();
 
   const gameOptions = useGameOptions();
 
@@ -91,9 +93,17 @@ export function GameMenu(props: IGameMenuProps) {
     await loadRemoteGame(gameId, { override: true });
   }, []);
 
+  const handleShareGame = useCallback(() => {
+    if (!session) {
+      openLogin();
+      return;
+    }
+    openShare();
+  }, [session, openLogin, openShare]);
+
   return (
     <>
-      <Button.Group data-tutorial-id="games-menu">
+      <Box data-tutorial-id="games-menu" display="inline-flex">
         <Menu>
           <Menu.Target>
             <Button
@@ -148,7 +158,7 @@ export function GameMenu(props: IGameMenuProps) {
                 <IconPencil color="var(--mantine-color-blue-3)" size={16} />
               }
               onClick={() => {
-                open();
+                openEdit();
               }}
             >
               Rename game
@@ -160,6 +170,15 @@ export function GameMenu(props: IGameMenuProps) {
               onClick={openGameSettingsModal}
             >
               Game settings
+            </Menu.Item>
+            <Menu.Item
+              data-tutorial-id="game-share-menu"
+              leftSection={
+                <IconShare color="var(--mantine-color-blue-4)" size={16} />
+              }
+              onClick={handleShareGame}
+            >
+              Share game
             </Menu.Item>
             <Menu.Item
               leftSection={<IconDeviceFloppy size={16} />}
@@ -187,22 +206,26 @@ export function GameMenu(props: IGameMenuProps) {
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
-        <Button
-          data-tutorial-id="game-save-button"
-          className={cx(classes.gameMenuSecondaryButton)}
-          variant="light"
-          color="gray"
-          loading={isSaving}
-          onClick={() => {
-            handleSaveGame(selectedId);
-          }}
-        >
-          <IconDeviceFloppy size={16} />
-        </Button>
-      </Button.Group>
+      </Box>
       {selectedId && (
-        <GameDetailModal opened={opened} close={close} gameId={selectedId} />
+        <GameDetailModal
+          opened={editOpened}
+          close={closeEdit}
+          gameId={selectedId}
+        />
       )}
+      {selectedId && (
+        <ShareGameModal
+          gameId={selectedId}
+          opened={shareOpened}
+          onClose={closeShare}
+        />
+      )}
+      <LoginModal
+        opened={loginOpened}
+        close={closeLogin}
+        message="Log in to share your Game with friends. After login, the share link is generated automatically."
+      />
     </>
   );
 }
