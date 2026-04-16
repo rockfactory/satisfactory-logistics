@@ -199,6 +199,10 @@ export function useTutorial() {
 
           useStore.getState().markChapterCompleted(chapter.id);
 
+          // The floating Notes panel (zIndex 300) sits above the Mantine
+          // outro modal — close it so the outro is reachable.
+          useStore.getState().toggleNotesPanel(false);
+
           // Hand control to the user via the outro modal — they pick
           // whether to chain into the next chapter or stop here.
           const choice = await requestOutro({

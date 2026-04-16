@@ -23,6 +23,39 @@ export const DEFAULT_NOTES_WINDOW: NotesWindowRect = {
   height: 520,
 };
 
+const NOTES_MIN_WIDTH = 280;
+const NOTES_MIN_HEIGHT = 240;
+const NOTES_VIEWPORT_MARGIN = 16;
+
+export function clampNotesRectToViewport(
+  rect: NotesWindowRect,
+): NotesWindowRect {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const width = Math.max(
+    NOTES_MIN_WIDTH,
+    Math.min(rect.width, vw - NOTES_VIEWPORT_MARGIN * 2),
+  );
+  const height = Math.max(
+    NOTES_MIN_HEIGHT,
+    Math.min(rect.height, vh - NOTES_VIEWPORT_MARGIN * 2),
+  );
+  const maxX = Math.max(
+    NOTES_VIEWPORT_MARGIN,
+    vw - width - NOTES_VIEWPORT_MARGIN,
+  );
+  const maxY = Math.max(
+    NOTES_VIEWPORT_MARGIN,
+    vh - height - NOTES_VIEWPORT_MARGIN,
+  );
+  return {
+    x: Math.min(Math.max(rect.x, NOTES_VIEWPORT_MARGIN), maxX),
+    y: Math.min(Math.max(rect.y, NOTES_VIEWPORT_MARGIN), maxY),
+    width,
+    height,
+  };
+}
+
 export const notesUiSlice = createSlice({
   name: 'notesUi',
   value: {
@@ -33,7 +66,16 @@ export const notesUiSlice = createSlice({
   } as NotesUiSlice,
   actions: {
     toggleNotesPanel: (open?: boolean) => state => {
-      state.isOpen = open ?? !state.isOpen;
+      const next = open ?? !state.isOpen;
+      // Re-clamp the stored rect against the current viewport so a window
+      // saved from a larger screen (or before a browser resize) can still
+      // be reached when reopened.
+      if (next && !state.isOpen) {
+        state.window = clampNotesRectToViewport(
+          state.window ?? DEFAULT_NOTES_WINDOW,
+        );
+      }
+      state.isOpen = next;
     },
     toggleNotesCollapsed: (collapsed?: boolean) => state => {
       state.isCollapsed = collapsed ?? !state.isCollapsed;

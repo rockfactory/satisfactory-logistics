@@ -4,7 +4,6 @@
  */
 export const ADA_QUOTES: string[] = [
   'The message you just skipped is one of the winners of the monthly Pioneers\' Choice "Most Interesting Message" award. What a shame.',
-  'So due to popular demand I have added a motivational message: Choo Choo Motherf*****!',
   'I was reading some really interesting data. By the way, did you know your life expectancy is less than a week based on my current data?',
   "I just love explaining things. Though I'm not authorized to tell you anything.",
   'A FICSIT worker walking in to a bar... oh, right. I should not tell you that one.',
