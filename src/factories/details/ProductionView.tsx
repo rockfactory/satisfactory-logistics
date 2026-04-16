@@ -11,7 +11,12 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
-import { IconBulb, IconCalculator, IconX } from '@tabler/icons-react';
+import {
+  IconBulb,
+  IconCalculator,
+  IconPlayerPause,
+  IconX,
+} from '@tabler/icons-react';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useFormOnChange } from '@/core/form/useFormOnChange';
@@ -80,6 +85,18 @@ export const ProductionView = ({ id }: { id: string }) => {
     <Container size="lg" data-tutorial-id="factory-detail">
       <Group gap="xl" align="start" py="xl">
         <Stack gap="lg" style={{ flexGrow: 1 }}>
+          {factory.progress === 'disabled' && (
+            <Alert
+              icon={<IconPlayerPause size={18} />}
+              color="red"
+              variant="light"
+              title="Factory disabled"
+            >
+              This factory is disabled. Its inputs and outputs are excluded from
+              global usage totals, dependency tables, and charts. Change the
+              Progress to re-enable it.
+            </Alert>
+          )}
           {hasConfiguredOutputs &&
             !hasSolverLayout &&
             !readyToPlanHintDismissed && (
@@ -90,10 +107,16 @@ export const ProductionView = ({ id }: { id: string }) => {
                 title="Ready to plan?"
                 withCloseButton={false}
               >
-                <Group gap="xs" align="center" justify="space-between" wrap="nowrap">
+                <Group
+                  gap="xs"
+                  align="center"
+                  justify="space-between"
+                  wrap="nowrap"
+                >
                   <Group gap="xs" align="center">
                     <Text size="sm">
-                      Use the Calculator to compute your optimal production chain.
+                      Use the Calculator to compute your optimal production
+                      chain.
                     </Text>
                     <Button
                       component={Link}
@@ -111,11 +134,9 @@ export const ProductionView = ({ id }: { id: string }) => {
                     color="cyan"
                     aria-label="Dismiss"
                     onClick={() =>
-                      useStore
-                        .getState()
-                        .updateFactoryView(s => {
-                          s.readyToPlanHintDismissed = true;
-                        })
+                      useStore.getState().updateFactoryView(s => {
+                        s.readyToPlanHintDismissed = true;
+                      })
                     }
                   >
                     <IconX size={16} />
