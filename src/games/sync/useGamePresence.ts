@@ -26,28 +26,35 @@ export function triggerImmediatePresencePoll(): void {
 }
 
 export function useGamePresence(): void {
-  const session = useStore(s => s.auth.session);
+  // Stable trigger: only re-run when the actual user changes. Supabase
+  // rotates the session object on token refresh (including on tab visibility
+  // change); depending on the full object here would tear down the hook on
+  // every tab switch and reset HTTP presence to zero, which in turn closes
+  // the websocket and restarts the whole dance.
+  const sessionUserId = useStore(s => s.auth.session?.user?.id ?? null);
   const selectedGameId = useStore(s => s.games.selected);
   const savedId = useStore(s =>
     selectedGameId ? s.games.games[selectedGameId]?.savedId : undefined,
   );
 
   useEffect(() => {
-    if (!session || !savedId || !selectedGameId) {
+    logger.debug(
+      `[effect presence] run sessionUserId=${sessionUserId ?? 'none'} savedId=${savedId ?? 'none'} selectedGameId=${selectedGameId ?? 'none'}`,
+    );
+    if (!sessionUserId || !savedId || !selectedGameId) {
       useStore.getState().clearHttpPresence();
       return;
     }
 
-    const userId = session.user.id;
+    const userId = sessionUserId;
     let disposed = false;
     let lastPollAt = 0;
     const inflightAborts = new Set<AbortController>();
 
-    // Read the current access token on every call in case it rotates between
-    // the effect starting and a later tick. Session changes re-run the effect
-    // (dependency below), so this is belt-and-suspenders.
-    const getToken = () =>
-      useStore.getState().auth.session?.access_token ?? session.access_token;
+    // The keepalive DELETE on beforeunload needs the raw access token
+    // because the SDK doesn't support keepalive. We read imperatively so we
+    // always pick up a freshly-refreshed token.
+    const getToken = () => useStore.getState().auth.session?.access_token ?? '';
 
     async function doUpsert(): Promise<void> {
       try {
@@ -55,7 +62,6 @@ export function useGamePresence(): void {
           savedId: savedId!,
           senderId: SENDER_ID,
           userId,
-          accessToken: getToken(),
         });
       } catch (err) {
         logger.warn('presence upsert failed', err);
@@ -68,7 +74,6 @@ export function useGamePresence(): void {
       try {
         const rows = await fetchPresence({
           savedId: savedId!,
-          accessToken: getToken(),
           signal: ac.signal,
         });
         if (disposed) return;
@@ -79,8 +84,17 @@ export function useGamePresence(): void {
           otherSenderIds.add(row.sender_id);
         }
 
+        const prev = useStore.getState().peers.httpPresence.otherSendersCount;
+        const next = otherSenderIds.size;
+        if (prev !== next) {
+          logger.info(
+            `poll: otherSendersCount ${prev} → ${next} (rows=${rows.length})`,
+          );
+        } else {
+          logger.debug(`poll: otherSendersCount stable at ${next}`);
+        }
         useStore.getState().setHttpPresence({
-          otherSendersCount: otherSenderIds.size,
+          otherSendersCount: next,
         });
       } catch (err) {
         if ((err as Error)?.name !== 'AbortError') {
@@ -132,8 +146,12 @@ export function useGamePresence(): void {
       if (document.visibilityState === 'visible') triggerImmediateWithUpsert();
     };
     const onOnline = () => triggerImmediateWithUpsert();
+    // Window focus catches cases where the user alt-tabs or clicks on the
+    // window without changing visibility state (e.g. switching between apps).
+    const onFocus = () => triggerImmediateWithUpsert();
     document.addEventListener('visibilitychange', onVisibility);
     window.addEventListener('online', onOnline);
+    window.addEventListener('focus', onFocus);
 
     const onBeforeUnload = () => {
       const token = getToken();
@@ -147,12 +165,16 @@ export function useGamePresence(): void {
     window.addEventListener('beforeunload', onBeforeUnload);
 
     return () => {
+      logger.debug(
+        `[effect presence] cleanup sessionUserId=${sessionUserId} savedId=${savedId} selectedGameId=${selectedGameId}`,
+      );
       disposed = true;
       if (currentImmediatePoll === triggerImmediate)
         currentImmediatePoll = null;
       clearInterval(tickTimer);
       document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('online', onOnline);
+      window.removeEventListener('focus', onFocus);
       window.removeEventListener('beforeunload', onBeforeUnload);
       for (const ac of inflightAborts) ac.abort();
       inflightAborts.clear();
@@ -168,5 +190,5 @@ export function useGamePresence(): void {
         });
       }
     };
-  }, [session, savedId, selectedGameId]);
+  }, [sessionUserId, savedId, selectedGameId]);
 }

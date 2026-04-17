@@ -13,16 +13,20 @@ export const BROADCAST_FULL_RESPONSE = 'game:full-response';
 // HTTP presence (see game_presence table + useGamePresence hook).
 // The websocket channel is opened only when the HTTP poll detects at least
 // one other peer on the same save. Heartbeat and poll share the same tick.
-export const PRESENCE_TICK_MS = 45_000;
+// 20s is a balance between peer-detection latency (for a remote tab that
+// isn't in focus and won't opportunistically poll) and HTTP load.
+export const PRESENCE_TICK_MS = 20_000;
 // TTL must tolerate browser throttling of setInterval in background tabs
 // (Chrome can stretch to 60s+; Safari further). We set 180s (~4x heartbeat)
 // so a backgrounded tab's row doesn't go stale while the tab is just
 // switched away for a few minutes.
 export const PRESENCE_TTL_SECONDS = 180;
 // Grace period before closing the websocket when HTTP presence drops to
-// zero. Avoids tearing down the channel on transient gaps (background tab
-// throttling, momentary network blip) that the WS itself would weather fine.
-export const ALONE_DOWNGRADE_MS = 180_000;
+// zero. Absorbs short flaps (reload, token refresh, brief network blip)
+// without keeping the slot alive long after a real disconnect. Stacks on
+// top of TTL (PRESENCE_TTL_SECONDS) + poll cadence (PRESENCE_TICK_MS), so
+// real-world channel close on a crash is ~TTL + poll + this.
+export const ALONE_DOWNGRADE_MS = 60_000;
 // Throttle for opportunistic polls (visibilitychange, online event,
 // HoverCard open). Prevents spamming the REST endpoint.
 export const PRESENCE_OPPORTUNISTIC_MIN_GAP_MS = 5_000;

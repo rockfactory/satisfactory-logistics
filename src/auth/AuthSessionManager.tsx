@@ -24,7 +24,9 @@ export function AuthSessionManager(props: IAuthSessionManagerProps) {
     const {
       data: { subscription },
     } = supabaseClient.auth.onAuthStateChange((_event, session) => {
-      logger.info('Loading session from remote', _event);
+      logger.info(
+        `onAuthStateChange event=${_event} userId=${session?.user?.id ?? 'none'} tokenTail=${session?.access_token?.slice(-8) ?? 'none'}`,
+      );
       logger.log('Session Loaded from remote', session);
 
       setSession(session);
