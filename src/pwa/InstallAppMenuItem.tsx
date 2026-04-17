@@ -1,4 +1,4 @@
-import { Button } from '@mantine/core';
+import { Menu } from '@mantine/core';
 import { IconDownload } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 
@@ -14,12 +14,11 @@ interface BeforeInstallPromptEvent extends Event {
 function isStandalone(): boolean {
   if (typeof window === 'undefined') return false;
   if (window.matchMedia('(display-mode: standalone)').matches) return true;
-  // Safari iOS legacy flag
   const nav = window.navigator as Navigator & { standalone?: boolean };
   return nav.standalone === true;
 }
 
-export function InstallAppButton() {
+export function InstallAppMenuItem() {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(
     null,
   );
@@ -59,15 +58,12 @@ export function InstallAppButton() {
   };
 
   return (
-    <Button
-      data-tutorial-id="header-install-app"
-      variant="subtle"
-      color="gray"
-      size="xs"
+    <Menu.Item
+      data-tutorial-id="install-app-menu-item"
       leftSection={<IconDownload size={16} />}
       onClick={handleClick}
     >
-      Install app
-    </Button>
+      Install as app
+    </Menu.Item>
   );
 }

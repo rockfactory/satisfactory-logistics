@@ -14,6 +14,7 @@ import cx from 'clsx';
 import { useState } from 'react';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
+import { InstallAppMenuItem } from '@/pwa/InstallAppMenuItem';
 import { useSession } from './authSelectors';
 import { LoginModal } from './LoginModal';
 import classes from './UserMenu.module.css';
@@ -76,6 +77,7 @@ export function UserMenu(props: IUserMenuProps) {
         </UnstyledButton>
       </Menu.Target>
       <Menu.Dropdown>
+        <InstallAppMenuItem />
         <Menu.Item
           leftSection={<IconLogout size={16} />}
           onClick={async () => {
