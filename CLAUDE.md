@@ -149,6 +149,10 @@ Savegame files (`.sav`) are parsed using `@etothepii/satisfactory-file-parser` i
 
 ## Code Conventions
 
+### Writing Style
+
+- **Do not use em dashes (`—`)** in code comments, UI copy, notification messages, commit messages, or any text that ships to users. Prefer commas, parentheses, colons, or separate sentences. Applies to both source code and generated text.
+
 ### TypeScript
 
 - Strict mode is enabled (`tsconfig.json`).
