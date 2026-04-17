@@ -53,6 +53,7 @@ export default defineConfig({
         globPatterns: [
           '**/*.{js,css,html,json,woff2,wasm}',
           'images/game/**/*.{png,webp,jpg}',
+          'images/map/**/*.{png,jpg,webp}',
           'icons/*.png',
         ],
         navigateFallback: '/index.html',

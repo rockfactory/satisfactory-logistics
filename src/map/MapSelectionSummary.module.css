@@ -1,0 +1,138 @@
+.panel {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 500;
+  padding: 10px 12px;
+  border-radius: var(--mantine-radius-md);
+  background-color: rgba(20, 21, 23, 0.94);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color: var(--mantine-color-gray-1);
+  font-size: 13px;
+  line-height: 1.4;
+  max-height: min(55%, 420px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background-color: var(--mantine-color-violet-6);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--mantine-radius-sm);
+  background-color: var(--mantine-color-dark-6);
+  border: 1px solid var(--mantine-color-dark-5);
+}
+
+.rowIcon {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  object-fit: contain;
+}
+
+.rowText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.rowName {
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--mantine-color-gray-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rowMeta {
+  font-size: 11px;
+  color: var(--mantine-color-gray-5);
+  font-variant-numeric: tabular-nums;
+}
+
+.rowTotal {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--mantine-color-gray-0);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.rowUnit {
+  font-size: 10px;
+  color: var(--mantine-color-gray-5);
+  margin-left: 2px;
+  font-weight: 500;
+}
+
+.empty {
+  color: var(--mantine-color-gray-4);
+  font-size: 12px;
+  font-style: italic;
+  padding: 2px 0;
+}
+
+.collapsed {
+  max-height: none;
+  padding: 6px 10px;
+}
+
+.collapsedSummary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}

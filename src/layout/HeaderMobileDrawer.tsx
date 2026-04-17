@@ -50,17 +50,24 @@ export function HeaderMobileDrawer({
         <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
           Navigation
         </Text>
-        {(['factories', 'charts', 'calculator', 'tools', 'codex'] as const).map(
-          tab => (
-            <NavLink
-              key={tab}
-              label={capitalize(tab)}
-              leftSection={TAB_ICONS[tab]}
-              active={activeTab === tab}
-              onClick={() => navigateTo(tab)}
-            />
-          ),
-        )}
+        {(
+          [
+            'factories',
+            'map',
+            'charts',
+            'calculator',
+            'tools',
+            'codex',
+          ] as const
+        ).map(tab => (
+          <NavLink
+            key={tab}
+            label={capitalize(tab)}
+            leftSection={TAB_ICONS[tab]}
+            active={activeTab === tab}
+            onClick={() => navigateTo(tab)}
+          />
+        ))}
         <Divider my="xs" />
         <TutorialMenu />
         <UserMenu />

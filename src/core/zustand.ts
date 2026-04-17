@@ -13,6 +13,12 @@ import { gameFactoriesActions } from '@/games/store/gameFactoriesActions';
 import { gameRealtimeActions } from '@/games/store/gameRealtimeActions';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
 import { peersSlice } from '@/games/sync/peersSlice';
+import { mapSelectionSlice } from '@/map/store/mapSelectionSlice';
+import {
+  initialMapSliceState,
+  type MapSlice,
+  mapSlice,
+} from '@/map/store/mapSlice';
 import { notesUiSlice } from '@/notes/store/notesUiSlice';
 import { solverFactoriesActions } from '@/solver/store/solverFactoriesActions';
 import { solversSlice } from '@/solver/store/solverSlice';
@@ -41,6 +47,8 @@ const slices = withSlices(
   tutorialSlice,
   notesUiSlice,
   peersSlice,
+  mapSlice,
+  mapSelectionSlice,
 );
 
 export type RootState = ReturnType<typeof slices>;
@@ -57,14 +65,34 @@ export const useStore = create(
   devtools(
     persist(slicesWithActions, {
       name: 'zustand:persist',
-      partialize: state => omit(state, ['gameSave', 'peers']),
-      version: 4,
+      partialize: state => omit(state, ['gameSave', 'peers', 'mapSelection']),
+      version: 5,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
       ),
       onRehydrateStorage: () => state => {
         logger.info('Rehydrated storage');
-        state?.setHasRehydratedLocalData(true);
+        if (state) {
+          // Backfill any missing map-slice fields. Earlier shapes of
+          // this slice shipped without `usedNodesByGame` /
+          // `resourceFilters` / `hideUsedNodes`, and zustand's default
+          // shallow merge leaves those stale shapes as-is on rehydrate.
+          const mapState = (state as unknown as { map?: Partial<MapSlice> })
+            .map;
+          if (mapState) {
+            const defaults = initialMapSliceState();
+            if (!mapState.resourceFilters)
+              mapState.resourceFilters = defaults.resourceFilters;
+            if (!mapState.usedNodesByGame)
+              mapState.usedNodesByGame = defaults.usedNodesByGame;
+            if (typeof mapState.hideUsedNodes !== 'boolean')
+              mapState.hideUsedNodes = defaults.hideUsedNodes;
+          } else {
+            (state as unknown as { map: MapSlice }).map =
+              initialMapSliceState();
+          }
+          state.setHasRehydratedLocalData(true);
+        }
       },
       migrate: (state, version) => {
         if (version === 0) {
@@ -105,6 +133,19 @@ export const useStore = create(
           return migrateStoreWithPlan(storeMigrationV4, state as any, draft => {
             draft.factoryView.viewMode = 'grid';
           });
+        }
+
+        if (version === 4) {
+          logger.log('Migrating from version 4 to 5 [map slice reshape]');
+          // The map slice changed shape (per-resource purity filters,
+          // used-node tracking). Replace the old slice wholesale with
+          // the new default. We can't rely on the persist middleware's
+          // shallow merge to fill in missing keys — it overwrites the
+          // base `map` slice with whatever the persisted state had.
+          return {
+            ...(state as any),
+            map: initialMapSliceState(),
+          };
         }
 
         return state;
