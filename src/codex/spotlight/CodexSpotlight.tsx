@@ -1,8 +1,10 @@
 import { Image } from '@mantine/core';
 import {
+  IconBackspace,
   IconBox,
   IconBuildingFactory2,
   IconChevronRight,
+  IconCornerDownLeft,
   IconHomeCog,
   IconToolsKitchen2,
 } from '@tabler/icons-react';
@@ -12,13 +14,17 @@ import { useNavigate } from 'react-router-dom';
 
 import type { Factory } from '@/factories/Factory';
 import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
-import { AllFactoryBuildings } from '@/recipes/FactoryBuilding';
+import {
+  AllFactoryBuildings,
+  type FactoryBuilding,
+} from '@/recipes/FactoryBuilding';
 import {
   AllFactoryItems,
   AllFactoryItemsMap,
+  type FactoryItem,
   FactoryItemForm,
 } from '@/recipes/FactoryItem';
-import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
+import { AllFactoryRecipes, type FactoryRecipe } from '@/recipes/FactoryRecipe';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import './cmdk.css';
 
@@ -147,8 +153,11 @@ export function CodexSpotlight() {
       <Command.List ref={listRef}>
         <Command.Empty>No results found.</Command.Empty>
 
-        {!page && (
+        {!page && !search && (
           <RootPage pushPage={pushPage} factoryCount={factories.length} />
+        )}
+        {!page && search && (
+          <UnifiedResultsPage factories={factories} select={select} />
         )}
         {page === 'factories' && (
           <FactoriesPage factories={factories} select={select} />
@@ -163,12 +172,21 @@ export function CodexSpotlight() {
         <span>
           {pages.length > 0 ? (
             <>
-              <kbd>↩</kbd> select &nbsp; <kbd>⌫</kbd> back &nbsp; <kbd>esc</kbd>{' '}
-              close
+              <kbd>
+                <IconCornerDownLeft size={12} />
+              </kbd>{' '}
+              select &nbsp;{' '}
+              <kbd>
+                <IconBackspace size={12} />
+              </kbd>{' '}
+              back &nbsp; <kbd>esc</kbd> close
             </>
           ) : (
             <>
-              <kbd>↩</kbd> select &nbsp; <kbd>esc</kbd> close
+              <kbd>
+                <IconCornerDownLeft size={12} />
+              </kbd>{' '}
+              select &nbsp; <kbd>esc</kbd> close
             </>
           )}
         </span>
@@ -252,49 +270,9 @@ function FactoriesPage({
 }) {
   return (
     <Command.Group heading="Factories">
-      {factories.map(f => {
-        const outputs = (f.outputs ?? []).filter(
-          (o): o is typeof o & { resource: string } => Boolean(o?.resource),
-        );
-        return (
-          <Command.Item
-            key={f.id}
-            value={`${f.name ?? 'Unnamed Factory'} ${f.id}`}
-            keywords={outputs.map(o => o.resource)}
-            onSelect={() => select(`/factories/${f.id}/calculator`)}
-          >
-            <div className="cmdk-item-icon">
-              <IconHomeCog size={22} />
-            </div>
-            <div className="cmdk-item-content">
-              <span className="cmdk-item-label">
-                {f.name || 'Unnamed Factory'}
-              </span>
-              {outputs.length > 0 && (
-                <span className="cmdk-item-outputs">
-                  {outputs.map((o, i) => {
-                    const item = AllFactoryItemsMap[o.resource];
-                    return (
-                      <span key={o.resource} className="cmdk-item-output">
-                        {i > 0 && (
-                          <span className="cmdk-item-output-sep">·</span>
-                        )}
-                        <FactoryItemImage id={o.resource} size={16} />
-                        <span>{item?.displayName ?? o.resource}</span>
-                        {o.amount != null && (
-                          <span className="cmdk-item-output-amount">
-                            {o.amount}/min
-                          </span>
-                        )}
-                      </span>
-                    );
-                  })}
-                </span>
-              )}
-            </div>
-          </Command.Item>
-        );
-      })}
+      {factories.map(f => (
+        <FactoryRow key={f.id} factory={f} select={select} />
+      ))}
     </Command.Group>
   );
 }
@@ -303,20 +281,7 @@ function ItemsPage({ select }: { select: (path: string) => void }) {
   return (
     <Command.Group heading="Items">
       {validItems.map(item => (
-        <Command.Item
-          key={item.id}
-          value={`${item.displayName} ${item.id}`}
-          keywords={[item.name, item.form]}
-          onSelect={() => select(`/codex/items/${item.id}`)}
-        >
-          <div className="cmdk-item-icon">
-            <FactoryItemImage id={item.id} size={24} />
-          </div>
-          <div className="cmdk-item-content">
-            <span className="cmdk-item-label">{item.displayName}</span>
-            <span className="cmdk-item-description">{item.form}</span>
-          </div>
-        </Command.Item>
+        <ItemRow key={item.id} item={item} select={select} />
       ))}
     </Command.Group>
   );
@@ -325,36 +290,9 @@ function ItemsPage({ select }: { select: (path: string) => void }) {
 function BuildingsPage({ select }: { select: (path: string) => void }) {
   return (
     <Command.Group heading="Buildings">
-      {AllFactoryBuildings.map(b => {
-        const category = b.powerGenerator
-          ? 'Power Generator'
-          : b.extractor
-            ? 'Extractor'
-            : b.conveyor || b.pipeline
-              ? 'Logistics'
-              : 'Production';
-        return (
-          <Command.Item
-            key={b.id}
-            value={`${b.name} ${b.id}`}
-            keywords={[category]}
-            onSelect={() => select(`/codex/buildings/${b.id}`)}
-          >
-            <div className="cmdk-item-icon">
-              <Image
-                w={24}
-                h={24}
-                fit="contain"
-                src={b.imagePath?.replace('_256', '_64')}
-              />
-            </div>
-            <div className="cmdk-item-content">
-              <span className="cmdk-item-label">{b.name}</span>
-              <span className="cmdk-item-description">{category}</span>
-            </div>
-          </Command.Item>
-        );
-      })}
+      {AllFactoryBuildings.map(b => (
+        <BuildingRow key={b.id} building={b} select={select} />
+      ))}
     </Command.Group>
   );
 }
@@ -363,20 +301,171 @@ function RecipesPage({ select }: { select: (path: string) => void }) {
   return (
     <Command.Group heading="Recipes">
       {AllFactoryRecipes.map(r => (
-        <Command.Item
-          key={r.id}
-          value={`${r.name} ${r.id}`}
-          keywords={r.products.map(p => p.resource)}
-          onSelect={() => select(`/codex/recipes/${r.id}`)}
-        >
-          <div className="cmdk-item-icon">
-            <FactoryItemImage id={r.products[0]?.resource} size={24} />
-          </div>
-          <div className="cmdk-item-content">
-            <span className="cmdk-item-label">{r.name}</span>
-          </div>
-        </Command.Item>
+        <RecipeRow key={r.id} recipe={r} select={select} />
       ))}
     </Command.Group>
+  );
+}
+
+function UnifiedResultsPage({
+  factories,
+  select,
+}: {
+  factories: Factory[];
+  select: (path: string) => void;
+}) {
+  return (
+    <>
+      {factories.length > 0 && (
+        <Command.Group heading="Factories">
+          {factories.map(f => (
+            <FactoryRow key={f.id} factory={f} select={select} />
+          ))}
+        </Command.Group>
+      )}
+      <Command.Group heading="Items">
+        {validItems.map(item => (
+          <ItemRow key={item.id} item={item} select={select} />
+        ))}
+      </Command.Group>
+      <Command.Group heading="Buildings">
+        {AllFactoryBuildings.map(b => (
+          <BuildingRow key={b.id} building={b} select={select} />
+        ))}
+      </Command.Group>
+      <Command.Group heading="Recipes">
+        {AllFactoryRecipes.map(r => (
+          <RecipeRow key={r.id} recipe={r} select={select} />
+        ))}
+      </Command.Group>
+    </>
+  );
+}
+
+function FactoryRow({
+  factory: f,
+  select,
+}: {
+  factory: Factory;
+  select: (path: string) => void;
+}) {
+  const outputs = (f.outputs ?? []).filter(
+    (o): o is typeof o & { resource: string } => Boolean(o?.resource),
+  );
+  return (
+    <Command.Item
+      value={`${f.name ?? 'Unnamed Factory'} ${f.id}`}
+      keywords={outputs.map(o => o.resource)}
+      onSelect={() => select(`/factories/${f.id}/calculator`)}
+    >
+      <div className="cmdk-item-icon">
+        <IconHomeCog size={22} />
+      </div>
+      <div className="cmdk-item-content">
+        <span className="cmdk-item-label">{f.name || 'Unnamed Factory'}</span>
+        {outputs.length > 0 && (
+          <span className="cmdk-item-outputs">
+            {outputs.map((o, i) => {
+              const item = AllFactoryItemsMap[o.resource];
+              return (
+                <span key={o.resource} className="cmdk-item-output">
+                  {i > 0 && <span className="cmdk-item-output-sep">·</span>}
+                  <FactoryItemImage id={o.resource} size={16} />
+                  <span>{item?.displayName ?? o.resource}</span>
+                  {o.amount != null && (
+                    <span className="cmdk-item-output-amount">
+                      {o.amount}/min
+                    </span>
+                  )}
+                </span>
+              );
+            })}
+          </span>
+        )}
+      </div>
+    </Command.Item>
+  );
+}
+
+function ItemRow({
+  item,
+  select,
+}: {
+  item: FactoryItem;
+  select: (path: string) => void;
+}) {
+  return (
+    <Command.Item
+      value={`${item.displayName} ${item.id}`}
+      keywords={[item.name, item.form]}
+      onSelect={() => select(`/codex/items/${item.id}`)}
+    >
+      <div className="cmdk-item-icon">
+        <FactoryItemImage id={item.id} size={24} />
+      </div>
+      <div className="cmdk-item-content">
+        <span className="cmdk-item-label">{item.displayName}</span>
+        <span className="cmdk-item-description">{item.form}</span>
+      </div>
+    </Command.Item>
+  );
+}
+
+function BuildingRow({
+  building: b,
+  select,
+}: {
+  building: FactoryBuilding;
+  select: (path: string) => void;
+}) {
+  const category = b.powerGenerator
+    ? 'Power Generator'
+    : b.extractor
+      ? 'Extractor'
+      : b.conveyor || b.pipeline
+        ? 'Logistics'
+        : 'Production';
+  return (
+    <Command.Item
+      value={`${b.name} ${b.id}`}
+      keywords={[category]}
+      onSelect={() => select(`/codex/buildings/${b.id}`)}
+    >
+      <div className="cmdk-item-icon">
+        <Image
+          w={24}
+          h={24}
+          fit="contain"
+          src={b.imagePath?.replace('_256', '_64')}
+        />
+      </div>
+      <div className="cmdk-item-content">
+        <span className="cmdk-item-label">{b.name}</span>
+        <span className="cmdk-item-description">{category}</span>
+      </div>
+    </Command.Item>
+  );
+}
+
+function RecipeRow({
+  recipe: r,
+  select,
+}: {
+  recipe: FactoryRecipe;
+  select: (path: string) => void;
+}) {
+  return (
+    <Command.Item
+      value={`${r.name} ${r.id}`}
+      keywords={r.products.map(p => p.resource)}
+      onSelect={() => select(`/codex/recipes/${r.id}`)}
+    >
+      <div className="cmdk-item-icon">
+        <FactoryItemImage id={r.products[0]?.resource} size={24} />
+      </div>
+      <div className="cmdk-item-content">
+        <span className="cmdk-item-label">{r.name}</span>
+      </div>
+    </Command.Item>
   );
 }
