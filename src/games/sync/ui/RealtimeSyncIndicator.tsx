@@ -26,7 +26,13 @@ import { LoginModal } from '@/auth/LoginModal';
 import { useStore } from '@/core/zustand';
 import { useGameSaveInfo } from '@/games/save/useGameSaveInfo';
 import { useIsOnline } from '@/pwa/useNetworkStatus';
-import { useAllPeers } from '../peersSlice';
+import {
+  type PeerInfo,
+  useAllPeers,
+  useHttpOtherSendersCount,
+} from '../peersSlice';
+import { DEVICE_NAME, SENDER_ID } from '../realtimeSyncTypes';
+import { triggerImmediatePresencePoll } from '../useGamePresence';
 import { OnlinePeersList } from './OnlinePeersList';
 import { PeerAvatar } from './PeerAvatar';
 import classes from './RealtimeSyncIndicator.module.css';
@@ -37,18 +43,50 @@ export function RealtimeSyncIndicator() {
   const session = useSession();
   const saveInfo = useGameSaveInfo();
   const isOnline = useIsOnline();
+  const httpOtherSendersCount = useHttpOtherSendersCount();
   const [loginOpened, loginHandlers] = useDisclosure(false);
+
+  const isLoggedOut = !session;
+  // "Standby": logged in, no other users detected via HTTP polling, so the
+  // websocket is intentionally not opened to conserve Supabase realtime slots.
+  // Distinct from "Realtime sync offline" (transient error/reconnect).
+  const isStandby =
+    isOnline && !isLoggedOut && !isConnected && httpOtherSendersCount === 0;
+
+  // In standby mode the websocket is closed, so the peers slice is empty —
+  // but the user is still "present" in the logical sense. Inject a synthetic
+  // self peer so the pill keeps showing their avatar (signals "all good,
+  // you're just alone" instead of "something's missing").
+  const selfPeer = useMemo<PeerInfo | null>(() => {
+    if (!session) return null;
+    const user = session.user;
+    return {
+      senderId: SENDER_ID,
+      userId: user.id,
+      avatarUrl: user.user_metadata?.avatar_url ?? null,
+      displayName:
+        user.user_metadata?.full_name ?? user.user_metadata?.name ?? 'Unknown',
+      deviceName: DEVICE_NAME,
+      factoryId: null,
+    };
+  }, [session]);
+
+  const displayPeers = useMemo<PeerInfo[]>(() => {
+    if (peers.length > 0) return peers;
+    if (isStandby && selfPeer) return [selfPeer];
+    return [];
+  }, [peers, isStandby, selfPeer]);
 
   const deviceCountByUser = useMemo(() => {
     const map = new Map<string, number>();
-    for (const p of peers) {
+    for (const p of displayPeers) {
       map.set(p.userId, (map.get(p.userId) ?? 0) + 1);
     }
     return map;
-  }, [peers]);
+  }, [displayPeers]);
 
   const hasPeers = peers.length > 0;
-  const isLoggedOut = !session;
+  const hasDisplayPeers = displayPeers.length > 0;
 
   const statusTitle = !isOnline
     ? 'Offline'
@@ -56,7 +94,9 @@ export function RealtimeSyncIndicator() {
       ? 'Realtime sync active'
       : isLoggedOut
         ? 'Cloud sync off'
-        : 'Realtime sync offline';
+        : isStandby
+          ? 'Realtime sync ready'
+          : 'Realtime sync offline';
 
   const ariaLabel = !isOnline
     ? 'Offline. Changes are saved on this device.'
@@ -64,15 +104,19 @@ export function RealtimeSyncIndicator() {
       ? 'Realtime sync active'
       : isLoggedOut
         ? 'Log in to enable realtime sync'
-        : 'Realtime sync offline';
+        : isStandby
+          ? 'Realtime sync ready. Will resume automatically when another user joins.'
+          : 'Realtime sync offline';
 
   const pillLabel = !isOnline
     ? 'Offline'
     : isLoggedOut
       ? 'Log in'
-      : !isConnected
-        ? 'Offline'
-        : null;
+      : isStandby
+        ? null
+        : !isConnected
+          ? 'Offline'
+          : null;
 
   const savedView = useMemo((): {
     icon: ReactNode;
@@ -173,6 +217,12 @@ export function RealtimeSyncIndicator() {
             />
             <Box className={classes.statusDot} />
           </>
+        ) : isStandby ? (
+          <IconBroadcast
+            size={18}
+            color="var(--mantine-color-green-4)"
+            stroke={1.8}
+          />
         ) : (
           <IconBroadcastOff
             size={18}
@@ -186,13 +236,13 @@ export function RealtimeSyncIndicator() {
           {pillLabel}
         </Text>
       )}
-      {hasPeers && (
+      {hasDisplayPeers && (
         <Box className={classes.avatarStack}>
-          {peers.map((peer, idx) => (
+          {displayPeers.map((peer, idx) => (
             <Box
               key={peer.senderId}
               className={classes.avatarStackItem}
-              style={{ '--peer-z': peers.length - idx } as CSSProperties}
+              style={{ '--peer-z': displayPeers.length - idx } as CSSProperties}
             >
               <PeerAvatar
                 peer={peer}
@@ -216,6 +266,7 @@ export function RealtimeSyncIndicator() {
         openDelay={100}
         closeDelay={150}
         withinPortal
+        onOpen={triggerImmediatePresencePoll}
       >
         <HoverCard.Target>{pill}</HoverCard.Target>
         <HoverCard.Dropdown p="sm" maw={260}>
@@ -228,6 +279,12 @@ export function RealtimeSyncIndicator() {
                   stroke={1.8}
                 />
               ) : isConnected ? (
+                <IconBroadcast
+                  size={14}
+                  color="var(--mantine-color-green-4)"
+                  stroke={1.8}
+                />
+              ) : isStandby ? (
                 <IconBroadcast
                   size={14}
                   color="var(--mantine-color-green-4)"
@@ -254,6 +311,12 @@ export function RealtimeSyncIndicator() {
               <Text size="xs" c="dimmed" lh={1.4}>
                 Your changes stay on this device and will sync when you're back
                 online.
+              </Text>
+            )}
+            {isStandby && (
+              <Text size="xs" c="dimmed" lh={1.4}>
+                No one else is here right now. Realtime sync resumes
+                automatically when another user joins this game.
               </Text>
             )}
             <Group gap={6} align="center" wrap="nowrap">
