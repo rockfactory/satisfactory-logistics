@@ -83,7 +83,7 @@ export function NotesPanel() {
         left: classes.resizeHandleEdge,
         top: classes.resizeHandleEdge,
       }}
-      style={{ zIndex: 300 }}
+      style={{ zIndex: 300, position: 'fixed' }}
     >
       <div className={classes.window} data-tutorial-id="notes-panel">
         <div className={`${classes.header} ${DRAG_HANDLE}`}>
