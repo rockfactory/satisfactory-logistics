@@ -5,11 +5,10 @@ import {
   Container,
   Group,
   Image,
-  Kbd,
   Tabs,
   Tooltip,
 } from '@mantine/core';
-import { useDisclosure, useOs } from '@mantine/hooks';
+import { useDisclosure } from '@mantine/hooks';
 import {
   IconBuildingFactory,
   IconCalculator,
@@ -29,6 +28,7 @@ import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { RealtimeSyncIndicator } from '@/games/sync/ui/RealtimeSyncIndicator';
 import { NotesPanelTrigger } from '@/notes/NotesPanelTrigger';
 import { TutorialMenu } from '@/tutorial/TutorialMenu';
+import { HotkeyKbd } from '@/utils/HotkeyKbd';
 import classes from './Header.module.css';
 import { HeaderMobileDrawer } from './HeaderMobileDrawer';
 
@@ -68,7 +68,6 @@ export function Header() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const activeTab = resolveActiveTab(pathname);
-  const os = useOs();
 
   return (
     <header className={classes.header}>
@@ -95,11 +94,9 @@ export function Header() {
           <Group gap="xs" wrap="nowrap" visibleFrom="sm">
             <Tooltip
               label={
-                <>
-                  Search <Kbd size="xs">{os === 'macos' ? '⌘' : 'Ctrl'}</Kbd>
-                  {' + '}
-                  <Kbd size="xs">K</Kbd>
-                </>
+                <Group gap={6} align="center" wrap="nowrap" component="span">
+                  Search <HotkeyKbd keys={['SystemCtrlOrCmd', 'K']} />
+                </Group>
               }
               position="bottom"
             >

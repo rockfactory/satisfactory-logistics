@@ -13,7 +13,7 @@ export function NotesPanelTrigger() {
       label={
         <Group gap={6} align="center" wrap="nowrap">
           <span style={{ lineHeight: 1 }}>Open notes</span>
-          <HotkeyKbd keys={['Ctrl', 'J']} />
+          <HotkeyKbd keys={['SystemCtrlOrCmd', 'J']} />
         </Group>
       }
       withArrow
