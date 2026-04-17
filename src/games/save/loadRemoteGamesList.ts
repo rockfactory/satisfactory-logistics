@@ -2,6 +2,7 @@ import { notifications } from '@mantine/notifications';
 import type { QueryData } from '@supabase/supabase-js';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
+import { withSuppressedDirtyTracking } from './dirtyTrackingSuppression';
 
 // Shared and normal
 const loadRemoteGamesQuery = supabaseClient
@@ -48,6 +49,8 @@ export async function loadRemoteGamesList() {
   }
 
   console.log('Loaded games:', data);
-  useStore.getState().setRemoteGames(data);
+  withSuppressedDirtyTracking(() => {
+    useStore.getState().setRemoteGames(data);
+  });
   useStore.getState().setIsLoading(false);
 }

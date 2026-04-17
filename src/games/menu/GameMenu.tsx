@@ -1,4 +1,13 @@
-import { Box, Button, Menu } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Group,
+  Loader,
+  Menu,
+  Stack,
+  Text,
+  Tooltip,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import {
@@ -24,6 +33,7 @@ import { ShareGameModal } from '@/games/page/share/ShareGameModal';
 import { loadRemoteGame } from '@/games/save/loadRemoteGame';
 import { loadRemoteGamesList } from '@/games/save/loadRemoteGamesList';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
+import { useGameSaveInfo } from '@/games/save/useGameSaveInfo';
 import { openGameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { GameDetailModal } from './GameDetailModal';
 
@@ -57,6 +67,37 @@ export function GameMenu(props: IGameMenuProps) {
     state => !!state.games.games[selectedId ?? '']?.savedId,
   );
   const navigate = useNavigate();
+  const saveInfo = useGameSaveInfo();
+
+  const saveStatusLabel = useMemo(() => {
+    switch (saveInfo.kind) {
+      case 'saving':
+        return 'Saving…';
+      case 'cloud-saved':
+        return 'All changes saved to cloud';
+      case 'cloud-dirty':
+        return 'Unsaved changes';
+      case 'cloud-pending':
+        return 'Not yet saved';
+      case 'local-only':
+        return null;
+    }
+  }, [saveInfo]);
+
+  const saveStatusTooltip =
+    (saveInfo.kind === 'cloud-saved' || saveInfo.kind === 'cloud-dirty') &&
+    saveInfo.full
+      ? `Last save: ${saveInfo.full} (${saveInfo.relative})`
+      : null;
+
+  const saveStatusColor: string | undefined =
+    saveInfo.kind === 'cloud-saved'
+      ? 'var(--mantine-color-green-4)'
+      : saveInfo.kind === 'saving'
+        ? 'var(--mantine-color-blue-4)'
+        : saveInfo.kind === 'cloud-dirty' || saveInfo.kind === 'cloud-pending'
+          ? 'var(--mantine-color-yellow-5)'
+          : undefined;
 
   const [editOpened, { open: openEdit, close: closeEdit }] = useDisclosure();
   const [shareOpened, { open: openShare, close: closeShare }] = useDisclosure();
@@ -183,7 +224,32 @@ export function GameMenu(props: IGameMenuProps) {
               leftSection={<IconDeviceFloppy size={16} />}
               onClick={() => handleSaveGame(selectedId)}
             >
-              Save game
+              <Stack gap={2}>
+                <Text size="sm" lh={1.2}>
+                  Save game
+                </Text>
+                {saveStatusLabel && (
+                  <Tooltip
+                    label={saveStatusTooltip ?? saveStatusLabel}
+                    withArrow
+                    disabled={!saveStatusTooltip}
+                  >
+                    <Group gap={6} align="center" wrap="nowrap">
+                      {saveInfo.kind === 'saving' && (
+                        <Loader size={10} color="blue" />
+                      )}
+                      <Text
+                        size="xs"
+                        c="dimmed"
+                        lh={1.2}
+                        style={{ color: saveStatusColor }}
+                      >
+                        {saveStatusLabel}
+                      </Text>
+                    </Group>
+                  </Tooltip>
+                )}
+              </Stack>
             </Menu.Item>
             {selectedId && isSelectedSavedOnRemote && (
               <Menu.Item

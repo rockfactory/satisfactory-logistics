@@ -7,13 +7,17 @@ import {
   IconToolsKitchen2,
 } from '@tabler/icons-react';
 import { Command } from 'cmdk';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useShallowStore } from '@/core/zustand';
 import type { Factory } from '@/factories/Factory';
+import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
 import { AllFactoryBuildings } from '@/recipes/FactoryBuilding';
-import { AllFactoryItems, FactoryItemForm } from '@/recipes/FactoryItem';
+import {
+  AllFactoryItems,
+  AllFactoryItemsMap,
+  FactoryItemForm,
+} from '@/recipes/FactoryItem';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import './cmdk.css';
@@ -24,6 +28,12 @@ const validItems = AllFactoryItems.filter(
   item => item.form !== FactoryItemForm.Invalid,
 );
 
+let openSpotlightFn: (() => void) | null = null;
+
+export function openSpotlight() {
+  openSpotlightFn?.();
+}
+
 export function CodexSpotlight() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -32,10 +42,16 @@ export function CodexSpotlight() {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const factoriesMap = useShallowStore(state => state.factories.factories);
-  const factories = useMemo(() => Object.values(factoriesMap), [factoriesMap]);
+  const factories = useGameFactories();
 
   const page = pages[pages.length - 1];
+
+  useEffect(() => {
+    openSpotlightFn = () => setOpen(true);
+    return () => {
+      openSpotlightFn = null;
+    };
+  }, []);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -48,6 +64,7 @@ export function CodexSpotlight() {
     return () => document.removeEventListener('keydown', down);
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: scroll side effect
   useEffect(() => {
     listRef.current?.scrollTo({ top: 0 });
   }, [search]);
@@ -235,29 +252,49 @@ function FactoriesPage({
 }) {
   return (
     <Command.Group heading="Factories">
-      {factories.map(f => (
-        <Command.Item
-          key={f.id}
-          value={`${f.name ?? 'Unnamed Factory'} ${f.id}`}
-          onSelect={() => select(`/factories/${f.id}/calculator`)}
-        >
-          <div className="cmdk-item-icon">
-            <IconHomeCog size={22} />
-          </div>
-          <div className="cmdk-item-content">
-            <span className="cmdk-item-label">
-              {f.name || 'Unnamed Factory'}
-            </span>
-            {(f.outputs.length > 0 || f.inputs.length > 0) && (
-              <span className="cmdk-item-description">
-                {f.outputs.length}{' '}
-                {f.outputs.length === 1 ? 'output' : 'outputs'},{' '}
-                {f.inputs.length} {f.inputs.length === 1 ? 'input' : 'inputs'}
+      {factories.map(f => {
+        const outputs = (f.outputs ?? []).filter(
+          (o): o is typeof o & { resource: string } => Boolean(o?.resource),
+        );
+        return (
+          <Command.Item
+            key={f.id}
+            value={`${f.name ?? 'Unnamed Factory'} ${f.id}`}
+            keywords={outputs.map(o => o.resource)}
+            onSelect={() => select(`/factories/${f.id}/calculator`)}
+          >
+            <div className="cmdk-item-icon">
+              <IconHomeCog size={22} />
+            </div>
+            <div className="cmdk-item-content">
+              <span className="cmdk-item-label">
+                {f.name || 'Unnamed Factory'}
               </span>
-            )}
-          </div>
-        </Command.Item>
-      ))}
+              {outputs.length > 0 && (
+                <span className="cmdk-item-outputs">
+                  {outputs.map((o, i) => {
+                    const item = AllFactoryItemsMap[o.resource];
+                    return (
+                      <span key={o.resource} className="cmdk-item-output">
+                        {i > 0 && (
+                          <span className="cmdk-item-output-sep">·</span>
+                        )}
+                        <FactoryItemImage id={o.resource} size={16} />
+                        <span>{item?.displayName ?? o.resource}</span>
+                        {o.amount != null && (
+                          <span className="cmdk-item-output-amount">
+                            {o.amount}/min
+                          </span>
+                        )}
+                      </span>
+                    );
+                  })}
+                </span>
+              )}
+            </div>
+          </Command.Item>
+        );
+      })}
     </Command.Group>
   );
 }
