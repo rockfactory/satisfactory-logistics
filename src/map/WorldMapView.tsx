@@ -71,7 +71,10 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
         attributionControl={false}
         className={classes.map}
       >
-        <ImageOverlay url="/images/map/world-map.jpg" bounds={IMAGE_BOUNDS} />
+        <ImageOverlay
+          url="/images/map/world-map-5k.png"
+          bounds={IMAGE_BOUNDS}
+        />
         <ResourceMarkersLayer
           nodes={filteredNodes}
           usedNodes={usedNodes}
