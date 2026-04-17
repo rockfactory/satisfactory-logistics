@@ -26,6 +26,10 @@ export const DEFAULT_NOTES_WINDOW: NotesWindowRect = {
 const NOTES_MIN_WIDTH = 280;
 const NOTES_MIN_HEIGHT = 240;
 const NOTES_VIEWPORT_MARGIN = 16;
+// How much of the window must remain reachable on screen when the user
+// pushes it toward an edge. Keeps the header draggable back even when
+// most of the panel is tucked off-viewport.
+const NOTES_VISIBLE_ANCHOR = 80;
 
 export function clampNotesRectToViewport(
   rect: NotesWindowRect,
@@ -40,17 +44,12 @@ export function clampNotesRectToViewport(
     NOTES_MIN_HEIGHT,
     Math.min(rect.height, vh - NOTES_VIEWPORT_MARGIN * 2),
   );
-  const maxX = Math.max(
-    NOTES_VIEWPORT_MARGIN,
-    vw - width - NOTES_VIEWPORT_MARGIN,
-  );
-  const maxY = Math.max(
-    NOTES_VIEWPORT_MARGIN,
-    vh - height - NOTES_VIEWPORT_MARGIN,
-  );
+  const minX = NOTES_VISIBLE_ANCHOR - width;
+  const maxX = vw - NOTES_VISIBLE_ANCHOR;
+  const maxY = vh - NOTES_VISIBLE_ANCHOR;
   return {
-    x: Math.min(Math.max(rect.x, NOTES_VIEWPORT_MARGIN), maxX),
-    y: Math.min(Math.max(rect.y, NOTES_VIEWPORT_MARGIN), maxY),
+    x: Math.min(Math.max(rect.x, minX), maxX),
+    y: Math.min(Math.max(rect.y, 0), maxY),
     width,
     height,
   };
@@ -84,7 +83,8 @@ export const notesUiSlice = createSlice({
       state.activeTab = tab;
     },
     setNotesWindowRect: (rect: Partial<NotesWindowRect>) => state => {
-      state.window = { ...DEFAULT_NOTES_WINDOW, ...state.window, ...rect };
+      const merged = { ...DEFAULT_NOTES_WINDOW, ...state.window, ...rect };
+      state.window = clampNotesRectToViewport(merged);
     },
   },
 });

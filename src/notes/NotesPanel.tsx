@@ -64,7 +64,6 @@ export function NotesPanel() {
       size={{ width: windowRect.width, height: effectiveHeight }}
       minWidth={MIN_WIDTH}
       minHeight={isCollapsed ? COLLAPSED_HEIGHT : MIN_HEIGHT}
-      bounds="window"
       dragHandleClassName={DRAG_HANDLE}
       enableResizing={!isCollapsed}
       onDragStop={(_e, d) => setNotesWindowRect({ x: d.x, y: d.y })}
