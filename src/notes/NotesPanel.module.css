@@ -1,0 +1,184 @@
+.window {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: color-mix(in srgb, var(--mantine-color-dark-7) 82%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--mantine-color-dark-4);
+  border-radius: var(--mantine-radius-md);
+  /* Layered shadow: on a dark background a single wide blur bands at
+     1440p+, so stack short falloffs. Each layer stays ≤12px and the
+     outer one's opacity is kept low to smear the gradient edge. */
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 2px 5px rgba(0, 0, 0, 0.32),
+    0 4px 9px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.resizeHandleBR {
+  width: 14px !important;
+  height: 14px !important;
+  right: 2px !important;
+  bottom: 2px !important;
+  background-image: linear-gradient(
+    135deg,
+    transparent 0 40%,
+    var(--mantine-color-gray-5) 40% 50%,
+    transparent 50% 65%,
+    var(--mantine-color-gray-5) 65% 75%,
+    transparent 75%
+  );
+  opacity: 0.55;
+  transition: opacity 120ms ease;
+  pointer-events: auto;
+}
+
+.window:hover .resizeHandleBR {
+  opacity: 1;
+}
+
+.resizeHandleEdge {
+  pointer-events: auto;
+}
+
+.resizeHint {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--mantine-spacing-xs);
+  padding: 6px 8px 6px 10px;
+  border-bottom: 1px solid var(--mantine-color-dark-5);
+  cursor: move;
+  user-select: none;
+  background: color-mix(in srgb, var(--mantine-color-dark-6) 90%, transparent);
+}
+
+.titleIcon {
+  color: var(--mantine-color-gray-5);
+  flex-shrink: 0;
+}
+
+.title {
+  flex: 1;
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 600;
+  color: var(--mantine-color-gray-2);
+}
+
+.header > :global(.mantine-SegmentedControl-root) {
+  flex: 1;
+}
+
+.tabDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mantine-color-yellow-5);
+}
+
+.editorWrapper :global(.mantine-RichTextEditor-root) {
+  border: none;
+}
+
+.editorWrapper :global(.mantine-RichTextEditor-toolbar) {
+  padding: 4px 6px;
+  min-height: 0;
+  background: transparent;
+  border-bottom: 1px solid var(--mantine-color-dark-5);
+}
+
+.editorWrapper :global(.mantine-RichTextEditor-control) {
+  min-width: 22px;
+  width: 22px;
+  height: 22px;
+  border: none;
+}
+
+.editorWrapper :global(.mantine-RichTextEditor-control svg) {
+  width: 14px;
+  height: 14px;
+}
+
+.editorWrapper :global(.mantine-RichTextEditor-controlsGroup) {
+  gap: 2px;
+  background: transparent;
+}
+
+.editorWrapper :global(.mantine-RichTextEditor-content .ProseMirror) {
+  position: relative;
+  padding: var(--mantine-spacing-xs);
+  flex: 1;
+}
+
+.editorWrapper
+  :global(
+    .mantine-RichTextEditor-content
+    .ProseMirror
+    p.is-editor-empty:first-child::before
+  ) {
+  content: attr(data-placeholder);
+  position: absolute;
+  top: var(--mantine-spacing-xs);
+  left: var(--mantine-spacing-xs);
+  right: var(--mantine-spacing-xs);
+  color: var(--mantine-color-dark-1);
+  font-style: italic;
+  font-size: 0.88em;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  opacity: 0.85;
+  white-space: normal;
+  pointer-events: none;
+  height: auto;
+  float: none;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-xs);
+  flex: 1;
+  min-height: 0;
+}
+
+.editorWrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.editorWrapper > :global(.mantine-RichTextEditor-root) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  background: transparent;
+}
+
+.editorWrapper :global(.mantine-RichTextEditor-Typography) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.editorWrapper :global(.mantine-RichTextEditor-content) {
+  flex: 1;
+  overflow-y: auto;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}

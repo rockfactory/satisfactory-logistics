@@ -16,10 +16,13 @@ export interface IFactorySelectInputProps extends SelectProps {
   showOnlyIds?: string[] | null;
   /** To provide note handling */
   worldSection?: ReactNode;
+  /** Rendered as the leftSection when a real factory is selected */
+  factorySection?: ReactNode;
 }
 
 export function FactorySelectInput(props: IFactorySelectInputProps) {
-  const { exceptId, showOnlyIds, worldSection, ...inputProps } = props;
+  const { exceptId, showOnlyIds, worldSection, factorySection, ...inputProps } =
+    props;
 
   const factories = useGameFactories();
 
@@ -75,7 +78,9 @@ export function FactorySelectInput(props: IFactorySelectInputProps) {
         leftSection={
           inputProps.value === WORLD_SOURCE_ID
             ? (worldSection ?? <IconWorld size={16} />)
-            : undefined
+            : inputProps.value
+              ? factorySection
+              : undefined
         }
         // label="Factories"
         searchable

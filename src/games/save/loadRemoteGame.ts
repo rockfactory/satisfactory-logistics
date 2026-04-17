@@ -4,6 +4,7 @@ import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
 import type { SerializedGame } from '@/games/store/gameFactoriesActions';
 import type { ILoadRemoteGameOptions } from '@/games/store/gameRemoteActions';
+import { withSuppressedDirtyTracking } from './dirtyTrackingSuppression';
 
 const logger = loglev.getLogger('games:loader');
 
@@ -39,7 +40,9 @@ export async function loadRemoteGame(
 
     const serialized = data.data as unknown as SerializedGame;
     logger.info('Loaded game:', serialized);
-    useStore.getState().loadRemoteGame(serialized, data, options);
+    withSuppressedDirtyTracking(() => {
+      useStore.getState().loadRemoteGame(serialized, data, options);
+    });
     useStore.getState().selectGame(serialized.game.id);
   } catch (error: any) {
     logger.error('Error loading game:', error);

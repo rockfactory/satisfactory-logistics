@@ -1,12 +1,23 @@
-import { Alert, Box, Container, Paper, Text } from '@mantine/core';
+import {
+  ActionIcon,
+  Alert,
+  Box,
+  Container,
+  Group,
+  Tooltip as MantineTooltip,
+  Paper,
+  Stack,
+  Text,
+} from '@mantine/core';
 import {
   type DefaultLink,
   type DefaultNode,
   ResponsiveSankey,
 } from '@nivo/sankey';
 import { ErrorBoundary } from '@sentry/react';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { IconAlertCircle, IconCalculator, IconEye } from '@tabler/icons-react';
 import { useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 
@@ -14,11 +25,11 @@ const getResourceName = (resourceId: string) => {
   return AllFactoryItemsMap[resourceId]?.name ?? 'N/A';
 };
 
-type Node = DefaultNode & {
+type SankeyNode = DefaultNode & {
   _originalId: string;
 };
 
-type Link = DefaultLink & {
+type SankeyLink = DefaultLink & {
   resourceLabel: string;
 };
 
@@ -26,13 +37,18 @@ export interface IFactoriesSankeyChartProps {}
 
 export function FactoriesSankeyChart(props: IFactoriesSankeyChartProps) {
   const factories = useGameFactories();
+  const navigate = useNavigate();
 
   const data: {
-    nodes: Node[];
-    links: Link[];
+    nodes: SankeyNode[];
+    links: SankeyLink[];
   } = useMemo(() => {
-    const nodes: Node[] = factories
-      .filter(f => f.name)
+    const disabledIds = new Set(
+      factories.filter(f => f.progress === 'disabled').map(f => f.id),
+    );
+
+    const nodes: SankeyNode[] = factories
+      .filter(f => f.name && f.progress !== 'disabled')
       .map(f => ({
         id: f.name!,
         _originalId: f.id,
@@ -43,17 +59,22 @@ export function FactoriesSankeyChart(props: IFactoriesSankeyChartProps) {
       _originalId: 'WORLD',
     });
 
-    const links: Link[] = factories.flatMap(target => {
-      return (target.inputs ?? [])
-        .filter(i => i.factoryId && target.name)
-        .map(input => ({
-          source: nodes.find(n => n._originalId === input.factoryId)?.id ?? '',
-          target: target.name!,
-          value: input.amount ?? 0,
-          resourceLabel: getResourceName(input.resource ?? ''),
-        }))
-        .filter(l => l.source !== l.target);
-    });
+    const links: SankeyLink[] = factories
+      .filter(target => target.progress !== 'disabled')
+      .flatMap(target => {
+        return (target.inputs ?? [])
+          .filter(
+            i => i.factoryId && target.name && !disabledIds.has(i.factoryId),
+          )
+          .map(input => ({
+            source:
+              nodes.find(n => n._originalId === input.factoryId)?.id ?? '',
+            target: target.name!,
+            value: input.amount ?? 0,
+            resourceLabel: getResourceName(input.resource ?? ''),
+          }))
+          .filter(l => l.source !== l.target);
+      });
 
     return { nodes, links };
   }, [factories]);
@@ -93,6 +114,56 @@ export function FactoriesSankeyChart(props: IFactoriesSankeyChartProps) {
           bottom: 32,
           left: 32,
           right: 32,
+        }}
+        onClick={(datum: any) => {
+          const node = datum as SankeyNode | undefined;
+          if (
+            node &&
+            typeof node._originalId === 'string' &&
+            node._originalId !== 'WORLD'
+          ) {
+            navigate(`/factories/${node._originalId}`);
+          }
+        }}
+        nodeTooltip={info => {
+          const originalId = (info.node as SankeyNode)._originalId;
+          const isWorld = originalId === 'WORLD';
+          return (
+            <Paper shadow="sm" radius="sm" p="md">
+              <Stack gap="xs">
+                <Text size="md" fw={500}>
+                  {info.node.id}
+                </Text>
+                {!isWorld && (
+                  <Group gap="xs">
+                    <MantineTooltip label="Open factory" withArrow>
+                      <ActionIcon
+                        component={Link}
+                        to={`/factories/${originalId}`}
+                        variant="default"
+                        size="sm"
+                        aria-label="Open factory"
+                      >
+                        <IconEye size={14} />
+                      </ActionIcon>
+                    </MantineTooltip>
+                    <MantineTooltip label="Open calculator" withArrow>
+                      <ActionIcon
+                        component={Link}
+                        to={`/factories/${originalId}/calculator`}
+                        variant="filled"
+                        color="cyan"
+                        size="sm"
+                        aria-label="Open calculator"
+                      >
+                        <IconCalculator size={14} />
+                      </ActionIcon>
+                    </MantineTooltip>
+                  </Group>
+                )}
+              </Stack>
+            </Paper>
+          );
         }}
         linkTooltip={info => {
           return (

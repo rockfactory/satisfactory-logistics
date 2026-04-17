@@ -1,7 +1,7 @@
 {
   "name": "satisfactory-logistics",
   "private": true,
-  "version": "0.10.0",
+  "version": "0.11.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +12,8 @@
     "lint": "biome check src",
     "preview": "vite preview",
     "supabase:types": "npx supabase gen types typescript --project-id nymrtujjmzbhxcimjsci > ./src/core/database.types.ts",
-    "parse-docs": "tsx scripts/parseDocs.ts"
+    "parse-docs": "tsx scripts/parseDocs.ts",
+    "generate-pwa-icons": "tsx scripts/generatePwaIcons.ts"
   },
   "dependencies": {
     "@caldwell619/react-kanban": "^0.0.11",
@@ -25,6 +26,7 @@
     "@mantine/hooks": "^9.0.0",
     "@mantine/modals": "^9.0.0",
     "@mantine/notifications": "^9.0.0",
+    "@mantine/tiptap": "^9.0.2",
     "@nivo/sankey": "^0.99.0",
     "@sentry/react": "^8.37.1",
     "@sentry/vite-plugin": "^5.2.0",
@@ -33,15 +35,23 @@
     "@supabase/sentry-js-integration": "^0.3.0",
     "@supabase/supabase-js": "^2.103.0",
     "@tabler/icons-react": "^3.21.0",
+    "@tiptap/extension-placeholder": "^3.22.3",
+    "@tiptap/extension-task-item": "^3.22.3",
+    "@tiptap/extension-task-list": "^3.22.3",
+    "@tiptap/pm": "^3.22.3",
+    "@tiptap/react": "^3.22.3",
+    "@tiptap/starter-kit": "^3.22.3",
     "@xyflow/react": "^12.10.2",
     "base-64": "^1.0.0",
     "canvas-confetti": "^1.9.4",
     "chalk": "^5.6.2",
     "chroma-js": "2.4",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "core-js": "^3.49.0",
     "dayjs": "^1.11.20",
     "dot-prop": "^10.1.0",
+    "driver.js": "^1.4.0",
     "graphology": "^0.26.0",
     "graphology-traversal": "^0.3.1",
     "highs": "^1.8.0",
@@ -52,10 +62,12 @@
     "loglevel": "^1.9.2",
     "loglevel-plugin-prefix": "^0.8.4",
     "microdiff": "^1.5.0",
+    "minidenticons": "^4.2.1",
     "moize": "^6.1.7",
     "pako": "^2.1.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-rnd": "^10.5.3",
     "react-router-dom": "^6.28.0",
     "short-uuid": "^5.2.0",
     "uuid": "^10.0.0",
@@ -83,8 +95,10 @@
     "typescript": "^5.9.3",
     "typescript-plugin-css-modules": "^5.2.0",
     "vite": "^8.0.3",
+    "vite-plugin-pwa": "https://pkg.pr.new/vite-plugin-pwa@924",
     "vite-plugin-static-copy": "^4.0.1",
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.4",
+    "workbox-window": "^7.4.0"
   },
   "overrides": {
     "use-sync-external-store": "^1.4.0"

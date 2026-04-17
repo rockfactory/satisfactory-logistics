@@ -28,6 +28,7 @@ export const FactoryPage = ({
         <Group gap="sm" justify="space-between">
           <Group gap="sm">
             <Button
+              data-tutorial-id="back-to-factories"
               component={Link}
               to="/factories"
               variant="light"
@@ -40,6 +41,7 @@ export const FactoryPage = ({
           </Group>
           <Group gap="sm">
             <SegmentedControl
+              data-tutorial-id="factory-view-switcher"
               radius="md"
               data={[
                 { value: 'overview', label: 'Overview' },

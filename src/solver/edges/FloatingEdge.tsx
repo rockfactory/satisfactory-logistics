@@ -1,5 +1,7 @@
-import { type EdgeProps, getBezierPath, useInternalNode } from '@xyflow/react';
+import { type EdgeProps, useInternalNode } from '@xyflow/react';
 
+import { useGameSetting } from '@/games/gamesSlice';
+import { getConfigurableEdgePath } from './getConfigurableEdgePath';
 import { getEdgeParams } from './utils.js';
 
 export function FloatingEdge({
@@ -11,6 +13,9 @@ export function FloatingEdge({
 }: EdgeProps) {
   const sourceNode = useInternalNode(source);
   const targetNode = useInternalNode(target);
+  const orthogonalEdges = useGameSetting('orthogonalEdges') as
+    | boolean
+    | undefined;
 
   if (!sourceNode || !targetNode) {
     return null;
@@ -21,14 +26,17 @@ export function FloatingEdge({
     targetNode,
   );
 
-  const [edgePath] = getBezierPath({
-    sourceX: sx,
-    sourceY: sy,
-    sourcePosition: sourcePos,
-    targetPosition: targetPos,
-    targetX: tx,
-    targetY: ty,
-  });
+  const [edgePath] = getConfigurableEdgePath(
+    {
+      sourceX: sx,
+      sourceY: sy,
+      sourcePosition: sourcePos,
+      targetPosition: targetPos,
+      targetX: tx,
+      targetY: ty,
+    },
+    !!orthogonalEdges,
+  );
 
   return (
     <path

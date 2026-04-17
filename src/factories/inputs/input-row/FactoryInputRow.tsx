@@ -7,8 +7,9 @@ import {
   TextInput,
   Tooltip,
 } from '@mantine/core';
-import { IconTrash, IconWorld } from '@tabler/icons-react';
+import { IconExternalLink, IconTrash, IconWorld } from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
 import { useShallowStore, useStore } from '@/core/zustand';
 import {
@@ -58,6 +59,9 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   const { index, input, factoryId, displayMode = 'factory' } = props;
 
   const [focused, setFocused] = useState(false);
+  const forceUsageTooltip = useStore(
+    state => state.tutorial.forceUsageTooltip ?? false,
+  );
 
   const sourceOutputs = useStore(
     state => state.factories.factories[input.factoryId ?? '']?.outputs,
@@ -92,9 +96,26 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   return (
     <Group key={index} align="flex-start" gap="sm">
       <FactorySelectInput
+        data-tutorial-id="factory-input-source"
         // exceptId={factoryId}
         value={input.factoryId}
         showOnlyIds={factoriesIdsProducingInputResource}
+        factorySection={
+          input.factoryId &&
+          input.factoryId !== WORLD_SOURCE_ID && (
+            <ActionIcon
+              component={Link}
+              to={`/factories/${input.factoryId}`}
+              size="sm"
+              variant="subtle"
+              color="gray"
+              title="Open source factory"
+              aria-label="Open source factory"
+            >
+              <IconExternalLink size={16} />
+            </ActionIcon>
+          )
+        }
         worldSection={
           <Popover width={200} position="bottom-start" withArrow shadow="md">
             <Popover.Target>
@@ -130,7 +151,6 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         onChange={onChangeHandler(`inputs.${index}.resource`)}
       />
       <Tooltip
-        color="dark.8"
         label={
           <Group gap="sm">
             <span>Usage</span>
@@ -157,9 +177,10 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           </Group>
         }
         position="top-start"
-        opened={focused}
+        opened={focused || forceUsageTooltip}
       >
         <NumberInput
+          data-tutorial-id="factory-input-amount"
           value={input.amount ?? 0}
           w={100}
           min={0}

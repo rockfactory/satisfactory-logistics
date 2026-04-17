@@ -12,15 +12,21 @@ export function useFactoriesGraph() {
     const nodes: Node<IFactoryNodeData>[] = [];
     const edges: Edge<IInputEdgeData>[] = [];
 
+    const disabledIds = new Set(
+      factories.filter(f => f?.progress === 'disabled').map(f => f!.id),
+    );
+
     const maxInputAmount =
       max(
-        factories.flatMap(
-          factory => factory?.inputs?.map(input => input.amount ?? 0) ?? [],
-        ),
+        factories
+          .filter(f => f && f.progress !== 'disabled')
+          .flatMap(
+            factory => factory?.inputs?.map(input => input.amount ?? 0) ?? [],
+          ),
       ) ?? 1;
 
     for (const factory of factories) {
-      if (!factory) continue;
+      if (!factory || factory.progress === 'disabled') continue;
 
       nodes.push({
         id: factory.id,
@@ -38,6 +44,7 @@ export function useFactoriesGraph() {
       for (let i = 0; i < inputs.length; i++) {
         const input = inputs[i];
         if (!input.factoryId) continue;
+        if (disabledIds.has(input.factoryId)) continue;
 
         edges.push({
           id: `${factory.id}-i${i}`,

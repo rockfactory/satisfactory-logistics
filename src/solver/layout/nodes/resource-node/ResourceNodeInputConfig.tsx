@@ -18,6 +18,7 @@ export function ResourceNodeInputConfig(props: IResourceNodeInputConfigProps) {
   return (
     <Stack gap="sm" w="100%">
       <NumberInput
+        data-tutorial-id="resource-input-amount"
         value={inputAmount ?? 0}
         inputWrapperOrder={['label', 'input', 'description', 'error']}
         placeholder="Amount"

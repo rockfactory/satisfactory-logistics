@@ -1,33 +1,73 @@
 import {
+  ActionIcon,
   Badge,
   Burger,
   Container,
   Group,
   Image,
   Tabs,
-  useMantineTheme,
+  Tooltip,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import {
+  IconBuildingFactory,
+  IconCalculator,
+  IconChartBar,
+  IconPackages,
+  IconSearch,
+  IconTools,
+} from '@tabler/icons-react';
 import { capitalize } from 'lodash';
-import { Link } from 'react-router-dom';
+import type { ReactNode } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { UserMenu } from '@/auth/UserMenu';
+import { openSpotlight } from '@/codex/spotlight/CodexSpotlight';
 import { useStore } from '@/core/zustand';
 import { GameMenu } from '@/games/menu/GameMenu';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
+import { RealtimeSyncIndicator } from '@/games/sync/ui/RealtimeSyncIndicator';
+import { NotesPanelTrigger } from '@/notes/NotesPanelTrigger';
+import { TutorialMenu } from '@/tutorial/TutorialMenu';
+import { HotkeyKbd } from '@/utils/HotkeyKbd';
 import classes from './Header.module.css';
+import { HeaderMobileDrawer } from './HeaderMobileDrawer';
 
-interface HeaderProps {
-  tabs?: string[];
-  activeTab?: string | null;
-  children?: React.ReactNode;
-  onChangeTab?: (tab: string | null) => void;
+const TABS = ['factories', 'charts', 'calculator', 'tools', 'codex'] as const;
+
+type HeaderTab = (typeof TABS)[number];
+
+export const TAB_ROUTES: Record<HeaderTab, string> = {
+  factories: '/factories',
+  charts: '/factories/charts',
+  calculator: '/factories/calculator',
+  tools: '/tools',
+  codex: '/codex',
+};
+
+export const TAB_ICONS: Record<HeaderTab, ReactNode> = {
+  factories: <IconBuildingFactory size={16} />,
+  charts: <IconChartBar size={16} />,
+  calculator: <IconCalculator size={16} />,
+  tools: <IconTools size={16} />,
+  codex: <IconPackages size={16} />,
+};
+
+export function resolveActiveTab(pathname: string): HeaderTab | null {
+  if (pathname.startsWith('/tools')) return 'tools';
+  if (pathname.startsWith('/codex')) return 'codex';
+  if (pathname.startsWith('/factories/charts')) return 'charts';
+  if (pathname.startsWith('/factories/calculator')) return 'calculator';
+  if (pathname.startsWith('/factories')) return 'factories';
+  return null;
 }
 
-export function Header(props: HeaderProps) {
-  const { children } = props;
-  const theme = useMantineTheme();
-  const [opened, { toggle }] = useDisclosure(false);
+export function Header() {
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
+    useDisclosure(false);
   const hasSelectedGame = useStore(state => state.games.selected !== null);
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const activeTab = resolveActiveTab(pathname);
 
   return (
     <header className={classes.header}>
@@ -38,52 +78,94 @@ export function Header(props: HeaderProps) {
           </Badge>
         </div>
       )}
-      <Container className={classes.mainSection} size="lg">
-        <Group justify="space-between">
-          <Group align="flex-start">
-            <Link to="/factories">
+      <Container className={classes.globalBand} size="lg">
+        <Group justify="space-between" wrap="nowrap" gap="md">
+          <Group gap="sm" wrap="nowrap">
+            <Link to="/factories" className={classes.logoLink}>
               <Image
                 h={32}
-                miw={200}
                 w="auto"
                 src="/images/logo/satisfactory-logistics-logo.png"
                 alt="Satisfactory Logistics Planner"
               />
             </Link>
+            <RealtimeSyncIndicator />
           </Group>
-          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-          <Group>
-            <GameMenu />
-            {hasSelectedGame && <GameSettingsModal />}
+          <Group gap="xs" wrap="nowrap" visibleFrom="sm">
+            <Tooltip
+              label={
+                <Group gap={6} align="center" wrap="nowrap" component="span">
+                  Search <HotkeyKbd keys={['SystemCtrlOrCmd', 'K']} />
+                </Group>
+              }
+              position="bottom"
+            >
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                size="lg"
+                onClick={openSpotlight}
+                aria-label="Search"
+              >
+                <IconSearch size={18} />
+              </ActionIcon>
+            </Tooltip>
+            {hasSelectedGame && <GameMenu />}
+            <TutorialMenu />
             <UserMenu />
           </Group>
+          <Burger
+            opened={drawerOpened}
+            onClick={toggleDrawer}
+            hiddenFrom="sm"
+            size="sm"
+          />
         </Group>
       </Container>
-      {children}
-      {props.tabs && (
-        <Container size="lg">
-          <Tabs
-            defaultValue="factories"
-            value={props.activeTab}
-            variant="outline"
-            visibleFrom="sm"
-            onChange={tab => props.onChangeTab?.(tab)}
-            classNames={{
-              root: classes.tabs,
-              list: classes.tabsList,
-              tab: classes.tab,
-            }}
-          >
-            <Tabs.List>
-              {props.tabs?.map(tab => (
-                <Tabs.Tab value={tab} key={tab}>
-                  {capitalize(tab)}
-                </Tabs.Tab>
-              ))}
-            </Tabs.List>
-          </Tabs>
+      {hasSelectedGame && (
+        <Container className={classes.gameBand} size="lg" visibleFrom="sm">
+          <Group justify="space-between" wrap="nowrap" gap="md">
+            <Tabs
+              value={activeTab ?? null}
+              variant="outline"
+              visibleFrom="sm"
+              onChange={value => {
+                if (value && value in TAB_ROUTES) {
+                  navigate(TAB_ROUTES[value as HeaderTab]);
+                }
+              }}
+              classNames={{
+                root: classes.gameTabs,
+                list: classes.tabsList,
+                tab: classes.gameTab,
+              }}
+            >
+              <Tabs.List>
+                {TABS.map(tab => (
+                  <Tabs.Tab
+                    value={tab}
+                    key={tab}
+                    leftSection={TAB_ICONS[tab]}
+                    data-tutorial-id={`header-tab-${tab}`}
+                  >
+                    {capitalize(tab)}
+                  </Tabs.Tab>
+                ))}
+              </Tabs.List>
+            </Tabs>
+            <Group gap="xs" wrap="nowrap" className={classes.gameActions}>
+              <NotesPanelTrigger />
+              <GameSettingsModal />
+            </Group>
+          </Group>
         </Container>
       )}
+      <HeaderMobileDrawer
+        opened={drawerOpened}
+        onClose={closeDrawer}
+        hasSelectedGame={hasSelectedGame}
+        activeTab={activeTab}
+      />
     </header>
   );
 }

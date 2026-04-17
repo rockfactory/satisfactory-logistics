@@ -20,6 +20,7 @@ import type { Json } from '@/core/database.types';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
 import type { Factory } from '@/factories/Factory';
+import { useIsOnline } from '@/pwa/useNetworkStatus';
 import {
   type SolverInstance,
   sharedSolverUUIDTranslator,
@@ -38,6 +39,7 @@ export interface ISolverShareButtonProps {
 export function SolverShareButton(props: ISolverShareButtonProps) {
   const instance = usePathSolverInstance(props.id);
   const session = useSession();
+  const isOnline = useIsOnline();
 
   const [loading, setLoading] = useState(false);
   const [sharedId, setSharedId] = useState<string | null>(null);
@@ -108,18 +110,32 @@ export function SolverShareButton(props: ISolverShareButtonProps) {
     ? `${window.location.origin}/factories/calculator/shared/${sharedSolverUUIDTranslator.fromUUID(sharedId)}`
     : '';
 
+  const shareButton = (
+    <Button
+      variant="filled"
+      color="blue"
+      size="sm"
+      leftSection={<IconShare size={16} />}
+      onClick={handleShare}
+      loading={loading}
+      disabled={!isOnline}
+    >
+      Share
+    </Button>
+  );
+
   return (
     <>
-      <Button
-        variant="filled"
-        color="blue"
-        size="sm"
-        leftSection={<IconShare size={16} />}
-        onClick={handleShare}
-        loading={loading}
-      >
-        Share
-      </Button>
+      {isOnline ? (
+        shareButton
+      ) : (
+        <Tooltip
+          label="You're offline. Reconnect to share this calculator."
+          withArrow
+        >
+          <span>{shareButton}</span>
+        </Tooltip>
+      )}
       <LoginModal
         opened={authOpened}
         close={closeAuth}

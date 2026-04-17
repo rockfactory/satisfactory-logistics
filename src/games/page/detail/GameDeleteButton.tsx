@@ -39,8 +39,8 @@ export function GameDeleteButton(props: IGameDeleteButtonProps) {
 
     notifications.show({
       title: 'Game deleted',
-      message: `Game ${game.name} was successfully deleted`,
-      color: 'orange',
+      message: `"${game.name}" has been removed from your games.`,
+      color: 'green',
     });
     close();
   };

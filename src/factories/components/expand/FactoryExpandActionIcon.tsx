@@ -12,7 +12,7 @@ export interface IFactoryExpandActionIconProps {
 export function FactoryExpandActionIcon(props: IFactoryExpandActionIconProps) {
   const { isCollapsed, factoryId } = props;
   return (
-    <Tooltip label={isCollapsed ? 'Expand' : 'Collapse'} color="dark.8">
+    <Tooltip label={isCollapsed ? 'Expand' : 'Collapse'}>
       <ActionIcon
         variant="subtle"
         color="gray"

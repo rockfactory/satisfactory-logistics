@@ -1,0 +1,12 @@
+.identiconBadge {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--mantine-color-dark-5);
+  border: 2px solid var(--mantine-color-dark-7);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}

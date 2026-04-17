@@ -1,5 +1,5 @@
 .header {
-  padding-top: var(--mantine-spacing-sm);
+  padding-top: var(--mantine-spacing-xs);
   background-color: light-dark(
     var(--mantine-color-gray-0),
     var(--mantine-color-dark-6)
@@ -15,8 +15,22 @@
   left: 5px;
 }
 
-.mainSection {
-  padding-bottom: var(--mantine-spacing-sm);
+.globalBand {
+  padding-bottom: var(--mantine-spacing-xs);
+}
+
+.gameBand {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.gameActions {
+  padding-right: var(--mantine-spacing-sm);
+}
+
+.logoLink {
+  display: inline-flex;
+  align-items: center;
 }
 
 .tabsList {
@@ -25,7 +39,7 @@
   }
 }
 
-.tab {
+.gameTab {
   font-weight: 600;
   height: rem(38);
   background-color: transparent;

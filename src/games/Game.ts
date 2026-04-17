@@ -1,3 +1,4 @@
+import type { JSONContent } from '@tiptap/react';
 import type { Tables } from '@/core/database.types';
 
 export interface Game {
@@ -10,16 +11,18 @@ export interface Game {
   allowedRecipes?: string[];
   allowedBuildings?: string[];
   collapsedFactoriesIds?: string[];
+  notes?: JSONContent | null;
   // Only if saved
   savedId?: string;
   shareToken?: string | null;
   authorId?: string;
   createdAt?: string;
+  updatedAt?: string;
 }
 
 export type GameRemoteData = Pick<
   Tables<'games'>,
-  'author_id' | 'created_at' | 'id' | 'share_token'
+  'author_id' | 'created_at' | 'id' | 'share_token' | 'updated_at'
 >;
 
 export interface GameSettings {
@@ -27,4 +30,6 @@ export interface GameSettings {
   highlight100PercentColor?: string;
   maxBelt?: string;
   maxPipeline?: string;
+  orthogonalEdges?: boolean;
+  disableEdgeAnimation?: boolean;
 }

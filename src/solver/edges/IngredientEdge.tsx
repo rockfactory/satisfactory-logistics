@@ -4,7 +4,6 @@ import {
   type Edge,
   EdgeLabelRenderer,
   type EdgeProps,
-  getBezierPath,
   useInternalNode,
   useStore,
 } from '@xyflow/react';
@@ -12,6 +11,7 @@ import { last } from 'lodash';
 import type { FC } from 'react';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import {
+  useGameSetting,
   useGameSettingMaxBelt,
   useGameSettingMaxPipeline,
 } from '@/games/gamesSlice';
@@ -21,6 +21,8 @@ import {
 } from '@/recipes/FactoryBuilding';
 import { type FactoryItem, FactoryItemForm } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { getConfigurableEdgePath } from '@/solver/edges/getConfigurableEdgePath';
+import { useEdgeAnimationEnabled } from '@/solver/edges/useEdgeAnimationEnabled';
 import { getEdgeParams, getSpecialPath } from './utils';
 
 export interface IIngredientEdgeData {
@@ -64,6 +66,10 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
 
   const maxBelt = useGameSettingMaxBelt();
   const maxPipeline = useGameSettingMaxPipeline();
+  const orthogonalEdges = useGameSetting('orthogonalEdges') as
+    | boolean
+    | undefined;
+  const animationEnabled = useEdgeAnimationEnabled();
   const isOverMaxBelt = maxBelt && (data?.value ?? 0) > maxBelt.conveyor!.speed;
   const isOverMaxPipeline =
     maxPipeline && (data?.value ?? 0) > maxPipeline.pipeline!.flowRate;
@@ -93,7 +99,7 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
 
   const [edgePath, labelX, labelY] = isBiDirectionEdge
     ? getSpecialPath(edgePathParams)
-    : getBezierPath(edgePathParams);
+    : getConfigurableEdgePath(edgePathParams, !!orthogonalEdges);
 
   const duration = 60 / (data?.value ?? 0);
 
@@ -124,13 +130,15 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
             sx < tx ? 'url(#edge-gradient)' : 'url(#edge-gradient-reverse)',
         }}
       />
-      <circle r="2" fill="var(--mantine-color-indigo-3)">
-        <animateMotion
-          dur={`${duration}s`}
-          repeatCount="indefinite"
-          path={edgePath}
-        />
-      </circle>
+      {animationEnabled && (
+        <circle r="2" fill="var(--mantine-color-indigo-3)">
+          <animateMotion
+            dur={`${duration}s`}
+            repeatCount="indefinite"
+            path={edgePath}
+          />
+        </circle>
+      )}
       <EdgeLabelRenderer>
         <Box
           p={'4px'}
@@ -147,7 +155,6 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
           className="nodrag"
         >
           <Tooltip
-            color="dark.8"
             label={
               <Group>
                 <Image

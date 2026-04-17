@@ -1,5 +1,7 @@
-import { Stack, Table, Text } from '@mantine/core';
+import { ActionIcon, Group, Stack, Table, Text, Tooltip } from '@mantine/core';
+import { IconCalculator, IconEye } from '@tabler/icons-react';
 import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
 import { useShallowStore } from '@/core/zustand';
 import type { FactoryOutput } from '@/factories/Factory';
@@ -15,10 +17,12 @@ export function OutputDependenciesTable(props: IOutputDependenciesTableProps) {
   const factoriesUsingOutput = useShallowStore(state =>
     state.games.games[state.games.selected ?? '']?.factoriesIds
       .map(id => state.factories.factories[id])
-      .filter(factory =>
-        factory?.inputs?.some(
-          i => i.resource === output.resource && i.factoryId === factoryId,
-        ),
+      .filter(
+        factory =>
+          factory?.progress !== 'disabled' &&
+          factory?.inputs?.some(
+            i => i.resource === output.resource && i.factoryId === factoryId,
+          ),
       ),
   );
 
@@ -59,7 +63,35 @@ export function OutputDependenciesTable(props: IOutputDependenciesTableProps) {
         </Table.Thead>
         {dependencies.map(({ source, input }) => (
           <Table.Tr key={source.id}>
-            <Table.Td>{source.name}</Table.Td>
+            <Table.Td>
+              <Group gap="xs" wrap="nowrap">
+                <Text size="sm">{source.name}</Text>
+                <Tooltip label="Open factory" withArrow>
+                  <ActionIcon
+                    component={Link}
+                    to={`/factories/${source.id}`}
+                    size="sm"
+                    variant="filled"
+                    color="blue"
+                    aria-label="Open factory"
+                  >
+                    <IconEye size={14} />
+                  </ActionIcon>
+                </Tooltip>
+                <Tooltip label="Open calculator" withArrow>
+                  <ActionIcon
+                    component={Link}
+                    to={`/factories/${source.id}/calculator`}
+                    size="sm"
+                    variant="filled"
+                    color="cyan"
+                    aria-label="Open calculator"
+                  >
+                    <IconCalculator size={14} />
+                  </ActionIcon>
+                </Tooltip>
+              </Group>
+            </Table.Td>
             <Table.Td>
               {input.amount}
               <small>/min</small>

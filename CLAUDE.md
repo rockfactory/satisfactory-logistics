@@ -149,6 +149,10 @@ Savegame files (`.sav`) are parsed using `@etothepii/satisfactory-file-parser` i
 
 ## Code Conventions
 
+### Writing Style
+
+- **Do not use em dashes (`—`)** in code comments, UI copy, notification messages, commit messages, or any text that ships to users. Prefer commas, parentheses, colons, or separate sentences. Applies to both source code and generated text.
+
 ### TypeScript
 
 - Strict mode is enabled (`tsconfig.json`).
@@ -233,9 +237,42 @@ This overwrites [src/core/database.types.ts](src/core/database.types.ts). Requir
 
 ---
 
+## Tutorials
+
+The in-app guided tour lives in [src/tutorial/](src/tutorial/) and is built on top of [`driver.js`](https://driverjs.com/). It is the first thing a new user sees (welcome modal on first mount) and stays accessible from the `?` icon in the header.
+
+### Architecture
+
+- **Chapters**: declarative units in [src/tutorial/chapters/](src/tutorial/chapters/). Each chapter exports a `TutorialChapter` ([types.ts](src/tutorial/chapters/types.ts)) with: `id`, `title`, `description`, optional `nextChapterId`, optional `setup()` (seeds state — e.g. demo factories), optional `outroBody` (custom recap shown in the outro modal), and one or more `segments`.
+- **Segments**: bound to a `route` (string, RegExp, or function of context). With `autoNavigate: true` the runner navigates there programmatically; with `autoNavigate: false` it waits for the user to navigate. Each segment is a series of `DriveStep`s (driver.js shape).
+- **Step targets** use `data-tutorial-id="…"` attributes on real DOM elements. **Never** rely on Mantine class names or React structure — those break across upgrades.
+- **Step helpers** live in [chapters/stepHelpers.ts](src/tutorial/chapters/stepHelpers.ts): `clickSelector`, `ensurePresent`, `ensureAbsent`, `chainHooks`, `rehighlightWhenAvailable`, `openAndRehighlight`. Use these for preconditions (drawer must be open, action popover must be mounted, etc.) so back/forward navigation stays consistent.
+- **Demo factories**: shared `ensureDemoFactory` / `ensureConsumerFactory` / `removeDemoFactories` in [chapters/demoFactories.ts](src/tutorial/chapters/demoFactories.ts). Chapters that need a populated state call them from `setup()`. The runner removes them in a `finally` when the tour ends so users do not get orphan factories.
+- **Runner**: [useTutorial.ts](src/tutorial/useTutorial.ts) drives chapter execution (segments, location bus, driver lifecycle). Between chapters it pauses on `ChapterOutroModal` (Mantine) and lets the user pick continue / done — no silent auto-chain.
+- **Help button blip**: [helpButtonBlip.ts](src/tutorial/helpButtonBlip.ts) pulses the `?` icon when the user opts out, so they discover where to resume.
+
+### Authoring rules
+
+- **Always update tutorials when changing the UI.** Adding, renaming, removing, or repositioning any UI element that the tutorial highlights (anything with `data-tutorial-id`, or anything mentioned by name in a popover description) requires a parallel update in [src/tutorial/chapters/](src/tutorial/chapters/). The tutorial is part of the product surface — treat it like tests.
+- **Add a `data-tutorial-id`** on every new feature element you expect users to discover (drawer triggers, primary actions, toggles, important inputs). Pattern: `data-tutorial-id="<area>-<thing>"` (e.g. `calculator-auto-set`, `factory-input-amount`).
+- **Idempotent preconditions**: every chapter step must be safe to enter via Back as well as Next. Use `ensurePresent` / `ensureAbsent` instead of `onDeselected` side effects.
+- **Drop `data-tutorial-id`s with the elements they live on.** When you remove a feature, also remove the matching tutorial step (or rewrite it to point at the replacement) — orphan selectors silently break the tour.
+- **Programmatic interactions** (auto-fill state, pre-open drawers, pre-select tabs) belong in `onHighlightStarted`, not in step descriptions: keep the user's job to "press Next or arrows" and the tour does the rest.
+- **Position popovers to leave the highlighted element visible**. Prefer `side: 'bottom' | 'top' | 'left' | 'right'` + `align: 'start' | 'center' | 'end'` based on where the element sits on screen — never let the popover cover the element it is describing.
+
+### Testing a tutorial change
+
+1. `npm run dev`, clear IndexedDB → reload, run the welcome modal "Show me around" path end-to-end.
+2. From the `?` menu, run any chapter standalone and verify it works without its predecessors (chapters seed their own state via `setup()`).
+3. Use Back/Next on every step you touched — preconditions must keep the UI in the right state in both directions.
+4. Run `npm run check-types && npm run lint && npm test -- --run`.
+
+---
+
 ## Contributing
 
 1. Fork the repository.
 2. Create a branch: `feature/my-feature` or `fix/my-fix`.
 3. Target PRs at the **`dev`** branch (not `main`).
 4. Ensure `npm run lint`, `npm run check-types`, and `npm test -- --run` all pass before opening a PR.
+5. **If your change touches the UI surface (new buttons / drawers / pages, renames, repositions)**, update the corresponding chapter in [src/tutorial/chapters/](src/tutorial/chapters/) — see the **Tutorials** section above.

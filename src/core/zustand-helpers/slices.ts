@@ -1,5 +1,5 @@
-import { produce, type WritableDraft } from 'immer';
-import { ImmerActions } from './immer';
+import { produceWithPatches, type WritableDraft } from 'immer';
+import { emitStorePatches, ImmerActions } from './immer';
 
 type InferState<Slices> = Slices extends [
   SliceConfig<infer Name, infer State, infer Actions>,
@@ -30,9 +30,13 @@ export function withSlices<
 
       for (const [name, action] of Object.entries(slice.actions)) {
         state[name] = (...args: any[]) => {
-          set(
-            produce(prevState => action(...args)(prevState[slice.name], get)),
-          );
+          set(prevState => {
+            const [nextState, patches] = produceWithPatches(prevState, draft =>
+              action(...args)(draft[slice.name], get),
+            );
+            if (patches.length > 0) emitStorePatches(patches);
+            return nextState;
+          });
         };
         (state[name] as any)[ImmerActions] = (state: any, ...args: any[]) => {
           action(...args)(state[slice.name], get);

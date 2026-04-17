@@ -32,6 +32,7 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
     <Group justify="space-between">
       <Group>
         <SegmentedControl
+          data-tutorial-id="view-switcher"
           radius="md"
           data={[
             {
@@ -117,6 +118,7 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
       <Group>
         {/* <FactoryUndoButtons /> */}
         <Button
+          data-tutorial-id="add-factory-btn"
           onClick={e => {
             const factoryId = v4();
 

@@ -1,4 +1,13 @@
-import { Button, Menu } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Group,
+  Loader,
+  Menu,
+  Stack,
+  Text,
+  Tooltip,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
 import {
@@ -11,19 +20,22 @@ import {
   IconPencil,
   IconPlus,
   IconSettings,
+  IconShare,
 } from '@tabler/icons-react';
-import cx from 'clsx';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 } from 'uuid';
 import { useSession } from '@/auth/authSelectors';
+import { LoginModal } from '@/auth/LoginModal';
 import { useShallowStore, useStore } from '@/core/zustand';
+import { generateGameName } from '@/games/gameNameGenerator';
+import { ShareGameModal } from '@/games/page/share/ShareGameModal';
 import { loadRemoteGame } from '@/games/save/loadRemoteGame';
 import { loadRemoteGamesList } from '@/games/save/loadRemoteGamesList';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
+import { useGameSaveInfo } from '@/games/save/useGameSaveInfo';
 import { openGameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { GameDetailModal } from './GameDetailModal';
-import classes from './GameMenu.module.css';
 
 export interface IGameMenuProps {}
 
@@ -54,10 +66,42 @@ export function GameMenu(props: IGameMenuProps) {
   const isSelectedSavedOnRemote = useStore(
     state => !!state.games.games[selectedId ?? '']?.savedId,
   );
-  const isSaving = useStore(state => state.gameSave.isSaving);
   const navigate = useNavigate();
+  const saveInfo = useGameSaveInfo();
 
-  const [opened, { toggle, open, close }] = useDisclosure();
+  const saveStatusLabel = useMemo(() => {
+    switch (saveInfo.kind) {
+      case 'saving':
+        return 'Saving…';
+      case 'cloud-saved':
+        return 'All changes saved to cloud';
+      case 'cloud-dirty':
+        return 'Unsaved changes';
+      case 'cloud-pending':
+        return 'Not yet saved';
+      case 'local-only':
+        return null;
+    }
+  }, [saveInfo]);
+
+  const saveStatusTooltip =
+    (saveInfo.kind === 'cloud-saved' || saveInfo.kind === 'cloud-dirty') &&
+    saveInfo.full
+      ? `Last save: ${saveInfo.full} (${saveInfo.relative})`
+      : null;
+
+  const saveStatusColor: string | undefined =
+    saveInfo.kind === 'cloud-saved'
+      ? 'var(--mantine-color-green-4)'
+      : saveInfo.kind === 'saving'
+        ? 'var(--mantine-color-blue-4)'
+        : saveInfo.kind === 'cloud-dirty' || saveInfo.kind === 'cloud-pending'
+          ? 'var(--mantine-color-yellow-5)'
+          : undefined;
+
+  const [editOpened, { open: openEdit, close: closeEdit }] = useDisclosure();
+  const [shareOpened, { open: openShare, close: closeShare }] = useDisclosure();
+  const [loginOpened, { open: openLogin, close: closeLogin }] = useDisclosure();
 
   const gameOptions = useGameOptions();
 
@@ -91,13 +135,21 @@ export function GameMenu(props: IGameMenuProps) {
     await loadRemoteGame(gameId, { override: true });
   }, []);
 
+  const handleShareGame = useCallback(() => {
+    if (!session) {
+      openLogin();
+      return;
+    }
+    openShare();
+  }, [session, openLogin, openShare]);
+
   return (
     <>
-      <Button.Group>
+      <Box data-tutorial-id="games-menu" display="inline-flex">
         <Menu>
           <Menu.Target>
             <Button
-              loading={isSaving}
+              data-tutorial-id="games-menu-trigger"
               variant="light"
               color="gray"
               leftSection={<IconDeviceGamepad size={16} />}
@@ -106,7 +158,7 @@ export function GameMenu(props: IGameMenuProps) {
               {gameName ?? 'Select game'}
             </Button>
           </Menu.Target>
-          <Menu.Dropdown>
+          <Menu.Dropdown data-tutorial-id="games-menu-dropdown">
             <Menu.Label>Change game</Menu.Label>
             {gameOptions.map(option => (
               <Menu.Item
@@ -117,7 +169,7 @@ export function GameMenu(props: IGameMenuProps) {
                   navigate(`/factories`);
                 }}
                 rightSection={
-                  selectedId == option.value && (
+                  selectedId === option.value && (
                     <IconCircleFilled
                       size={8}
                       color="var(--mantine-color-green-7)"
@@ -132,9 +184,7 @@ export function GameMenu(props: IGameMenuProps) {
             <Menu.Item
               onClick={() => {
                 useStore.getState().createGame(v4(), {
-                  name:
-                    'New Game ' +
-                    (Object.keys(useStore.getState().games.games).length + 1),
+                  name: generateGameName(),
                 });
               }}
               leftSection={<IconPlus color="orange" size={16} />}
@@ -148,10 +198,10 @@ export function GameMenu(props: IGameMenuProps) {
                 <IconPencil color="var(--mantine-color-blue-3)" size={16} />
               }
               onClick={() => {
-                open();
+                openEdit();
               }}
             >
-              Edit game
+              Rename game
             </Menu.Item>
             <Menu.Item
               leftSection={
@@ -162,10 +212,44 @@ export function GameMenu(props: IGameMenuProps) {
               Game settings
             </Menu.Item>
             <Menu.Item
+              data-tutorial-id="game-share-menu"
+              leftSection={
+                <IconShare color="var(--mantine-color-blue-4)" size={16} />
+              }
+              onClick={handleShareGame}
+            >
+              Share game
+            </Menu.Item>
+            <Menu.Item
               leftSection={<IconDeviceFloppy size={16} />}
               onClick={() => handleSaveGame(selectedId)}
             >
-              Save game
+              <Stack gap={2}>
+                <Text size="sm" lh={1.2}>
+                  Save game
+                </Text>
+                {saveStatusLabel && (
+                  <Tooltip
+                    label={saveStatusTooltip ?? saveStatusLabel}
+                    withArrow
+                    disabled={!saveStatusTooltip}
+                  >
+                    <Group gap={6} align="center" wrap="nowrap">
+                      {saveInfo.kind === 'saving' && (
+                        <Loader size={10} color="blue" />
+                      )}
+                      <Text
+                        size="xs"
+                        c="dimmed"
+                        lh={1.2}
+                        style={{ color: saveStatusColor }}
+                      >
+                        {saveStatusLabel}
+                      </Text>
+                    </Group>
+                  </Tooltip>
+                )}
+              </Stack>
             </Menu.Item>
             {selectedId && isSelectedSavedOnRemote && (
               <Menu.Item
@@ -177,6 +261,7 @@ export function GameMenu(props: IGameMenuProps) {
             )}
             <Menu.Divider />
             <Menu.Item
+              data-tutorial-id="games-menu-list"
               leftSection={<IconList size={16} />}
               onClick={() => {
                 navigate(`/games`);
@@ -186,20 +271,26 @@ export function GameMenu(props: IGameMenuProps) {
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
-        <Button
-          className={cx(classes.gameMenuSecondaryButton)}
-          variant="light"
-          color="gray"
-          onClick={() => {
-            handleSaveGame(selectedId);
-          }}
-        >
-          <IconDeviceFloppy size={16} />
-        </Button>
-      </Button.Group>
+      </Box>
       {selectedId && (
-        <GameDetailModal opened={opened} close={close} gameId={selectedId} />
+        <GameDetailModal
+          opened={editOpened}
+          close={closeEdit}
+          gameId={selectedId}
+        />
       )}
+      {selectedId && (
+        <ShareGameModal
+          gameId={selectedId}
+          opened={shareOpened}
+          onClose={closeShare}
+        />
+      )}
+      <LoginModal
+        opened={loginOpened}
+        close={closeLogin}
+        message="Log in to share your Game with friends. After login, the share link is generated automatically."
+      />
     </>
   );
 }

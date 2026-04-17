@@ -34,6 +34,7 @@ export function ResourceNodeExtractorDetail(
 
   return (
     <Table
+      data-tutorial-id="resource-extractors"
       withColumnBorders
       style={{
         borderRight: '1px solid var(--mantine-color-dark-4)',

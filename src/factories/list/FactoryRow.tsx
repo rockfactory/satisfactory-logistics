@@ -24,6 +24,7 @@ import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
 import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
 import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
 import { useGameFactoryIsCollapsed } from '@/games/gamesSlice';
+import { FactoryPeers } from '@/games/sync/ui/FactoryPeers';
 
 export interface IFactoryRowProps {
   id: string;
@@ -61,7 +62,11 @@ export function FactoryRow(props: IFactoryRowProps) {
   }
 
   return (
-    <Card key={id} withBorder>
+    <Card
+      key={id}
+      withBorder
+      style={{ opacity: factory.progress === 'disabled' ? 0.55 : 1 }}
+    >
       <Group gap="sm" align="flex-start" justify="space-between">
         <Group gap="sm" align="flex-start">
           <Group gap={2}>
@@ -74,6 +79,7 @@ export function FactoryRow(props: IFactoryRowProps) {
               defaultValue={factory.name ?? ''}
               onChange={onChangeHandler('name')}
             />
+            <FactoryPeers factoryId={id} />
           </Group>
 
           <Stack gap={'sm'}>

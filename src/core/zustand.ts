@@ -10,9 +10,13 @@ import { factoryViewSortActions } from '@/factories/store/factoryViewSortActions
 import { gamesSlice } from '@/games/gamesSlice';
 import { gameSaveSlice } from '@/games/save/gameSaveSlice';
 import { gameFactoriesActions } from '@/games/store/gameFactoriesActions';
+import { gameRealtimeActions } from '@/games/store/gameRealtimeActions';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
+import { peersSlice } from '@/games/sync/peersSlice';
+import { notesUiSlice } from '@/notes/store/notesUiSlice';
 import { solverFactoriesActions } from '@/solver/store/solverFactoriesActions';
 import { solversSlice } from '@/solver/store/solverSlice';
+import { tutorialSlice } from '@/tutorial/store/tutorialSlice';
 import { loglev } from './logger/log';
 import { migratePersistedStoreFromRedux } from './migrations/migratePersistedStoreFromRedux';
 import { migrateStoreWithPlan } from './migrations/planner/StoreMigrationPlan';
@@ -34,6 +38,9 @@ const slices = withSlices(
   factoryViewSlice,
   solversSlice,
   chartsSlice,
+  tutorialSlice,
+  notesUiSlice,
+  peersSlice,
 );
 
 export type RootState = ReturnType<typeof slices>;
@@ -42,6 +49,7 @@ const slicesWithActions = withActions(
   gameFactoriesActions,
   solverFactoriesActions,
   gameRemoteActions,
+  gameRealtimeActions,
   factoryViewSortActions,
 );
 
@@ -49,7 +57,7 @@ export const useStore = create(
   devtools(
     persist(slicesWithActions, {
       name: 'zustand:persist',
-      partialize: state => omit(state, ['gameSave']),
+      partialize: state => omit(state, ['gameSave', 'peers']),
       version: 4,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),

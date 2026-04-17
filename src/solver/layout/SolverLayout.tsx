@@ -385,6 +385,7 @@ export const SolverLayout = (props: SolverLayoutProps) => {
 
   return (
     <ReactFlow
+      data-tutorial-id="solver-graph"
       ref={ref}
       minZoom={0.2}
       nodes={nodes}

@@ -37,7 +37,11 @@ export function MachineNodeProductionConfig(
       : 100;
 
   return (
-    <SimpleGrid cols={2} spacing={6}>
+    <SimpleGrid
+      data-tutorial-id="machine-action-overclock-somersloops"
+      cols={2}
+      spacing={6}
+    >
       <NumberInput
         styles={{
           input: {
@@ -74,6 +78,7 @@ export function MachineNodeProductionConfig(
         }
       />
       <NumberInput
+        data-tutorial-id="machine-action-overclock"
         label={
           <Text size="xs" style={{ visibility: 'hidden' }}>
             {'\u00A0'}

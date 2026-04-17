@@ -6,6 +6,7 @@ import { useStore } from '@/core/zustand';
 import { ProgressChip } from '@/factories/components/ProgressChip';
 import type { Factory } from '@/factories/Factory';
 import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
+import { FactoryPeers } from '@/games/sync/ui/FactoryPeers';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import classes from './FactoryGridCard.module.css';
 
@@ -36,16 +37,26 @@ export function FactoryGridCard(props: IFactoryGridCard) {
   }
 
   return (
-    <Card key={id} withBorder component={Link} to={id} className={classes.card}>
+    <Card
+      key={id}
+      withBorder
+      component={Link}
+      to={id}
+      className={classes.card}
+      style={{ opacity: factory.progress === 'disabled' ? 0.55 : 1 }}
+    >
       <Group justify="space-between" align="center" wrap="nowrap">
         <Stack
           justify="space-between"
           align="stretch"
           className={classes.cardContent}
         >
-          <Text fw={500} size="lg">
-            {factory.name ?? 'Unnamed'}
-          </Text>
+          <Group gap="xs" wrap="nowrap">
+            <Text fw={500} size="lg">
+              {factory.name ?? 'Unnamed'}
+            </Text>
+            <FactoryPeers factoryId={id} />
+          </Group>
           <Flex
             align="center"
             wrap="nowrap"

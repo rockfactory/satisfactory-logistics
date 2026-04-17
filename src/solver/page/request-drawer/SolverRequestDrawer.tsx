@@ -63,6 +63,7 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
         {SolverRequestTabs.map(({ value, label, icon }) => (
           <Button
             key={value}
+            data-tutorial-id={`calculator-${value}`}
             // variant="light"
             color="blue"
             size="sm"
@@ -93,6 +94,7 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
         <Drawer.Content>
           <Drawer.Header>
             <Button
+              data-tutorial-id="calculator-drawer-close"
               variant="unstyled"
               onClick={close}
               className={classes.closeBanner}
@@ -114,7 +116,11 @@ export function SolverRequestDrawer(props: ISolverRequestDrawerProps) {
                 >
                   <Tabs.List>
                     {SolverRequestTabs.map(({ value, label, icon }) => (
-                      <Tabs.Tab key={value} value={value}>
+                      <Tabs.Tab
+                        key={value}
+                        value={value}
+                        data-tutorial-id={`calculator-drawer-tab-${value}`}
+                      >
                         <Center style={{ gap: 10 }}>
                           {icon}
                           {label}

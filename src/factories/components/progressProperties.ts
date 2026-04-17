@@ -2,6 +2,7 @@ import type { MantineColor } from '@mantine/core';
 import {
   IconCircle,
   IconCircleCheck,
+  IconPlayerPause,
   IconProgress,
   IconProgressHelp,
   type IconProps,
@@ -36,5 +37,10 @@ export const progressProperties: Record<
     color: 'green',
     label: 'Done',
     Icon: IconCircleCheck,
+  },
+  disabled: {
+    color: 'red',
+    label: 'Disabled',
+    Icon: IconPlayerPause,
   },
 };

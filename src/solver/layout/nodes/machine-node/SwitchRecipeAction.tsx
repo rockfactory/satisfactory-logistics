@@ -68,6 +68,7 @@ export function SwitchRecipeAction(props: ISwitchRecipeActionProps) {
 
   return (
     <Checkbox.Group
+      data-tutorial-id="machine-action-switch-recipe"
       w="100%"
       labelProps={{ w: '100%' }}
       label={

@@ -24,6 +24,7 @@ import {
 import { useEffect } from 'react';
 import {
   createBrowserRouter,
+  Outlet,
   RouterProvider,
   useLocation,
   useNavigate,
@@ -32,39 +33,96 @@ import {
 import { LoginPage } from './auth/LoginPage';
 import { PrivacyPolicy } from './auth/privacy/PrivacyPolicy';
 import { SyncManager } from './auth/sync/SyncManager';
+import { CodexRoutes } from './codex/CodexRoutes';
+import { CodexSpotlight } from './codex/spotlight/CodexSpotlight';
 import { useStore } from './core/zustand';
 import { GamesRoutes } from './games/page/GamesRoutes';
+import { AppLayout } from './layout/AppLayout';
+import { PWAUpdatePrompt } from './pwa/PWAUpdatePrompt';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
 import { theme } from './theme';
+import { ToolsRoutes } from './tools/page/ToolsRoutes';
 
-const router = createBrowserRouter([
-  {
-    path: '/privacy-policy',
-    element: <PrivacyPolicy />,
-  },
-  {
-    path: '/factories/*',
-    element: <FactoryRoutes />,
-    ErrorBoundary: () => {
-      throw useRouteError();
+const basename = import.meta.env.BASE_URL.replace(/\/+$/, '') || '/';
+
+function SpotlightLayout() {
+  return (
+    <>
+      <CodexSpotlight />
+      <Outlet />
+    </>
+  );
+}
+
+function RootLayout() {
+  return (
+    <>
+      <SyncManager />
+      <Outlet />
+    </>
+  );
+}
+
+const router = createBrowserRouter(
+  [
+    {
+      element: <RootLayout />,
+      children: [
+        {
+          path: '/privacy-policy',
+          element: <PrivacyPolicy />,
+        },
+        {
+          element: <SpotlightLayout />,
+          children: [
+            {
+              element: <AppLayout />,
+              children: [
+                {
+                  path: '/factories/*',
+                  element: <FactoryRoutes />,
+                  ErrorBoundary: () => {
+                    throw useRouteError();
+                  },
+                },
+                {
+                  path: '/games/*',
+                  element: <GamesRoutes />,
+                  ErrorBoundary: () => {
+                    throw useRouteError();
+                  },
+                },
+                {
+                  path: '/codex/*',
+                  element: <CodexRoutes />,
+                  ErrorBoundary: () => {
+                    throw useRouteError();
+                  },
+                },
+                {
+                  path: '/tools/*',
+                  element: <ToolsRoutes />,
+                  ErrorBoundary: () => {
+                    throw useRouteError();
+                  },
+                },
+                {
+                  path: '*',
+                  element: <Redirect to="/factories" />,
+                },
+              ],
+            },
+            {
+              path: '/login',
+              element: <LoginPage />,
+            },
+          ],
+        },
+      ],
     },
-  },
-  {
-    path: '/games/*',
-    element: <GamesRoutes />,
-    ErrorBoundary: () => {
-      throw useRouteError();
-    },
-  },
-  {
-    path: '/login',
-    element: <LoginPage />,
-  },
-  {
-    path: '*',
-    element: <Redirect to="/factories" />,
-  },
-]);
+  ],
+  { basename },
+);
 
 function Redirect({ to }: { to: string }) {
   const location = useLocation();
@@ -159,8 +217,8 @@ export default function App() {
             </Center>
           }
         >
-          <SyncManager />
           <Notifications position="top-right" zIndex={1000} />
+          <PWAUpdatePrompt />
           <RouterProvider router={router} />
         </ErrorBoundary>
       </ModalsProvider>

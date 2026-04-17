@@ -38,7 +38,7 @@ export function FactoryOutputObjectiveSelect(
   return (
     <Menu withinPortal loop returnFocus>
       <Menu.Target>
-        <Tooltip label={current.tooltip} position="top" color="dark.8">
+        <Tooltip label={current.tooltip} position="top">
           <ActionIcon variant="default" title="Objective">
             {current.icon}
           </ActionIcon>

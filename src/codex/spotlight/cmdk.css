@@ -1,0 +1,209 @@
+[cmdk-overlay] {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(7px);
+  z-index: 999;
+}
+
+[cmdk-dialog] {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  z-index: 1000;
+}
+
+[cmdk-root] {
+  background: var(--mantine-color-dark-7);
+  border: 1px solid var(--mantine-color-dark-4);
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.cmdk-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px 0;
+}
+
+.cmdk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: var(--mantine-radius-sm);
+  background: var(--mantine-color-dark-5);
+  color: var(--mantine-color-dark-0);
+  white-space: nowrap;
+}
+
+[cmdk-input] {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-family: inherit;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--mantine-color-dark-4);
+  color: var(--mantine-color-dark-0);
+  outline: none;
+}
+
+[cmdk-input]::placeholder {
+  color: var(--mantine-color-dark-3);
+}
+
+[cmdk-list] {
+  max-height: 400px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
+  scroll-padding-block: 6px;
+  transition: height 100ms ease;
+}
+
+[cmdk-group-heading] {
+  padding: 8px 10px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mantine-color-dark-3);
+  user-select: none;
+}
+
+[cmdk-item] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--mantine-radius-sm);
+  font-size: 14px;
+  color: var(--mantine-color-dark-0);
+  cursor: pointer;
+  user-select: none;
+  transition: background 80ms ease;
+}
+
+[cmdk-item][data-selected="true"] {
+  background: var(--mantine-color-dark-5);
+}
+
+[cmdk-item]:active {
+  background: var(--mantine-color-dark-4);
+}
+
+[cmdk-item][data-disabled="true"] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+[cmdk-item] .cmdk-item-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+[cmdk-item] .cmdk-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1;
+}
+
+[cmdk-item] .cmdk-item-label {
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[cmdk-item] .cmdk-item-description {
+  font-size: 12px;
+  color: var(--mantine-color-dark-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[cmdk-item] .cmdk-item-chevron {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: var(--mantine-color-dark-3);
+}
+
+[cmdk-item] .cmdk-item-outputs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--mantine-color-dark-2);
+}
+
+[cmdk-item] .cmdk-item-output {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+[cmdk-item] .cmdk-item-output-sep {
+  color: var(--mantine-color-dark-4);
+  margin-right: 2px;
+}
+
+[cmdk-item] .cmdk-item-output-amount {
+  color: var(--mantine-color-dark-3);
+}
+
+[cmdk-empty] {
+  padding: 32px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--mantine-color-dark-3);
+}
+
+[cmdk-separator] {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--mantine-color-dark-5);
+}
+
+.cmdk-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  border-top: 1px solid var(--mantine-color-dark-4);
+  font-size: 12px;
+  color: var(--mantine-color-dark-3);
+}
+
+.cmdk-footer kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  font-size: 11px;
+  font-family: inherit;
+  background: var(--mantine-color-dark-5);
+  border: 1px solid var(--mantine-color-dark-4);
+  border-radius: 4px;
+  color: var(--mantine-color-dark-1);
+  vertical-align: middle;
+}
