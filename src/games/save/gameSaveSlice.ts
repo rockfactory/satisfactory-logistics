@@ -7,6 +7,7 @@ export const gameSaveSlice = createSlice({
     isSaving: false,
     isLoading: false,
     isRealtimeSyncConnected: false,
+    dirtyAt: {} as Record<string, number>,
   },
   actions: {
     setIsSaving: (isSaving: boolean) => state => {
@@ -20,6 +21,12 @@ export const gameSaveSlice = createSlice({
     },
     setRealtimeSyncConnected: (isRealtimeSyncConnected: boolean) => state => {
       state.isRealtimeSyncConnected = isRealtimeSyncConnected;
+    },
+    markGameDirty: (gameId: string, at: number) => state => {
+      state.dirtyAt[gameId] = at;
+    },
+    clearGameDirty: (gameId: string) => state => {
+      delete state.dirtyAt[gameId];
     },
   },
 });

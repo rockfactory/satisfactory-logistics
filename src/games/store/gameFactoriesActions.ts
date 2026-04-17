@@ -90,6 +90,7 @@ export const gameFactoriesActions = createActions({
     }
 
     delete state.games.games[gameId];
+    delete state.gameSave.dirtyAt[gameId];
     if (state.games.selected === gameId) {
       state.games.selected = null;
     }

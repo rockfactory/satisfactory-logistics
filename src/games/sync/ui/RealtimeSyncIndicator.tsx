@@ -6,19 +6,25 @@ import {
   HoverCard,
   Stack,
   Text,
+  Tooltip,
   UnstyledButton,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
   IconBroadcast,
   IconBroadcastOff,
+  IconCloudCheck,
+  IconCloudOff,
+  IconCloudUpload,
+  IconDeviceFloppy,
   IconLogin2,
 } from '@tabler/icons-react';
 import cx from 'clsx';
-import { type CSSProperties, useMemo } from 'react';
+import { type CSSProperties, type ReactNode, useMemo } from 'react';
 import { useSession } from '@/auth/authSelectors';
 import { LoginModal } from '@/auth/LoginModal';
 import { useStore } from '@/core/zustand';
+import { useGameSaveInfo } from '@/games/save/useGameSaveInfo';
 import { useAllPeers } from '../peersSlice';
 import { OnlinePeersList } from './OnlinePeersList';
 import { PeerAvatar } from './PeerAvatar';
@@ -28,6 +34,7 @@ export function RealtimeSyncIndicator() {
   const isConnected = useStore(s => s.gameSave.isRealtimeSyncConnected);
   const peers = useAllPeers();
   const session = useSession();
+  const saveInfo = useGameSaveInfo();
   const [loginOpened, loginHandlers] = useDisclosure(false);
 
   const deviceCountByUser = useMemo(() => {
@@ -54,6 +61,78 @@ export function RealtimeSyncIndicator() {
       : 'Realtime sync offline';
 
   const pillLabel = isLoggedOut ? 'Log in' : !isConnected ? 'Offline' : null;
+
+  const savedView = useMemo((): {
+    icon: ReactNode;
+    label: string;
+    detail?: string;
+    tooltip?: string;
+  } => {
+    switch (saveInfo.kind) {
+      case 'local-only':
+        return {
+          icon: (
+            <IconDeviceFloppy
+              size={14}
+              color="var(--mantine-color-gray-5)"
+              stroke={1.8}
+            />
+          ),
+          label: 'Saved on this device',
+          detail: 'Log in to back up to the cloud.',
+        };
+      case 'saving':
+        return {
+          icon: (
+            <IconCloudUpload
+              size={14}
+              color="var(--mantine-color-blue-4)"
+              stroke={1.8}
+            />
+          ),
+          label: 'Saving to cloud…',
+        };
+      case 'cloud-saved':
+        return {
+          icon: (
+            <IconCloudCheck
+              size={14}
+              color="var(--mantine-color-green-4)"
+              stroke={1.8}
+            />
+          ),
+          label: 'All changes saved to cloud',
+          tooltip: `Last save: ${saveInfo.full} (${saveInfo.relative})`,
+        };
+      case 'cloud-dirty':
+        return {
+          icon: (
+            <IconCloudUpload
+              size={14}
+              color="var(--mantine-color-yellow-5)"
+              stroke={1.8}
+            />
+          ),
+          label: 'Unsaved changes',
+          detail: 'Your edits will be saved to the cloud shortly.',
+          tooltip: saveInfo.full
+            ? `Last save: ${saveInfo.full} (${saveInfo.relative})`
+            : undefined,
+        };
+      case 'cloud-pending':
+        return {
+          icon: (
+            <IconCloudOff
+              size={14}
+              color="var(--mantine-color-yellow-5)"
+              stroke={1.8}
+            />
+          ),
+          label: 'Not yet saved to cloud',
+          detail: 'Your game is kept safe on this device.',
+        };
+    }
+  }, [saveInfo]);
 
   const pill = (
     <UnstyledButton
@@ -119,7 +198,7 @@ export function RealtimeSyncIndicator() {
         withinPortal
       >
         <HoverCard.Target>{pill}</HoverCard.Target>
-        <HoverCard.Dropdown p="sm" maw={240}>
+        <HoverCard.Dropdown p="sm" maw={260}>
           <Stack gap={8}>
             <Group gap={6} align="center" wrap="nowrap">
               {isConnected ? (
@@ -140,28 +219,41 @@ export function RealtimeSyncIndicator() {
                 {hasPeers && (
                   <Text span size="sm" c="dimmed" fw={400}>
                     {' · '}
-                    {peers.length} connected
+                    {peers.length} online
                   </Text>
                 )}
               </Text>
             </Group>
-            {isLoggedOut && (
-              <>
+            <Group gap={6} align="center" wrap="nowrap">
+              {savedView.icon}
+              {savedView.tooltip ? (
+                <Tooltip label={savedView.tooltip} withArrow>
+                  <Text size="xs" c="dimmed" lh={1.4}>
+                    {savedView.label}
+                  </Text>
+                </Tooltip>
+              ) : (
                 <Text size="xs" c="dimmed" lh={1.4}>
-                  Log in to enable cloud save, sync across devices, and sharing
-                  with friends.
+                  {savedView.label}
                 </Text>
-                <Button
-                  size="xs"
-                  variant="light"
-                  color="blue"
-                  leftSection={<IconLogin2 size={14} />}
-                  onClick={loginHandlers.open}
-                  fullWidth
-                >
-                  Log in
-                </Button>
-              </>
+              )}
+            </Group>
+            {savedView.detail && (
+              <Text size="xs" c="dimmed" lh={1.4}>
+                {savedView.detail}
+              </Text>
+            )}
+            {isLoggedOut && (
+              <Button
+                size="xs"
+                variant="light"
+                color="blue"
+                leftSection={<IconLogin2 size={14} />}
+                onClick={loginHandlers.open}
+                fullWidth
+              >
+                Log in
+              </Button>
             )}
             {hasPeers && (
               <>
