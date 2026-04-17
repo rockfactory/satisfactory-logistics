@@ -12,7 +12,8 @@
     "lint": "biome check src",
     "preview": "vite preview",
     "supabase:types": "npx supabase gen types typescript --project-id nymrtujjmzbhxcimjsci > ./src/core/database.types.ts",
-    "parse-docs": "tsx scripts/parseDocs.ts"
+    "parse-docs": "tsx scripts/parseDocs.ts",
+    "generate-pwa-icons": "tsx scripts/generatePwaIcons.ts"
   },
   "dependencies": {
     "@caldwell619/react-kanban": "^0.0.11",
@@ -94,8 +95,10 @@
     "typescript": "^5.9.3",
     "typescript-plugin-css-modules": "^5.2.0",
     "vite": "^8.0.3",
+    "vite-plugin-pwa": "https://pkg.pr.new/vite-plugin-pwa@924",
     "vite-plugin-static-copy": "^4.0.1",
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.4",
+    "workbox-window": "^7.4.0"
   },
   "overrides": {
     "use-sync-external-store": "^1.4.0"

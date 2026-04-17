@@ -2,6 +2,7 @@ import { sentryVitePlugin } from '@sentry/vite-plugin';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import pkg from './package.json' with { type: 'json' };
 
@@ -21,6 +22,52 @@ export default defineConfig({
           rename: { stripBase: true },
         },
       ],
+    }),
+    VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: false,
+      includeAssets: ['favicon.ico', 'favicon-plain.ico'],
+      manifest: {
+        name: 'Satisfactory Logistics',
+        short_name: 'SF Logistics',
+        description:
+          'Plan factories, track logistics and optimise production chains for the game Satisfactory.',
+        theme_color: '#1a1b1e',
+        background_color: '#1a1b1e',
+        display: 'standalone',
+        start_url: '/factories',
+        scope: '/',
+        icons: [
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+          {
+            src: '/icons/icon-512-maskable.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+        ],
+      },
+      workbox: {
+        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+        globPatterns: [
+          '**/*.{js,css,html,json,woff2,wasm}',
+          'images/game/**/*.{png,webp,jpg}',
+          'icons/*.png',
+        ],
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api/, /^\/auth/],
+        cleanupOutdatedCaches: true,
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/nymrtujjmzbhxcimjsci\.supabase\.co\/.*/i,
+            handler: 'NetworkOnly',
+          },
+        ],
+      },
+      devOptions: {
+        enabled: false,
+      },
     }),
   ],
   resolve: {

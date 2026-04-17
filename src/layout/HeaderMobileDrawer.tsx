@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserMenu } from '@/auth/UserMenu';
 import { useStore } from '@/core/zustand';
 import { openGameSettingsModal } from '@/games/settings/GameSettingsModal';
+import { InstallAppButton } from '@/pwa/InstallAppButton';
 import { TutorialMenu } from '@/tutorial/TutorialMenu';
 import { TAB_ICONS, TAB_ROUTES } from './Header';
 
@@ -62,6 +63,7 @@ export function HeaderMobileDrawer({
           ),
         )}
         <Divider my="xs" />
+        <InstallAppButton />
         <TutorialMenu />
         <UserMenu />
 
