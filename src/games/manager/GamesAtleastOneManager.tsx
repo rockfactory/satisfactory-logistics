@@ -29,7 +29,9 @@ export function GamesAtleastOneManager(props: IGamesAtleastOneManagerProps) {
 
     if (gameIds.length === 0) {
       const newGameId = v4();
-      logger.info(`No games found, creating default "First Game" (${newGameId})`);
+      logger.info(
+        `No games found, creating default "First Game" (${newGameId})`,
+      );
       state.createGame(newGameId, {
         name: 'First Game',
       });
