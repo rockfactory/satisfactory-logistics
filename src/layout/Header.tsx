@@ -1,16 +1,28 @@
-import { Badge, Burger, Container, Group, Image, Tabs } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import {
+  ActionIcon,
+  Badge,
+  Burger,
+  Container,
+  Group,
+  Image,
+  Kbd,
+  Tabs,
+  Tooltip,
+} from '@mantine/core';
+import { useDisclosure, useOs } from '@mantine/hooks';
 import {
   IconBuildingFactory,
   IconCalculator,
   IconChartBar,
   IconPackages,
+  IconSearch,
   IconTools,
 } from '@tabler/icons-react';
 import { capitalize } from 'lodash';
 import type { ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { UserMenu } from '@/auth/UserMenu';
+import { openSpotlight } from '@/codex/spotlight/CodexSpotlight';
 import { useStore } from '@/core/zustand';
 import { GameMenu } from '@/games/menu/GameMenu';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
@@ -56,6 +68,7 @@ export function Header() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const activeTab = resolveActiveTab(pathname);
+  const os = useOs();
 
   return (
     <header className={classes.header}>
@@ -80,6 +93,26 @@ export function Header() {
             <RealtimeSyncIndicator />
           </Group>
           <Group gap="xs" wrap="nowrap" visibleFrom="sm">
+            <Tooltip
+              label={
+                <>
+                  Search <Kbd size="xs">{os === 'macos' ? '⌘' : 'Ctrl'}</Kbd>
+                  {' + '}
+                  <Kbd size="xs">K</Kbd>
+                </>
+              }
+              position="bottom"
+            >
+              <ActionIcon
+                variant="subtle"
+                color="gray"
+                size="lg"
+                onClick={openSpotlight}
+                aria-label="Search"
+              >
+                <IconSearch size={18} />
+              </ActionIcon>
+            </Tooltip>
             {hasSelectedGame && <GameMenu />}
             <TutorialMenu />
             <UserMenu />

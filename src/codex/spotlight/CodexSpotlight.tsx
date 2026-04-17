@@ -28,6 +28,12 @@ const validItems = AllFactoryItems.filter(
   item => item.form !== FactoryItemForm.Invalid,
 );
 
+let openSpotlightFn: (() => void) | null = null;
+
+export function openSpotlight() {
+  openSpotlightFn?.();
+}
+
 export function CodexSpotlight() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -39,6 +45,13 @@ export function CodexSpotlight() {
   const factories = useGameFactories();
 
   const page = pages[pages.length - 1];
+
+  useEffect(() => {
+    openSpotlightFn = () => setOpen(true);
+    return () => {
+      openSpotlightFn = null;
+    };
+  }, []);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
