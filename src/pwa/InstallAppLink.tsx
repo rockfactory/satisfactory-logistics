@@ -1,4 +1,4 @@
-import { Menu } from '@mantine/core';
+import { Anchor, Group } from '@mantine/core';
 import { IconDownload } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 
@@ -18,7 +18,7 @@ function isStandalone(): boolean {
   return nav.standalone === true;
 }
 
-export function InstallAppMenuItem() {
+export function InstallAppLink() {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(
     null,
   );
@@ -44,9 +44,10 @@ export function InstallAppMenuItem() {
     };
   }, [installed]);
 
-  if (installed || !deferred) return null;
+  if (!import.meta.env.DEV && (installed || !deferred)) return null;
 
   const handleClick = async () => {
+    if (!deferred) return;
     try {
       await deferred.prompt();
       await deferred.userChoice;
@@ -58,12 +59,11 @@ export function InstallAppMenuItem() {
   };
 
   return (
-    <Menu.Item
-      data-tutorial-id="install-app-menu-item"
-      leftSection={<IconDownload size={16} />}
-      onClick={handleClick}
-    >
-      Install as app
-    </Menu.Item>
+    <Anchor component="button" c="dimmed" size="sm" onClick={handleClick}>
+      <Group gap={4}>
+        <IconDownload size={14} />
+        Install app
+      </Group>
+    </Anchor>
   );
 }

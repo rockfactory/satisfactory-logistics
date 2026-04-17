@@ -1,6 +1,7 @@
 import { Anchor, Button, Container, Divider, Group, Text } from '@mantine/core';
 import { IconBrandDiscord, IconBrandGithub } from '@tabler/icons-react';
 import clsx from 'clsx';
+import { InstallAppLink } from '@/pwa/InstallAppLink';
 import { FeedbackButton } from '@/third-party/FeedbackButton';
 import { KofiSupportButton } from '@/third-party/KofiSupportButton';
 import classes from './Footer.module.css';
@@ -47,7 +48,10 @@ export function Footer({ compact }: { compact?: boolean }) {
           <Text size="sm" c="dimmed">
             v{APP_VERSION} © {new Date().getFullYear()} Satisfactory Logistics
           </Text>
-          <Group className={classes.links}>{items}</Group>
+          <Group className={classes.links}>
+            {items}
+            <InstallAppLink />
+          </Group>
         </Group>
         {compact ? (
           <Group gap="sm">
