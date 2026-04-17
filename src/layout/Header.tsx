@@ -27,6 +27,7 @@ import { GameMenu } from '@/games/menu/GameMenu';
 import { GameSettingsModal } from '@/games/settings/GameSettingsModal';
 import { RealtimeSyncIndicator } from '@/games/sync/ui/RealtimeSyncIndicator';
 import { NotesPanelTrigger } from '@/notes/NotesPanelTrigger';
+import { InstallAppButton } from '@/pwa/InstallAppButton';
 import { TutorialMenu } from '@/tutorial/TutorialMenu';
 import { HotkeyKbd } from '@/utils/HotkeyKbd';
 import classes from './Header.module.css';
@@ -111,6 +112,7 @@ export function Header() {
               </ActionIcon>
             </Tooltip>
             {hasSelectedGame && <GameMenu />}
+            <InstallAppButton />
             <TutorialMenu />
             <UserMenu />
           </Group>

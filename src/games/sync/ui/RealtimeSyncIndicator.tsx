@@ -25,6 +25,7 @@ import { useSession } from '@/auth/authSelectors';
 import { LoginModal } from '@/auth/LoginModal';
 import { useStore } from '@/core/zustand';
 import { useGameSaveInfo } from '@/games/save/useGameSaveInfo';
+import { useIsOnline } from '@/pwa/useNetworkStatus';
 import { useAllPeers } from '../peersSlice';
 import { OnlinePeersList } from './OnlinePeersList';
 import { PeerAvatar } from './PeerAvatar';
@@ -35,6 +36,7 @@ export function RealtimeSyncIndicator() {
   const peers = useAllPeers();
   const session = useSession();
   const saveInfo = useGameSaveInfo();
+  const isOnline = useIsOnline();
   const [loginOpened, loginHandlers] = useDisclosure(false);
 
   const deviceCountByUser = useMemo(() => {
@@ -48,19 +50,29 @@ export function RealtimeSyncIndicator() {
   const hasPeers = peers.length > 0;
   const isLoggedOut = !session;
 
-  const statusTitle = isConnected
-    ? 'Realtime sync active'
-    : isLoggedOut
-      ? 'Cloud sync off'
-      : 'Realtime sync offline';
+  const statusTitle = !isOnline
+    ? 'Offline'
+    : isConnected
+      ? 'Realtime sync active'
+      : isLoggedOut
+        ? 'Cloud sync off'
+        : 'Realtime sync offline';
 
-  const ariaLabel = isConnected
-    ? 'Realtime sync active'
-    : isLoggedOut
-      ? 'Log in to enable realtime sync'
-      : 'Realtime sync offline';
+  const ariaLabel = !isOnline
+    ? 'Offline. Changes are saved on this device.'
+    : isConnected
+      ? 'Realtime sync active'
+      : isLoggedOut
+        ? 'Log in to enable realtime sync'
+        : 'Realtime sync offline';
 
-  const pillLabel = isLoggedOut ? 'Log in' : !isConnected ? 'Offline' : null;
+  const pillLabel = !isOnline
+    ? 'Offline'
+    : isLoggedOut
+      ? 'Log in'
+      : !isConnected
+        ? 'Offline'
+        : null;
 
   const savedView = useMemo((): {
     icon: ReactNode;
@@ -134,17 +146,25 @@ export function RealtimeSyncIndicator() {
     }
   }, [saveInfo]);
 
+  const canOpenLogin = isLoggedOut && isOnline;
+
   const pill = (
     <UnstyledButton
       data-tutorial-id="realtime-sync-indicator"
       className={cx(classes.pill, {
-        [classes.pillClickable]: isLoggedOut,
+        [classes.pillClickable]: canOpenLogin,
       })}
       aria-label={ariaLabel}
-      onClick={isLoggedOut ? loginHandlers.open : undefined}
+      onClick={canOpenLogin ? loginHandlers.open : undefined}
     >
       <Box className={classes.statusIconWrap}>
-        {isConnected ? (
+        {!isOnline ? (
+          <IconCloudOff
+            size={18}
+            color="var(--mantine-color-gray-6)"
+            stroke={1.8}
+          />
+        ) : isConnected ? (
           <>
             <IconBroadcast
               size={18}
@@ -201,7 +221,13 @@ export function RealtimeSyncIndicator() {
         <HoverCard.Dropdown p="sm" maw={260}>
           <Stack gap={8}>
             <Group gap={6} align="center" wrap="nowrap">
-              {isConnected ? (
+              {!isOnline ? (
+                <IconCloudOff
+                  size={14}
+                  color="var(--mantine-color-gray-6)"
+                  stroke={1.8}
+                />
+              ) : isConnected ? (
                 <IconBroadcast
                   size={14}
                   color="var(--mantine-color-green-4)"
@@ -224,6 +250,12 @@ export function RealtimeSyncIndicator() {
                 )}
               </Text>
             </Group>
+            {!isOnline && (
+              <Text size="xs" c="dimmed" lh={1.4}>
+                Your changes stay on this device and will sync when you're back
+                online.
+              </Text>
+            )}
             <Group gap={6} align="center" wrap="nowrap">
               {savedView.icon}
               {savedView.tooltip ? (
@@ -243,7 +275,7 @@ export function RealtimeSyncIndicator() {
                 {savedView.detail}
               </Text>
             )}
-            {isLoggedOut && (
+            {isLoggedOut && isOnline && (
               <Button
                 size="xs"
                 variant="light"

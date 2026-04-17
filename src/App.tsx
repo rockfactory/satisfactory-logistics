@@ -38,6 +38,7 @@ import { CodexSpotlight } from './codex/spotlight/CodexSpotlight';
 import { useStore } from './core/zustand';
 import { GamesRoutes } from './games/page/GamesRoutes';
 import { AppLayout } from './layout/AppLayout';
+import { PWAUpdatePrompt } from './pwa/PWAUpdatePrompt';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
 import { theme } from './theme';
 import { ToolsRoutes } from './tools/page/ToolsRoutes';
@@ -217,6 +218,7 @@ export default function App() {
           }
         >
           <Notifications position="top-right" zIndex={1000} />
+          <PWAUpdatePrompt />
           <RouterProvider router={router} />
         </ErrorBoundary>
       </ModalsProvider>
