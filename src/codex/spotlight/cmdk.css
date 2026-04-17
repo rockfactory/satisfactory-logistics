@@ -145,6 +145,30 @@
   color: var(--mantine-color-dark-3);
 }
 
+[cmdk-item] .cmdk-item-outputs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--mantine-color-dark-2);
+}
+
+[cmdk-item] .cmdk-item-output {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+[cmdk-item] .cmdk-item-output-sep {
+  color: var(--mantine-color-dark-4);
+  margin-right: 2px;
+}
+
+[cmdk-item] .cmdk-item-output-amount {
+  color: var(--mantine-color-dark-3);
+}
+
 [cmdk-empty] {
   padding: 32px 16px;
   text-align: center;
