@@ -13,10 +13,24 @@ export interface PeerInfo {
   factoryId: string | null;
 }
 
+export interface HttpPresenceSnapshot {
+  // Count of other sessions currently active on the same save (any user,
+  // any device, any tab — excludes our own sender_id). Drives the websocket
+  // gate: if 0 we stay in HTTP-only mode. Same-user multi-tab/multi-device is
+  // treated as a peer so cross-tab realtime sync keeps working for a single
+  // logged-in user.
+  otherSendersCount: number;
+}
+
+const EMPTY_HTTP_PRESENCE: HttpPresenceSnapshot = {
+  otherSendersCount: 0,
+};
+
 export const peersSlice = createSlice({
   name: 'peers',
   value: {
     peers: {} as Record<string, PeerInfo>,
+    httpPresence: EMPTY_HTTP_PRESENCE as HttpPresenceSnapshot,
   },
   actions: {
     setPeers: (peers: Record<string, PeerInfo>) => state => {
@@ -24,6 +38,12 @@ export const peersSlice = createSlice({
     },
     clearPeers: () => state => {
       state.peers = {};
+    },
+    setHttpPresence: (snapshot: HttpPresenceSnapshot) => state => {
+      state.httpPresence = snapshot;
+    },
+    clearHttpPresence: () => state => {
+      state.httpPresence = EMPTY_HTTP_PRESENCE;
     },
   },
 });
@@ -53,6 +73,10 @@ export function useAllFactoryPeers(factoryId: string): PeerInfo[] {
       sortPeers(Object.values(peers).filter(p => p.factoryId === factoryId)),
     [peers, factoryId],
   );
+}
+
+export function useHttpOtherSendersCount(): number {
+  return useStore(s => s.peers.httpPresence.otherSendersCount);
 }
 
 export function countOtherPeers(peers: Record<string, PeerInfo>): number {

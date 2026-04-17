@@ -25,7 +25,7 @@ Main features include:
 
 ### Code Style
 
-This project uses [Prettier](https://prettier.io/) to format the code. You can run `npm run format` to apply the code style.
+This project uses [Biome](https://biomejs.dev/) to format the code. You can run `npm run format` to apply the code style.
 
 ## Contributing
 

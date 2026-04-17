@@ -10,6 +10,23 @@ export const BROADCAST_EVENT = 'game:patch';
 export const BROADCAST_FULL_REQUEST = 'game:full-request';
 export const BROADCAST_FULL_RESPONSE = 'game:full-response';
 
+// HTTP presence (see game_presence table + useGamePresence hook).
+// The websocket channel is opened only when the HTTP poll detects at least
+// one other peer on the same save. Heartbeat and poll share the same tick.
+export const PRESENCE_TICK_MS = 45_000;
+// TTL must tolerate browser throttling of setInterval in background tabs
+// (Chrome can stretch to 60s+; Safari further). We set 180s (~4x heartbeat)
+// so a backgrounded tab's row doesn't go stale while the tab is just
+// switched away for a few minutes.
+export const PRESENCE_TTL_SECONDS = 180;
+// Grace period before closing the websocket when HTTP presence drops to
+// zero. Avoids tearing down the channel on transient gaps (background tab
+// throttling, momentary network blip) that the WS itself would weather fine.
+export const ALONE_DOWNGRADE_MS = 180_000;
+// Throttle for opportunistic polls (visibilitychange, online event,
+// HoverCard open). Prevents spamming the REST endpoint.
+export const PRESENCE_OPPORTUNISTIC_MIN_GAP_MS = 5_000;
+
 export interface PatchBroadcastPayload {
   senderId: string;
   seq: number;

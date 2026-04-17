@@ -19,6 +19,7 @@ import {
   type SyncTimers,
 } from './realtimeSyncHandlers';
 import {
+  ALONE_DOWNGRADE_MS,
   AUTO_SAVE_DEBOUNCE_MS,
   BROADCAST_EVENT,
   BROADCAST_FULL_REQUEST,
@@ -46,12 +47,29 @@ export function useRealtimeGameSync() {
   const savedId = game?.savedId;
   const factoryId = useCurrentFactoryId();
 
+  // Gate for the realtime channel: when zero, stay in HTTP-only mode
+  // (auto-save still works; no websocket slot consumed). Driven by the
+  // useGamePresence hook polling game_presence every ~45s. Counts ANY other
+  // sender (different user OR different tab/device of the same user), so
+  // cross-tab realtime sync keeps working for a single logged-in user.
+  const httpOtherSendersCount = useStore(
+    s => s.peers.httpPresence.otherSendersCount,
+  );
+
   const channelRef = useRef<RealtimeChannel | null>(null);
   const isApplyingRemoteRef = useRef(false);
   const seqRef = useRef(0);
   const isLeaderRef = useRef(false);
   const factoryIdRef = useRef(factoryId);
   factoryIdRef.current = factoryId;
+
+  // Cross-effect buffers: these must survive channel-lifecycle teardown so we
+  // don't drop pending edits when the user goes solo -> peer -> solo.
+  const pendingPatchesRef = useRef<Patch[]>([]);
+  const hasDirtyRef = useRef(false);
+  const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const autoSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Bumped to force the subscribe effect to re-run and recreate the channel
   // after CHANNEL_ERROR / CLOSED / TIMED_OUT. Reset on successful SUBSCRIBED.
   const [reconnectEpoch, setReconnectEpoch] = useState(0);
@@ -72,19 +90,165 @@ export function useRealtimeGameSync() {
     channelRef.current.track(payload);
   }, [factoryId, session]);
 
+  // Effect 1 — always on while preconditions hold. Owns patch accumulation,
+  // auto-save scheduling, and the last-chance save on tab close. Runs
+  // regardless of whether a websocket channel is open, so a solo user still
+  // gets HTTP auto-save and never loses edits across channel open/close
+  // transitions driven by HTTP presence flips.
+  useEffect(() => {
+    if (!session || !savedId || !selectedGameId) return;
+    const gameId = selectedGameId;
+
+    // Leader when the websocket is open: defer to presence-based election
+    // (computeLeaderAndPeers). When HTTP-only, any other sender would have
+    // triggered a websocket open via the gate, so HTTP-only == truly alone
+    // == we are the leader.
+    function isEffectiveLeader(): boolean {
+      if (channelRef.current) return isLeaderRef.current;
+      return true;
+    }
+
+    function flushPatches(): void {
+      flushTimerRef.current = null;
+      if (pendingPatchesRef.current.length === 0) return;
+
+      // No channel, or we're alone on the channel: drop the batch. The
+      // corresponding state is already in the zustand store and will be
+      // persisted by the auto-save path.
+      if (
+        !channelRef.current ||
+        !hasOtherPeersConnectedOnChannel(channelRef.current)
+      ) {
+        pendingPatchesRef.current = [];
+        return;
+      }
+
+      seqRef.current += 1;
+      const seq = seqRef.current;
+      const batch = pendingPatchesRef.current;
+      pendingPatchesRef.current = [];
+
+      safeChannelSend({
+        channel: channelRef.current,
+        message: {
+          type: 'broadcast',
+          event: BROADCAST_EVENT,
+          payload: {
+            senderId: SENDER_ID,
+            seq,
+            patches: batch,
+          } satisfies PatchBroadcastPayload,
+        },
+        context: `patch batch seq=${seq}`,
+      });
+      logger.debug(`Broadcasted ${batch.length} patches (seq=${seq})`);
+    }
+
+    function scheduleAutoSave(): void {
+      if (!isEffectiveLeader()) return;
+      hasDirtyRef.current = true;
+      if (autoSaveTimerRef.current !== null) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+      autoSaveTimerRef.current = setTimeout(() => {
+        autoSaveTimerRef.current = null;
+        if (!isEffectiveLeader()) return;
+        if (!hasDirtyRef.current) return;
+        hasDirtyRef.current = false;
+        saveRemoteGame(gameId, { silent: true }).catch(err =>
+          logger.error('Auto-save failed', err),
+        );
+      }, AUTO_SAVE_DEBOUNCE_MS);
+    }
+
+    const unsubscribePatches = onStorePatches(patches => {
+      if (isApplyingRemoteRef.current || isBroadcastSuppressed()) return;
+
+      const gamePatches = patches.filter(isGamePatch);
+      if (gamePatches.length === 0) return;
+
+      pendingPatchesRef.current.push(...gamePatches);
+      scheduleAutoSave();
+
+      if (flushTimerRef.current !== null) clearTimeout(flushTimerRef.current);
+      flushTimerRef.current = setTimeout(flushPatches, PATCH_DEBOUNCE_MS);
+    });
+
+    // On abrupt tab close the React cleanup does not run and the autosave
+    // debounce timer (up to AUTO_SAVE_DEBOUNCE_MS) is simply dropped, meaning
+    // the DB stays stale until someone else saves. We flush a best-effort
+    // keepalive save here so the leader does not leave pending edits unsaved.
+    const onBeforeUnload = () => {
+      if (!isEffectiveLeader()) return;
+      if (!hasDirtyRef.current) return;
+      flushRemoteGameOnUnload(gameId);
+    };
+    window.addEventListener('beforeunload', onBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', onBeforeUnload);
+      unsubscribePatches();
+      if (flushTimerRef.current !== null) {
+        clearTimeout(flushTimerRef.current);
+        flushTimerRef.current = null;
+        flushPatches();
+      }
+      if (autoSaveTimerRef.current !== null) {
+        clearTimeout(autoSaveTimerRef.current);
+        autoSaveTimerRef.current = null;
+        // Leadership can change between scheduling and unmount (e.g. the
+        // timer was set while we were leader, then a new peer joined and
+        // took over); in that case the new leader will save and we must not
+        // stomp them. Also skip if the game was deleted while the timer was
+        // pending — saveRemoteGame would fail on a missing game.
+        if (isEffectiveLeader() && hasDirtyRef.current) {
+          hasDirtyRef.current = false;
+          const gameStillExists = !!useStore.getState().games.games[gameId];
+          if (gameStillExists) {
+            saveRemoteGame(gameId, { silent: true }).catch(err =>
+              logger.error('Auto-save on cleanup failed', err),
+            );
+          } else {
+            logger.info(
+              `Skipping cleanup save: game ${gameId} no longer exists`,
+            );
+          }
+        }
+      }
+      pendingPatchesRef.current = [];
+      hasDirtyRef.current = false;
+    };
+  }, [session, savedId, selectedGameId]);
+
+  // Effect 2 — realtime channel lifecycle. Only opens a websocket when the
+  // HTTP presence poll detects another user on the same save. When the poll
+  // drops to zero, we close the channel and stay in HTTP-only mode, freeing
+  // a Supabase realtime slot. A peer returning (or joining for the first
+  // time) flips the gate and re-opens the channel.
   useEffect(() => {
     if (!session || !savedId || !selectedGameId) {
       if (channelRef.current) {
         logger.info('Leaving realtime channel (preconditions lost)');
         supabaseClient.removeChannel(channelRef.current);
         channelRef.current = null;
+        useStore.getState().setRealtimeSyncConnected(false);
+        useStore.getState().clearPeers();
       }
+      return;
+    }
+
+    // Read HTTP presence imperatively (NOT as a dep) so transient flaps from
+    // background-tab throttling don't tear down the channel. The separate
+    // alone-downgrade effect below owns the "close due to HTTP" decision.
+    const currentHttpOthers =
+      useStore.getState().peers.httpPresence.otherSendersCount;
+    if (currentHttpOthers === 0) {
       return;
     }
 
     const channelName = `game:${savedId}`;
     logger.info(
-      `Joining realtime channel: ${channelName} (epoch=${reconnectEpoch})`,
+      `Joining realtime channel: ${channelName} (epoch=${reconnectEpoch}, httpPeers=${currentHttpOthers})`,
     );
 
     const channel = supabaseClient.channel(channelName, {
@@ -99,11 +263,7 @@ export function useRealtimeGameSync() {
     };
     const timers: SyncTimers = { dbFallback: null };
 
-    let pendingPatches: Patch[] = [];
-    let flushTimer: ReturnType<typeof setTimeout> | null = null;
-    let autoSaveTimer: ReturnType<typeof setTimeout> | null = null;
     let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
-    let hasDirtySinceLastSave = false;
     // Set to true in the effect cleanup so the subscribe callback (which fires
     // with CLOSED when we voluntarily remove the channel) does not schedule a
     // reconnect loop. Only genuine errors while the effect is still active
@@ -128,51 +288,6 @@ export function useRealtimeGameSync() {
 
     const doRequestFullState = () =>
       requestFullStateWithFallback(channel, gameId, refs, timers);
-
-    function scheduleAutoSave() {
-      if (!isLeaderRef.current) return;
-      hasDirtySinceLastSave = true;
-      if (autoSaveTimer !== null) clearTimeout(autoSaveTimer);
-      autoSaveTimer = setTimeout(() => {
-        autoSaveTimer = null;
-        if (!isLeaderRef.current) return;
-        if (!hasDirtySinceLastSave) return;
-        hasDirtySinceLastSave = false;
-        saveRemoteGame(gameId, { silent: true }).catch(err =>
-          logger.error('Auto-save failed', err),
-        );
-      }, AUTO_SAVE_DEBOUNCE_MS);
-    }
-
-    function flushPatches() {
-      flushTimer = null;
-      if (!channelRef.current || pendingPatches.length === 0) return;
-
-      if (!hasOtherPeersConnectedOnChannel(channelRef.current)) {
-        pendingPatches = [];
-        return;
-      }
-
-      seqRef.current += 1;
-      const seq = seqRef.current;
-      const batch = pendingPatches;
-      pendingPatches = [];
-
-      safeChannelSend({
-        channel: channelRef.current,
-        message: {
-          type: 'broadcast',
-          event: BROADCAST_EVENT,
-          payload: {
-            senderId: SENDER_ID,
-            seq,
-            patches: batch,
-          } satisfies PatchBroadcastPayload,
-        },
-        context: `patch batch seq=${seq}`,
-      });
-      logger.debug(`Broadcasted ${batch.length} patches (seq=${seq})`);
-    }
 
     channel
       .on('broadcast', { event: BROADCAST_EVENT }, ({ payload }) => {
@@ -232,19 +347,6 @@ export function useRealtimeGameSync() {
 
     channelRef.current = channel;
 
-    // On abrupt tab close the React cleanup does not run and the autosave
-    // debounce timer (up to AUTO_SAVE_DEBOUNCE_MS) is simply dropped, meaning
-    // the DB stays stale until someone else saves. We flush a best-effort
-    // keepalive save here so the leader does not leave pending edits unsaved.
-    // Gated on leadership + dirtiness to avoid duplicate writes when multiple
-    // peers close simultaneously.
-    const onBeforeUnload = () => {
-      if (!isLeaderRef.current) return;
-      if (!hasDirtySinceLastSave) return;
-      flushRemoteGameOnUnload(gameId);
-    };
-    window.addEventListener('beforeunload', onBeforeUnload);
-
     // Supabase's channel heartbeat can take 30s+ to detect a dead WebSocket,
     // so we flip the sync-connected flag off immediately when the browser
     // reports offline, and force an early reconnect attempt when it comes back.
@@ -265,52 +367,10 @@ export function useRealtimeGameSync() {
     window.addEventListener('offline', onOffline);
     window.addEventListener('online', onOnline);
 
-    const unsubscribePatches = onStorePatches(patches => {
-      if (isApplyingRemoteRef.current || isBroadcastSuppressed()) return;
-      if (!channelRef.current) return;
-
-      const gamePatches = patches.filter(isGamePatch);
-      if (gamePatches.length === 0) return;
-
-      pendingPatches.push(...gamePatches);
-      scheduleAutoSave();
-
-      if (flushTimer !== null) clearTimeout(flushTimer);
-      flushTimer = setTimeout(flushPatches, PATCH_DEBOUNCE_MS);
-    });
-
     return () => {
       isCleaningUp = true;
-      window.removeEventListener('beforeunload', onBeforeUnload);
       window.removeEventListener('offline', onOffline);
       window.removeEventListener('online', onOnline);
-      unsubscribePatches();
-      if (flushTimer !== null) {
-        clearTimeout(flushTimer);
-        flushPatches();
-      }
-      if (autoSaveTimer !== null) {
-        clearTimeout(autoSaveTimer);
-        // Only the leader is allowed to persist on cleanup. Leadership can
-        // change between scheduling and unmount (e.g. the timer was set while
-        // we were leader, then a new peer joined and we lost it); in that case
-        // the new leader will save and we must not stomp them with stale data.
-        // Also skip if the game was deleted while the timer was pending, since
-        // saveRemoteGame would fail on a missing game.
-        if (isLeaderRef.current && hasDirtySinceLastSave) {
-          hasDirtySinceLastSave = false;
-          const gameStillExists = !!useStore.getState().games.games[gameId];
-          if (gameStillExists) {
-            saveRemoteGame(gameId, { silent: true }).catch(err =>
-              logger.error('Auto-save on cleanup failed', err),
-            );
-          } else {
-            logger.info(
-              `Skipping cleanup save: game ${gameId} no longer exists`,
-            );
-          }
-        }
-      }
       if (timers.dbFallback !== null) {
         clearTimeout(timers.dbFallback);
         timers.dbFallback = null;
@@ -328,6 +388,46 @@ export function useRealtimeGameSync() {
 
       useStore.getState().setRealtimeSyncConnected(false);
       useStore.getState().clearPeers();
+      isLeaderRef.current = false;
     };
   }, [session, savedId, selectedGameId, reconnectEpoch]);
+
+  // HTTP-presence gate, decoupled from the channel effect so count flips
+  // don't recycle the channel. Rules:
+  //  - HTTP sees another sender and we have no channel → trigger reconnect
+  //    (channel effect will read fresh count and open).
+  //  - HTTP says we're alone AND a channel is open → start a grace timer;
+  //    if still alone and the WS also has no peers when it fires, close the
+  //    channel. This absorbs background-tab throttling and brief network
+  //    blips that would otherwise produce an open→close→open storm.
+  useEffect(() => {
+    if (!session || !savedId || !selectedGameId) return;
+
+    if (httpOtherSendersCount > 0) {
+      if (!channelRef.current) setReconnectEpoch(e => e + 1);
+      return;
+    }
+
+    if (!channelRef.current) return;
+
+    const timer = setTimeout(() => {
+      if (!channelRef.current) return;
+      if (hasOtherPeersConnectedOnChannel(channelRef.current)) {
+        logger.info(
+          'HTTP presence says alone but WS still has peers; keeping channel',
+        );
+        return;
+      }
+      logger.info(
+        `Closing realtime channel: alone on HTTP + WS for ${ALONE_DOWNGRADE_MS}ms`,
+      );
+      supabaseClient.removeChannel(channelRef.current);
+      channelRef.current = null;
+      useStore.getState().setRealtimeSyncConnected(false);
+      useStore.getState().clearPeers();
+      isLeaderRef.current = false;
+    }, ALONE_DOWNGRADE_MS);
+
+    return () => clearTimeout(timer);
+  }, [session, savedId, selectedGameId, httpOtherSendersCount]);
 }
