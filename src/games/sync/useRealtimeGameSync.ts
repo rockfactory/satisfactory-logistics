@@ -55,9 +55,10 @@ export function useRealtimeGameSync() {
 
   // Gate for the realtime channel: when zero, stay in HTTP-only mode
   // (auto-save still works; no websocket slot consumed). Driven by the
-  // useGamePresence hook polling game_presence every ~45s. Counts ANY other
-  // sender (different user OR different tab/device of the same user), so
-  // cross-tab realtime sync keeps working for a single logged-in user.
+  // useGamePresence hook polling game_presence on PRESENCE_TICK_MS cadence.
+  // Counts ANY other sender (different user OR different tab/device of the
+  // same user), so cross-tab realtime sync keeps working for a single
+  // logged-in user.
   const httpOtherSendersCount = useStore(
     s => s.peers.httpPresence.otherSendersCount,
   );
@@ -106,9 +107,6 @@ export function useRealtimeGameSync() {
   useEffect(() => {
     if (!sessionUserId || !savedId || !selectedGameId) return;
     const gameId = selectedGameId;
-    logger.debug(
-      `[effect autosave] run sessionUserId=${sessionUserId} savedId=${savedId} selectedGameId=${selectedGameId}`,
-    );
 
     // Leader when the websocket is open: defer to presence-based election
     // (computeLeaderAndPeers). When HTTP-only, any other sender would have
@@ -197,9 +195,6 @@ export function useRealtimeGameSync() {
     window.addEventListener('beforeunload', onBeforeUnload);
 
     return () => {
-      logger.debug(
-        `[effect autosave] cleanup sessionUserId=${sessionUserId} savedId=${savedId} selectedGameId=${selectedGameId}`,
-      );
       window.removeEventListener('beforeunload', onBeforeUnload);
       unsubscribePatches();
       if (flushTimerRef.current !== null) {
@@ -240,9 +235,6 @@ export function useRealtimeGameSync() {
   // a Supabase realtime slot. A peer returning (or joining for the first
   // time) flips the gate and re-opens the channel.
   useEffect(() => {
-    logger.debug(
-      `[effect channel] run sessionUserId=${sessionUserId ?? 'none'} savedId=${savedId ?? 'none'} selectedGameId=${selectedGameId ?? 'none'} epoch=${reconnectEpoch}`,
-    );
     const session = useStore.getState().auth.session;
     if (!session || !sessionUserId || !savedId || !selectedGameId) {
       if (channelRef.current) {
@@ -260,9 +252,6 @@ export function useRealtimeGameSync() {
     // alone-downgrade effect below owns the "close due to HTTP" decision.
     const currentHttpOthers =
       useStore.getState().peers.httpPresence.otherSendersCount;
-    logger.debug(
-      `[effect channel] currentHttpOthers=${currentHttpOthers} channelPresent=${channelRef.current !== null}`,
-    );
     if (currentHttpOthers === 0) {
       return;
     }
@@ -294,6 +283,13 @@ export function useRealtimeGameSync() {
     function scheduleReconnect() {
       if (isCleaningUp) return;
       if (reconnectTimer !== null) return;
+      // If HTTP presence says we're alone, we were voluntarily switched to
+      // HTTP-only mode (grace timer expired, removed channel). The subscribe
+      // callback then fires CLOSED and lands here — don't let it pollute
+      // reconnectAttempts, and don't bump the epoch for no reason.
+      const currentCount =
+        useStore.getState().peers.httpPresence.otherSendersCount;
+      if (currentCount === 0) return;
       const attempt = reconnectAttemptsRef.current;
       // Exponential backoff capped at 30s: 1s, 2s, 4s, 8s, 16s, 30s, 30s, ...
       const delay = Math.min(1000 * 2 ** attempt, 30_000);
@@ -389,9 +385,6 @@ export function useRealtimeGameSync() {
     window.addEventListener('online', onOnline);
 
     return () => {
-      logger.debug(
-        `[effect channel] cleanup sessionUserId=${sessionUserId ?? 'none'} savedId=${savedId ?? 'none'} selectedGameId=${selectedGameId ?? 'none'} epoch=${reconnectEpoch}`,
-      );
       isCleaningUp = true;
       window.removeEventListener('offline', onOffline);
       window.removeEventListener('online', onOnline);
@@ -413,6 +406,10 @@ export function useRealtimeGameSync() {
       useStore.getState().setRealtimeSyncConnected(false);
       useStore.getState().clearPeers();
       isLeaderRef.current = false;
+      // Reset backoff so a later user (or a fresh reconnect cycle after a
+      // long-lived disconnection) starts from 1s, not from wherever the
+      // previous session's chain left off.
+      reconnectAttemptsRef.current = 0;
     };
   }, [sessionUserId, savedId, selectedGameId, reconnectEpoch]);
 
@@ -425,16 +422,11 @@ export function useRealtimeGameSync() {
   //    channel. This absorbs background-tab throttling and brief network
   //    blips that would otherwise produce an open→close→open storm.
   useEffect(() => {
-    logger.debug(
-      `[effect http-gate] run httpOtherSendersCount=${httpOtherSendersCount} channelPresent=${channelRef.current !== null}`,
-    );
     if (!sessionUserId || !savedId || !selectedGameId) return;
 
     if (httpOtherSendersCount > 0) {
       if (!channelRef.current) {
-        logger.info(
-          '[effect http-gate] peer detected, no channel yet → bumping reconnectEpoch',
-        );
+        logger.info('HTTP peer detected, opening realtime channel');
         setReconnectEpoch(e => e + 1);
       }
       return;
@@ -443,19 +435,15 @@ export function useRealtimeGameSync() {
     if (!channelRef.current) return;
 
     logger.info(
-      `[effect http-gate] alone on HTTP, channel still open → starting ${ALONE_DOWNGRADE_MS}ms grace timer`,
+      `HTTP presence alone, starting ${ALONE_DOWNGRADE_MS}ms grace timer`,
     );
     const timer = setTimeout(() => {
       if (!channelRef.current) return;
       if (hasOtherPeersConnectedOnChannel(channelRef.current)) {
-        logger.info(
-          '[effect http-gate] grace expired but WS still has peers; keeping channel',
-        );
+        logger.info('Grace expired but WS still has peers; keeping channel');
         return;
       }
-      logger.info(
-        `[effect http-gate] grace expired, closing channel (alone on HTTP + WS for ${ALONE_DOWNGRADE_MS}ms)`,
-      );
+      logger.info('Grace expired, closing realtime channel (HTTP-only mode)');
       supabaseClient.removeChannel(channelRef.current);
       channelRef.current = null;
       useStore.getState().setRealtimeSyncConnected(false);
@@ -463,9 +451,6 @@ export function useRealtimeGameSync() {
       isLeaderRef.current = false;
     }, ALONE_DOWNGRADE_MS);
 
-    return () => {
-      logger.debug('[effect http-gate] cleanup (clearing grace timer)');
-      clearTimeout(timer);
-    };
+    return () => clearTimeout(timer);
   }, [sessionUserId, savedId, selectedGameId, httpOtherSendersCount]);
 }

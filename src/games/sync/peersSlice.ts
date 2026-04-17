@@ -22,9 +22,9 @@ export interface HttpPresenceSnapshot {
   otherSendersCount: number;
 }
 
-const EMPTY_HTTP_PRESENCE: HttpPresenceSnapshot = {
+const EMPTY_HTTP_PRESENCE: Readonly<HttpPresenceSnapshot> = Object.freeze({
   otherSendersCount: 0,
-};
+});
 
 export const peersSlice = createSlice({
   name: 'peers',

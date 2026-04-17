@@ -38,15 +38,11 @@ export function useGamePresence(): void {
   );
 
   useEffect(() => {
-    logger.debug(
-      `[effect presence] run sessionUserId=${sessionUserId ?? 'none'} savedId=${savedId ?? 'none'} selectedGameId=${selectedGameId ?? 'none'}`,
-    );
     if (!sessionUserId || !savedId || !selectedGameId) {
       useStore.getState().clearHttpPresence();
       return;
     }
 
-    const userId = sessionUserId;
     let disposed = false;
     let lastPollAt = 0;
     const inflightAborts = new Set<AbortController>();
@@ -54,17 +50,26 @@ export function useGamePresence(): void {
     // The keepalive DELETE on beforeunload needs the raw access token
     // because the SDK doesn't support keepalive. We read imperatively so we
     // always pick up a freshly-refreshed token.
-    const getToken = () => useStore.getState().auth.session?.access_token ?? '';
+    const getToken = (): string | null =>
+      useStore.getState().auth.session?.access_token ?? null;
+
+    // Suppress network error logs entirely when the browser reports
+    // offline: failures are expected and would flood the console on every
+    // tick until connectivity returns.
+    const logNetworkFailure = (context: string, err: unknown) => {
+      if (!navigator.onLine) return;
+      logger.warn(`${context} failed`, err);
+    };
 
     async function doUpsert(): Promise<void> {
       try {
         await upsertPresence({
           savedId: savedId!,
           senderId: SENDER_ID,
-          userId,
+          userId: sessionUserId!,
         });
       } catch (err) {
-        logger.warn('presence upsert failed', err);
+        logNetworkFailure('presence upsert', err);
       }
     }
 
@@ -90,43 +95,40 @@ export function useGamePresence(): void {
           logger.info(
             `poll: otherSendersCount ${prev} → ${next} (rows=${rows.length})`,
           );
-        } else {
-          logger.debug(`poll: otherSendersCount stable at ${next}`);
         }
         useStore.getState().setHttpPresence({
           otherSendersCount: next,
         });
       } catch (err) {
         if ((err as Error)?.name !== 'AbortError') {
-          logger.warn('presence poll failed', err);
+          logNetworkFailure('presence poll', err);
         }
       } finally {
         inflightAborts.delete(ac);
       }
     }
 
-    function triggerImmediate(): void {
+    // Opportunistic trigger used by visibility/focus/online events and by
+    // external UI hooks (e.g. HoverCard open). Throttled so a burst of
+    // events collapses into a single network round-trip. When withUpsert is
+    // true, refresh our own row first — used on visibility returns where
+    // the background-throttled heartbeat may have aged our row past the
+    // TTL from other peers' point of view.
+    function triggerPoll(withUpsert: boolean): void {
       const now = Date.now();
       if (now - lastPollAt < PRESENCE_OPPORTUNISTIC_MIN_GAP_MS) return;
       lastPollAt = now;
-      void doPoll();
-    }
-
-    // When coming back from a hidden tab, the background-throttled heartbeat
-    // may have aged our row past the TTL from other peers' point of view.
-    // Refresh our own row first, THEN poll, so we catch up and they see us
-    // on their next poll.
-    function triggerImmediateWithUpsert(): void {
-      const now = Date.now();
-      if (now - lastPollAt < PRESENCE_OPPORTUNISTIC_MIN_GAP_MS) return;
-      lastPollAt = now;
-      void doUpsert().then(() => {
-        if (disposed) return;
+      if (withUpsert) {
+        void doUpsert().then(() => {
+          if (disposed) return;
+          void doPoll();
+        });
+      } else {
         void doPoll();
-      });
+      }
     }
 
-    currentImmediatePoll = triggerImmediate;
+    currentImmediatePoll = () => triggerPoll(false);
 
     // Initial burst: upsert first (so other peers polling right now can see
     // us), then poll (so we learn about peers already there).
@@ -143,12 +145,12 @@ export function useGamePresence(): void {
     }, PRESENCE_TICK_MS);
 
     const onVisibility = () => {
-      if (document.visibilityState === 'visible') triggerImmediateWithUpsert();
+      if (document.visibilityState === 'visible') triggerPoll(true);
     };
-    const onOnline = () => triggerImmediateWithUpsert();
+    const onOnline = () => triggerPoll(true);
     // Window focus catches cases where the user alt-tabs or clicks on the
     // window without changing visibility state (e.g. switching between apps).
-    const onFocus = () => triggerImmediateWithUpsert();
+    const onFocus = () => triggerPoll(true);
     document.addEventListener('visibilitychange', onVisibility);
     window.addEventListener('online', onOnline);
     window.addEventListener('focus', onFocus);
@@ -165,12 +167,8 @@ export function useGamePresence(): void {
     window.addEventListener('beforeunload', onBeforeUnload);
 
     return () => {
-      logger.debug(
-        `[effect presence] cleanup sessionUserId=${sessionUserId} savedId=${savedId} selectedGameId=${selectedGameId}`,
-      );
       disposed = true;
-      if (currentImmediatePoll === triggerImmediate)
-        currentImmediatePoll = null;
+      currentImmediatePoll = null;
       clearInterval(tickTimer);
       document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('online', onOnline);
