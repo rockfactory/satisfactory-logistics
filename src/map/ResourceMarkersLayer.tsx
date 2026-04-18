@@ -11,7 +11,11 @@ import {
   getExtractorsForResource,
   OVERCLOCK_STEPS,
 } from './extraction';
-import { getPurityLabel, getResourceMarkerIcon } from './markerIcons';
+import {
+  getPurityColor,
+  getPurityLabel,
+  getResourceMarkerIcon,
+} from './markerIcons';
 
 export interface ResourceMarkersLayerProps {
   nodes: WorldResourceNode[];
@@ -60,6 +64,7 @@ function buildPopupHtml(
   const name = escapeHtml(item?.displayName ?? node.resource);
   const imagePath = item?.imagePath?.replace('_256', '_64') ?? '';
   const purityLabel = getPurityLabel(node.purity);
+  const purityColor = getPurityColor(node.purity);
   const x = formatNumber(node.x);
   const y = formatNumber(node.y);
   const altitude =
@@ -116,7 +121,10 @@ function buildPopupHtml(
         ${imagePath ? `<img class="map-marker-popup__icon" src="${escapeHtml(imagePath)}" alt="" />` : ''}
         <div class="map-marker-popup__title">
           <div class="map-marker-popup__name">${name}${pills ? ` ${pills}` : ''}</div>
-          <div class="map-marker-popup__meta">${escapeHtml(purityLabel)} purity</div>
+          <div class="map-marker-popup__meta">
+            <span class="map-marker-popup__purity-dot" style="background-color:${purityColor};" aria-hidden="true"></span>
+            ${escapeHtml(purityLabel)} purity
+          </div>
         </div>
       </div>
       <dl class="map-marker-popup__stats">
