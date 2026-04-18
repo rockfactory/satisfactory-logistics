@@ -27,7 +27,19 @@ import { NO_GAME_USED_NODES_KEY } from './store/mapSlice';
 import classes from './WorldMapView.module.css';
 
 const DEFAULT_TILES_BASE_URL =
-  'https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v1';
+  'https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v2';
+
+/**
+ * `detectRetina` on the TileLayer internally bumps zoomOffset by 1 and
+ * decrements its own maxZoom by 1 (it uses tiles from one pyramid
+ * level above). If the map is allowed to reach the raw `MAX_ZOOM`, the
+ * TileLayer bails out at that level with no render (grey screen).
+ * Retina users already see native-density data at `MAX_ZOOM - 1` (it
+ * pulls from the highest URL zoom behind the scenes), so capping the
+ * UI zoom to one step below matches what non-retina users get at
+ * `MAX_ZOOM` without the bail.
+ */
+const EFFECTIVE_MAX_ZOOM = L.Browser.retina ? MAX_ZOOM - 1 : MAX_ZOOM;
 
 const TILES_BASE_URL =
   import.meta.env.VITE_MAP_TILES_BASE_URL ?? DEFAULT_TILES_BASE_URL;
@@ -144,7 +156,7 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
         center={DEFAULT_CENTER}
         zoom={DEFAULT_ZOOM}
         minZoom={MIN_ZOOM}
-        maxZoom={MAX_ZOOM}
+        maxZoom={EFFECTIVE_MAX_ZOOM}
         maxBounds={IMAGE_BOUNDS}
         attributionControl={false}
         className={classes.map}
@@ -156,6 +168,8 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
           bounds={IMAGE_BOUNDS}
           minZoom={MIN_ZOOM}
           maxZoom={MAX_ZOOM}
+          maxNativeZoom={MAX_ZOOM}
+          detectRetina
         />
         <MarkerZoomScaleController />
         <ResourceMarkersLayer

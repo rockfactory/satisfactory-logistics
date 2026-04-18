@@ -9,8 +9,8 @@ DigitalOcean Spaces (see [below](#tile-pyramid--cdn)).
 ## Map image: source and license
 
 The tile pyramid is derived from an in-game extraction of the
-MASSAGE-2 (AB)b world map (8192x8192 PNG), upscaled 2x with AI to
-16384x16384. The map artwork is the intellectual property of Coffee Stain
+MASSAGE-2 (AB)b world map (8192x8192 PNG), upscaled 4x with AI to
+32768x32768. The map artwork is the intellectual property of Coffee Stain
 Studios and is reproduced here for reference under fair use, consistent
 with how community Satisfactory tools (e.g.
 [satisfactory-calculator.com](https://satisfactory-calculator.com)) use
@@ -101,30 +101,31 @@ layer for pyramid zoom `N`, and the image is displayed at
 
 | Leaflet zoom | Image displayed (px) | Tile URL zoom | Tiles per side |
 |---|---|---|---|
-| 0 (MIN_ZOOM)  |   256 | 0 |  1 |
-| 2 (DEFAULT)   |  1024 | 2 |  4 |
-| 4             |  4096 | 4 | 16 |
-| 6 (MAX_ZOOM)  | 16384 | 6 | 64 |
+| 0 (MIN_ZOOM)  |   256 | 0 |   1 |
+| 2 (DEFAULT)   |  1024 | 2 |   4 |
+| 4             |  4096 | 4 |  16 |
+| 6             | 16384 | 6 |  64 |
+| 7 (MAX_ZOOM)  | 32768 | 7 | 128 |
 
 ### Swapping the source image
 
 If you replace the source with a render that has a **different
 framing** (different crop of the world), re-tune the `WORLD_*` bounds
 so markers land on the right biomes. If you change the **resolution**
-(e.g. a new 32k upscale), extend the pyramid by one level and bump
-`MAX_ZOOM` to 7; `IMAGE_SIZE` and the `WORLD_*` bounds stay the same.
-The current 16384 upscale preserves the original framing of
+(e.g. a new 64k upscale), extend the pyramid by one level and bump
+`MAX_ZOOM`; `IMAGE_SIZE` and the `WORLD_*` bounds stay the same.
+The current 32k upscale preserves the original framing of
 `world-map-5k.png`, so no re-tuning was needed.
 
 ## Tile pyramid + CDN
 
-The map is served as a 7-level WebP tile pyramid (zoom 0 to 6, 256x256
+The map is served as an 8-level WebP tile pyramid (zoom 0 to 7, 256x256
 tiles, XYZ numbering) hosted on **DigitalOcean Spaces**:
 
 - Space: `satisfactory-logistics-maps` (region `fra1`).
 - CDN edge base URL: `https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com`
-- Published path (current version): `/map/v1/{z}/{x}/{y}.webp`
-- Full URL example: `https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v1/0/0/0.webp`
+- Published path (current version): `/map/v2/{z}/{x}/{y}.webp`
+- Full URL example: `https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v2/0/0/0.webp`
 
 This is the default base URL baked into
 [`WorldMapView.tsx`](../../../src/map/WorldMapView.tsx); it can be
@@ -135,18 +136,19 @@ overridden via the `VITE_MAP_TILES_BASE_URL` env var (see
 
 Prerequisites: `gdal` on PATH (`brew install gdal`, tested with GDAL
 3.12.3). The source PNG must be square (the current source is
-16384x16384).
+32768x32768).
 
 ```
-npm run generate-map-tiles -- /path/to/source.png
+npm run generate-map-tiles -- /path/to/source.png --max-zoom=7
 ```
 
-The path argument is required. The script wipes and re-creates
-`dist-map-tiles/` at the repo root
-(gitignored) and invokes `gdal2tiles.py` with
-`--profile=raster --xyz -z 0-6 --tiledriver=WEBP --webp-quality=80
---resampling=lanczos`. Expected output: 5461 WebP tiles, around 100 to
-250 MB on disk.
+The path argument is required. `--max-zoom` defaults to 6 (for a 16k
+source); set it to `log2(width / 256)` for other sizes (7 for 32k, 8
+for 64k). The script wipes and re-creates `dist-map-tiles/` at the
+repo root (gitignored) and invokes `gdal2tiles.py` with
+`--profile=raster --xyz --tiledriver=WEBP --webp-quality=80
+--resampling=lanczos`. Expected output for a 32k source: 21845 WebP
+tiles, ~50 MB on disk.
 
 ### 2. Upload to DigitalOcean Spaces (rclone)
 
@@ -159,13 +161,13 @@ for recreating it on a new machine). Verify the layout:
 rclone lsd do-satisfactory-logistics-maps:
 ```
 
-Then upload the generated pyramid under a fresh version prefix (`v1`
-for the current drop, bump to `v2` when you regenerate):
+Then upload the generated pyramid under a fresh version prefix
+(current production is `v2`; bump to `v3` on the next regeneration):
 
 ```
 rclone copy \
   dist-map-tiles/ \
-  do-satisfactory-logistics-maps:satisfactory-logistics-maps/map/v1/ \
+  do-satisfactory-logistics-maps:satisfactory-logistics-maps/map/v2/ \
   --header-upload "Cache-Control: public, max-age=31536000, immutable" \
   --s3-acl public-read \
   --transfers 16 \
@@ -175,7 +177,7 @@ rclone copy \
 
 If the rclone remote is configured to already point at the bucket, drop
 the bucket segment:
-`do-satisfactory-logistics-maps:map/v1/`.
+`do-satisfactory-logistics-maps:map/v2/`.
 
 Notes:
 
@@ -183,15 +185,15 @@ Notes:
   returns HTTP 403 otherwise).
 - `Content-Type: image/webp` is auto-detected by rclone from the
   extension.
-- `--transfers 16 --checkers 32` speeds up the upload across 5000+
-  small files.
+- `--transfers 16 --checkers 32` speeds up the upload across 20000+
+  small files (32k source).
 
 ### 3. Verify
 
 ```
-curl -I https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v1/0/0/0.webp
+curl -I https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v2/0/0/0.webp
 curl -I -H 'Origin: https://satisfactory-logistics.xyz' \
-     https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v1/0/0/0.webp
+     https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v2/0/0/0.webp
 ```
 
 Expected:
@@ -203,8 +205,8 @@ Expected:
 
 Spot-check visually by opening a few tile URLs in a browser:
 
-- `…/map/v1/0/0/0.webp` shows the entire map shrunk to 256x256.
-- `…/map/v1/6/32/32.webp` shows a native-resolution tile near the
+- `…/map/v2/0/0/0.webp` shows the entire map shrunk to 256x256.
+- `…/map/v2/7/64/64.webp` shows a native-resolution tile near the
   center.
 
 ### 4. Versioning
@@ -238,7 +240,7 @@ mirror, etc.) set `VITE_MAP_TILES_BASE_URL` at build-time:
 
 - **Local dev**: add to `.env` (gitignored), then restart Vite. Example:
   ```
-  VITE_MAP_TILES_BASE_URL=https://<some-other-cdn>/map/v1
+  VITE_MAP_TILES_BASE_URL=https://<some-other-cdn>/map/v2
   ```
 - **Production (Render.com)**: set the key in the static site's
   Environment settings. Because it is consumed at build-time

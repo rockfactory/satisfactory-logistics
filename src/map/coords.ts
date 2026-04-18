@@ -56,10 +56,10 @@ export const DEFAULT_CENTER: L.LatLngExpression = [
 
 /**
  * Leaflet zoom range. Matches the tile pyramid 1:1 (no offset): 0 shows
- * the whole map in one 256x256 tile, 6 is the native 16384x16384
+ * the whole map in one 256x256 tile, 7 is the native 32768x32768
  * resolution of the source PNG. `DEFAULT_ZOOM` shows the map at about
  * 1024 px (readable on typical viewports).
  */
 export const MIN_ZOOM = 0;
-export const MAX_ZOOM = 6;
+export const MAX_ZOOM = 7;
 export const DEFAULT_ZOOM = 2;
