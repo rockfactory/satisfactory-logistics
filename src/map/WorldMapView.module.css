@@ -83,25 +83,24 @@
 }
 
 :global(.map-marker__shape-path) {
-  /* Background = ring color tinted toward white so the dark game icons stay
-     readable on top while still telegraphing the node's purity at a glance. */
-  fill: color-mix(in srgb, var(--ring, #f1c40f) 65%, white 35%);
-  /* Border = even lighter tint, painted as a native stroke. We initially
-     used 4 stacked drop-shadows (the "fake stroke" trick) for a softer
-     halo look, but at hundreds of markers the filter cost lagged the map.
-     Stroke is GPU-fast and visually close. */
-  stroke: color-mix(in srgb, var(--ring, #f1c40f) 25%, white 75%);
+  /* Background = ring color heavily tinted toward white so the game icons
+     stay readable, with a strong dark-ring border doing the purity
+     signalling instead of the fill. */
+  fill: color-mix(in srgb, var(--ring, #f1c40f) 35%, white 65%);
+  /* Border = darker shade of the ring, painted as a native stroke. We
+     initially used 4 stacked drop-shadows (the "fake stroke" trick) for
+     a softer halo look, but at hundreds of markers the filter cost
+     lagged the map. Stroke is GPU-fast and visually close. */
+  stroke: color-mix(in srgb, var(--ring, #f1c40f) 70%, black 30%);
   stroke-width: 1.25;
   stroke-linejoin: round;
   stroke-linecap: round;
 }
 
-/* Collectibles' game-art icons (slugs, sloops, WATs) are themselves
-   saturated in the ring color, so they vanish on the resource fill. We
-   push the fill close to white and crank the stroke back to the full
-   ring color so the type still reads at a glance. */
+/* Collectibles share the pin silhouette but sit on a plain white fill so
+   the themed glyph + ring color do all the communication. */
 :global(.map-marker--collectible) :global(.map-marker__shape-path) {
-  fill: color-mix(in srgb, var(--ring, #f1c40f) 20%, white 80%);
+  fill: white;
   stroke: var(--ring, #f1c40f);
 }
 
