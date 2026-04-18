@@ -1,24 +1,14 @@
 import L from 'leaflet';
 
 /**
- * Converts game world coordinates (cm, Unreal default unit) to image
- * pixel coordinates suitable for Leaflet's `CRS.Simple`.
- *
- * `IMAGE_SIZE` is the logical coordinate space the world is projected
- * onto; it is decoupled from the backdrop's actual pixel resolution.
- * The backdrop is a WebP tile pyramid (zoom 0-6, 7 levels) derived from
- * a 16384x16384 source, served from DigitalOcean Spaces. See the map
- * README for the tile generation/upload flow.
- *
- * The bounds and the Y-flip below match the calibration used by
- * `Hirashi3630/satisfactory_node_heatmap` (MIT, see this project's map
- * README). The playable area is treated as a 750,000 cm square; the
- * image's top edge is `+Y` (north on the in-game compass) and the
- * bottom edge is `-Y`, hence the flip in `gameToLatLng`.
+ * Projects game world coordinates (cm, Unreal default unit) into
+ * Leaflet `CRS.Simple` LatLng space. Backdrop is a WebP tile pyramid
+ * (levels 0-6) on DigitalOcean Spaces; see the map README for details
+ * on calibration, tile generation, and the coord mapping.
  */
 
-/** Size of the logical coordinate space the world is projected onto. */
-export const IMAGE_SIZE = 2048;
+/** Logical coord-space size. Equals the tile size so zoom 0 == 1 tile. */
+export const IMAGE_SIZE = 256;
 
 /** Game-space bounds of the playable area, in centimeters. */
 export const WORLD_X_MIN = -324_700;
@@ -63,18 +53,12 @@ export const DEFAULT_CENTER: L.LatLngExpression = [
   IMAGE_SIZE / 2,
 ];
 
-/** Sensible initial zoom showing the whole map. */
-export const DEFAULT_ZOOM = -1;
-
-/** Min/max zoom kept conservative to keep markers usable at all scales. */
-export const MIN_ZOOM = -3;
-export const MAX_ZOOM = 3;
-
 /**
- * Leaflet zoom to tile-pyramid zoom offset. The pyramid has 7 levels
- * (0..6); Leaflet zoom 0 corresponds to tile zoom 3 (because the source
- * pixels, 16384, are 8x the logical coord space, 2048), so
- * `tileZoom = leafletZoom + TILE_ZOOM_OFFSET` keeps the Leaflet-native
- * zoom range centered on a readable view.
+ * Leaflet zoom range. Matches the tile pyramid 1:1 (no offset): 0 shows
+ * the whole map in one 256x256 tile, 6 is the native 16384x16384
+ * resolution of the source PNG. `DEFAULT_ZOOM` shows the map at about
+ * 1024 px (readable on typical viewports).
  */
-export const TILE_ZOOM_OFFSET = 3;
+export const MIN_ZOOM = 0;
+export const MAX_ZOOM = 6;
+export const DEFAULT_ZOOM = 2;

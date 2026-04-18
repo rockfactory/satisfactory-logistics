@@ -42,17 +42,20 @@ below summarises how the three spaces line up.
 Game world (cm)              Leaflet CRS.Simple             Pixel / tile space
 (Unreal axes)                (LatLng, y-up)                 (Leaflet zoom 0)
 
-  +Y = north (top)             lat =  0         top         pixel_y =  0   tile y = 0
+  +Y = north (top)             lat =  0         top         pixel_y =   0   tile y = 0
    │                            │                            │
    ├──                         ─┤                           ─┤
    │                            │                            │
-  -Y = south (bottom)           lat = -IMAGE_SIZE bottom     pixel_y = IMAGE_SIZE
-                                                                   tile y = IMAGE_SIZE/256 - 1
+  -Y = south (bottom)           lat = -256       bottom      pixel_y = 256  tile y = 0
 
-  -X = west (left)              lng =  0          left       pixel_x =  0      tile x = 0
-  +X = east (right)             lng =  IMAGE_SIZE right      pixel_x = IMAGE_SIZE
-                                                                   tile x = IMAGE_SIZE/256 - 1
+  -X = west (left)              lng =    0       left        pixel_x =   0  tile x = 0
+  +X = east (right)             lng =  256       right       pixel_x = 256  tile x = 0
 ```
+
+At Leaflet zoom 0 the entire map fits in a single 256x256 tile (pyramid
+level 0). `IMAGE_SIZE` is therefore `256`: it equals the tile size so
+that one Leaflet zoom step doubles the displayed pixels and lines up
+directly with one pyramid level.
 
 ### Game → Leaflet LatLng
 
@@ -91,31 +94,25 @@ in `[0, IMAGE_SIZE]` over the image → tile y indices land in
 
 ### Leaflet zoom ↔ tile pyramid zoom
 
-`IMAGE_SIZE` (currently `2048`) is only a **logical coordinate space**;
-it is decoupled from the tile pyramid's pixel resolution. The link is
-[`TILE_ZOOM_OFFSET`](../../../src/map/coords.ts): the source image is
-16384 px, the logical space is 2048 units, and `16384 / 2048 = 8 = 2³`,
-so Leaflet zoom `N` asks the tile layer for pyramid zoom `N + 3`.
+`IMAGE_SIZE = 256` (= tile size) makes Leaflet zoom line up with the
+pyramid zoom 1:1. No offset needed: Leaflet zoom `N` asks the tile
+layer for pyramid zoom `N`, and the image is displayed at
+`IMAGE_SIZE * 2^N = 256 * 2^N` px.
 
 | Leaflet zoom | Image displayed (px) | Tile URL zoom | Tiles per side |
 |---|---|---|---|
-| −3 (MIN_ZOOM) | 256  | 0 | 1   |
-| −1 (DEFAULT)  | 1024 | 2 | 4   |
-|  0            | 2048 | 3 | 8   |
-| +3 (MAX_ZOOM) | 16384 | 6 | 64  |
-
-`IMAGE_SIZE` could be set to any value (e.g. `16384` to match the
-source 1:1, in which case you'd shift min/max/default zoom and the
-offset accordingly). `2048` is kept because the resource-node
-calibration was tuned against that size.
+| 0 (MIN_ZOOM)  |   256 | 0 |  1 |
+| 2 (DEFAULT)   |  1024 | 2 |  4 |
+| 4             |  4096 | 4 | 16 |
+| 6 (MAX_ZOOM)  | 16384 | 6 | 64 |
 
 ### Swapping the source image
 
 If you replace the source with a render that has a **different
 framing** (different crop of the world), re-tune the `WORLD_*` bounds
-so markers land on the right biomes. If you only change the
-**resolution** (e.g. a new 32k upscale), adjust `TILE_ZOOM_OFFSET` and
-the Leaflet zoom range instead; the `WORLD_*` bounds stay the same.
+so markers land on the right biomes. If you change the **resolution**
+(e.g. a new 32k upscale), extend the pyramid by one level and bump
+`MAX_ZOOM` to 7; `IMAGE_SIZE` and the `WORLD_*` bounds stay the same.
 The current 16384 upscale preserves the original framing of
 `world-map-5k.png`, so no re-tuning was needed.
 

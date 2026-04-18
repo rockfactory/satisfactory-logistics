@@ -13,7 +13,6 @@ import {
   IMAGE_BOUNDS,
   MAX_ZOOM,
   MIN_ZOOM,
-  TILE_ZOOM_OFFSET,
 } from './coords';
 import { MapSelectionSummary } from './MapSelectionSummary';
 import { ResourceMarkersLayer } from './ResourceMarkersLayer';
@@ -82,7 +81,9 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
           url={`${TILES_BASE_URL}/{z}/{x}/{y}.webp`}
           tileSize={256}
           noWrap
-          zoomOffset={TILE_ZOOM_OFFSET}
+          bounds={IMAGE_BOUNDS}
+          minZoom={MIN_ZOOM}
+          maxZoom={MAX_ZOOM}
         />
         <ResourceMarkersLayer
           nodes={filteredNodes}
