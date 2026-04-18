@@ -37,13 +37,14 @@ const Y_RANGE = WORLD_Y_MAX - WORLD_Y_MIN;
 
 /**
  * Converts a `(gameX, gameY)` point in centimeters to a Leaflet
- * `LatLng` for `CRS.Simple`. Game `+x` maps right and game `+y` (north,
- * in-game compass) maps to `lat = 0` (top of the image); `-Y` maps to
- * `lat = -IMAGE_SIZE` (bottom).
+ * `LatLng` for `CRS.Simple`. Game `+x` maps right. The current tile
+ * pyramid is rendered with game `+y` (north on the in-game compass) at
+ * the *bottom* of the image, so `+Y` maps to `lat = -IMAGE_SIZE` and
+ * `-Y` maps to `lat = 0`.
  */
 export function gameToLatLng(gameX: number, gameY: number): L.LatLng {
   const px = ((gameX - WORLD_X_MIN) / X_RANGE) * IMAGE_SIZE;
-  const py = ((gameY - WORLD_Y_MIN) / Y_RANGE) * IMAGE_SIZE - IMAGE_SIZE;
+  const py = -((gameY - WORLD_Y_MIN) / Y_RANGE) * IMAGE_SIZE;
   return L.latLng(py, px);
 }
 
