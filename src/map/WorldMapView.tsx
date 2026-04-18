@@ -4,9 +4,15 @@ import { useMemo } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { useShallowStore } from '@/core/zustand';
 import {
+  COLLECTIBLE_TYPES,
+  type CollectibleType,
+  getWorldCollectibles,
+} from '@/recipes/WorldCollectibles';
+import {
   getWorldResourceNodes,
   type Purity,
 } from '@/recipes/WorldResourceNodes';
+import { CollectibleMarkersLayer } from './CollectibleMarkersLayer';
 import {
   DEFAULT_CENTER,
   DEFAULT_ZOOM,
@@ -16,6 +22,7 @@ import {
 } from './coords';
 import { MapSelectionSummary } from './MapSelectionSummary';
 import { ResourceMarkersLayer } from './ResourceMarkersLayer';
+import { ShareUrlSync } from './ShareUrlSync';
 import { NO_GAME_USED_NODES_KEY } from './store/mapSlice';
 import classes from './WorldMapView.module.css';
 
@@ -39,22 +46,48 @@ const EMPTY_USED_NODES: readonly string[] = [];
 const EMPTY_RESOURCE_FILTERS: Record<string, Purity[]> = {};
 /** Stable fallback for the per-game used-node map in mid-rehydrate states. */
 const EMPTY_USED_BY_GAME: Record<string, string[]> = {};
+/** Stable fallback for collectible visibility before rehydrate finishes. */
+const EMPTY_COLLECTIBLE_VISIBILITY: Record<CollectibleType, boolean> = (() => {
+  const visibility = {} as Record<CollectibleType, boolean>;
+  for (const type of COLLECTIBLE_TYPES) visibility[type] = true;
+  return visibility;
+})();
+/** Stable fallback for the per-game collected map. */
+const EMPTY_COLLECTED_BY_GAME: Record<string, string[]> = {};
+/** Stable empty list mirror of `EMPTY_USED_NODES` for collectibles. */
+const EMPTY_COLLECTED_LIST: readonly string[] = [];
 
 export function WorldMapView({ gameId }: WorldMapViewProps) {
-  const { resourceFilters, hideUsedNodes, usedNodesList, sumMode } =
-    useShallowStore(state => {
-      const mapState = state.map;
-      const usedByGame = mapState?.usedNodesByGame ?? EMPTY_USED_BY_GAME;
-      return {
-        resourceFilters: mapState?.resourceFilters ?? EMPTY_RESOURCE_FILTERS,
-        hideUsedNodes: mapState?.hideUsedNodes ?? false,
-        usedNodesList:
-          usedByGame[gameId ?? NO_GAME_USED_NODES_KEY] ?? EMPTY_USED_NODES,
-        sumMode: state.mapSelection?.sumMode ?? false,
-      };
-    });
+  const {
+    resourceFilters,
+    hideUsedNodes,
+    usedNodesList,
+    sumMode,
+    collectibleVisibility,
+    hideCollectedCollectibles,
+    collectedList,
+  } = useShallowStore(state => {
+    const mapState = state.map;
+    const usedByGame = mapState?.usedNodesByGame ?? EMPTY_USED_BY_GAME;
+    const collectedByGame =
+      mapState?.collectedByGame ?? EMPTY_COLLECTED_BY_GAME;
+    return {
+      resourceFilters: mapState?.resourceFilters ?? EMPTY_RESOURCE_FILTERS,
+      hideUsedNodes: mapState?.hideUsedNodes ?? false,
+      usedNodesList:
+        usedByGame[gameId ?? NO_GAME_USED_NODES_KEY] ?? EMPTY_USED_NODES,
+      sumMode: state.mapSelection?.sumMode ?? false,
+      collectibleVisibility:
+        mapState?.collectibleVisibility ?? EMPTY_COLLECTIBLE_VISIBILITY,
+      hideCollectedCollectibles: mapState?.hideCollectedCollectibles ?? false,
+      collectedList:
+        collectedByGame[gameId ?? NO_GAME_USED_NODES_KEY] ??
+        EMPTY_COLLECTED_LIST,
+    };
+  });
 
   const usedNodes = useMemo(() => new Set(usedNodesList), [usedNodesList]);
+  const collectedIds = useMemo(() => new Set(collectedList), [collectedList]);
 
   const filteredNodes = useMemo(() => {
     return getWorldResourceNodes(gameId).filter(node => {
@@ -63,6 +96,15 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
       return true;
     });
   }, [gameId, resourceFilters, hideUsedNodes, usedNodes]);
+
+  const filteredCollectibles = useMemo(() => {
+    return getWorldCollectibles().filter(collectible => {
+      if (!collectibleVisibility[collectible.type]) return false;
+      if (hideCollectedCollectibles && collectedIds.has(collectible.id))
+        return false;
+      return true;
+    });
+  }, [collectibleVisibility, hideCollectedCollectibles, collectedIds]);
 
   return (
     <div className={classes.mapShell} data-tutorial-id="map-canvas">
@@ -90,10 +132,18 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
           gameId={gameId ?? null}
           sumMode={sumMode}
         />
+        <CollectibleMarkersLayer
+          collectibles={filteredCollectibles}
+          collectedIds={collectedIds}
+          gameId={gameId ?? null}
+        />
+        <ShareUrlSync />
       </MapContainer>
       <div className={classes.nodeCount}>
-        {filteredNodes.length} node{filteredNodes.length === 1 ? '' : 's'}{' '}
-        visible
+        {filteredNodes.length} node{filteredNodes.length === 1 ? '' : 's'}
+        {' · '}
+        {filteredCollectibles.length} collectible
+        {filteredCollectibles.length === 1 ? '' : 's'}
       </div>
       {sumMode ? (
         <div className={classes.sumBanner}>

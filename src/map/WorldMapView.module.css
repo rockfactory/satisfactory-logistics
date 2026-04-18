@@ -75,6 +75,78 @@
   background-position: center;
 }
 
+/*
+ * Pin tip below each marker. Built from two stacked CSS triangles
+ * (border + before) so the outer one matches the ring color and the
+ * inner one fills with the marker background, giving the same
+ * "outlined disc" feel as the ring itself. The whole element sits
+ * just outside the ring's bottom edge so it visually points at the
+ * actual `iconAnchor` coordinate.
+ */
+:global(.map-marker__pointer) {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 7px solid var(--ring, #f1c40f);
+  pointer-events: none;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+:global(.map-marker__pointer)::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: -3px;
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-top: 5px solid rgba(20, 21, 23, 0.9);
+}
+
+:global(.map-marker__pointer--sm) {
+  bottom: -6px;
+  border-left-width: 4px;
+  border-right-width: 4px;
+  border-top-width: 6px;
+}
+
+:global(.map-marker__pointer--sm)::before {
+  top: -7px;
+  left: -2px;
+  border-left-width: 2px;
+  border-right-width: 2px;
+  border-top-width: 4px;
+}
+
+/*
+ * Collectibles share the same circular ring + checkmark visual as
+ * resource nodes, but use a slightly thinner border so the smaller
+ * 28px footprint still feels balanced. The SVG variant centers the
+ * inline icon and lets `currentColor` flow through to the strokes.
+ */
+:global(.map-marker--collectible) {
+  border-width: 2px;
+  background-color: rgba(20, 21, 23, 0.95);
+}
+
+:global(.map-marker__inner--svg) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:global(.map-marker__inner--svg svg) {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 :global(.map-marker--used) {
   opacity: 0.5;
   filter: grayscale(0.6);
@@ -281,6 +353,48 @@
 :global(.map-marker-popup__pill--selected) {
   background-color: var(--mantine-color-violet-9);
   color: var(--mantine-color-violet-2);
+}
+
+/*
+ * Drop pod cost chips. Rendered as a labeled row of icon + amount
+ * pills so the player can scan it like a recipe card without us
+ * needing a full table.
+ */
+:global(.map-marker-popup__cost) {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+:global(.map-marker-popup__cost-label) {
+  color: var(--mantine-color-gray-5);
+  font-weight: 500;
+}
+
+:global(.map-marker-popup__cost-items) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+:global(.map-marker-popup__cost-chip) {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px 2px 4px;
+  border-radius: 999px;
+  background-color: var(--mantine-color-dark-6);
+  color: var(--mantine-color-gray-1);
+  font-variant-numeric: tabular-nums;
+}
+
+:global(.map-marker-popup__cost-chip img) {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
 }
 
 :global(.map-marker-popup__actions) {

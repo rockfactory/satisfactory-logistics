@@ -66,7 +66,7 @@ export const useStore = create(
     persist(slicesWithActions, {
       name: 'zustand:persist',
       partialize: state => omit(state, ['gameSave', 'peers', 'mapSelection']),
-      version: 5,
+      version: 7,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
       ),
@@ -75,8 +75,10 @@ export const useStore = create(
         if (state) {
           // Backfill any missing map-slice fields. Earlier shapes of
           // this slice shipped without `usedNodesByGame` /
-          // `resourceFilters` / `hideUsedNodes`, and zustand's default
-          // shallow merge leaves those stale shapes as-is on rehydrate.
+          // `resourceFilters` / `hideUsedNodes` /
+          // `collectibleVisibility` / `collectedByGame` /
+          // `hideCollectedCollectibles`, and zustand's default shallow
+          // merge leaves those stale shapes as-is on rehydrate.
           const mapState = (state as unknown as { map?: Partial<MapSlice> })
             .map;
           if (mapState) {
@@ -87,6 +89,28 @@ export const useStore = create(
               mapState.usedNodesByGame = defaults.usedNodesByGame;
             if (typeof mapState.hideUsedNodes !== 'boolean')
               mapState.hideUsedNodes = defaults.hideUsedNodes;
+            if (!mapState.collectibleVisibility) {
+              mapState.collectibleVisibility = defaults.collectibleVisibility;
+            } else {
+              for (const [type, on] of Object.entries(
+                defaults.collectibleVisibility,
+              )) {
+                if (
+                  typeof mapState.collectibleVisibility[
+                    type as keyof typeof defaults.collectibleVisibility
+                  ] !== 'boolean'
+                ) {
+                  mapState.collectibleVisibility[
+                    type as keyof typeof defaults.collectibleVisibility
+                  ] = on;
+                }
+              }
+            }
+            if (!mapState.collectedByGame)
+              mapState.collectedByGame = defaults.collectedByGame;
+            if (typeof mapState.hideCollectedCollectibles !== 'boolean')
+              mapState.hideCollectedCollectibles =
+                defaults.hideCollectedCollectibles;
           } else {
             (state as unknown as { map: MapSlice }).map =
               initialMapSliceState();
@@ -145,6 +169,56 @@ export const useStore = create(
           return {
             ...(state as any),
             map: initialMapSliceState(),
+          };
+        }
+
+        if (version === 5) {
+          logger.log(
+            'Migrating from version 5 to 6 [add collectibles to map slice]',
+          );
+          // v6 introduces `collectibleVisibility`, `collectedByGame`,
+          // and `hideCollectedCollectibles` on the map slice. Backfill
+          // them while keeping the player's existing resource filters
+          // and used-node marks intact — those are real choices we
+          // don't want to reset.
+          const defaults = initialMapSliceState();
+          const previous = (state as { map?: Partial<MapSlice> }).map;
+          return {
+            ...(state as any),
+            map: {
+              ...defaults,
+              ...(previous ?? {}),
+              collectibleVisibility:
+                previous?.collectibleVisibility ??
+                defaults.collectibleVisibility,
+              collectedByGame:
+                previous?.collectedByGame ?? defaults.collectedByGame,
+              hideCollectedCollectibles:
+                typeof previous?.hideCollectedCollectibles === 'boolean'
+                  ? previous.hideCollectedCollectibles
+                  : defaults.hideCollectedCollectibles,
+            },
+          };
+        }
+
+        if (version === 6) {
+          logger.log(
+            'Migrating from version 6 to 7 [collectibles default to hidden]',
+          );
+          // v7 changes the collectible visibility default from all-on
+          // to all-off — there are ~1.7k collectible markers and they
+          // visually drown out the resource layer. Reset everyone's
+          // visibility so they get the new opt-in UX. Collected marks
+          // and the hide-collected toggle stay intact.
+          const defaults = initialMapSliceState();
+          const previous = (state as { map?: Partial<MapSlice> }).map;
+          return {
+            ...(state as any),
+            map: {
+              ...defaults,
+              ...(previous ?? {}),
+              collectibleVisibility: defaults.collectibleVisibility,
+            },
           };
         }
 

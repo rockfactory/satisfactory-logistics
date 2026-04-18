@@ -8,12 +8,25 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { IconRefresh, IconSum } from '@tabler/icons-react';
+import {
+  IconBrush,
+  IconCheck,
+  IconDeviceAudioTape,
+  IconPackage,
+  IconRefresh,
+  IconSum,
+} from '@tabler/icons-react';
 import clsx from 'clsx';
-import { type CSSProperties, useMemo } from 'react';
+import { type CSSProperties, type ReactNode, useMemo } from 'react';
 import { useShallowStore, useStore } from '@/core/zustand';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import {
+  COLLECTIBLE_TYPE_META,
+  COLLECTIBLE_TYPES,
+  type CollectibleType,
+  getWorldCollectibles,
+} from '@/recipes/WorldCollectibles';
 import {
   getWorldResourceNodes,
   PURITIES,
@@ -41,6 +54,30 @@ const EMPTY_USED_NODES: readonly string[] = [];
 const EMPTY_RESOURCE_FILTERS: Record<string, Purity[]> = {};
 /** Stable fallback for the per-game used-node map in mid-rehydrate states. */
 const EMPTY_USED_BY_GAME: Record<string, string[]> = {};
+/** Stable fallback for collectible visibility before rehydrate finishes. */
+const EMPTY_COLLECTIBLE_VISIBILITY: Record<CollectibleType, boolean> = (() => {
+  const visibility = {} as Record<CollectibleType, boolean>;
+  for (const type of COLLECTIBLE_TYPES) visibility[type] = true;
+  return visibility;
+})();
+/** Stable fallback for collected-by-game map. */
+const EMPTY_COLLECTED_BY_GAME: Record<string, string[]> = {};
+/** Empty list mirror of {@link EMPTY_USED_NODES} for collectibles. */
+const EMPTY_COLLECTED_LIST: readonly string[] = [];
+
+/**
+ * Bundled-asset icons for collectible categories that have in-game
+ * art (slugs, somersloops, mercer spheres). Tabler-icon fallbacks
+ * cover hard drives, audio tapes, and customization unlocks where
+ * the game ships no representative icon we can reuse. Keys are
+ * `iconName` from {@link COLLECTIBLE_TYPE_META} so we can swap
+ * implementations without changing the meta data.
+ */
+const TABLER_ICON_BY_NAME: Record<string, ReactNode> = {
+  IconPackage: <IconPackage size={16} />,
+  IconDeviceAudioTape: <IconDeviceAudioTape size={16} />,
+  IconBrush: <IconBrush size={16} />,
+};
 
 export interface MapFiltersPanelProps {
   gameId?: string | null;
@@ -53,9 +90,14 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
     usedNodesForGame,
     sumMode,
     selectedCount,
+    collectibleVisibility,
+    hideCollectedCollectibles,
+    collectedForGame,
   } = useShallowStore(state => {
     const mapState = state.map;
     const usedByGame = mapState?.usedNodesByGame ?? EMPTY_USED_BY_GAME;
+    const collectedByGame =
+      mapState?.collectedByGame ?? EMPTY_COLLECTED_BY_GAME;
     return {
       resourceFilters: mapState?.resourceFilters ?? EMPTY_RESOURCE_FILTERS,
       hideUsedNodes: mapState?.hideUsedNodes ?? false,
@@ -63,6 +105,12 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
         usedByGame[gameId ?? NO_GAME_USED_NODES_KEY] ?? EMPTY_USED_NODES,
       sumMode: state.mapSelection?.sumMode ?? false,
       selectedCount: state.mapSelection?.selectedNodeIds.length ?? 0,
+      collectibleVisibility:
+        mapState?.collectibleVisibility ?? EMPTY_COLLECTIBLE_VISIBILITY,
+      hideCollectedCollectibles: mapState?.hideCollectedCollectibles ?? false,
+      collectedForGame:
+        collectedByGame[gameId ?? NO_GAME_USED_NODES_KEY] ??
+        EMPTY_COLLECTED_LIST,
     };
   });
   const toggleResourcePurity = useStore(state => state.toggleResourcePurity);
@@ -76,8 +124,51 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
   const resetMapFilters = useStore(state => state.resetMapFilters);
   const setSumMode = useStore(state => state.setSumMode);
   const clearSelection = useStore(state => state.clearSelection);
+  const toggleCollectibleType = useStore(state => state.toggleCollectibleType);
+  const setAllCollectiblesVisible = useStore(
+    state => state.setAllCollectiblesVisible,
+  );
+  const setHideCollectedCollectibles = useStore(
+    state => state.setHideCollectedCollectibles,
+  );
+  const clearCollectedCollectibles = useStore(
+    state => state.clearCollectedCollectibles,
+  );
 
   const allNodes = useMemo(() => getWorldResourceNodes(gameId), [gameId]);
+  const allCollectibles = useMemo(() => getWorldCollectibles(), []);
+
+  /**
+   * Per-type counts of all collectibles in the world. Computed once
+   * since the source data is static. Used both for the per-row
+   * "(N)" total and the overall "X of Y" header.
+   */
+  const collectibleTotalsByType = useMemo(() => {
+    const totals = {} as Record<CollectibleType, number>;
+    for (const type of COLLECTIBLE_TYPES) totals[type] = 0;
+    for (const c of allCollectibles) totals[c.type] += 1;
+    return totals;
+  }, [allCollectibles]);
+
+  /**
+   * How many of each collectible type the player has marked
+   * collected in the current game. Recomputed only when the
+   * collected list shape changes, since the underlying static
+   * collectibles never change at runtime.
+   */
+  const collectedCountsByType = useMemo(() => {
+    const counts = {} as Record<CollectibleType, number>;
+    for (const type of COLLECTIBLE_TYPES) counts[type] = 0;
+    if (collectedForGame.length === 0) return counts;
+    const collectedSet = new Set(collectedForGame);
+    for (const c of allCollectibles) {
+      if (collectedSet.has(c.id)) counts[c.type] += 1;
+    }
+    return counts;
+  }, [allCollectibles, collectedForGame]);
+
+  const totalCollectibles = allCollectibles.length;
+  const totalCollected = collectedForGame.length;
 
   /**
    * Counts nodes broken down as `counts[resource][purity]`. Computed
@@ -346,6 +437,138 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
                     );
                   })}
                 </div>
+              </div>
+            );
+          })}
+        </Stack>
+      </Stack>
+
+      <Stack gap="xs" data-tutorial-id="map-collectibles-filter">
+        <Group justify="space-between" align="center" wrap="nowrap" gap="xs">
+          <Text
+            size="xs"
+            fw={600}
+            c="dimmed"
+            tt="uppercase"
+            className={classes.sectionTitle}
+          >
+            Collectibles
+          </Text>
+          <Group gap={4} wrap="nowrap">
+            <Tooltip label="Show every collectible" withinPortal>
+              <button
+                type="button"
+                className={classes.miniAction}
+                onClick={() => setAllCollectiblesVisible(true)}
+              >
+                All
+              </button>
+            </Tooltip>
+            <Tooltip label="Hide every collectible" withinPortal>
+              <button
+                type="button"
+                className={classes.miniAction}
+                onClick={() => setAllCollectiblesVisible(false)}
+              >
+                None
+              </button>
+            </Tooltip>
+          </Group>
+        </Group>
+
+        <Group justify="space-between" align="center" wrap="nowrap" gap="xs">
+          <Group gap={6} align="center" wrap="nowrap">
+            <Text size="xs" c="dimmed" className={classes.sectionCount}>
+              {totalCollected} / {totalCollectibles} collected
+            </Text>
+            {totalCollected > 0 ? (
+              <Button
+                variant="subtle"
+                color="gray"
+                size="compact-xs"
+                px={6}
+                onClick={() => clearCollectedCollectibles(gameId ?? null)}
+              >
+                Clear
+              </Button>
+            ) : null}
+          </Group>
+          <Switch
+            size="xs"
+            checked={hideCollectedCollectibles}
+            onChange={event =>
+              setHideCollectedCollectibles(event.currentTarget.checked)
+            }
+            aria-label="Hide collected collectibles on the map"
+            label="Hide"
+            labelPosition="left"
+            styles={{
+              label: { fontSize: 11, color: 'var(--mantine-color-dimmed)' },
+            }}
+          />
+        </Group>
+
+        <Stack gap={3}>
+          {COLLECTIBLE_TYPES.map(type => {
+            const meta = COLLECTIBLE_TYPE_META[type];
+            const total = collectibleTotalsByType[type];
+            const collected = collectedCountsByType[type];
+            const visible = collectibleVisibility[type];
+            const empty = total === 0;
+
+            return (
+              <div
+                key={type}
+                className={clsx(classes.collectibleRow, {
+                  [classes.collectibleRowDim]: !visible,
+                  [classes.collectibleRowEmpty]: empty,
+                })}
+                style={
+                  { ['--chip-color' as string]: meta.color } as CSSProperties
+                }
+              >
+                <Tooltip
+                  label={
+                    empty
+                      ? `No ${meta.displayName.toLowerCase()} on this map`
+                      : visible
+                        ? `Hide ${meta.displayName.toLowerCase()}`
+                        : `Show ${meta.displayName.toLowerCase()}`
+                  }
+                  withinPortal
+                >
+                  <button
+                    type="button"
+                    className={classes.collectibleLabel}
+                    aria-pressed={visible}
+                    disabled={empty}
+                    onClick={() => toggleCollectibleType(type)}
+                  >
+                    <span
+                      className={classes.collectibleSwatch}
+                      aria-hidden="true"
+                    >
+                      {meta.iconImagePath ? (
+                        <img src={meta.iconImagePath} alt="" />
+                      ) : meta.iconName ? (
+                        TABLER_ICON_BY_NAME[meta.iconName]
+                      ) : null}
+                    </span>
+                    <span className={classes.collectibleName}>
+                      {meta.displayName}
+                    </span>
+                    <span className={classes.collectibleProgress}>
+                      {collected > 0 ? (
+                        <IconCheck
+                          size={10}
+                          className={classes.collectibleCheck}
+                          aria-hidden="true"
+                        />
+                      ) : null}
+                      {collected} / {total}
+                    </span>
+                  </button>
+                </Tooltip>
               </div>
             );
           })}

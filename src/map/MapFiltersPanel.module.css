@@ -245,6 +245,103 @@
   color: inherit;
 }
 
+/*
+ * Collectibles list. Each row is a single tap target — toggles
+ * visibility for that category — with a colored swatch on the left
+ * (the category's themed color from COLLECTIBLE_TYPE_META) and a
+ * "collected / total" count on the right. Mirrors the resource
+ * rows visually so the eye reads the panel as one continuous list.
+ */
+
+.collectibleRow {
+  --chip-color: var(--mantine-color-gray-5);
+
+  display: flex;
+  align-items: center;
+  padding: 3px 6px;
+  border-radius: var(--mantine-radius-sm);
+  transition:
+    background-color 120ms ease,
+    opacity 120ms ease;
+}
+
+.collectibleRow:hover {
+  background-color: var(--mantine-color-dark-6);
+}
+
+.collectibleRowDim {
+  opacity: 0.4;
+}
+
+.collectibleRowDim:hover {
+  opacity: 0.75;
+}
+
+.collectibleRowEmpty {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.collectibleLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: var(--mantine-color-gray-1);
+  text-align: left;
+  cursor: pointer;
+}
+
+.collectibleLabel:disabled {
+  cursor: not-allowed;
+}
+
+.collectibleSwatch {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--chip-color);
+  background-color: var(--mantine-color-dark-8);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--chip-color);
+  overflow: hidden;
+}
+
+.collectibleSwatch img {
+  width: 14px;
+  height: 14px;
+}
+
+.collectibleName {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.collectibleProgress {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--mantine-color-gray-4);
+}
+
+.collectibleCheck {
+  color: var(--mantine-color-teal-4);
+}
+
 @media (max-width: 768px) {
   .panel {
     width: 100%;
