@@ -3,7 +3,11 @@ import {
   type FactoryBuilding,
 } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap, FactoryItemForm } from '@/recipes/FactoryItem';
-import type { Purity } from '@/recipes/WorldResourceNodes';
+import type {
+  Purity,
+  WorldResourceNode,
+  WorldResourceNodeType,
+} from '@/recipes/WorldResourceNodes';
 
 /**
  * Purity multiplier applied to an extractor's base `itemsPerMinute`.
@@ -29,10 +33,16 @@ const SOLID_MINER_IDS = [
   'Build_MinerMk3_C',
 ] as const;
 
-const FLUID_EXTRACTOR_IDS: Record<string, string[]> = {
-  Desc_LiquidOil_C: ['Build_OilPump_C', 'Build_FrackingExtractor_C'],
-  Desc_Water_C: ['Build_WaterPump_C', 'Build_FrackingExtractor_C'],
-  Desc_NitrogenGas_C: ['Build_FrackingExtractor_C'],
+const RESOURCE_WELL_EXTRACTOR_ID = 'Build_FrackingExtractor_C';
+
+/**
+ * Standalone (non-fracking) fluid pumps per resource id. These apply
+ * to `BP_ResourceNode_C` actors only — fracking satellites use the
+ * resource well extractor regardless of resource.
+ */
+const STANDALONE_FLUID_EXTRACTOR_IDS: Record<string, string> = {
+  Desc_LiquidOil_C: 'Build_OilPump_C',
+  Desc_Water_C: 'Build_WaterPump_C',
 };
 
 function findBuildings(ids: readonly string[]): FactoryBuilding[] {
@@ -45,18 +55,67 @@ function findBuildings(ids: readonly string[]): FactoryBuilding[] {
 }
 
 /**
- * Returns the list of extractors that can pull `resource` out of the
- * ground, in display order. Solids return Mk1/Mk2/Mk3 miners. Fluids
- * and gases return the appropriate extractor + the resource well
- * extractor when applicable. Order is preserved.
+ * Returns the list of extractors that can pull this specific node out
+ * of the ground, in display order. The choice depends on the node's
+ * **actor type**, not just its resource — a fracking satellite of oil
+ * is extracted only by the Resource Well Extractor, *not* an Oil Pump,
+ * even though both produce crude oil.
+ *
+ * - `node` (standalone): Mk1/Mk2/Mk3 miners for solids, or the
+ *   appropriate fluid pump for liquids (e.g. Oil Pump for crude oil).
+ * - `frackingSatellite`: Resource Well Extractor only.
+ * - `frackingCore`: empty — the core itself isn't extracted; players
+ *   place a Resource Well Pressurizer on it to activate the
+ *   surrounding satellites.
+ * - `geyser`: empty — geysers feed the Geothermal Generator (power
+ *   only, not a resource extractor).
+ * - `deposit`: empty — breakable rocks are harvested with the portable
+ *   miner, which isn't a placeable factory building.
  */
-export function getExtractorsForResource(resource: string): FactoryBuilding[] {
-  const item = AllFactoryItemsMap[resource];
-  if (!item) return [];
-  if (item.form === FactoryItemForm.Solid) {
-    return findBuildings(SOLID_MINER_IDS);
+export function getExtractorsForNode(
+  node: Pick<WorldResourceNode, 'resource' | 'nodeType'>,
+): FactoryBuilding[] {
+  switch (node.nodeType) {
+    case 'frackingSatellite':
+      return findBuildings([RESOURCE_WELL_EXTRACTOR_ID]);
+    case 'frackingCore':
+    case 'geyser':
+    case 'deposit':
+      return [];
+    case 'node': {
+      const item = AllFactoryItemsMap[node.resource];
+      if (!item) return [];
+      if (item.form === FactoryItemForm.Solid) {
+        return findBuildings(SOLID_MINER_IDS);
+      }
+      const pumpId = STANDALONE_FLUID_EXTRACTOR_IDS[node.resource];
+      return pumpId ? findBuildings([pumpId]) : [];
+    }
+    default:
+      return [];
   }
-  return findBuildings(FLUID_EXTRACTOR_IDS[resource] ?? []);
+}
+
+/**
+ * Short human-friendly summary of how this node is harvested in-game.
+ * Surfaced in the popover as a hint above (or instead of) the rates
+ * table, so players who don't know the well/geyser mechanics can still
+ * make sense of the markers.
+ */
+export function getExtractionMethodLabel(
+  nodeType: WorldResourceNodeType,
+): string | undefined {
+  switch (nodeType) {
+    case 'frackingSatellite':
+    case 'frackingCore':
+      return undefined;
+    case 'geyser':
+      return 'Powers the Geothermal Generator (no resource extraction).';
+    case 'deposit':
+      return 'Mine with the Portable Miner.';
+    default:
+      return undefined;
+  }
 }
 
 /**

@@ -124,7 +124,7 @@ export function MapSelectionSummary({ gameId }: MapSelectionSummaryProps) {
       ) : (
         <div className={classes.body}>
           {aggregates.map(a => (
-            <div key={a.resource} className={classes.row}>
+            <div key={a.key} className={classes.row}>
               <div className={classes.rowText}>
                 <div className={classes.rowName}>{a.displayName}</div>
                 <div className={classes.rowMeta}>

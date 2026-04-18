@@ -22,15 +22,16 @@ export const SOLID_MINER_CHOICES = [
 ] as const;
 
 /**
- * Default fluid/gas extractor per resource id. Matches the in-game
- * practical choice — Oil Pump for crude oil, Water Pump for water,
- * Fracking Extractor for nitrogen (which has no simpler alternative).
+ * Standalone fluid pump per resource id, used only for non-fracking
+ * (`BP_ResourceNode_C`) nodes. Fracking satellites always use the
+ * Resource Well Extractor regardless of resource.
  */
-const DEFAULT_FLUID_EXTRACTOR: Record<string, string> = {
+const STANDALONE_FLUID_EXTRACTOR: Record<string, string> = {
   Desc_LiquidOil_C: 'Build_OilPump_C',
   Desc_Water_C: 'Build_WaterPump_C',
-  Desc_NitrogenGas_C: 'Build_FrackingExtractor_C',
 };
+
+const RESOURCE_WELL_EXTRACTOR_ID = 'Build_FrackingExtractor_C';
 
 function findBuilding(id: string): FactoryBuilding | undefined {
   return AllFactoryBuildings.find(b => b.id === id);
@@ -38,56 +39,85 @@ function findBuilding(id: string): FactoryBuilding | undefined {
 
 /**
  * Picks the extractor building used when summing a node's yield in
- * the aggregate panel. Solids use whatever miner the user selected in
- * the panel; fluids/gases use their hard-coded default extractor.
- * Returns `undefined` when the resource has no known extractor.
+ * the aggregate panel. The decision is gated by the node's actor type
+ * so a fracking satellite of crude oil is summed using the Resource
+ * Well Extractor's rate, *not* the Oil Pump's, even though both
+ * produce the same resource.
+ *
+ * Returns `undefined` when the node has no factory-buildable extractor
+ * (cores, geysers, deposits) so the sum panel skips it cleanly.
  */
 function getExtractorForNode(
-  resource: string,
+  node: WorldResourceNode,
   selectedMinerId: string,
 ): FactoryBuilding | undefined {
-  const item = AllFactoryItemsMap[resource];
-  if (!item) return undefined;
-  if (item.form === FactoryItemForm.Solid) return findBuilding(selectedMinerId);
-  const fluidExtractorId = DEFAULT_FLUID_EXTRACTOR[resource];
-  return fluidExtractorId ? findBuilding(fluidExtractorId) : undefined;
+  switch (node.nodeType) {
+    case 'frackingSatellite':
+      return findBuilding(RESOURCE_WELL_EXTRACTOR_ID);
+    case 'frackingCore':
+    case 'geyser':
+    case 'deposit':
+      return undefined;
+    case 'node': {
+      const item = AllFactoryItemsMap[node.resource];
+      if (!item) return undefined;
+      if (item.form === FactoryItemForm.Solid) {
+        return findBuilding(selectedMinerId);
+      }
+      const pumpId = STANDALONE_FLUID_EXTRACTOR[node.resource];
+      return pumpId ? findBuilding(pumpId) : undefined;
+    }
+    default:
+      return undefined;
+  }
 }
 
 export interface ResourceAggregate {
+  /**
+   * Stable React key. Combines resource and extractor so a selection
+   * containing both an oil node *and* an oil fracking satellite shows
+   * up as two honest rows (Oil Pump vs Resource Well Extractor) rather
+   * than one mis-summed row.
+   */
+  key: string;
   resource: string;
   /** Display name for the resource, for convenience in the UI. */
   displayName: string;
-  /** Extractor picked for this resource (differs per solid vs fluid). */
+  /** Extractor picked for this row (differs per solid vs fluid vs well). */
   extractorName: string;
   unit: string;
   /** Sum of yields across every selected node of this resource. */
   totalRate: number;
   /** Count of nodes contributing, broken down by purity. */
   purityCounts: Record<Purity, number>;
-  /** Total node count for this resource (sum of {@link purityCounts}). */
+  /** Total node count for this row (sum of {@link purityCounts}). */
   nodeCount: number;
 }
 
 /**
  * Computes per-resource totals for the given set of nodes at the
  * chosen miner tier and overclock. Fluids/gases ignore `minerId` and
- * use a default extractor. Resources with no known extractor are
- * skipped.
+ * use a default extractor. Resources with no known extractor (cores,
+ * geysers, deposits) are skipped. Rows are split per `(resource,
+ * extractor)` pair so a selection that mixes standalone oil nodes with
+ * oil fracking satellites yields two honest sub-totals.
  */
 export function getSelectionAggregates(
   nodes: readonly WorldResourceNode[],
   minerId: string,
   overclock: OverclockStep,
 ): ResourceAggregate[] {
-  const byResource = new Map<string, ResourceAggregate>();
+  const byKey = new Map<string, ResourceAggregate>();
   for (const node of nodes) {
-    const extractor = getExtractorForNode(node.resource, minerId);
+    const extractor = getExtractorForNode(node, minerId);
     if (!extractor) continue;
 
-    let aggregate = byResource.get(node.resource);
+    const key = `${node.resource}::${extractor.id}`;
+    let aggregate = byKey.get(key);
     if (!aggregate) {
       const item = AllFactoryItemsMap[node.resource];
       aggregate = {
+        key,
         resource: node.resource,
         displayName: item?.displayName ?? node.resource,
         extractorName: extractor.name,
@@ -96,7 +126,7 @@ export function getSelectionAggregates(
         purityCounts: { impure: 0, normal: 0, pure: 0 },
         nodeCount: 0,
       };
-      byResource.set(node.resource, aggregate);
+      byKey.set(key, aggregate);
     }
 
     aggregate.totalRate += getExtractionRate(extractor, node.purity, overclock);
@@ -104,9 +134,12 @@ export function getSelectionAggregates(
     aggregate.nodeCount += 1;
   }
 
-  // Stable display order: alphabetical by display name, which is
-  // easier to scan than resource id order.
-  return [...byResource.values()].sort((a, b) =>
-    a.displayName.localeCompare(b.displayName),
-  );
+  // Stable display order: alphabetical by display name first, then
+  // extractor name to keep matching resources adjacent.
+  return [...byKey.values()].sort((a, b) => {
+    const byName = a.displayName.localeCompare(b.displayName);
+    return byName !== 0
+      ? byName
+      : a.extractorName.localeCompare(b.extractorName);
+  });
 }

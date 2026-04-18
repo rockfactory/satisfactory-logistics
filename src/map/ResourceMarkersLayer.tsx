@@ -6,9 +6,10 @@ import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import type { WorldResourceNode } from '@/recipes/WorldResourceNodes';
 import { gameToLatLng } from './coords';
 import {
+  getExtractionMethodLabel,
   getExtractionRate,
   getExtractionUnit,
-  getExtractorsForResource,
+  getExtractorsForNode,
   OVERCLOCK_STEPS,
 } from './extraction';
 import {
@@ -70,8 +71,9 @@ function buildPopupHtml(
   const altitude =
     node.z != null ? `${formatNumber(Math.round(node.z / 100))} m` : '—';
 
-  const extractors = getExtractorsForResource(node.resource);
+  const extractors = getExtractorsForNode(node);
   const unit = getExtractionUnit(node.resource);
+  const methodLabel = getExtractionMethodLabel(node.nodeType);
 
   const tableRows = extractors
     .map(building => {
@@ -96,6 +98,10 @@ function buildPopupHtml(
         </table>
       `
       : '';
+
+  const methodHtml = methodLabel
+    ? `<p class="map-marker-popup__method">${escapeHtml(methodLabel)}</p>`
+    : '';
 
   const usedLabel = isUsed ? 'Mark as unused' : 'Mark as used';
   const usedModifier = isUsed ? ' map-marker-popup__action--used' : '';
@@ -131,6 +137,7 @@ function buildPopupHtml(
         <dt>Coordinates</dt><dd>${x} / ${y}</dd>
         <dt>Altitude</dt><dd>${altitude}</dd>
       </dl>
+      ${methodHtml}
       ${tableHtml}
       <div class="map-marker-popup__actions">
         <button

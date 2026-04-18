@@ -209,6 +209,17 @@
   font-variant-numeric: tabular-nums;
 }
 
+:global(.map-marker-popup__method) {
+  margin: 0 0 10px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background-color: var(--mantine-color-dark-6);
+  border-left: 2px solid var(--mantine-color-gray-6);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--mantine-color-gray-3);
+}
+
 :global(.map-marker-popup__rates) {
   width: 100%;
   border-collapse: collapse;

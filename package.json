@@ -13,6 +13,7 @@
     "preview": "vite preview",
     "supabase:types": "npx supabase gen types typescript --project-id nymrtujjmzbhxcimjsci > ./src/core/database.types.ts",
     "parse-docs": "tsx scripts/parseDocs.ts",
+    "extract-world-nodes": "tsx scripts/extractWorldNodes.ts",
     "generate-pwa-icons": "tsx scripts/generatePwaIcons.ts",
     "generate-map-tiles": "tsx scripts/generateMapTiles.ts"
   },

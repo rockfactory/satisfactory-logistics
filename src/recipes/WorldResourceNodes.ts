@@ -100,20 +100,44 @@ export function getSavegameOverrides(
 }
 
 /**
+ * Node types intentionally hidden from the map UI. Kept out at the
+ * top-level accessor so the rest of the app (filters, popovers, sum
+ * mode) never has to special-case them.
+ *
+ * - `frackingCore` — the well's anchor point. Players don't extract
+ *   from it directly; they place a Resource Well Pressurizer here to
+ *   activate the surrounding satellites. The satellites themselves
+ *   already mark every extraction location, so cores are noise.
+ *
+ * The underlying dataset still includes these (the parser keeps the
+ * full world picture so future features — e.g. drawing lines from
+ * satellites to their parent core — can opt back in via a separate
+ * accessor).
+ */
+const HIDDEN_NODE_TYPES: ReadonlySet<WorldResourceNodeType> = new Set([
+  'frackingCore',
+]);
+
+/**
  * Returns the list of world resource nodes to render on the map for the
  * given game. Falls back to the bundled static dataset; per-game
  * savegame-derived nodes (when present) supersede static entries with
- * matching ids.
+ * matching ids. Node types in {@link HIDDEN_NODE_TYPES} are filtered
+ * out here so callers get a clean "what to render" list.
  */
 export function getWorldResourceNodes(
   gameId?: string | null,
 ): WorldResourceNode[] {
   const overrides = getSavegameOverrides(gameId);
-  if (overrides.length === 0) return StaticWorldResourceNodes;
-
-  const overrideIds = new Set(overrides.map(n => n.id));
-  return [
-    ...StaticWorldResourceNodes.filter(n => !overrideIds.has(n.id)),
-    ...overrides,
-  ];
+  const merged =
+    overrides.length === 0
+      ? StaticWorldResourceNodes
+      : (() => {
+          const overrideIds = new Set(overrides.map(n => n.id));
+          return [
+            ...StaticWorldResourceNodes.filter(n => !overrideIds.has(n.id)),
+            ...overrides,
+          ];
+        })();
+  return merged.filter(n => !HIDDEN_NODE_TYPES.has(n.nodeType));
 }
