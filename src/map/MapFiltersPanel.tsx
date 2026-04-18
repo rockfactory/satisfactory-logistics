@@ -493,19 +493,21 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
               </Button>
             ) : null}
           </Group>
-          <Switch
-            size="xs"
-            checked={hideCollectedCollectibles}
-            onChange={event =>
-              setHideCollectedCollectibles(event.currentTarget.checked)
-            }
-            aria-label="Hide collected collectibles on the map"
-            label="Hide"
-            labelPosition="left"
-            styles={{
-              label: { fontSize: 11, color: 'var(--mantine-color-dimmed)' },
-            }}
-          />
+          {totalCollected > 0 ? (
+            <Switch
+              size="xs"
+              checked={hideCollectedCollectibles}
+              onChange={event =>
+                setHideCollectedCollectibles(event.currentTarget.checked)
+              }
+              aria-label="Hide collected collectibles on the map"
+              label="Hide"
+              labelPosition="left"
+              styles={{
+                label: { fontSize: 11, color: 'var(--mantine-color-dimmed)' },
+              }}
+            />
+          ) : null}
         </Group>
 
         <Stack gap={3}>
