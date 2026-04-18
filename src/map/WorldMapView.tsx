@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useMemo } from 'react';
-import { ImageOverlay, MapContainer } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import { useShallowStore } from '@/core/zustand';
 import {
   getWorldResourceNodes,
@@ -18,6 +18,12 @@ import { MapSelectionSummary } from './MapSelectionSummary';
 import { ResourceMarkersLayer } from './ResourceMarkersLayer';
 import { NO_GAME_USED_NODES_KEY } from './store/mapSlice';
 import classes from './WorldMapView.module.css';
+
+const DEFAULT_TILES_BASE_URL =
+  'https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v1';
+
+const TILES_BASE_URL =
+  import.meta.env.VITE_MAP_TILES_BASE_URL ?? DEFAULT_TILES_BASE_URL;
 
 export interface WorldMapViewProps {
   gameId?: string | null;
@@ -67,13 +73,16 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
         minZoom={MIN_ZOOM}
         maxZoom={MAX_ZOOM}
         maxBounds={IMAGE_BOUNDS}
-        maxBoundsViscosity={1}
         attributionControl={false}
         className={classes.map}
       >
-        <ImageOverlay
-          url="/images/map/world-map-5k.png"
+        <TileLayer
+          url={`${TILES_BASE_URL}/{z}/{x}/{y}.webp`}
+          tileSize={256}
+          noWrap
           bounds={IMAGE_BOUNDS}
+          minZoom={MIN_ZOOM}
+          maxZoom={MAX_ZOOM}
         />
         <ResourceMarkersLayer
           nodes={filteredNodes}

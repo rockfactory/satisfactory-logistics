@@ -13,7 +13,8 @@
     "preview": "vite preview",
     "supabase:types": "npx supabase gen types typescript --project-id nymrtujjmzbhxcimjsci > ./src/core/database.types.ts",
     "parse-docs": "tsx scripts/parseDocs.ts",
-    "generate-pwa-icons": "tsx scripts/generatePwaIcons.ts"
+    "generate-pwa-icons": "tsx scripts/generatePwaIcons.ts",
+    "generate-map-tiles": "tsx scripts/generateMapTiles.ts"
   },
   "dependencies": {
     "@caldwell619/react-kanban": "^0.0.11",

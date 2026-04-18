@@ -1,23 +1,14 @@
 import L from 'leaflet';
 
 /**
- * Converts game world coordinates (cm, Unreal default unit) to image
- * pixel coordinates suitable for Leaflet's `CRS.Simple`.
- *
- * Constants are tuned to the map at `public/images/map/world-map.jpg`,
- * which is the official top-down render of MASSAGE-2 (AB)b sourced from
- * the Satisfactory Wiki (2048x2048). When the image is replaced with a
- * different render only the constants below need to change.
- *
- * The bounds and the Y-flip below match the calibration used by
- * `Hirashi3630/satisfactory_node_heatmap` (MIT, see this project's map
- * README). The playable area is treated as a 750,000 cm square; the
- * image's top edge is `+Y` (north on the in-game compass) and the
- * bottom edge is `-Y`, hence the flip in `gameToLatLng`.
+ * Projects game world coordinates (cm, Unreal default unit) into
+ * Leaflet `CRS.Simple` LatLng space. Backdrop is a WebP tile pyramid
+ * (levels 0-6) on DigitalOcean Spaces; see the map README for details
+ * on calibration, tile generation, and the coord mapping.
  */
 
-/** Width and height of the map image in pixels (square). */
-export const IMAGE_SIZE = 2048;
+/** Logical coord-space size. Equals the tile size so zoom 0 == 1 tile. */
+export const IMAGE_SIZE = 256;
 
 /** Game-space bounds of the playable area, in centimeters. */
 export const WORLD_X_MIN = -324_700;
@@ -26,12 +17,19 @@ export const WORLD_Y_MIN = -375_000;
 export const WORLD_Y_MAX = 375_000;
 
 /**
- * Bounds for the `ImageOverlay`. Leaflet `CRS.Simple` uses
- * `[y, x]` (lat, lng) ordering, with the y-axis pointing down.
+ * Bounds for the world map image in Leaflet `CRS.Simple` coordinates.
+ *
+ * `CRS.Simple` has y increasing upward (northing convention, see
+ * https://leafletjs.com/examples/crs-simple/crs-simple.html), so the
+ * top edge of the image sits at `lat = 0` and the bottom edge at
+ * `lat = -IMAGE_SIZE`. This orientation is required for XYZ tile
+ * layers: pixel-y = -lat is then non-negative over the image, and
+ * tile indices (pixel-y / tileSize) stay in [0, imageHeight/tileSize),
+ * matching the `gdal2tiles.py --xyz` pyramid on disk.
  */
 export const IMAGE_BOUNDS: L.LatLngBoundsExpression = [
-  [0, 0],
-  [IMAGE_SIZE, IMAGE_SIZE],
+  [-IMAGE_SIZE, 0],
+  [0, IMAGE_SIZE],
 ];
 
 const X_RANGE = WORLD_X_MAX - WORLD_X_MIN;
@@ -39,25 +37,28 @@ const Y_RANGE = WORLD_Y_MAX - WORLD_Y_MIN;
 
 /**
  * Converts a `(gameX, gameY)` point in centimeters to a Leaflet
- * `LatLng` for `CRS.Simple`. Game `+x` is mapped right and game `+y`
- * is mapped up (so the bottom edge of the image is `Y_MIN`, matching
- * the in-game compass where `+Y` points north).
+ * `LatLng` for `CRS.Simple`. Game `+x` maps right and game `+y` (north,
+ * in-game compass) maps to `lat = 0` (top of the image); `-Y` maps to
+ * `lat = -IMAGE_SIZE` (bottom).
  */
 export function gameToLatLng(gameX: number, gameY: number): L.LatLng {
   const px = ((gameX - WORLD_X_MIN) / X_RANGE) * IMAGE_SIZE;
-  const py = IMAGE_SIZE - ((gameY - WORLD_Y_MIN) / Y_RANGE) * IMAGE_SIZE;
+  const py = ((gameY - WORLD_Y_MIN) / Y_RANGE) * IMAGE_SIZE - IMAGE_SIZE;
   return L.latLng(py, px);
 }
 
 /** Convenient default center (geometric center of the playable area). */
 export const DEFAULT_CENTER: L.LatLngExpression = [
-  IMAGE_SIZE / 2,
+  -IMAGE_SIZE / 2,
   IMAGE_SIZE / 2,
 ];
 
-/** Sensible initial zoom showing the whole map. */
-export const DEFAULT_ZOOM = -1;
-
-/** Min/max zoom kept conservative to keep markers usable at all scales. */
-export const MIN_ZOOM = -2;
-export const MAX_ZOOM = 3;
+/**
+ * Leaflet zoom range. Matches the tile pyramid 1:1 (no offset): 0 shows
+ * the whole map in one 256x256 tile, 6 is the native 16384x16384
+ * resolution of the source PNG. `DEFAULT_ZOOM` shows the map at about
+ * 1024 px (readable on typical viewports).
+ */
+export const MIN_ZOOM = 0;
+export const MAX_ZOOM = 6;
+export const DEFAULT_ZOOM = 2;

@@ -135,6 +135,9 @@ dist
 
 /data/assets/
 
+# Generated map tile pyramid (uploaded to DigitalOcean Spaces, not shipped in build)
+/dist-map-tiles/
+
 # intellij idea
 .idea
 
