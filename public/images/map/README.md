@@ -33,28 +33,91 @@ schema (`{ id, resource, purity, x, y, z }`).
 
 ## Coordinate calibration
 
-The map is treated as a 2048x2048 logical coordinate space (unrelated
-to the tile pyramid's pixel resolution, see next section), framed so
-that the playable Satisfactory world fills the canvas. The
-world-to-image transform lives in
-[`src/map/coords.ts`](../../../src/map/coords.ts) and treats the
-playable area as a 750,000 cm square:
+The whole pipeline (game coords → Leaflet LatLng → screen pixels →
+tile indices) is driven by a small number of constants in
+[`src/map/coords.ts`](../../../src/map/coords.ts). The ASCII diagram
+below summarises how the three spaces line up.
 
-- `X_MIN = -324,700`, `X_MAX = 425,300`
-- `Y_MIN = -375,000`, `Y_MAX = 375,000`
+```
+Game world (cm)              Leaflet CRS.Simple             Pixel / tile space
+(Unreal axes)                (LatLng, y-up)                 (Leaflet zoom 0)
 
-The Y axis is flipped when projecting to image pixels so that the
-in-game compass north (`+Y`) is at the top of the image, matching the
-convention used by the source dataset and the wiki render. These
-constants come from the same heatmap project and have been verified
-against the wiki's known resource node counts (e.g. 127 Iron Ore
-nodes, 62 Coal nodes, 94 Limestone nodes).
+  +Y = north (top)             lat =  0         top         pixel_y =  0   tile y = 0
+   │                            │                            │
+   ├──                         ─┤                           ─┤
+   │                            │                            │
+  -Y = south (bottom)           lat = -IMAGE_SIZE bottom     pixel_y = IMAGE_SIZE
+                                                                   tile y = IMAGE_SIZE/256 - 1
 
-The 16384 upscale preserves the original framing exactly (same crop,
-same aspect), so these constants do not change. **If you swap the
-source image for a render with different framing, re-tune the world
-bounds in `coords.ts`** so resource node markers land on the right
-biomes.
+  -X = west (left)              lng =  0          left       pixel_x =  0      tile x = 0
+  +X = east (right)             lng =  IMAGE_SIZE right      pixel_x = IMAGE_SIZE
+                                                                   tile x = IMAGE_SIZE/256 - 1
+```
+
+### Game → Leaflet LatLng
+
+The **playable area** is a 750,000 cm square in Unreal units:
+
+- `WORLD_X_MIN = -324,700`, `WORLD_X_MAX = 425,300` (west → east)
+- `WORLD_Y_MIN = -375,000`, `WORLD_Y_MAX = 375,000` (south → north)
+
+(Constants derived from
+[`Hirashi3630/satisfactory_node_heatmap`](https://github.com/Hirashi3630/satisfactory_node_heatmap)
+and verified against known node counts, e.g. 127 Iron Ore, 62 Coal,
+94 Limestone.)
+
+`gameToLatLng(gameX, gameY)` linearly maps that rectangle onto the
+Leaflet image bounds `[[-IMAGE_SIZE, 0], [0, IMAGE_SIZE]]`:
+
+- `lng = ((gameX - WORLD_X_MIN) / X_RANGE) * IMAGE_SIZE`
+  → `0` at west, `IMAGE_SIZE` at east.
+- `lat = ((gameY - WORLD_Y_MIN) / Y_RANGE) * IMAGE_SIZE - IMAGE_SIZE`
+  → `-IMAGE_SIZE` at south, `0` at north.
+
+### Why `lat` goes negative southward
+
+Leaflet `CRS.Simple` uses a **y-up** convention (see the
+[official CRS.Simple example](https://leafletjs.com/examples/crs-simple/crs-simple.html)),
+while XYZ tile pyramids (produced by `gdal2tiles.py --xyz`) use the
+**y-down** convention with `y = 0` at the top.
+
+If the map's top edge sat at positive lat, CRS.Simple would project it
+to a *negative* pixel-y (because its default transformation is
+`(1, 0, -1, 0)`), which in turn would make `TileLayer` compute
+*negative* tile y indices (requests like `/3/5/-4.webp`, all 404). Put
+north at `lat = 0` and south at `lat = -IMAGE_SIZE` and pixel-y stays
+in `[0, IMAGE_SIZE]` over the image → tile y indices land in
+`[0, IMAGE_SIZE / 256)`, exactly what the pyramid on disk serves.
+
+### Leaflet zoom ↔ tile pyramid zoom
+
+`IMAGE_SIZE` (currently `2048`) is only a **logical coordinate space**;
+it is decoupled from the tile pyramid's pixel resolution. The link is
+[`TILE_ZOOM_OFFSET`](../../../src/map/coords.ts): the source image is
+16384 px, the logical space is 2048 units, and `16384 / 2048 = 8 = 2³`,
+so Leaflet zoom `N` asks the tile layer for pyramid zoom `N + 3`.
+
+| Leaflet zoom | Image displayed (px) | Tile URL zoom | Tiles per side |
+|---|---|---|---|
+| −3 (MIN_ZOOM) | 256  | 0 | 1   |
+| −1 (DEFAULT)  | 1024 | 2 | 4   |
+|  0            | 2048 | 3 | 8   |
+| +3 (MAX_ZOOM) | 16384 | 6 | 64  |
+
+`IMAGE_SIZE` could be set to any value (e.g. `16384` to match the
+source 1:1, in which case you'd shift min/max/default zoom and the
+offset accordingly). `2048` is kept because the resource-node
+calibration was tuned against that size.
+
+### Swapping the source image
+
+If you replace the source with a render that has a **different
+framing** (different crop of the world), re-tune the `WORLD_*` bounds
+so markers land on the right biomes. If you only change the
+**resolution** (e.g. a new 32k upscale), adjust `TILE_ZOOM_OFFSET` and
+the Leaflet zoom range instead; the `WORLD_*` bounds stay the same.
+The current 16384 upscale preserves the original framing of
+`world-map-5k.png`, so no re-tuning was needed.
 
 ## Tile pyramid + CDN
 

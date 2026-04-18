@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useMemo } from 'react';
-import { ImageOverlay, MapContainer } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import { useShallowStore } from '@/core/zustand';
 import {
   getWorldResourceNodes,
@@ -13,11 +13,19 @@ import {
   IMAGE_BOUNDS,
   MAX_ZOOM,
   MIN_ZOOM,
+  TILE_ZOOM_OFFSET,
 } from './coords';
 import { MapSelectionSummary } from './MapSelectionSummary';
 import { ResourceMarkersLayer } from './ResourceMarkersLayer';
 import { NO_GAME_USED_NODES_KEY } from './store/mapSlice';
 import classes from './WorldMapView.module.css';
+
+const TILES_BASE_URL = import.meta.env.VITE_MAP_TILES_BASE_URL;
+if (!TILES_BASE_URL) {
+  throw new Error(
+    'VITE_MAP_TILES_BASE_URL is required (see public/images/map/README.md)',
+  );
+}
 
 export interface WorldMapViewProps {
   gameId?: string | null;
@@ -67,13 +75,14 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
         minZoom={MIN_ZOOM}
         maxZoom={MAX_ZOOM}
         maxBounds={IMAGE_BOUNDS}
-        maxBoundsViscosity={1}
         attributionControl={false}
         className={classes.map}
       >
-        <ImageOverlay
-          url="/images/map/world-map-5k.png"
-          bounds={IMAGE_BOUNDS}
+        <TileLayer
+          url={`${TILES_BASE_URL}/{z}/{x}/{y}.webp`}
+          tileSize={256}
+          noWrap
+          zoomOffset={TILE_ZOOM_OFFSET}
         />
         <ResourceMarkersLayer
           nodes={filteredNodes}
