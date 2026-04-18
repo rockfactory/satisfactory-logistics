@@ -35,7 +35,6 @@ import {
 import { WorldResourcesList } from '@/recipes/WorldResources';
 import classes from './MapFiltersPanel.module.css';
 import { getPurityColor, getPurityLabel } from './markerIcons';
-import { NO_GAME_USED_NODES_KEY } from './store/mapSlice';
 
 const PURITY_SHORT: Record<Purity, string> = {
   impure: 'I',
@@ -52,16 +51,12 @@ const PURITY_SHORT: Record<Purity, string> = {
 const EMPTY_USED_NODES: readonly string[] = [];
 /** Stable fallback for `resourceFilters` when the slice hasn't rehydrated yet. */
 const EMPTY_RESOURCE_FILTERS: Record<string, Purity[]> = {};
-/** Stable fallback for the per-game used-node map in mid-rehydrate states. */
-const EMPTY_USED_BY_GAME: Record<string, string[]> = {};
 /** Stable fallback for collectible visibility before rehydrate finishes. */
 const EMPTY_COLLECTIBLE_VISIBILITY: Record<CollectibleType, boolean> = (() => {
   const visibility = {} as Record<CollectibleType, boolean>;
   for (const type of COLLECTIBLE_TYPES) visibility[type] = true;
   return visibility;
 })();
-/** Stable fallback for collected-by-game map. */
-const EMPTY_COLLECTED_BY_GAME: Record<string, string[]> = {};
 /** Empty list mirror of {@link EMPTY_USED_NODES} for collectibles. */
 const EMPTY_COLLECTED_LIST: readonly string[] = [];
 
@@ -95,22 +90,17 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
     collectedForGame,
   } = useShallowStore(state => {
     const mapState = state.map;
-    const usedByGame = mapState?.usedNodesByGame ?? EMPTY_USED_BY_GAME;
-    const collectedByGame =
-      mapState?.collectedByGame ?? EMPTY_COLLECTED_BY_GAME;
+    const game = gameId ? state.games.games[gameId] : null;
     return {
       resourceFilters: mapState?.resourceFilters ?? EMPTY_RESOURCE_FILTERS,
       hideUsedNodes: mapState?.hideUsedNodes ?? false,
-      usedNodesForGame:
-        usedByGame[gameId ?? NO_GAME_USED_NODES_KEY] ?? EMPTY_USED_NODES,
+      usedNodesForGame: game?.usedNodes ?? EMPTY_USED_NODES,
       sumMode: state.mapSelection?.sumMode ?? false,
       selectedCount: state.mapSelection?.selectedNodeIds.length ?? 0,
       collectibleVisibility:
         mapState?.collectibleVisibility ?? EMPTY_COLLECTIBLE_VISIBILITY,
       hideCollectedCollectibles: mapState?.hideCollectedCollectibles ?? false,
-      collectedForGame:
-        collectedByGame[gameId ?? NO_GAME_USED_NODES_KEY] ??
-        EMPTY_COLLECTED_LIST,
+      collectedForGame: game?.collectedItems ?? EMPTY_COLLECTED_LIST,
     };
   });
   const toggleResourcePurity = useStore(state => state.toggleResourcePurity);
@@ -120,7 +110,7 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
   );
   const setOnlyPurity = useStore(state => state.setOnlyPurity);
   const setHideUsedNodes = useStore(state => state.setHideUsedNodes);
-  const clearUsedNodes = useStore(state => state.clearUsedNodes);
+  const clearGameUsedNodes = useStore(state => state.clearGameUsedNodes);
   const resetMapFilters = useStore(state => state.resetMapFilters);
   const setSumMode = useStore(state => state.setSumMode);
   const clearSelection = useStore(state => state.clearSelection);
@@ -131,8 +121,8 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
   const setHideCollectedCollectibles = useStore(
     state => state.setHideCollectedCollectibles,
   );
-  const clearCollectedCollectibles = useStore(
-    state => state.clearCollectedCollectibles,
+  const clearGameCollectedItems = useStore(
+    state => state.clearGameCollectedItems,
   );
 
   const allNodes = useMemo(() => getWorldResourceNodes(gameId), [gameId]);
@@ -286,7 +276,7 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
             size="compact-xs"
             justify="flex-start"
             className={classes.inlineAction}
-            onClick={() => clearUsedNodes(gameId ?? null)}
+            onClick={() => clearGameUsedNodes(gameId ?? null)}
           >
             Clear {usedNodesCount} used mark{usedNodesCount === 1 ? '' : 's'}
           </Button>
@@ -487,7 +477,7 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
                 color="gray"
                 size="compact-xs"
                 px={6}
-                onClick={() => clearCollectedCollectibles(gameId ?? null)}
+                onClick={() => clearGameCollectedItems(gameId ?? null)}
               >
                 Clear
               </Button>

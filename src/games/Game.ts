@@ -12,6 +12,19 @@ export interface Game {
   allowedBuildings?: string[];
   collapsedFactoriesIds?: string[];
   notes?: JSONContent | null;
+  /**
+   * Map page: ids of resource nodes the player has marked as "used"
+   * (i.e. they already built a miner on it). Lives on the game so it
+   * syncs and saves alongside factories/notes/etc.
+   */
+  usedNodes?: string[];
+  /**
+   * Map page: ids of world collectibles (slugs, sloops, hard drives, …)
+   * the player has picked up. Stored alongside {@link usedNodes} for
+   * the same sync/save reasons; kept separate because the semantics
+   * differ (one-time pickup vs. permanent placement).
+   */
+  collectedItems?: string[];
   // Only if saved
   savedId?: string;
   shareToken?: string | null;

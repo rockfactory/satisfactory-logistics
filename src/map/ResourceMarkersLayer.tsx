@@ -23,7 +23,7 @@ export interface ResourceMarkersLayerProps {
   /** Ids of nodes the player has marked as "used" in the current game. */
   usedNodes: Set<string>;
   /**
-   * Currently selected game id, forwarded to the `toggleNodeUsed`
+   * Currently selected game id, forwarded to the `toggleGameUsedNode`
    * action so used-state is scoped per game.
    */
   gameId: string | null;
@@ -270,7 +270,7 @@ export function ResourceMarkersLayer({
       event.stopPropagation();
 
       if (action === 'toggle-used') {
-        useStore.getState().toggleNodeUsed(gameId, nodeId);
+        useStore.getState().toggleGameUsedNode(gameId, nodeId);
       } else if (action === 'toggle-selected') {
         useStore.getState().toggleNodeSelected(nodeId);
       } else {

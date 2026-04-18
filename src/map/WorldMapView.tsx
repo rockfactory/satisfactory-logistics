@@ -23,7 +23,6 @@ import {
 import { MapSelectionSummary } from './MapSelectionSummary';
 import { ResourceMarkersLayer } from './ResourceMarkersLayer';
 import { ShareUrlSync } from './ShareUrlSync';
-import { NO_GAME_USED_NODES_KEY } from './store/mapSlice';
 import classes from './WorldMapView.module.css';
 
 const DEFAULT_TILES_BASE_URL =
@@ -56,16 +55,12 @@ export interface WorldMapViewProps {
 const EMPTY_USED_NODES: readonly string[] = [];
 /** Stable fallback for `resourceFilters` when the slice hasn't rehydrated yet. */
 const EMPTY_RESOURCE_FILTERS: Record<string, Purity[]> = {};
-/** Stable fallback for the per-game used-node map in mid-rehydrate states. */
-const EMPTY_USED_BY_GAME: Record<string, string[]> = {};
 /** Stable fallback for collectible visibility before rehydrate finishes. */
 const EMPTY_COLLECTIBLE_VISIBILITY: Record<CollectibleType, boolean> = (() => {
   const visibility = {} as Record<CollectibleType, boolean>;
   for (const type of COLLECTIBLE_TYPES) visibility[type] = true;
   return visibility;
 })();
-/** Stable fallback for the per-game collected map. */
-const EMPTY_COLLECTED_BY_GAME: Record<string, string[]> = {};
 /** Stable empty list mirror of `EMPTY_USED_NODES` for collectibles. */
 const EMPTY_COLLECTED_LIST: readonly string[] = [];
 
@@ -111,21 +106,16 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
     collectedList,
   } = useShallowStore(state => {
     const mapState = state.map;
-    const usedByGame = mapState?.usedNodesByGame ?? EMPTY_USED_BY_GAME;
-    const collectedByGame =
-      mapState?.collectedByGame ?? EMPTY_COLLECTED_BY_GAME;
+    const game = gameId ? state.games.games[gameId] : null;
     return {
       resourceFilters: mapState?.resourceFilters ?? EMPTY_RESOURCE_FILTERS,
       hideUsedNodes: mapState?.hideUsedNodes ?? false,
-      usedNodesList:
-        usedByGame[gameId ?? NO_GAME_USED_NODES_KEY] ?? EMPTY_USED_NODES,
+      usedNodesList: game?.usedNodes ?? EMPTY_USED_NODES,
       sumMode: state.mapSelection?.sumMode ?? false,
       collectibleVisibility:
         mapState?.collectibleVisibility ?? EMPTY_COLLECTIBLE_VISIBILITY,
       hideCollectedCollectibles: mapState?.hideCollectedCollectibles ?? false,
-      collectedList:
-        collectedByGame[gameId ?? NO_GAME_USED_NODES_KEY] ??
-        EMPTY_COLLECTED_LIST,
+      collectedList: game?.collectedItems ?? EMPTY_COLLECTED_LIST,
     };
   });
 

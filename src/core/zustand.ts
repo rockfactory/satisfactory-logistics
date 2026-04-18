@@ -66,7 +66,7 @@ export const useStore = create(
     persist(slicesWithActions, {
       name: 'zustand:persist',
       partialize: state => omit(state, ['gameSave', 'peers', 'mapSelection']),
-      version: 7,
+      version: 8,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
       ),
@@ -74,9 +74,8 @@ export const useStore = create(
         logger.info('Rehydrated storage');
         if (state) {
           // Backfill any missing map-slice fields. Earlier shapes of
-          // this slice shipped without `usedNodesByGame` /
-          // `resourceFilters` / `hideUsedNodes` /
-          // `collectibleVisibility` / `collectedByGame` /
+          // this slice shipped without `resourceFilters` /
+          // `hideUsedNodes` / `collectibleVisibility` /
           // `hideCollectedCollectibles`, and zustand's default shallow
           // merge leaves those stale shapes as-is on rehydrate.
           const mapState = (state as unknown as { map?: Partial<MapSlice> })
@@ -85,8 +84,6 @@ export const useStore = create(
             const defaults = initialMapSliceState();
             if (!mapState.resourceFilters)
               mapState.resourceFilters = defaults.resourceFilters;
-            if (!mapState.usedNodesByGame)
-              mapState.usedNodesByGame = defaults.usedNodesByGame;
             if (typeof mapState.hideUsedNodes !== 'boolean')
               mapState.hideUsedNodes = defaults.hideUsedNodes;
             if (!mapState.collectibleVisibility) {
@@ -106,8 +103,6 @@ export const useStore = create(
                 }
               }
             }
-            if (!mapState.collectedByGame)
-              mapState.collectedByGame = defaults.collectedByGame;
             if (typeof mapState.hideCollectedCollectibles !== 'boolean')
               mapState.hideCollectedCollectibles =
                 defaults.hideCollectedCollectibles;
@@ -176,11 +171,12 @@ export const useStore = create(
           logger.log(
             'Migrating from version 5 to 6 [add collectibles to map slice]',
           );
-          // v6 introduces `collectibleVisibility`, `collectedByGame`,
-          // and `hideCollectedCollectibles` on the map slice. Backfill
+          // v6 introduced `collectibleVisibility` and
+          // `hideCollectedCollectibles` on the map slice. Backfill
           // them while keeping the player's existing resource filters
-          // and used-node marks intact — those are real choices we
-          // don't want to reset.
+          // intact — those are real choices we don't want to reset.
+          // (Earlier revisions also seeded `collectedByGame` here; v8
+          // removed that field entirely so we no longer touch it.)
           const defaults = initialMapSliceState();
           const previous = (state as { map?: Partial<MapSlice> }).map;
           return {
@@ -191,8 +187,6 @@ export const useStore = create(
               collectibleVisibility:
                 previous?.collectibleVisibility ??
                 defaults.collectibleVisibility,
-              collectedByGame:
-                previous?.collectedByGame ?? defaults.collectedByGame,
               hideCollectedCollectibles:
                 typeof previous?.hideCollectedCollectibles === 'boolean'
                   ? previous.hideCollectedCollectibles
@@ -220,6 +214,31 @@ export const useStore = create(
               collectibleVisibility: defaults.collectibleVisibility,
             },
           };
+        }
+
+        if (version === 7) {
+          logger.log(
+            'Migrating from version 7 to 8 [used/collected marks moved onto Game]',
+          );
+          // v8 moves per-game node "used" and collectible "collected"
+          // marks off the map slice and onto each Game (so they sync
+          // and save with the game). Existing local-only marks are
+          // intentionally dropped — they were view-state in practice
+          // and most users hadn't accumulated meaningful sets yet.
+          const previous = (state as { map?: Partial<MapSlice> }).map;
+          if (previous) {
+            const next = { ...previous } as Partial<MapSlice> & {
+              usedNodesByGame?: unknown;
+              collectedByGame?: unknown;
+            };
+            delete next.usedNodesByGame;
+            delete next.collectedByGame;
+            return {
+              ...(state as any),
+              map: next,
+            };
+          }
+          return state;
         }
 
         return state;

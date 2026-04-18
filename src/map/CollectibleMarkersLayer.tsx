@@ -18,8 +18,8 @@ export interface CollectibleMarkersLayerProps {
    */
   collectedIds: Set<string>;
   /**
-   * Currently selected game id, forwarded to
-   * `toggleCollectibleCollected` so collected-state is scoped per game.
+   * Currently selected game id, forwarded to `toggleGameCollectedItem`
+   * so collected-state is scoped per game.
    */
   gameId: string | null;
 }
@@ -225,7 +225,7 @@ export function CollectibleMarkersLayer({
       event.preventDefault();
       event.stopPropagation();
 
-      useStore.getState().toggleCollectibleCollected(gameId, id);
+      useStore.getState().toggleGameCollectedItem(gameId, id);
       repaintMarker(id);
     };
 

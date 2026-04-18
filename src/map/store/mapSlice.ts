@@ -6,13 +6,6 @@ import {
 import { PURITIES, type Purity } from '@/recipes/WorldResourceNodes';
 import { WorldResourcesList } from '@/recipes/WorldResources';
 
-/**
- * Used when the player hasn't selected a game yet. Lets us still
- * persist their "used node" decisions without dropping them on the
- * floor.
- */
-export const NO_GAME_USED_NODES_KEY = '_default';
-
 export interface MapSlice {
   /**
    * Per-resource purity filter. The set of visible nodes is the union
@@ -23,15 +16,10 @@ export interface MapSlice {
    */
   resourceFilters: Record<string, Purity[]>;
   /**
-   * Per-game record of node ids the player has marked as "used"
-   * (i.e. they already built a miner on it). Keyed by the selected
-   * game id, falling back to {@link NO_GAME_USED_NODES_KEY}.
-   */
-  usedNodesByGame: Record<string, string[]>;
-  /**
    * When true, used nodes are dropped from the map render entirely.
    * When false, they're rendered with a faded/checkmark variant.
-   * Persists across games.
+   * Persists across games — it's a view preference, not a per-game
+   * value (the marks themselves live on each {@link Game}).
    */
   hideUsedNodes: boolean;
   /**
@@ -43,17 +31,9 @@ export interface MapSlice {
    */
   collectibleVisibility: Record<CollectibleType, boolean>;
   /**
-   * Per-game record of collectible ids the player has marked as
-   * "collected". Keyed the same way as {@link usedNodesByGame}.
-   * Intentionally separate from used-node marks because the semantic
-   * is one-time pickup vs. permanent placement, and the player may
-   * want to clear one without the other.
-   */
-  collectedByGame: Record<string, string[]>;
-  /**
    * When true, already-collected collectibles are dropped from the
-   * render entirely. When false, they're shown with a faded
-   * variant (like used nodes). Persists across games.
+   * render entirely. Same view-preference rationale as
+   * {@link hideUsedNodes}.
    */
   hideCollectedCollectibles: boolean;
 }
@@ -86,28 +66,21 @@ function defaultCollectibleVisibility(): Record<CollectibleType, boolean> {
  */
 export const initialMapSliceState = (): MapSlice => ({
   resourceFilters: defaultResourceFilters(),
-  usedNodesByGame: {},
   hideUsedNodes: false,
   collectibleVisibility: defaultCollectibleVisibility(),
-  collectedByGame: {},
   hideCollectedCollectibles: false,
 });
-
-function gameKey(gameId?: string | null): string {
-  return gameId ?? NO_GAME_USED_NODES_KEY;
-}
 
 /**
  * Ensures the slice has every expected field before an action mutates
  * it. Older persisted stores from this feature's development cycles
- * had only the old keys (`selectedResources` / `selectedPurities`) and
- * the zustand persist middleware's shallow merge leaves the slice in
- * that stale shape on rehydrate. Backfilling here keeps actions safe
- * regardless of where the slice came from.
+ * had only a subset of keys and the zustand persist middleware's
+ * shallow merge leaves the slice in that stale shape on rehydrate.
+ * Backfilling here keeps actions safe regardless of where the slice
+ * came from.
  */
 function ensureMapSliceShape(state: MapSlice): void {
   if (!state.resourceFilters) state.resourceFilters = defaultResourceFilters();
-  if (!state.usedNodesByGame) state.usedNodesByGame = {};
   if (typeof state.hideUsedNodes !== 'boolean') state.hideUsedNodes = false;
   if (!state.collectibleVisibility) {
     state.collectibleVisibility = defaultCollectibleVisibility();
@@ -121,7 +94,6 @@ function ensureMapSliceShape(state: MapSlice): void {
       }
     }
   }
-  if (!state.collectedByGame) state.collectedByGame = {};
   if (typeof state.hideCollectedCollectibles !== 'boolean') {
     state.hideCollectedCollectibles = false;
   }
@@ -219,31 +191,6 @@ export const mapSlice = createSlice({
       }
       state.resourceFilters = next;
     },
-    /** Marks or unmarks a node id as used in the given game. */
-    toggleNodeUsed:
-      (gameId: string | null | undefined, nodeId: string) => state => {
-        ensureMapSliceShape(state);
-        const key = gameKey(gameId);
-        const current = state.usedNodesByGame[key] ?? [];
-        const idx = current.indexOf(nodeId);
-        if (idx === -1) {
-          state.usedNodesByGame[key] = [...current, nodeId];
-        } else {
-          const next = [...current];
-          next.splice(idx, 1);
-          if (next.length === 0) {
-            delete state.usedNodesByGame[key];
-          } else {
-            state.usedNodesByGame[key] = next;
-          }
-        }
-      },
-    /** Drops every used-node mark for the given game. */
-    clearUsedNodes: (gameId: string | null | undefined) => state => {
-      ensureMapSliceShape(state);
-      const key = gameKey(gameId);
-      delete state.usedNodesByGame[key];
-    },
     setHideUsedNodes: (hide: boolean) => state => {
       ensureMapSliceShape(state);
       state.hideUsedNodes = hide;
@@ -275,41 +222,15 @@ export const mapSlice = createSlice({
           state.collectibleVisibility[type] = !!visibility[type];
         }
       },
-    /** Marks or unmarks a collectible id as collected in the given game. */
-    toggleCollectibleCollected:
-      (gameId: string | null | undefined, collectibleId: string) => state => {
-        ensureMapSliceShape(state);
-        const key = gameKey(gameId);
-        const current = state.collectedByGame[key] ?? [];
-        const idx = current.indexOf(collectibleId);
-        if (idx === -1) {
-          state.collectedByGame[key] = [...current, collectibleId];
-        } else {
-          const next = [...current];
-          next.splice(idx, 1);
-          if (next.length === 0) {
-            delete state.collectedByGame[key];
-          } else {
-            state.collectedByGame[key] = next;
-          }
-        }
-      },
-    /** Drops every collected mark for the given game. */
-    clearCollectedCollectibles:
-      (gameId: string | null | undefined) => state => {
-        ensureMapSliceShape(state);
-        const key = gameKey(gameId);
-        delete state.collectedByGame[key];
-      },
     setHideCollectedCollectibles: (hide: boolean) => state => {
       ensureMapSliceShape(state);
       state.hideCollectedCollectibles = hide;
     },
     /**
      * Resets only the visibility filters back to "show everything".
-     * Used-node marks and collected collectibles are intentionally
-     * preserved — those represent real player choices, not display
-     * preferences.
+     * Used-node marks and collected collectibles live on each
+     * {@link Game} now and are intentionally untouched here — those
+     * represent real player choices, not display preferences.
      */
     resetMapFilters: () => state => {
       ensureMapSliceShape(state);
@@ -321,23 +242,3 @@ export const mapSlice = createSlice({
     },
   },
 });
-
-/** Reads the used-node id list for the given game, defaulting to []. */
-export function getUsedNodesForGame(
-  state: MapSlice,
-  gameId?: string | null,
-): string[] {
-  return state.usedNodesByGame[gameKey(gameId)] ?? [];
-}
-
-/**
- * Reads the collected-collectible id list for the given game,
- * defaulting to []. Mirrors {@link getUsedNodesForGame} so consumers
- * have a stable accessor regardless of where the slice came from.
- */
-export function getCollectedForGame(
-  state: MapSlice,
-  gameId?: string | null,
-): string[] {
-  return state.collectedByGame[gameKey(gameId)] ?? [];
-}

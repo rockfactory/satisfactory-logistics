@@ -143,6 +143,68 @@ export const gamesSlice = createSlice({
           game.collapsedFactoriesIds.push(factoryId);
         }
       },
+    /**
+     * Map page: marks (or unmarks) a resource node id as "used" on
+     * the given game. No-op when no game id is provided so the map
+     * UI stays safe when called before the user picks a game.
+     */
+    toggleGameUsedNode:
+      (gameId: string | null | undefined, nodeId: string) => state => {
+        if (!gameId) return;
+        const game = state.games[gameId];
+        if (!game) return;
+        const current = game.usedNodes ?? [];
+        const idx = current.indexOf(nodeId);
+        if (idx === -1) {
+          game.usedNodes = [...current, nodeId];
+        } else {
+          const next = [...current];
+          next.splice(idx, 1);
+          if (next.length === 0) {
+            delete game.usedNodes;
+          } else {
+            game.usedNodes = next;
+          }
+        }
+      },
+    /** Map page: drops every used-node mark for the given game. */
+    clearGameUsedNodes: (gameId: string | null | undefined) => state => {
+      if (!gameId) return;
+      const game = state.games[gameId];
+      if (!game) return;
+      delete game.usedNodes;
+    },
+    /**
+     * Map page: marks (or unmarks) a collectible id as "collected" on
+     * the given game. Mirrors {@link toggleGameUsedNode} so the two
+     * map-side toggles behave identically.
+     */
+    toggleGameCollectedItem:
+      (gameId: string | null | undefined, itemId: string) => state => {
+        if (!gameId) return;
+        const game = state.games[gameId];
+        if (!game) return;
+        const current = game.collectedItems ?? [];
+        const idx = current.indexOf(itemId);
+        if (idx === -1) {
+          game.collectedItems = [...current, itemId];
+        } else {
+          const next = [...current];
+          next.splice(idx, 1);
+          if (next.length === 0) {
+            delete game.collectedItems;
+          } else {
+            game.collectedItems = next;
+          }
+        }
+      },
+    /** Map page: drops every collected mark for the given game. */
+    clearGameCollectedItems: (gameId: string | null | undefined) => state => {
+      if (!gameId) return;
+      const game = state.games[gameId];
+      if (!game) return;
+      delete game.collectedItems;
+    },
     toggleAllFactoriesExpanded: (expanded?: boolean) => state => {
       const game = state.games[state.selected ?? ''];
       if (!game) return;

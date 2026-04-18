@@ -6,8 +6,8 @@ import RawWorldCollectibles from './WorldCollectibles.json';
  * "track" the player completes once per game (the slugs/sloops/spheres
  * stack across the run, but the location itself is one-and-done).
  *
- * The keys here are stable storage tokens — they're persisted in the
- * Zustand `collectedByGame` map, so don't rename without a migration.
+ * The keys here are stable storage tokens — they're persisted on each
+ * `Game.collectedItems` list, so don't rename without a migration.
  */
 export type CollectibleType =
   | 'slugMk1'
