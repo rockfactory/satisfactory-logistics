@@ -19,12 +19,11 @@ import { ResourceMarkersLayer } from './ResourceMarkersLayer';
 import { NO_GAME_USED_NODES_KEY } from './store/mapSlice';
 import classes from './WorldMapView.module.css';
 
-const TILES_BASE_URL = import.meta.env.VITE_MAP_TILES_BASE_URL;
-if (!TILES_BASE_URL) {
-  throw new Error(
-    'VITE_MAP_TILES_BASE_URL is required (see public/images/map/README.md)',
-  );
-}
+const DEFAULT_TILES_BASE_URL =
+  'https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v1';
+
+const TILES_BASE_URL =
+  import.meta.env.VITE_MAP_TILES_BASE_URL ?? DEFAULT_TILES_BASE_URL;
 
 export interface WorldMapViewProps {
   gameId?: string | null;

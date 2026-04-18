@@ -126,8 +126,10 @@ tiles, XYZ numbering) hosted on **DigitalOcean Spaces**:
 - Published path (current version): `/map/v1/{z}/{x}/{y}.webp`
 - Full URL example: `https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v1/0/0/0.webp`
 
-The app reads the base URL from the Vite env variable
-`VITE_MAP_TILES_BASE_URL` (see [Environment configuration](#environment-configuration)).
+This is the default base URL baked into
+[`WorldMapView.tsx`](../../../src/map/WorldMapView.tsx); it can be
+overridden via the `VITE_MAP_TILES_BASE_URL` env var (see
+[Environment configuration](#environment-configuration)).
 
 ### 1. Regenerate the tile pyramid
 
@@ -230,13 +232,15 @@ If the Space is being provisioned from scratch:
 
 ## Environment configuration
 
-The app reads the CDN base URL from Vite at build-time:
+The production CDN URL is the default, so no env var is required. To
+point the app at a different CDN (dev bucket, new `/v2/` rollout,
+mirror, etc.) set `VITE_MAP_TILES_BASE_URL` at build-time:
 
-- **Local dev**: add to `.env` (gitignored):
+- **Local dev**: add to `.env` (gitignored), then restart Vite. Example:
   ```
-  VITE_MAP_TILES_BASE_URL=https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v1
+  VITE_MAP_TILES_BASE_URL=https://<some-other-cdn>/map/v1
   ```
-- **Production (Render.com)**: set the same key/value in the static
-  site's Environment settings. Because it is consumed at build-time
+- **Production (Render.com)**: set the key in the static site's
+  Environment settings. Because it is consumed at build-time
   (`import.meta.env.*`), it must be set **before** the build that
   ships the change.
