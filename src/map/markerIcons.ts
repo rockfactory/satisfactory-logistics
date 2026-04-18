@@ -106,9 +106,9 @@ function buildPinIcon({
 
 const RESOURCE_MARKER_WIDTH = 36;
 // The pin head is a circle (center 18,18 r≈14.14), whose inscribed square
-// is ~20 units. We size the icon a bit smaller so the corners stay clear of
-// the curved edge and the halo border has room to breathe.
-const RESOURCE_INNER_SIZE = 16;
+// is ~20 units. We size the icon just under that so the corners stay clear
+// of the curved edge and the stroke has a sliver of room.
+const RESOURCE_INNER_SIZE = 18;
 
 export interface ResourceMarkerIconOptions {
   /**
