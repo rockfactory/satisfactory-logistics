@@ -62,74 +62,76 @@ export interface CollectibleTypeMeta {
   description: string;
 }
 
-export const COLLECTIBLE_TYPE_META: Record<CollectibleType, CollectibleTypeMeta> =
-  {
-    slugMk1: {
-      type: 'slugMk1',
-      displayName: 'Blue Power Slug',
-      shortName: 'Mk1 Slug',
-      iconImagePath: '/images/game/power-slug-green_64.png',
-      color: '#3498db',
-      description: 'Refines into 1 Power Shard at a Constructor.',
-    },
-    slugMk2: {
-      type: 'slugMk2',
-      displayName: 'Yellow Power Slug',
-      shortName: 'Mk2 Slug',
-      iconImagePath: '/images/game/power-slug-yellow_64.png',
-      color: '#f1c40f',
-      description: 'Refines into 2 Power Shards at a Constructor.',
-    },
-    slugMk3: {
-      type: 'slugMk3',
-      displayName: 'Purple Power Slug',
-      shortName: 'Mk3 Slug',
-      iconImagePath: '/images/game/power-slug-purple_64.png',
-      color: '#9b59b6',
-      description: 'Refines into 5 Power Shards at a Constructor.',
-    },
-    somersloop: {
-      type: 'somersloop',
-      displayName: 'Somersloop',
-      shortName: 'Sloop',
-      iconImagePath: '/images/game/wat-1_64.png',
-      color: '#e91e63',
-      description: 'Doubles output of any Manufacturer when slotted in.',
-    },
-    mercerSphere: {
-      type: 'mercerSphere',
-      displayName: 'Mercer Sphere',
-      shortName: 'Sphere',
-      iconImagePath: '/images/game/wat-2_64.png',
-      color: '#1abc9c',
-      description: 'Powers the Dimensional Depot at a Mercer Sphere shrine.',
-    },
-    hardDrive: {
-      type: 'hardDrive',
-      displayName: 'Hard Drive (Drop Pod)',
-      shortName: 'HD',
-      iconName: 'IconPackage',
-      color: '#e67e22',
-      description:
-        'Crashed drop pod. Open with the listed cost to claim a hard drive for the MAM.',
-    },
-    audioTape: {
-      type: 'audioTape',
-      displayName: 'Audio Tape',
-      shortName: 'Tape',
-      iconName: 'IconDeviceAudioTape',
-      color: '#95a5a6',
-      description: 'Adds a song to your boombox playlist.',
-    },
-    customizationUnlock: {
-      type: 'customizationUnlock',
-      displayName: 'Customization Unlock',
-      shortName: 'Cosmetic',
-      iconName: 'IconBrush',
-      color: '#bdc3c7',
-      description: 'Unlocks a cosmetic / paint job.',
-    },
-  };
+export const COLLECTIBLE_TYPE_META: Record<
+  CollectibleType,
+  CollectibleTypeMeta
+> = {
+  slugMk1: {
+    type: 'slugMk1',
+    displayName: 'Blue Power Slug',
+    shortName: 'Mk1 Slug',
+    iconImagePath: '/images/game/power-slug-green_64.png',
+    color: '#3498db',
+    description: 'Refines into 1 Power Shard at a Constructor.',
+  },
+  slugMk2: {
+    type: 'slugMk2',
+    displayName: 'Yellow Power Slug',
+    shortName: 'Mk2 Slug',
+    iconImagePath: '/images/game/power-slug-yellow_64.png',
+    color: '#f1c40f',
+    description: 'Refines into 2 Power Shards at a Constructor.',
+  },
+  slugMk3: {
+    type: 'slugMk3',
+    displayName: 'Purple Power Slug',
+    shortName: 'Mk3 Slug',
+    iconImagePath: '/images/game/power-slug-purple_64.png',
+    color: '#9b59b6',
+    description: 'Refines into 5 Power Shards at a Constructor.',
+  },
+  somersloop: {
+    type: 'somersloop',
+    displayName: 'Somersloop',
+    shortName: 'Sloop',
+    iconImagePath: '/images/game/wat-1_64.png',
+    color: '#e91e63',
+    description: 'Doubles output of any Manufacturer when slotted in.',
+  },
+  mercerSphere: {
+    type: 'mercerSphere',
+    displayName: 'Mercer Sphere',
+    shortName: 'Sphere',
+    iconImagePath: '/images/game/wat-2_64.png',
+    color: '#1abc9c',
+    description: 'Powers the Dimensional Depot at a Mercer Sphere shrine.',
+  },
+  hardDrive: {
+    type: 'hardDrive',
+    displayName: 'Hard Drive (Drop Pod)',
+    shortName: 'HD',
+    iconName: 'IconPackage',
+    color: '#e67e22',
+    description:
+      'Crashed drop pod. Open with the listed cost to claim a hard drive for the MAM.',
+  },
+  audioTape: {
+    type: 'audioTape',
+    displayName: 'Audio Tape',
+    shortName: 'Tape',
+    iconName: 'IconDeviceAudioTape',
+    color: '#95a5a6',
+    description: 'Adds a song to your boombox playlist.',
+  },
+  customizationUnlock: {
+    type: 'customizationUnlock',
+    displayName: 'Customization Unlock',
+    shortName: 'Cosmetic',
+    iconName: 'IconBrush',
+    color: '#bdc3c7',
+    description: 'Unlocks a cosmetic / paint job.',
+  },
+};
 
 /**
  * Item cost the player has to pay to open a drop pod. Mirrors UE's
@@ -244,17 +246,18 @@ export function getWorldCollectibles(
  * Total counts per type across the static dataset, for the filter
  * panel's "X of Y collected" rendering. Computed once at module load.
  */
-export const COLLECTIBLE_TOTALS_BY_TYPE: Record<CollectibleType, number> = (() => {
-  const totals: Record<CollectibleType, number> = {
-    slugMk1: 0,
-    slugMk2: 0,
-    slugMk3: 0,
-    somersloop: 0,
-    mercerSphere: 0,
-    hardDrive: 0,
-    audioTape: 0,
-    customizationUnlock: 0,
-  };
-  for (const c of StaticWorldCollectibles) totals[c.type] += 1;
-  return totals;
-})();
+export const COLLECTIBLE_TOTALS_BY_TYPE: Record<CollectibleType, number> =
+  (() => {
+    const totals: Record<CollectibleType, number> = {
+      slugMk1: 0,
+      slugMk2: 0,
+      slugMk3: 0,
+      somersloop: 0,
+      mercerSphere: 0,
+      hardDrive: 0,
+      audioTape: 0,
+      customizationUnlock: 0,
+    };
+    for (const c of StaticWorldCollectibles) totals[c.type] += 1;
+    return totals;
+  })();
