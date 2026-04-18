@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useMemo } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { useEffect, useMemo } from 'react';
+import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { useShallowStore } from '@/core/zustand';
 import {
   COLLECTIBLE_TYPES,
@@ -56,6 +56,37 @@ const EMPTY_COLLECTIBLE_VISIBILITY: Record<CollectibleType, boolean> = (() => {
 const EMPTY_COLLECTED_BY_GAME: Record<string, string[]> = {};
 /** Stable empty list mirror of `EMPTY_USED_NODES` for collectibles. */
 const EMPTY_COLLECTED_LIST: readonly string[] = [];
+
+/** Marker scale at the min and max zoom levels; linearly interpolated between. */
+const MARKER_SCALE_AT_MIN_ZOOM = 0.75;
+const MARKER_SCALE_AT_MAX_ZOOM = 1.75;
+
+/**
+ * Writes `--marker-zoom-scale` on the Leaflet container so `.map-marker`
+ * can scale its transform with the current zoom level — markers grow as
+ * you zoom in, shrink as you zoom out.
+ */
+function MarkerZoomScaleController() {
+  const map = useMap();
+  useEffect(() => {
+    const container = map.getContainer();
+    const apply = () => {
+      const zoomRange = MAX_ZOOM - MIN_ZOOM || 1;
+      const t = (map.getZoom() - MIN_ZOOM) / zoomRange;
+      const scale =
+        MARKER_SCALE_AT_MIN_ZOOM +
+        t * (MARKER_SCALE_AT_MAX_ZOOM - MARKER_SCALE_AT_MIN_ZOOM);
+      container.style.setProperty('--marker-zoom-scale', scale.toFixed(3));
+    };
+    apply();
+    map.on('zoomend', apply);
+    return () => {
+      map.off('zoomend', apply);
+      container.style.removeProperty('--marker-zoom-scale');
+    };
+  }, [map]);
+  return null;
+}
 
 export function WorldMapView({ gameId }: WorldMapViewProps) {
   const {
@@ -126,6 +157,7 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
           minZoom={MIN_ZOOM}
           maxZoom={MAX_ZOOM}
         />
+        <MarkerZoomScaleController />
         <ResourceMarkersLayer
           nodes={filteredNodes}
           usedNodes={usedNodes}

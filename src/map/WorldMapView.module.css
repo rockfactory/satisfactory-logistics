@@ -53,98 +53,56 @@
 
 :global(.map-marker) {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: rgba(20, 21, 23, 0.9);
-  border: 2px solid var(--ring, #f1c40f);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  width: 36px;
+  height: 40px;
+  /* Tip sits at y=38 of a 40-tall box (95%). Scaling from here keeps the
+     pin point pinned to the map coordinate regardless of zoom scale. */
+  transform-origin: 50% 95%;
+  transform: scale(var(--marker-zoom-scale, 1));
+  /* `filter` is intentionally not in the transition list: it forces a per-
+     frame raster of every marker, and at hundreds of nodes the cost shows
+     up as visible lag. Used/selected variant changes are click-driven and
+     read fine without a tween. */
   transition:
     transform 120ms ease-out,
     opacity 120ms ease-out;
 }
 
 :global(.map-marker:hover) {
-  transform: scale(1.1);
+  transform: scale(calc(var(--marker-zoom-scale, 1) * 1.1));
 }
 
-:global(.map-marker__inner) {
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-/*
- * Pin tip below each marker. Built from two stacked CSS triangles
- * (border + before) so the outer one matches the ring color and the
- * inner one fills with the marker background, giving the same
- * "outlined disc" feel as the ring itself. The whole element sits
- * just outside the ring's bottom edge so it visually points at the
- * actual `iconAnchor` coordinate.
- */
-:global(.map-marker__pointer) {
+:global(.map-marker__shape) {
   position: absolute;
-  bottom: -7px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 7px solid var(--ring, #f1c40f);
-  pointer-events: none;
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
-}
-
-:global(.map-marker__pointer)::before {
-  content: "";
-  position: absolute;
-  top: -8px;
-  left: -3px;
-  width: 0;
-  height: 0;
-  border-left: 3px solid transparent;
-  border-right: 3px solid transparent;
-  border-top: 5px solid rgba(20, 21, 23, 0.9);
-}
-
-:global(.map-marker__pointer--sm) {
-  bottom: -6px;
-  border-left-width: 4px;
-  border-right-width: 4px;
-  border-top-width: 6px;
-}
-
-:global(.map-marker__pointer--sm)::before {
-  top: -7px;
-  left: -2px;
-  border-left-width: 2px;
-  border-right-width: 2px;
-  border-top-width: 4px;
-}
-
-/*
- * Collectibles share the same circular ring + checkmark visual as
- * resource nodes, but use a slightly thinner border so the smaller
- * 28px footprint still feels balanced. The SVG variant centers the
- * inline icon and lets `currentColor` flow through to the strokes.
- */
-:global(.map-marker--collectible) {
-  border-width: 2px;
-  background-color: rgba(20, 21, 23, 0.95);
-}
-
-:global(.map-marker__inner--svg) {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-:global(.map-marker__inner--svg svg) {
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   display: block;
+  overflow: visible;
+}
+
+:global(.map-marker__shape-path) {
+  /* Background = ring color tinted toward white so the dark game icons stay
+     readable on top while still telegraphing the node's purity at a glance. */
+  fill: color-mix(in srgb, var(--ring, #f1c40f) 65%, white 35%);
+  /* Border = even lighter tint, painted as a native stroke. We initially
+     used 4 stacked drop-shadows (the "fake stroke" trick) for a softer
+     halo look, but at hundreds of markers the filter cost lagged the map.
+     Stroke is GPU-fast and visually close. */
+  stroke: color-mix(in srgb, var(--ring, #f1c40f) 25%, white 75%);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* Collectibles' game-art icons (slugs, sloops, WATs) are themselves
+   saturated in the ring color, so they vanish on the resource fill. We
+   push the fill close to white and crank the stroke back to the full
+   ring color so the type still reads at a glance. */
+:global(.map-marker--collectible) :global(.map-marker__shape-path) {
+  fill: color-mix(in srgb, var(--ring, #f1c40f) 20%, white 80%);
+  stroke: var(--ring, #f1c40f);
 }
 
 :global(.map-marker--used) {
@@ -172,21 +130,22 @@
   font-weight: 700;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   pointer-events: none;
+  z-index: 2;
 }
 
 :global(.map-marker--selected) {
-  outline: 3px solid var(--mantine-color-violet-5);
-  outline-offset: 1px;
   opacity: 1;
-  filter: none;
-  box-shadow:
-    0 0 0 3px rgba(139, 92, 246, 0.35),
-    0 1px 4px rgba(0, 0, 0, 0.6);
   z-index: 1000;
 }
 
+/* Selected variant repaints the pin border with a thicker violet stroke
+   instead of a drop-shadow halo, again to stay off the filter pipeline. */
+:global(.map-marker--selected) :global(.map-marker__shape-path) {
+  stroke: var(--mantine-color-violet-5);
+  stroke-width: 2.5;
+}
+
 :global(.map-marker--used.map-marker--selected) {
-  /* Selected wins visually; we still want the check badge though. */
   opacity: 0.85;
   filter: grayscale(0.3);
 }
@@ -206,6 +165,7 @@
   font-weight: 700;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   pointer-events: none;
+  z-index: 2;
 }
 
 /* Popup styling */

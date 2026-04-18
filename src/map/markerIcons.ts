@@ -6,10 +6,12 @@ import {
 } from '@/recipes/WorldCollectibles';
 import type { Purity } from '@/recipes/WorldResourceNodes';
 
+// Open Color shade 5 (also Mantine defaults): red-5 / yellow-5 / green-5.
+// See https://yeun.github.io/open-color/
 const PURITY_RING: Record<Purity, string> = {
-  impure: '#e74c3c',
-  normal: '#f1c40f',
-  pure: '#2ecc71',
+  impure: '#fa5252',
+  normal: '#ffd43b',
+  pure: '#51cf66',
 };
 
 const PURITY_LABEL: Record<Purity, string> = {
@@ -26,16 +28,87 @@ export function getPurityLabel(purity: Purity): string {
   return PURITY_LABEL[purity];
 }
 
-const ICON_SIZE = 36;
-const INNER_SIZE = 26;
+// Pin silhouette: circle (center 18,18 r=10*sqrt(2) ≈ 14.14) tangent to the
+// two straight sides that meet at the tip (18,38) forming a right angle. The
+// tangent points are (8,28) and (28,28), so the transition from arc to line
+// is mathematically smooth (no seam) and the tip angle is exactly 90°.
+const PIN_VIEW_WIDTH = 36;
+const PIN_VIEW_HEIGHT = 40;
+const PIN_HEAD_CENTER = 18;
+const PIN_TIP_Y = 38;
+const PIN_PATH = 'M 18 38 L 28 28 A 14.1421 14.1421 0 1 0 8 28 Z';
+
+interface PinIconParams {
+  /** Outer SVG width in pixels; height is scaled from the pin viewBox. */
+  width: number;
+  /** Square icon edge (in viewBox units) painted inside the pin head. */
+  innerSize: number;
+  /** Path to the raster icon, when not rendering an inline glyph. */
+  iconHref?: string;
+  /** Inline SVG body to embed inside the pin head instead of an image. */
+  inlineSvg?: string;
+  ringColor: string;
+  classes: string[];
+  badgesHtml: string;
+}
+
 /**
- * Height of the downward "pin tip" rendered under each marker. The
- * marker icon visually points at this many pixels below the ring's
- * bottom edge, so we anchor markers `ICON_SIZE + POINTER_HEIGHT`
- * below their top-left corner instead of centering them. This lets
- * the player tell exactly where on the world a node sits.
+ * Centralizes the pin SVG markup so resources and collectibles share
+ * the exact same silhouette (just at different sizes). The icon is
+ * rendered as an `<image>` (or nested `<svg>`) inside the same SVG as
+ * the path, so it is guaranteed to stack above the pin without
+ * fighting CSS stacking contexts.
  */
-const POINTER_HEIGHT = 6;
+function buildPinIcon({
+  width,
+  innerSize,
+  iconHref,
+  inlineSvg,
+  ringColor,
+  classes,
+  badgesHtml,
+}: PinIconParams): L.DivIcon {
+  const scale = width / PIN_VIEW_WIDTH;
+  const height = Math.round(PIN_VIEW_HEIGHT * scale);
+  const tipY = Math.round(PIN_TIP_Y * scale);
+  // Center the icon on the pin head circle (whose center is at
+  // (PIN_HEAD_CENTER, PIN_HEAD_CENTER) in viewBox units).
+  const iconOffset = PIN_HEAD_CENTER - innerSize / 2;
+
+  let iconNode = '';
+  if (iconHref) {
+    iconNode = `<image class="map-marker__icon" href="${iconHref}" x="${iconOffset}" y="${iconOffset}" width="${innerSize}" height="${innerSize}" preserveAspectRatio="xMidYMid meet" />`;
+  } else if (inlineSvg) {
+    // Tabler "outline" defaults: 24x24 viewBox, 2px stroke, no fill,
+    // round caps + joins. `color` flows through to any path that uses
+    // `currentColor` (the audio-tape reels, for example).
+    iconNode = `<svg class="map-marker__icon" x="${iconOffset}" y="${iconOffset}" width="${innerSize}" height="${innerSize}" viewBox="0 0 24 24" color="${ringColor}" stroke="${ringColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">${inlineSvg}</svg>`;
+  }
+
+  const html = `
+    <div class="${classes.join(' ')}" style="--ring:${ringColor}; width:${width}px; height:${height}px;">
+      <svg class="map-marker__shape" viewBox="0 0 ${PIN_VIEW_WIDTH} ${PIN_VIEW_HEIGHT}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path class="map-marker__shape-path" d="${PIN_PATH}" />
+        ${iconNode}
+      </svg>
+      ${badgesHtml}
+    </div>
+  `;
+
+  return L.divIcon({
+    html,
+    className: 'map-marker-wrapper',
+    iconSize: [width, height],
+    iconAnchor: [width / 2, tipY],
+    popupAnchor: [0, -tipY],
+  });
+}
+
+const RESOURCE_MARKER_WIDTH = 36;
+// The pin head is a circle (center 18,18 r≈14.14), whose inscribed square
+// is ~20 units. We size the icon a bit smaller so the corners stay clear of
+// the curved edge and the halo border has room to breathe.
+const RESOURCE_INNER_SIZE = 16;
 
 export interface ResourceMarkerIconOptions {
   /**
@@ -44,18 +117,17 @@ export interface ResourceMarkerIconOptions {
    */
   used?: boolean;
   /**
-   * When true, the marker gets a purple "selected for comparison"
-   * ring around the purity ring, distinct from both plain and used
-   * variants. Used + selected combine (dim + ring + check).
+   * When true, the marker gets a violet "selected for comparison"
+   * halo, distinct from both plain and used variants. Used + selected
+   * combine (dim + halo + check).
    */
   selected?: boolean;
 }
 
 /**
- * Builds a Leaflet `divIcon` that displays the resource's in-game icon
- * inside a purity-tinted ring. We draw the ring and image with raw HTML
- * so all markers can share a single React-free path (Leaflet manages
- * marker DOM directly).
+ * Builds a Leaflet `divIcon` for a resource node. The marker is a
+ * pin-shaped SVG silhouette (gray fill, purity-tinted stroke) with the
+ * resource's in-game icon centered in its head.
  */
 export function getResourceMarkerIcon(
   resource: string,
@@ -74,32 +146,21 @@ export function getResourceMarkerIcon(
   const selectedBadge = options.selected
     ? '<div class="map-marker__selected-badge" aria-hidden="true">✦</div>'
     : '';
-  const totalHeight = ICON_SIZE + POINTER_HEIGHT;
-  const html = `
-    <div class="${classes.join(' ')}" style="--ring:${ringColor}; width:${ICON_SIZE}px; height:${ICON_SIZE}px;">
-      <div class="map-marker__inner" style="width:${INNER_SIZE}px; height:${INNER_SIZE}px; background-image:url('${imagePath}');"></div>
-      <div class="map-marker__pointer" aria-hidden="true"></div>
-      ${usedBadge}
-      ${selectedBadge}
-    </div>
-  `;
-  return L.divIcon({
-    html,
-    className: 'map-marker-wrapper',
-    iconSize: [ICON_SIZE, totalHeight],
-    iconAnchor: [ICON_SIZE / 2, totalHeight],
-    popupAnchor: [0, -totalHeight],
+  return buildPinIcon({
+    width: RESOURCE_MARKER_WIDTH,
+    innerSize: RESOURCE_INNER_SIZE,
+    iconHref: imagePath,
+    ringColor,
+    classes,
+    badgesHtml: `${usedBadge}${selectedBadge}`,
   });
 }
 
-/**
- * Slightly smaller markers for collectibles, so several collectibles
- * clustered around the same biome don't crowd out the resource nodes.
- */
-const COLLECTIBLE_ICON_SIZE = 28;
+// Slightly smaller markers for collectibles, so several collectibles
+// clustered around the same biome don't crowd out the resource nodes,
+// but big enough that the (mostly small) Tabler glyphs stay legible.
+const COLLECTIBLE_MARKER_WIDTH = 32;
 const COLLECTIBLE_INNER_SIZE = 18;
-/** Smaller pointer matched to the collectible icon footprint. */
-const COLLECTIBLE_POINTER_HEIGHT = 5;
 
 /**
  * Inline SVG fallbacks for collectible types whose game art isn't
@@ -143,26 +204,6 @@ const TABLER_ICON_PATHS: Record<string, string> = {
     .join(''),
 };
 
-function buildTablerSvg(name: string, color: string): string {
-  const paths = TABLER_ICON_PATHS[name];
-  if (!paths) return '';
-  // Tabler "outline" defaults: 24x24 viewBox, 2px stroke, no fill,
-  // round caps + joins.
-  return `
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      stroke="${color}"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      fill="none"
-      width="100%"
-      height="100%"
-    >${paths}</svg>
-  `;
-}
-
 export interface CollectibleMarkerIconOptions {
   /** Render the marker dimmed + checkmarked (already collected). */
   collected?: boolean;
@@ -171,9 +212,9 @@ export interface CollectibleMarkerIconOptions {
 /**
  * Builds a Leaflet `divIcon` for a collectible. Mirrors
  * {@link getResourceMarkerIcon} so the visual language stays
- * consistent — circular ring around an icon — but uses the
- * collectible's themed color instead of a purity color, and falls
- * back to an inline SVG when the collectible has no bundled game art.
+ * consistent (pin silhouette + icon), but uses the collectible's
+ * themed color instead of a purity color and falls back to an inline
+ * Tabler glyph when the collectible has no bundled game art.
  *
  * The "selected" / sum-mode variant is intentionally absent:
  * collectibles aren't part of the sum-mode flow (they have no
@@ -191,26 +232,23 @@ export function getCollectibleMarkerIcon(
     ? '<div class="map-marker__used-badge" aria-hidden="true">✓</div>'
     : '';
 
-  const innerHtml = meta.iconImagePath
-    ? `<div class="map-marker__inner" style="width:${COLLECTIBLE_INNER_SIZE}px; height:${COLLECTIBLE_INNER_SIZE}px; background-image:url('${meta.iconImagePath}');"></div>`
-    : `<div class="map-marker__inner map-marker__inner--svg" style="width:${COLLECTIBLE_INNER_SIZE}px; height:${COLLECTIBLE_INNER_SIZE}px; color:${ringColor};">${buildTablerSvg(
-        meta.iconName ?? '',
-        ringColor,
-      )}</div>`;
+  if (meta.iconImagePath) {
+    return buildPinIcon({
+      width: COLLECTIBLE_MARKER_WIDTH,
+      innerSize: COLLECTIBLE_INNER_SIZE,
+      iconHref: meta.iconImagePath,
+      ringColor,
+      classes,
+      badgesHtml: collectedBadge,
+    });
+  }
 
-  const totalHeight = COLLECTIBLE_ICON_SIZE + COLLECTIBLE_POINTER_HEIGHT;
-  const html = `
-    <div class="${classes.join(' ')}" style="--ring:${ringColor}; width:${COLLECTIBLE_ICON_SIZE}px; height:${COLLECTIBLE_ICON_SIZE}px;">
-      ${innerHtml}
-      <div class="map-marker__pointer map-marker__pointer--sm" aria-hidden="true"></div>
-      ${collectedBadge}
-    </div>
-  `;
-  return L.divIcon({
-    html,
-    className: 'map-marker-wrapper',
-    iconSize: [COLLECTIBLE_ICON_SIZE, totalHeight],
-    iconAnchor: [COLLECTIBLE_ICON_SIZE / 2, totalHeight],
-    popupAnchor: [0, -totalHeight],
+  return buildPinIcon({
+    width: COLLECTIBLE_MARKER_WIDTH,
+    innerSize: COLLECTIBLE_INNER_SIZE,
+    inlineSvg: TABLER_ICON_PATHS[meta.iconName ?? ''] ?? '',
+    ringColor,
+    classes,
+    badgesHtml: collectedBadge,
   });
 }
