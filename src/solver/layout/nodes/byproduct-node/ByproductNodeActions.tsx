@@ -7,7 +7,7 @@ import {
   Stack,
   Tooltip,
 } from '@mantine/core';
-import { IconDeviceFloppy, IconTrash } from '@tabler/icons-react';
+import { IconDeviceFloppy, IconPlus, IconTrash } from '@tabler/icons-react';
 import { produce, type WritableDraft } from 'immer';
 import { isEqual } from 'lodash';
 import { useState } from 'react';
@@ -56,8 +56,27 @@ export function ByproductNodeActions(props: IByproductNodeActionsProps) {
       .updateFactoryOutput(solverId!, outputIndex!, temporaryOutput);
   };
 
+  const handleSaveAsOutput = () => {
+    useStore.getState().addFactoryOutput(solverId!, {
+      resource: resource.id,
+      amount: value,
+      objective: 'default',
+    });
+  };
+
   return (
     <Stack gap="sm" align="flex-start">
+      {!output && (
+        <Tooltip label="Save as output">
+          <ActionIcon
+            color="blue"
+            variant="outline"
+            onClick={handleSaveAsOutput}
+          >
+            <IconPlus size={16} />
+          </ActionIcon>
+        </Tooltip>
+      )}
       {output && (
         <>
           <Group justify="space-between" w="100%">
