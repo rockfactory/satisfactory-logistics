@@ -71,6 +71,12 @@ export function getAllRecipesForItem(item: string) {
   return recipes;
 }
 
+export function getAllRecipesForIngredient(item: string) {
+  return AllFactoryRecipes.filter(r =>
+    r.ingredients.some(i => i.resource === item),
+  );
+}
+
 export function getRecipeProductPerBuilding(
   recipe: FactoryRecipe,
   productId: string,

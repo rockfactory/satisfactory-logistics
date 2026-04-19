@@ -36,7 +36,6 @@ export const ByproductNode = memo((props: IByproductNodeProps) => {
 
   return (
     <Popover
-      disabled={isByproduct}
       opened={(isHovering || props.selected) && !props.dragging}
       transitionProps={{}}
       hideDetached={false}
@@ -44,7 +43,12 @@ export const ByproductNode = memo((props: IByproductNodeProps) => {
       <Popover.Target>
         <Box
           p="sm"
-          style={{ borderRadius: 4 }}
+          style={{
+            borderRadius: 4,
+            border: props.selected
+              ? '1px solid var(--mantine-color-gray-3)'
+              : '1px solid transparent',
+          }}
           bg="teal.9"
           onMouseEnter={open}
           onMouseLeave={close}
@@ -93,8 +97,9 @@ export const ByproductNode = memo((props: IByproductNodeProps) => {
             ) : (
               <Stack>
                 <Text fs="italic" size="sm">
-                  Click on the node to see available actions, like editing
-                  amount.
+                  {isByproduct
+                    ? 'Click on the node to pick a recipe that processes this byproduct further.'
+                    : 'Click on the node to edit this output or pick a recipe to process it further.'}
                 </Text>
               </Stack>
             )}
