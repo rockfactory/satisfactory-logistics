@@ -153,25 +153,40 @@ function parseBuilding(building, index, buildingDescriptorsImages, buildCostMap)
     pipeline: parseBuildingsPipeline(building),
     extractor: parseBuildingExtractor(building),
     buildCost: buildCostMap[building.ClassName] ?? [],
-    powerGenerator: building.mFuel
-      ? {
-          fuels: building.mFuel.map(fuel => {
-            return {
-              resource: fuel.mFuelClass,
-              supplementalResource: fuel.mSupplementalFuelClass,
-              byproductResource: fuel.mByproductClass,
-              byproductAmount: fuel.mByproductAmount
-                ? parseFloat(fuel.mByproductAmount)
-                : undefined,
-            };
-          }),
-          powerProduction: parseFloat(building.mPowerProduction),
-          supplementalLoadAmount: parseFloat(building.mSupplementalLoadAmount),
-          fuelLoadAmount: parseFloat(building.mFuelLoadAmount),
-          requiresSupplementalResource:
-            building.mRequiresSupplementalResource === 'True',
-        }
+    powerGenerator: parsePowerGenerator(building),
+  };
+}
+
+function parsePowerGenerator(building) {
+  if (!building.NativeClass?.includes('FGBuildableGenerator')) return undefined;
+
+  const fuels = (building.mFuel ?? []).map(fuel => ({
+    resource: fuel.mFuelClass,
+    supplementalResource: fuel.mSupplementalFuelClass,
+    byproductResource: fuel.mByproductClass,
+    byproductAmount: fuel.mByproductAmount
+      ? parseFloat(fuel.mByproductAmount)
       : undefined,
+  }));
+
+  const basePowerProduction = parseFloat(building.mPowerProduction);
+  const variableFactor = building.mVariablePowerProductionFactor
+    ? parseFloat(building.mVariablePowerProductionFactor)
+    : 0;
+  // Fuel-less generators (e.g. Geothermal) report mPowerProduction=0 and
+  // model output via mVariablePowerProductionFactor (the cycle average).
+  const powerProduction =
+    basePowerProduction > 0 ? basePowerProduction : variableFactor;
+
+  return {
+    fuels,
+    powerProduction,
+    supplementalLoadAmount: parseFloat(
+      building.mSupplementalLoadAmount ?? '0',
+    ),
+    fuelLoadAmount: parseFloat(building.mFuelLoadAmount ?? '0'),
+    requiresSupplementalResource:
+      building.mRequiresSupplementalResource === 'True',
   };
 }
 
