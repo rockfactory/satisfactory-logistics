@@ -109,16 +109,19 @@ export const solverFactoriesActions = createActions({
       }
     },
 
-  addFactoryOutput: (factoryId: string) => state => {
-    state.factories.factories[factoryId]?.outputs?.push({
-      resource: null,
-      amount: 0,
-    });
-    // state.solvers.instances[factoryId]?.request.outputs.push({
-    //   resource: null,
-    //   amount: 0,
-    // });
-  },
+  addFactoryOutput:
+    (factoryId: string, output?: Partial<FactoryOutput>) => state => {
+      state.factories.factories[factoryId]?.outputs?.push({
+        resource: output?.resource ?? null,
+        amount: output?.amount ?? 0,
+        ...(output?.objective !== undefined
+          ? { objective: output.objective }
+          : {}),
+        ...(output?.somersloops !== undefined
+          ? { somersloops: output.somersloops }
+          : {}),
+      });
+    },
   removeFactoryOutput: (factoryId: string, outputIndex: number) => state => {
     state.factories.factories[factoryId]?.outputs?.splice(outputIndex, 1);
     // state.solvers.instances[factoryId]?.request.outputs.splice(outputIndex, 1);
