@@ -14,6 +14,8 @@ export function parseBuildings(docsJson: any) {
       nativeClass.NativeClass?.includes('FGBuildableResourceExtractor') ||
       nativeClass.NativeClass?.includes('FGBuildableFrackingExtractor') ||
       nativeClass.NativeClass?.includes('FGBuildablePipeline') ||
+      nativeClass.NativeClass?.includes('FGBuildablePolePipe') ||
+      nativeClass.NativeClass?.includes('FGBuildablePoleStackable') ||
       nativeClass.NativeClass?.includes('FGBuildableConveyorBelt')
     )
       return nativeClass.Classes.map(c => ({

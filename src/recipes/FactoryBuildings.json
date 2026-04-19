@@ -42,7 +42,7 @@
     "id": "Build_PipelinePump_C",
     "name": "Pipeline Pump Mk.1",
     "index": 1,
-    "description": "Attaches to a Pipeline to apply Head Lift.\r\nMaximum Head Lift: 20 m\r\n(Allows fluids to be transported 20 m upwards.)\r\n\r\nNOTE: Arrows and holograms when building indicate Head Lift direction.\r\nNOTE: Head Lift does not stack, so space between Pumps is recommended.",
+    "description": "Can be attached to a Pipeline to apply Head Lift.\r\nMaximum Head Lift: 20 m\r\n(Allows fluids to be transported 20 meters upwards.)\r\n\r\nNOTE: Arrows and holograms when building indicate Head Lift direction.\r\nNOTE: Head Lift does not stack, so space between Pumps is recommended.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
     "averagePowerConsumption": 4,
@@ -481,154 +481,6 @@
     }
   },
   {
-    "id": "Build_PipelineSupport_C",
-    "name": "Pipeline Support",
-    "index": 12,
-    "description": "Connects Pipeline segments. Support height can be adjusted.\r\nUseful for routing Pipelines more precisely and across long distances.",
-    "minimumPowerConsumption": null,
-    "maximumPowerConsumption": null,
-    "averagePowerConsumption": null,
-    "powerConsumption": null,
-    "powerConsumptionExponent": null,
-    "somersloopPowerConsumptionExponent": null,
-    "somersloopSlots": null,
-    "clearance": {
-      "width": null,
-      "length": null,
-      "height": null
-    },
-    "imagePath": "/images/game/pipeline-support_256.png",
-    "conveyor": null,
-    "pipeline": {
-      "isPipeline": true,
-      "flowRate": null
-    },
-    "extractor": null,
-    "buildCost": [
-      {
-        "resource": "Desc_IronPlate_C",
-        "amount": 2
-      },
-      {
-        "resource": "Desc_Cement_C",
-        "amount": 2
-      }
-    ]
-  },
-  {
-    "id": "Build_PipeSupportStackable_C",
-    "name": "Stackable Pipeline Support",
-    "index": 13,
-    "description": "Supports Pipelines. Can be stacked on other stackable supports.",
-    "minimumPowerConsumption": null,
-    "maximumPowerConsumption": null,
-    "averagePowerConsumption": null,
-    "powerConsumption": null,
-    "powerConsumptionExponent": null,
-    "somersloopPowerConsumptionExponent": null,
-    "somersloopSlots": null,
-    "clearance": {
-      "width": 1,
-      "length": 2.4,
-      "height": 2
-    },
-    "imagePath": "/images/game/stackable-pipeline-support_256.png",
-    "conveyor": null,
-    "pipeline": {
-      "isPipeline": true,
-      "flowRate": null
-    },
-    "extractor": null,
-    "buildCost": [
-      {
-        "resource": "Desc_IronPlate_C",
-        "amount": 4
-      },
-      {
-        "resource": "Desc_IronRod_C",
-        "amount": 2
-      },
-      {
-        "resource": "Desc_Cement_C",
-        "amount": 2
-      }
-    ]
-  },
-  {
-    "id": "Build_HyperPoleStackable_C",
-    "name": "Stackable Hypertube Support",
-    "index": 14,
-    "description": "Supports Hypertubes. Can be stacked on other stackable supports.",
-    "minimumPowerConsumption": null,
-    "maximumPowerConsumption": null,
-    "averagePowerConsumption": null,
-    "powerConsumption": null,
-    "powerConsumptionExponent": null,
-    "somersloopPowerConsumptionExponent": null,
-    "somersloopSlots": null,
-    "clearance": {
-      "width": 1,
-      "length": 2.4,
-      "height": 2
-    },
-    "imagePath": "/images/game/stackable-hypertube-support_256.png",
-    "conveyor": null,
-    "pipeline": {
-      "isPipeline": true,
-      "flowRate": null
-    },
-    "extractor": null,
-    "buildCost": [
-      {
-        "resource": "Desc_IronPlate_C",
-        "amount": 4
-      },
-      {
-        "resource": "Desc_IronRod_C",
-        "amount": 2
-      },
-      {
-        "resource": "Desc_Cement_C",
-        "amount": 2
-      }
-    ]
-  },
-  {
-    "id": "Build_PipeHyperSupport_C",
-    "name": "Hypertube Support",
-    "index": 15,
-    "description": "Supports Hypertubes, allowing them to stretch over longer distances.",
-    "minimumPowerConsumption": null,
-    "maximumPowerConsumption": null,
-    "averagePowerConsumption": null,
-    "powerConsumption": null,
-    "powerConsumptionExponent": null,
-    "somersloopPowerConsumptionExponent": null,
-    "somersloopSlots": null,
-    "clearance": {
-      "width": null,
-      "length": null,
-      "height": null
-    },
-    "imagePath": "/images/game/hypertube-support_256.png",
-    "conveyor": null,
-    "pipeline": {
-      "isPipeline": true,
-      "flowRate": null
-    },
-    "extractor": null,
-    "buildCost": [
-      {
-        "resource": "Desc_IronPlate_C",
-        "amount": 2
-      },
-      {
-        "resource": "Desc_Cement_C",
-        "amount": 2
-      }
-    ]
-  },
-  {
     "id": "Build_Pipeline_C",
     "name": "Pipeline Mk.1",
     "index": 16,
@@ -774,7 +626,7 @@
     "somersloopSlots": 0,
     "clearance": {
       "width": 2.4,
-      "length": 1.5,
+      "length": 2.4,
       "height": 1.5
     },
     "imagePath": "/images/game/pipeline-junction_256.png",
@@ -1164,7 +1016,7 @@
     "id": "Build_OilRefinery_C",
     "name": "Refinery",
     "index": 29,
-    "description": "Refines fluid and/or solid parts into other parts.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nContains both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
+    "description": "Refines fluid and/or solid parts into other parts.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nHas both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
     "averagePowerConsumption": 30,
@@ -1240,7 +1092,7 @@
     "id": "Build_Packager_C",
     "name": "Packager",
     "index": 31,
-    "description": "Packages and unpackages fluids.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nContains both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
+    "description": "Packages and unpackages fluids.\r\nHead Lift: 10 m\r\n(Allows fluids to be transported 10 meters upwards.)\r\n\r\nHas both Conveyor Belt and Pipeline input and output ports so that a wide range of recipes can be automated.",
     "minimumPowerConsumption": null,
     "maximumPowerConsumption": null,
     "averagePowerConsumption": 10,
@@ -1421,6 +1273,38 @@
     ]
   },
   {
+    "id": "Build_PipelineSupport_C",
+    "name": "Pipeline Support",
+    "index": 36,
+    "description": "Connects Pipeline segments. Support height can be adjusted.\r\nUseful for routing Pipelines more precisely and across long distances.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/pipe-pole_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
     "id": "Build_ConstructorMk1_C",
     "name": "Constructor",
     "index": 36,
@@ -1449,6 +1333,38 @@
       {
         "resource": "Desc_Cable_C",
         "amount": 8
+      }
+    ]
+  },
+  {
+    "id": "Build_PipeHyperSupport_C",
+    "name": "Hypertube Support",
+    "index": 37,
+    "description": "Supports Hypertubes, allowing them to stretch over longer distances.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/hyper-tube-pole_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 2
       }
     ]
   },
@@ -1562,6 +1478,78 @@
     ]
   },
   {
+    "id": "Build_PipeSupportStackable_C",
+    "name": "Stackable Pipeline Support",
+    "index": 38,
+    "description": "Supports Pipelines. Can be stacked on other stackable supports.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/pipe-pole-stackable_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 4
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_HyperPoleStackable_C",
+    "name": "Stackable Hypertube Support",
+    "index": 39,
+    "description": "Supports Hypertubes. Can be stacked on other stackable supports.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/hyper-tube-stackable_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 4
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
     "id": "Build_GeneratorGeoThermal_C",
     "name": "Geothermal Generator",
     "index": 39,
@@ -1602,6 +1590,49 @@
       {
         "resource": "Desc_Wire_C",
         "amount": 250
+      }
+    ],
+    "powerGenerator": {
+      "fuels": [],
+      "powerProduction": 200,
+      "supplementalLoadAmount": 0,
+      "fuelLoadAmount": 0,
+      "requiresSupplementalResource": false
+    }
+  },
+  {
+    "id": "Build_ConveyorPoleStackable_C",
+    "name": "Stackable Conveyor Pole",
+    "index": 40,
+    "description": "Supports Conveyor Belts. Can be stacked on other stackable supports.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/conveyor-pole-multi_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 2
       }
     ]
   }
