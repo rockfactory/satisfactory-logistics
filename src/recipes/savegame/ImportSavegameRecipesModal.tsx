@@ -14,41 +14,42 @@ import { notifications } from '@mantine/notifications';
 import { IconCloudUpload } from '@tabler/icons-react';
 import { useState } from 'react';
 import type { ParsedSatisfactorySave } from './ParseSavegameMessages';
-import { startSavegameParsing } from './startSavegameParsing';
+import { useSavegameImport } from './useSavegameImport';
 
 export interface IImportSavegameModalProps {
-  onImported?: (save: ParsedSatisfactorySave, asDefault: boolean) => void;
+  /**
+   * Fires after a save parses successfully. Receives the two
+   * checkbox choices so the caller can:
+   *  - honour `asDefault` to seed the current game's recipe list.
+   *  - honour `markUsedNodes` to replace the current game's
+   *    used-node marks with the save-derived set.
+   */
+  onImported?: (
+    save: ParsedSatisfactorySave,
+    asDefault: boolean,
+    markUsedNodes: boolean,
+  ) => void;
 }
 
 export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
   const [opened, { toggle, close }] = useDisclosure();
-  const [importing, setImporting] = useState(false);
   const [asDefault, setAsDefault] = useState(true);
-  const [progress, setProgress] = useState({
-    value: 0,
-    message: undefined as string | undefined,
-  });
+  const [markUsedNodes, setMarkUsedNodes] = useState(true);
+  const { importing, progress, importFile } = useSavegameImport();
 
   const handleImport = (file: File) => {
-    setImporting(true);
-    setProgress({ value: 0, message: undefined });
-    startSavegameParsing(file, (progress, message) => {
-      setProgress({ value: progress, message });
-    })
+    importFile(file)
       .then(save => {
-        // console.log('Parsed:', save.json);
-        setImporting(false);
         notifications.show({
           title: 'Savegame imported',
           message: 'Savegame recipes have been imported successfully',
           color: 'green',
         });
-        props.onImported?.(save, asDefault);
+        props.onImported?.(save, asDefault, markUsedNodes);
         close();
       })
       .catch(e => {
         console.error('Error while parsing:', e.message);
-        setImporting(false);
         notifications.show({
           title: 'Error while parsing savegame',
           message: e.message,
@@ -82,6 +83,13 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
             onChange={e => setAsDefault(e.currentTarget.checked)}
             label="Set as Game default"
             description="If checked, imported recipes will be set as default for this game: new factories will have these recipes selected by default"
+          />
+
+          <Checkbox
+            checked={markUsedNodes}
+            onChange={e => setMarkUsedNodes(e.currentTarget.checked)}
+            label="Mark nodes with miners as used on the map"
+            description="Replaces any existing used-node marks for this game with the ones found in the save."
           />
 
           <FileButton

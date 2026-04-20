@@ -48,6 +48,7 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
   const handleSetRecipesFromImport = (
     save: ParsedSatisfactorySave,
     asDefault: boolean,
+    markUsedNodes: boolean,
   ) => {
     const availableRecipes = new Set(save.availableRecipes);
     const saveRecipes = AllFactoryRecipes.filter(
@@ -61,6 +62,11 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
 
     if (asDefault) {
       useStore.getState().setGameAllowedRecipes(undefined, saveRecipes);
+    }
+
+    if (markUsedNodes) {
+      const selectedGameId = useStore.getState().games.selected;
+      useStore.getState().setGameUsedNodes(selectedGameId, save.usedNodeIds);
     }
   };
 

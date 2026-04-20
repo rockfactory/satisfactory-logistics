@@ -1,16 +1,20 @@
 import {
   Badge,
   Button,
+  FileButton,
   Group,
+  Progress,
   Stack,
   Switch,
   Text,
   Title,
   Tooltip,
 } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import {
   IconBrush,
   IconCheck,
+  IconCloudUpload,
   IconDeviceAudioTape,
   IconPackage,
   IconRefresh,
@@ -20,6 +24,7 @@ import clsx from 'clsx';
 import { type CSSProperties, type ReactNode, useMemo } from 'react';
 import { useShallowStore, useStore } from '@/core/zustand';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
+import { useSavegameImport } from '@/recipes/savegame/useSavegameImport';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import {
   COLLECTIBLE_TYPE_META,
@@ -111,6 +116,7 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
   const setOnlyPurity = useStore(state => state.setOnlyPurity);
   const setHideUsedNodes = useStore(state => state.setHideUsedNodes);
   const clearGameUsedNodes = useStore(state => state.clearGameUsedNodes);
+  const setGameUsedNodes = useStore(state => state.setGameUsedNodes);
   const resetMapFilters = useStore(state => state.resetMapFilters);
   const setSumMode = useStore(state => state.setSumMode);
   const clearSelection = useStore(state => state.clearSelection);
@@ -124,6 +130,41 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
   const clearGameCollectedItems = useStore(
     state => state.clearGameCollectedItems,
   );
+
+  const { importing, progress, importFile } = useSavegameImport();
+
+  const handleUsedNodesImport = (file: File | null) => {
+    if (!file) return;
+    if (!gameId) {
+      notifications.show({
+        title: 'No game selected',
+        message: 'Create or select a game before importing a save.',
+        color: 'yellow',
+      });
+      return;
+    }
+    importFile(file)
+      .then(save => {
+        setGameUsedNodes(gameId, save.usedNodeIds);
+        const count = save.usedNodeIds.length;
+        notifications.show({
+          title: 'Used nodes imported',
+          message:
+            count === 0
+              ? 'No miners found in the save. Cleared used marks.'
+              : `Marked ${count} node${count === 1 ? '' : 's'} as used from the save.`,
+          color: 'green',
+        });
+      })
+      .catch(e => {
+        console.error('Error while parsing savegame:', e?.message ?? e);
+        notifications.show({
+          title: 'Error while parsing savegame',
+          message: e?.message ?? 'Unknown parser error',
+          color: 'red',
+        });
+      });
+  };
 
   const allNodes = useMemo(() => getWorldResourceNodes(gameId), [gameId]);
   const allCollectibles = useMemo(() => getWorldCollectibles(), []);
@@ -280,6 +321,43 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
           >
             Clear {usedNodesCount} used mark{usedNodesCount === 1 ? '' : 's'}
           </Button>
+        ) : null}
+        <Tooltip
+          label={
+            gameId
+              ? 'Parse a .sav file and replace used-node marks with miners found in it'
+              : 'Select a game to enable save import'
+          }
+          withinPortal
+        >
+          <FileButton
+            onChange={handleUsedNodesImport}
+            accept=".sav"
+            disabled={!gameId || importing}
+          >
+            {fileButtonProps => (
+              <Button
+                {...fileButtonProps}
+                variant="light"
+                size="compact-xs"
+                leftSection={<IconCloudUpload size={13} />}
+                loading={importing}
+                disabled={!gameId || importing}
+              >
+                Import from save
+              </Button>
+            )}
+          </FileButton>
+        </Tooltip>
+        {importing ? (
+          <>
+            <Progress color="orange" value={progress.value * 100} animated />
+            {progress.message ? (
+              <Text size="xs" c="dimmed">
+                {progress.message}
+              </Text>
+            ) : null}
+          </>
         ) : null}
       </Stack>
 

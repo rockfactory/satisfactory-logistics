@@ -175,6 +175,24 @@ export const gamesSlice = createSlice({
       delete game.usedNodes;
     },
     /**
+     * Map page: replaces the used-node marks for the given game with
+     * {@link nodeIds}. Intended for savegame import — the imported set
+     * fully replaces any prior manual marks. An empty list clears the
+     * field so the persisted shape stays clean. Dedupes defensively in
+     * case the caller passed the same id twice.
+     */
+    setGameUsedNodes:
+      (gameId: string | null | undefined, nodeIds: string[]) => state => {
+        if (!gameId) return;
+        const game = state.games[gameId];
+        if (!game) return;
+        if (nodeIds.length === 0) {
+          delete game.usedNodes;
+        } else {
+          game.usedNodes = [...new Set(nodeIds)];
+        }
+      },
+    /**
      * Map page: marks (or unmarks) a collectible id as "collected" on
      * the given game. Mirrors {@link toggleGameUsedNode} so the two
      * map-side toggles behave identically.
