@@ -1,8 +1,8 @@
 import {
   Button,
-  Checkbox,
   Divider,
   FileButton,
+  List,
   Modal,
   Progress,
   Stack,
@@ -10,56 +10,41 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { notifications } from '@mantine/notifications';
 import { IconCloudUpload } from '@tabler/icons-react';
-import { useState } from 'react';
 import type { ParsedSatisfactorySave } from './ParseSavegameMessages';
-import { startSavegameParsing } from './startSavegameParsing';
 
 export interface IImportSavegameModalProps {
-  onImported?: (save: ParsedSatisfactorySave, asDefault: boolean) => void;
+  /** Whether an import is currently running (drives the loading UI). */
+  importing: boolean;
+  /** Progress fraction (0-1) and optional status message. */
+  progress: { value: number; message?: string };
+  /**
+   * Picks the file and runs the import via the parent (which owns
+   * the {@link useSavegameImport} hook). Resolves with the parsed
+   * save on success so the modal knows when to close, or `null` if
+   * the parent aborted (e.g. no game selected).
+   */
+  onImport: (file: File) => Promise<ParsedSatisfactorySave | null>;
 }
 
 export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
   const [opened, { toggle, close }] = useDisclosure();
-  const [importing, setImporting] = useState(false);
-  const [asDefault, setAsDefault] = useState(true);
-  const [progress, setProgress] = useState({
-    value: 0,
-    message: undefined as string | undefined,
-  });
 
   const handleImport = (file: File) => {
-    setImporting(true);
-    setProgress({ value: 0, message: undefined });
-    startSavegameParsing(file, (progress, message) => {
-      setProgress({ value: progress, message });
-    })
+    props
+      .onImport(file)
       .then(save => {
-        // console.log('Parsed:', save.json);
-        setImporting(false);
-        notifications.show({
-          title: 'Savegame imported',
-          message: 'Savegame recipes have been imported successfully',
-          color: 'green',
-        });
-        props.onImported?.(save, asDefault);
-        close();
+        if (save) close();
       })
-      .catch(e => {
-        console.error('Error while parsing:', e.message);
-        setImporting(false);
-        notifications.show({
-          title: 'Error while parsing savegame',
-          message: e.message,
-          color: 'red',
-        });
+      .catch(() => {
+        // Notification surfaced by the parent's hook; keep the modal
+        // open so the user can retry with a different file.
       });
   };
 
   return (
     <>
-      <Tooltip label="Import available recipes from a Savegame">
+      <Tooltip label="Import this game's state from a Satisfactory save file">
         <Button
           data-tutorial-id="recipes-from-savegame"
           onClick={toggle}
@@ -72,17 +57,15 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
       <Modal opened={opened} onClose={close} title="Import Savegame">
         <Stack gap="xs">
           <Text size="sm">
-            Select a savegame file to import available recipes from it.
+            Pick a Satisfactory <code>.sav</code> file. The save is treated as
+            the source of truth for this game and will replace:
           </Text>
+          <List size="sm" withPadding>
+            <List.Item>Available recipes (set as the game default)</List.Item>
+            <List.Item>Used resource nodes on the map</List.Item>
+          </List>
 
           <Divider mt="sm" mb="sm" />
-
-          <Checkbox
-            checked={asDefault}
-            onChange={e => setAsDefault(e.currentTarget.checked)}
-            label="Set as Game default"
-            description="If checked, imported recipes will be set as default for this game: new factories will have these recipes selected by default"
-          />
 
           <FileButton
             onChange={file => {
@@ -94,21 +77,27 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
             }}
             accept=".sav"
           >
-            {props => (
+            {fileButtonProps => (
               <Button
-                {...props}
+                {...fileButtonProps}
                 leftSection={<IconCloudUpload size={16} />}
-                loading={importing}
+                loading={props.importing}
               >
                 Select Savegame
               </Button>
             )}
           </FileButton>
 
-          {importing && (
+          {props.importing && (
             <>
-              <Progress color="orange" value={progress.value * 100} animated />
-              {progress.message && <Text size="sm">{progress.message}</Text>}
+              <Progress
+                color="orange"
+                value={props.progress.value * 100}
+                animated
+              />
+              {props.progress.message && (
+                <Text size="sm">{props.progress.message}</Text>
+              )}
             </>
           )}
         </Stack>

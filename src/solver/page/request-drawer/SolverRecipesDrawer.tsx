@@ -24,7 +24,7 @@ import { useMemo, useState } from 'react';
 import { useStore } from '@/core/zustand';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import { ImportSavegameRecipesModal } from '@/recipes/savegame/ImportSavegameRecipesModal';
-import type { ParsedSatisfactorySave } from '@/recipes/savegame/ParseSavegameMessages';
+import { useSavegameImport } from '@/recipes/savegame/useSavegameImport';
 import {
   usePathSolverInstance,
   useSolverAllowedRecipes,
@@ -40,28 +40,34 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
 
   const allowedRecipes = useSolverAllowedRecipes(instance?.id);
   const [search, setSearch] = useState('');
+  const { importing, progress, importAndApplyToGame } = useSavegameImport();
 
   const areAllSelected = useMemo(() => {
     return allowedRecipes?.length === AllFactoryRecipes.length;
   }, [allowedRecipes]);
 
-  const handleSetRecipesFromImport = (
-    save: ParsedSatisfactorySave,
-    asDefault: boolean,
-  ) => {
-    const availableRecipes = new Set(save.availableRecipes);
+  const handleImport = async (file: File) => {
+    const selectedGameId = useStore.getState().games.selected;
+    // The hook owns the game-side patch (recipes default + used
+    // nodes) and the success / failure notification. The solver
+    // instance lives on a different slice, so its recipe list is
+    // updated here as a follow-up using the parsed save the hook
+    // returns.
+    const result = await importAndApplyToGame(file, selectedGameId, {
+      defaultRecipes: true,
+      usedNodes: true,
+    });
+    if (!result || !instance) return null;
+
+    const availableRecipes = new Set(result.save.availableRecipes);
     const saveRecipes = AllFactoryRecipes.filter(
-      // We should only import recipes that are available in the savegame,
-      // but custom recipes are not directly present in it.
-      // For now, we just import all custom recipes.
+      // Custom recipes aren't in the save format, so they're always
+      // retained alongside the imported set.
       recipe => availableRecipes.has(recipe.id) || recipe.customType != null,
     ).map(recipe => recipe.id);
+    useStore.getState().setAllowedRecipes(instance.id, () => saveRecipes);
 
-    useStore.getState().setAllowedRecipes(instance!.id, () => saveRecipes);
-
-    if (asDefault) {
-      useStore.getState().setGameAllowedRecipes(undefined, saveRecipes);
-    }
+    return result.save;
   };
 
   return (
@@ -209,7 +215,11 @@ export function SolverRecipesDrawer(props: ISolverRecipesDrawerProps) {
             </Menu.Dropdown>
           </Menu>
 
-          <ImportSavegameRecipesModal onImported={handleSetRecipesFromImport} />
+          <ImportSavegameRecipesModal
+            importing={importing}
+            progress={progress}
+            onImport={handleImport}
+          />
         </Group>
       </Portal>
       <SolverRecipesList search={search} solverId={instance?.id} />

@@ -1,3 +1,45 @@
+/*
+ * Root of the Mantine Dropzone wrapping the map. Mantine's default
+ * Dropzone styling paints a dashed border, md padding, and a dark-6
+ * fill; the drop target here should be transparent chrome around
+ * the existing `mapShell`, which supplies the rounded corners,
+ * clipping, and background. This rule strips the defaults while
+ * keeping the 100% fill behaviour so the map still occupies the
+ * full panel.
+ */
+.dropzoneRoot {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: var(--mantine-radius-md);
+  cursor: default;
+}
+
+/* Neutralize the dark-6 background tint Mantine paints on the
+   Dropzone root when files are being dragged over it. Our own
+   dropOverlay inside `mapShell` handles the visual feedback. */
+.dropzoneRoot:where([data-accept]),
+.dropzoneRoot:where([data-reject]) {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+/*
+ * Mantine renders children inside an `inner` wrapper div (the class
+ * Dropzone.inner) which by default has no `height`. Without this
+ * rule, `mapShell`'s `height: 100%` has no definite parent to
+ * resolve against and the map collapses to 0px. Setting the inner
+ * to 100%/100% lets the existing height chain flow through
+ * untouched.
+ */
+.dropzoneInner {
+  width: 100%;
+  height: 100%;
+}
+
 .mapShell {
   position: relative;
   width: 100%;
@@ -42,6 +84,51 @@
   letter-spacing: 0.02em;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
   pointer-events: none;
+}
+
+/* Progress toast shown during a savegame import. Rendered as a
+   sibling of `mapShell` (inside the Dropzone root) rather than a
+   child, so it shares the Dropzone's stacking context with
+   Mantine's LoadingOverlay (default z-index: 400). The 410 value
+   keeps it just above the dimmed backdrop so the user can read the
+   parser status. */
+.importProgress {
+  position: absolute;
+  bottom: 46px;
+  left: 12px;
+  z-index: 410;
+  min-width: 220px;
+  padding: 8px 12px;
+  border-radius: var(--mantine-radius-sm);
+  background-color: rgba(20, 21, 23, 0.92);
+  color: var(--mantine-color-gray-1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+/* Full-area overlay shown while the user is dragging a file over the
+   map. The Dropzone.Accept/Reject slots control when this overlay is
+   rendered at all, so it only ever paints during an active drag. */
+.dropOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  border-radius: var(--mantine-radius-md);
+  background-color: rgba(20, 21, 23, 0.6);
+  color: var(--mantine-color-gray-0);
+  border: 2px dashed var(--mantine-color-teal-5);
+  pointer-events: none;
+  text-align: center;
+}
+
+.dropOverlayReject {
+  border-color: var(--mantine-color-red-5);
+  color: var(--mantine-color-red-1);
+  background-color: rgba(60, 10, 10, 0.55);
 }
 
 /* Marker styling (rendered as raw HTML by Leaflet via divIcon) */

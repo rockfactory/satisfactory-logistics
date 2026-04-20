@@ -1,8 +1,12 @@
+import { Progress, Text } from '@mantine/core';
+import { Dropzone } from '@mantine/dropzone';
+import { notifications } from '@mantine/notifications';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { useShallowStore } from '@/core/zustand';
+import { useSavegameImport } from '@/recipes/savegame/useSavegameImport';
 import {
   COLLECTIBLE_TYPES,
   type CollectibleType,
@@ -95,6 +99,21 @@ function MarkerZoomScaleController() {
   return null;
 }
 
+/**
+ * Mantine forwards an `Accept` object straight to react-dropzone's
+ * `accept` option. Passing the bare `['.sav']` array form would
+ * make react-dropzone validate `.sav` as a MIME type and spam
+ * `Skipped ".sav" because it is not a valid MIME type` warnings on
+ * every drag. Using the object form keys by a real MIME
+ * (`application/octet-stream`, the generic binary type browsers
+ * already report for `.sav`) and lists the extension as the value
+ * — this is the canonical shape and silences the warning while
+ * keeping extension-based matching.
+ */
+const SAVEGAME_ACCEPT = {
+  'application/octet-stream': ['.sav'],
+};
+
 export function WorldMapView({ gameId }: WorldMapViewProps) {
   const {
     resourceFilters,
@@ -139,54 +158,145 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
     });
   }, [collectibleVisibility, hideCollectedCollectibles, collectedIds]);
 
+  const { importing, progress, importAndApplyToGame } = useSavegameImport();
+
+  const handleDroppedSavegame = (files: File[]) => {
+    const file = files[0];
+    if (!file) return;
+    importAndApplyToGame(file, gameId, {
+      defaultRecipes: true,
+      usedNodes: true,
+    }).catch(() => {
+      // Notification surfaced by the hook; nothing else to do here.
+    });
+  };
+
+  const handleRejectedSavegame = () => {
+    notifications.show({
+      title: 'Unsupported file',
+      message: 'Drop a single Satisfactory .sav save file to import it.',
+      color: 'red',
+    });
+  };
+
   return (
-    <div className={classes.mapShell} data-tutorial-id="map-canvas">
-      <MapContainer
-        crs={L.CRS.Simple}
-        center={DEFAULT_CENTER}
-        zoom={DEFAULT_ZOOM}
-        minZoom={MIN_ZOOM}
-        maxZoom={EFFECTIVE_MAX_ZOOM}
-        maxBounds={IMAGE_BOUNDS}
-        attributionControl={false}
-        className={classes.map}
-      >
-        <TileLayer
-          url={`${TILES_BASE_URL}/{z}/{x}/{y}.webp`}
-          tileSize={256}
-          noWrap
-          bounds={IMAGE_BOUNDS}
+    <Dropzone
+      onDrop={handleDroppedSavegame}
+      onReject={handleRejectedSavegame}
+      accept={SAVEGAME_ACCEPT}
+      multiple={false}
+      // Clicks on the map must keep working (marker popups, pan, etc),
+      // so the dropzone only reacts to drag-and-drop, never opens the
+      // native file picker. Users who prefer a button still have the
+      // "Import from save" button in the left filter panel.
+      activateOnClick={false}
+      activateOnKeyboard={false}
+      // Mantine's `inner` wrapper defaults to `pointer-events: none`,
+      // which would swallow Leaflet's pan / scroll-zoom / marker
+      // click handlers. Re-enable pointer events so the underlying
+      // map keeps full interactivity; the dropzone still picks up
+      // the `dragenter`/`drop` events because react-dropzone binds
+      // them on the root, not on the inner.
+      enablePointerEvents
+      disabled={importing}
+      loading={importing}
+      // Mantine's default Dropzone root paints a dashed border,
+      // md padding, and a dark-6 background. We want the drop target
+      // to be invisible chrome around the existing mapShell (which
+      // has its own rounded corners / clipping / background), so
+      // `dropzoneRoot` zeroes out all of that while keeping the
+      // Dropzone semantics. The `inner` slot is Mantine's internal
+      // wrapper around children; by default it has no height, which
+      // would collapse `.mapShell`'s `height: 100%` to 0 — the
+      // `dropzoneInner` class propagates the 100% height through.
+      classNames={{
+        root: classes.dropzoneRoot,
+        inner: classes.dropzoneInner,
+      }}
+      data-tutorial-id="map-canvas"
+    >
+      <div className={classes.mapShell}>
+        <MapContainer
+          crs={L.CRS.Simple}
+          center={DEFAULT_CENTER}
+          zoom={DEFAULT_ZOOM}
           minZoom={MIN_ZOOM}
-          maxZoom={MAX_ZOOM}
-          maxNativeZoom={MAX_ZOOM}
-          detectRetina
-        />
-        <MarkerZoomScaleController />
-        <ResourceMarkersLayer
-          nodes={filteredNodes}
-          usedNodes={usedNodes}
-          gameId={gameId ?? null}
-          sumMode={sumMode}
-        />
-        <CollectibleMarkersLayer
-          collectibles={filteredCollectibles}
-          collectedIds={collectedIds}
-          gameId={gameId ?? null}
-        />
-        <ShareUrlSync />
-      </MapContainer>
-      <div className={classes.nodeCount}>
-        {filteredNodes.length} node{filteredNodes.length === 1 ? '' : 's'}
-        {' · '}
-        {filteredCollectibles.length} collectible
-        {filteredCollectibles.length === 1 ? '' : 's'}
+          maxZoom={EFFECTIVE_MAX_ZOOM}
+          maxBounds={IMAGE_BOUNDS}
+          attributionControl={false}
+          className={classes.map}
+        >
+          <TileLayer
+            url={`${TILES_BASE_URL}/{z}/{x}/{y}.webp`}
+            tileSize={256}
+            noWrap
+            bounds={IMAGE_BOUNDS}
+            minZoom={MIN_ZOOM}
+            maxZoom={MAX_ZOOM}
+            maxNativeZoom={MAX_ZOOM}
+            detectRetina
+          />
+          <MarkerZoomScaleController />
+          <ResourceMarkersLayer
+            nodes={filteredNodes}
+            usedNodes={usedNodes}
+            gameId={gameId ?? null}
+            sumMode={sumMode}
+          />
+          <CollectibleMarkersLayer
+            collectibles={filteredCollectibles}
+            collectedIds={collectedIds}
+            gameId={gameId ?? null}
+          />
+          <ShareUrlSync />
+        </MapContainer>
+        <div className={classes.nodeCount}>
+          {filteredNodes.length} node{filteredNodes.length === 1 ? '' : 's'}
+          {' · '}
+          {filteredCollectibles.length} collectible
+          {filteredCollectibles.length === 1 ? '' : 's'}
+        </div>
+        {sumMode ? (
+          <div className={classes.sumBanner}>
+            Sum mode — tap nodes to add or remove them from the total
+          </div>
+        ) : null}
+        <MapSelectionSummary gameId={gameId ?? null} />
+        <Dropzone.Accept>
+          <div className={classes.dropOverlay}>
+            <Text size="lg" fw={700}>
+              Drop save to import recipes and used nodes
+            </Text>
+          </div>
+        </Dropzone.Accept>
+        <Dropzone.Reject>
+          <div
+            className={`${classes.dropOverlay} ${classes.dropOverlayReject}`}
+          >
+            <Text size="lg" fw={700}>
+              Only .sav files are supported
+            </Text>
+          </div>
+        </Dropzone.Reject>
       </div>
-      {sumMode ? (
-        <div className={classes.sumBanner}>
-          Sum mode — tap nodes to add or remove them from the total
+      {/*
+        Sibling of `mapShell` (and of Mantine's internal LoadingOverlay)
+        rather than a child, so it shares the dropzone root's stacking
+        context. `mapShell` uses `isolation: isolate` which would trap
+        children inside its own stacking context — at that point
+        `z-index` could not lift this banner above the LoadingOverlay
+        backdrop (default `z-index: 400`). Rendered here with
+        `z-index: 401` it paints just above the backdrop while the
+        Mantine spinner sits next to it.
+      */}
+      {importing ? (
+        <div className={classes.importProgress}>
+          <Text size="xs" fw={600} mb={4}>
+            {progress.message ?? 'Parsing savegame…'}
+          </Text>
+          <Progress color="orange" value={progress.value * 100} animated />
         </div>
       ) : null}
-      <MapSelectionSummary gameId={gameId ?? null} />
-    </div>
+    </Dropzone>
   );
 }

@@ -1,7 +1,9 @@
 import {
   Badge,
   Button,
+  FileButton,
   Group,
+  Progress,
   Stack,
   Switch,
   Text,
@@ -11,6 +13,7 @@ import {
 import {
   IconBrush,
   IconCheck,
+  IconCloudUpload,
   IconDeviceAudioTape,
   IconPackage,
   IconRefresh,
@@ -20,6 +23,7 @@ import clsx from 'clsx';
 import { type CSSProperties, type ReactNode, useMemo } from 'react';
 import { useShallowStore, useStore } from '@/core/zustand';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
+import { useSavegameImport } from '@/recipes/savegame/useSavegameImport';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import {
   COLLECTIBLE_TYPE_META,
@@ -124,6 +128,18 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
   const clearGameCollectedItems = useStore(
     state => state.clearGameCollectedItems,
   );
+
+  const { importing, progress, importAndApplyToGame } = useSavegameImport();
+
+  const handleUsedNodesImport = (file: File | null) => {
+    if (!file) return;
+    importAndApplyToGame(file, gameId, {
+      defaultRecipes: true,
+      usedNodes: true,
+    }).catch(() => {
+      // Notification surfaced by the hook; nothing else to do here.
+    });
+  };
 
   const allNodes = useMemo(() => getWorldResourceNodes(gameId), [gameId]);
   const allCollectibles = useMemo(() => getWorldCollectibles(), []);
@@ -280,6 +296,43 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
           >
             Clear {usedNodesCount} used mark{usedNodesCount === 1 ? '' : 's'}
           </Button>
+        ) : null}
+        <Tooltip
+          label={
+            gameId
+              ? "Parse a .sav file and replace this game's used-node marks and recipe defaults with the save"
+              : 'Select a game to enable save import'
+          }
+          withinPortal
+        >
+          <FileButton
+            onChange={handleUsedNodesImport}
+            accept=".sav"
+            disabled={!gameId || importing}
+          >
+            {fileButtonProps => (
+              <Button
+                {...fileButtonProps}
+                variant="light"
+                size="compact-xs"
+                leftSection={<IconCloudUpload size={13} />}
+                loading={importing}
+                disabled={!gameId || importing}
+              >
+                Import from save
+              </Button>
+            )}
+          </FileButton>
+        </Tooltip>
+        {importing ? (
+          <>
+            <Progress color="orange" value={progress.value * 100} animated />
+            {progress.message ? (
+              <Text size="xs" c="dimmed">
+                {progress.message}
+              </Text>
+            ) : null}
+          </>
         ) : null}
       </Stack>
 
