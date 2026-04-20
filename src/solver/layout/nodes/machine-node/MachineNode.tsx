@@ -1,4 +1,5 @@
 import {
+  ActionIcon,
   alpha,
   Badge,
   Box,
@@ -12,17 +13,20 @@ import {
   Table,
   Text,
   Title,
+  Tooltip,
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
+  IconArrowDown,
+  IconArrowUp,
   IconBolt,
   IconBuildingFactory2,
   IconCircleCheckFilled,
   IconClockBolt,
 } from '@tabler/icons-react';
 import { type NodeProps, useReactFlow } from '@xyflow/react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { PercentageFormatter } from '@/core/intl/PercentageFormatter';
 import { useStore } from '@/core/zustand';
@@ -40,6 +44,7 @@ import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import { MachineNodeActions } from './MachineNodeActions';
 import { calculateMachineNodeBuildings } from './postprocess/calculateMachineNodeBuildings';
 import { RecipeIngredientRow } from './RecipeIngredientRow';
+import { roundOverclock } from './roundOverclock';
 
 export interface IMachineNodeData {
   label: string;
@@ -77,6 +82,41 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
   const overclock = machineCalc.overclock;
   const buildingsAmount = machineCalc.buildingsAmount;
   const amplifiedRate = machineCalc.amplifiedRate;
+
+  const [overclockValue, setOverclockValue] = useState<number | string>(
+    nodeState?.overclock as number | string,
+  );
+
+  const editedOverclock =
+    overclockValue != null && overclockValue !== ''
+      ? Number(overclockValue)
+      : overclock;
+
+  // Back-solve overclock from a target whole-number building count, holding the
+  // node's required output rate (value) and amplified rate constant.
+  // buildingsAmount = value / perBuilding / overclock / amplifiedRate
+  const overclockForBuildings = (target: number) =>
+    roundOverclock(
+      value / (machineCalc.perBuilding * machineCalc.amplifiedRate * target),
+    );
+
+  const flooredBuildings = Math.floor(buildingsAmount);
+  const ceiledBuildings = Math.ceil(buildingsAmount);
+  const buildingsAreFractional = ceiledBuildings !== flooredBuildings;
+  const overclockIfRoundedDown =
+    flooredBuildings > 0 ? overclockForBuildings(flooredBuildings) : null;
+  const overclockIfRoundedUp =
+    ceiledBuildings > 0 ? overclockForBuildings(ceiledBuildings) : null;
+  // 2.5 == 250% is the same upper bound enforced by MachineNodeProductionConfig.
+  const canRoundDown =
+    buildingsAreFractional &&
+    overclockIfRoundedDown != null &&
+    overclockIfRoundedDown <= 2.5;
+  const canRoundUp =
+    buildingsAreFractional &&
+    overclockIfRoundedUp != null &&
+    overclockIfRoundedUp > 0;
+
   return (
     <Popover
       opened={(isHovering || props.selected) && !props.dragging}
@@ -250,17 +290,70 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                       <IconBuildingFactory2 size={16} /> x
                       <RepeatingNumber value={buildingsAmount} />{' '}
                       {building.name}
+                      {props.selected && buildingsAreFractional && (
+                        <Group gap={2} ml={4}>
+                          <Tooltip
+                            label={
+                              canRoundDown && overclockIfRoundedDown != null
+                                ? `Round down to ${flooredBuildings} at ${PercentageFormatter.format(overclockIfRoundedDown)} overclock`
+                                : 'Cannot round down'
+                            }
+                          >
+                            <ActionIcon
+                              size="xs"
+                              variant="subtle"
+                              disabled={!canRoundDown}
+                              onClick={() => {
+                                if (overclockIfRoundedDown != null) {
+                                  setOverclockValue(overclockIfRoundedDown);
+                                }
+                              }}
+                            >
+                              <IconArrowDown size={12} />
+                            </ActionIcon>
+                          </Tooltip>
+                          <Tooltip
+                            label={
+                              canRoundUp && overclockIfRoundedUp != null
+                                ? `Round up to ${ceiledBuildings} at ${PercentageFormatter.format(overclockIfRoundedUp)} overclock`
+                                : 'Cannot round up (would exceed 250% overclock)'
+                            }
+                          >
+                            <ActionIcon
+                              size="xs"
+                              variant="subtle"
+                              disabled={!canRoundUp}
+                              onClick={() => {
+                                if (overclockIfRoundedUp != null) {
+                                  setOverclockValue(overclockIfRoundedUp);
+                                }
+                              }}
+                            >
+                              <IconArrowUp size={12} />
+                            </ActionIcon>
+                          </Tooltip>
+                        </Group>
+                      )}
                     </Group>
-                    {machineCalc.partialBuildingAmount > 0 && (
-                      <Text size="xs" c="dimmed">
-                        {machineCalc.fullBuildingsAmount} at{' '}
-                        {PercentageFormatter.format(overclock)}
-                        {' + 1 at '}
-                        {PercentageFormatter.format(
-                          machineCalc.partialBuildingOverclock,
-                        )}
-                      </Text>
-                    )}
+                    {machineCalc.partialBuildingAmount > 0 &&
+                      // Hide the "X at A% + 1 at B%" split when A and B render
+                      // to the same string (e.g. after the round-up button
+                      // picks an overclock where every building runs at the
+                      // same rate). Comparing formatted output avoids picking
+                      // a fragile numeric tolerance when the values may have
+                      // drifted by float noise but display identically.
+                      PercentageFormatter.format(
+                        machineCalc.partialBuildingOverclock,
+                      ) !== PercentageFormatter.format(overclock) && (
+                        <Text size="xs" c="dimmed">
+                          {machineCalc.fullBuildingsAmount} at{' '}
+                          {PercentageFormatter.format(overclock)}
+                          {' + 1 at '}
+                          {PercentageFormatter.format(
+                            machineCalc.partialBuildingOverclock,
+                          )}
+                        </Text>
+                      )}
                   </Stack>
                   <Group gap={4} align="center">
                     <IconBolt size={16} />{' '}
@@ -315,8 +408,10 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                     ingredient={ingredient}
                     key={ingredient.resource}
                     buildingsAmount={buildingsAmount}
-                    overclock={overclock}
+                    overclock={editedOverclock}
                     amplifiedRate={amplifiedRate}
+                    editable={props.selected}
+                    onOverclockChange={setOverclockValue}
                   />
                 ))}
                 <Table.Tr>
@@ -334,8 +429,10 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                     ingredient={product}
                     key={product.resource}
                     buildingsAmount={buildingsAmount}
-                    overclock={overclock}
+                    overclock={editedOverclock}
                     amplifiedRate={amplifiedRate}
+                    editable={props.selected}
+                    onOverclockChange={setOverclockValue}
                   />
                 ))}
               </Table.Tbody>
@@ -347,6 +444,8 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                 data={props.data}
                 id={props.id}
                 buildingsAmount={buildingsAmount}
+                overclockValue={overclockValue}
+                setOverclockValue={setOverclockValue}
               />
             ) : (
               <Stack>
