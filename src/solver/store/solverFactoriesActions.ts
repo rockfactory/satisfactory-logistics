@@ -87,6 +87,37 @@ export const solverFactoriesActions = createActions({
         amount: input?.amount ?? 0,
       });
     },
+  /**
+   * Add an input for `resource`, or, if one already exists, sum the amount
+   * into it instead of creating a duplicate row. Falls back to a plain push
+   * when `resource` is null (no usable merge key).
+   */
+  upsertFactoryInput:
+    (
+      factoryId: string,
+      input: {
+        resource: string | null;
+        amount: number | null;
+      },
+    ) =>
+    state => {
+      const factory = state.factories.factories[factoryId];
+      if (!factory) return;
+      if (!factory.inputs) factory.inputs = [];
+
+      const existing = input.resource
+        ? factory.inputs.find(i => i.resource === input.resource)
+        : undefined;
+
+      if (existing) {
+        existing.amount = (existing.amount ?? 0) + (input.amount ?? 0);
+      } else {
+        factory.inputs.push({
+          resource: input.resource ?? null,
+          amount: input.amount ?? 0,
+        });
+      }
+    },
   removeFactoryInput: (factoryId: string, inputIndex: number) => state => {
     state.factories.factories[factoryId]?.inputs?.splice(inputIndex, 1);
     // state.solvers.instances[factoryId]?.request.inputs?.splice(inputIndex, 1);

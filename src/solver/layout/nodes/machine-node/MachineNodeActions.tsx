@@ -158,7 +158,7 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
               color="blue"
               variant="outline"
               onClick={() =>
-                useStore.getState().addFactoryInput(solverId!, {
+                useStore.getState().upsertFactoryInput(solverId!, {
                   resource: recipe.products[0].resource,
                   amount: value,
                 })
