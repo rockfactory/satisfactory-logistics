@@ -1,4 +1,7 @@
+import { notifications } from '@mantine/notifications';
 import { useCallback, useState } from 'react';
+import { useStore } from '@/core/zustand';
+import type { ApplySavegameToGameOptions } from '@/games/gamesSlice';
 import type { ParsedSatisfactorySave } from './ParseSavegameMessages';
 import { startSavegameParsing } from './startSavegameParsing';
 
@@ -12,18 +15,45 @@ export interface SavegameImportProgress {
   message?: string;
 }
 
+/**
+ * Result of a successful `importAndApplyToGame` call. Includes the
+ * parsed save so callers (e.g. the recipes drawer) can do additional
+ * non-game-state work on top, like updating the active solver
+ * instance's allowed-recipe list.
+ */
+export interface SavegameImportApplied {
+  save: ParsedSatisfactorySave;
+  applied: ApplySavegameToGameOptions;
+  recipeCount: number;
+  usedNodeCount: number;
+}
+
 export interface UseSavegameImportResult {
   importing: boolean;
   progress: SavegameImportProgress;
   /**
-   * Kicks off parsing for the given `.sav` file. Resolves with the
-   * parsed save payload so the caller can do whatever it wants with
-   * it (mark recipes available, mark used nodes, etc). Rejects on
-   * parser error after surfacing the error via whatever mechanism
-   * the caller wires (the hook itself doesn't show notifications so
-   * map-side and modal-side UIs can tailor their own messaging).
+   * Low-level: kicks off parsing for the given `.sav` file and
+   * resolves with the parsed save. Most callers should prefer
+   * {@link UseSavegameImportResult.importAndApplyToGame} so import
+   * semantics stay consistent across surfaces.
    */
   importFile: (file: File) => Promise<ParsedSatisfactorySave>;
+  /**
+   * High-level: parses the file, applies the requested slices of
+   * derivable state to the game in a single store patch, and surfaces
+   * a unified success / failure notification. The promise resolves
+   * with the parsed save plus a summary of what was applied so
+   * callers can chain additional updates (e.g. solver-instance
+   * recipe lists) on the same flow.
+   *
+   * If `gameId` is null/undefined a "no game selected" notification
+   * is shown and the promise resolves to `null` without parsing.
+   */
+  importAndApplyToGame: (
+    file: File,
+    gameId: string | null | undefined,
+    apply: ApplySavegameToGameOptions,
+  ) => Promise<SavegameImportApplied | null>;
   /**
    * Resets progress / importing back to idle. Useful when a caller
    * unmounts a modal after success so reopening it starts fresh.
@@ -34,16 +64,11 @@ export interface UseSavegameImportResult {
 const IDLE_PROGRESS: SavegameImportProgress = { value: 0, message: undefined };
 
 /**
- * Thin wrapper around {@link startSavegameParsing} that tracks
- * `importing` + `progress` state for a single active import. Shared
- * between `ImportSavegameRecipesModal` and the map filter panel's
- * "Import from save" button so both surfaces behave identically and
- * can reuse the same progress UI.
- *
- * The hook is intentionally concern-free beyond state tracking:
- * callers decide what to do with the resolved save (mark recipes
- * available, mark used nodes, ...) and how to surface success or
- * failure (notifications, modal close, ...).
+ * Wrapper around {@link startSavegameParsing} that tracks `importing`
+ * + `progress` state for a single active import and centralizes the
+ * "apply this save to a game" flow. Shared between the recipes drawer,
+ * map filter panel, and map drop zone so all three surfaces produce
+ * identical store updates and notifications for the same file.
  */
 export function useSavegameImport(): UseSavegameImportResult {
   const [importing, setImporting] = useState(false);
@@ -69,10 +94,80 @@ export function useSavegameImport(): UseSavegameImportResult {
     [],
   );
 
+  const importAndApplyToGame = useCallback(
+    async (
+      file: File,
+      gameId: string | null | undefined,
+      apply: ApplySavegameToGameOptions,
+    ): Promise<SavegameImportApplied | null> => {
+      if (!gameId) {
+        notifications.show({
+          title: 'No game selected',
+          message: 'Create or select a game before importing a save.',
+          color: 'yellow',
+        });
+        return null;
+      }
+
+      try {
+        const save = await importFile(file);
+        useStore.getState().updateGameFromSavegame(gameId, save, apply);
+
+        const recipeCount = apply.defaultRecipes
+          ? save.availableRecipes.length
+          : 0;
+        const usedNodeCount = apply.usedNodes ? save.usedNodeIds.length : 0;
+
+        notifications.show({
+          title: 'Savegame imported',
+          message: buildSummaryMessage(apply, recipeCount, usedNodeCount),
+          color: 'green',
+        });
+
+        return { save, applied: apply, recipeCount, usedNodeCount };
+      } catch (err) {
+        const message =
+          err instanceof Error ? err.message : 'Unknown parser error';
+        console.error('Error while parsing savegame:', message);
+        notifications.show({
+          title: 'Error while parsing savegame',
+          message,
+          color: 'red',
+        });
+        throw err;
+      }
+    },
+    [importFile],
+  );
+
   const reset = useCallback(() => {
     setImporting(false);
     setProgress(IDLE_PROGRESS);
   }, []);
 
-  return { importing, progress, importFile, reset };
+  return { importing, progress, importFile, importAndApplyToGame, reset };
+}
+
+function buildSummaryMessage(
+  apply: ApplySavegameToGameOptions,
+  recipeCount: number,
+  usedNodeCount: number,
+): string {
+  const parts: string[] = [];
+  if (apply.defaultRecipes) {
+    parts.push(
+      `${recipeCount} recipe${recipeCount === 1 ? '' : 's'} as game default`,
+    );
+  }
+  if (apply.usedNodes) {
+    if (usedNodeCount === 0) {
+      parts.push('cleared used-node marks (no miners in save)');
+    } else {
+      parts.push(`${usedNodeCount} used node${usedNodeCount === 1 ? '' : 's'}`);
+    }
+  }
+  if (parts.length === 0) {
+    return 'Save parsed successfully (no game state updated).';
+  }
+  return `Updated: ${parts.join(', ')}.`;
 }

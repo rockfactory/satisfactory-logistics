@@ -8,7 +8,30 @@ import {
   FactoryConveyorBelts,
   FactoryPipelinesExclAlternates,
 } from '@/recipes/FactoryBuilding';
+import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
+import type { ParsedSatisfactorySave } from '@/recipes/savegame/ParseSavegameMessages';
 import type { Game, GameRemoteData, GameSettings } from './Game';
+
+/**
+ * Which slices of game state a savegame import should overwrite. All
+ * default to `false` so callers must opt in: importing a save is a
+ * destructive merge of "the game's truth lives in the .sav".
+ */
+export interface ApplySavegameToGameOptions {
+  /**
+   * Replace `game.allowedRecipes` with the recipes available in the
+   * save (custom recipes are always retained since the save format
+   * doesn't reference them).
+   */
+  defaultRecipes?: boolean;
+  /**
+   * Replace `game.usedNodes` with the resource nodes that have a
+   * miner / pump / fracking extractor placed on them in the save.
+   * An empty list clears the field so the persisted shape stays
+   * clean.
+   */
+  usedNodes?: boolean;
+}
 
 export interface GamesSlice {
   games: Record<string, Game>;
@@ -176,7 +199,7 @@ export const gamesSlice = createSlice({
     },
     /**
      * Map page: replaces the used-node marks for the given game with
-     * {@link nodeIds}. Intended for savegame import — the imported set
+     * {@link nodeIds}. Intended for savegame import, the imported set
      * fully replaces any prior manual marks. An empty list clears the
      * field so the persisted shape stays clean. Dedupes defensively in
      * case the caller passed the same id twice.
@@ -190,6 +213,38 @@ export const gamesSlice = createSlice({
           delete game.usedNodes;
         } else {
           game.usedNodes = [...new Set(nodeIds)];
+        }
+      },
+    /**
+     * Single entry point for "this savegame is the source of truth for
+     * this game". Each `apply` flag opts a slice of derivable state in.
+     * Centralizing here keeps every import surface (map drop, map
+     * filter panel, recipes drawer) producing identical store updates
+     * for the same file, in a single Immer patch and a single
+     * subscriber notification.
+     */
+    updateGameFromSavegame:
+      (
+        gameId: string | null | undefined,
+        save: ParsedSatisfactorySave,
+        apply: ApplySavegameToGameOptions = {},
+      ) =>
+      state => {
+        if (!gameId) return;
+        const game = state.games[gameId];
+        if (!game) return;
+        if (apply.defaultRecipes) {
+          const available = new Set(save.availableRecipes);
+          game.allowedRecipes = AllFactoryRecipes.filter(
+            recipe => available.has(recipe.id) || recipe.customType != null,
+          ).map(recipe => recipe.id);
+        }
+        if (apply.usedNodes) {
+          if (save.usedNodeIds.length === 0) {
+            delete game.usedNodes;
+          } else {
+            game.usedNodes = [...new Set(save.usedNodeIds)];
+          }
         }
       },
     /**

@@ -5,7 +5,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import { useShallowStore, useStore } from '@/core/zustand';
+import { useShallowStore } from '@/core/zustand';
 import { useSavegameImport } from '@/recipes/savegame/useSavegameImport';
 import {
   COLLECTIBLE_TYPES,
@@ -158,40 +158,17 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
     });
   }, [collectibleVisibility, hideCollectedCollectibles, collectedIds]);
 
-  const { importing, progress, importFile } = useSavegameImport();
+  const { importing, progress, importAndApplyToGame } = useSavegameImport();
 
   const handleDroppedSavegame = (files: File[]) => {
     const file = files[0];
     if (!file) return;
-    if (!gameId) {
-      notifications.show({
-        title: 'No game selected',
-        message: 'Create or select a game before importing a save.',
-        color: 'yellow',
-      });
-      return;
-    }
-    importFile(file)
-      .then(save => {
-        useStore.getState().setGameUsedNodes(gameId, save.usedNodeIds);
-        const count = save.usedNodeIds.length;
-        notifications.show({
-          title: 'Used nodes imported',
-          message:
-            count === 0
-              ? 'No miners found in the save. Cleared used marks.'
-              : `Marked ${count} node${count === 1 ? '' : 's'} as used from the save.`,
-          color: 'green',
-        });
-      })
-      .catch(err => {
-        console.error('Error while parsing savegame:', err?.message ?? err);
-        notifications.show({
-          title: 'Error while parsing savegame',
-          message: err?.message ?? 'Unknown parser error',
-          color: 'red',
-        });
-      });
+    importAndApplyToGame(file, gameId, {
+      defaultRecipes: true,
+      usedNodes: true,
+    }).catch(() => {
+      // Notification surfaced by the hook; nothing else to do here.
+    });
   };
 
   const handleRejectedSavegame = () => {
@@ -288,7 +265,7 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
         <Dropzone.Accept>
           <div className={classes.dropOverlay}>
             <Text size="lg" fw={700}>
-              Drop save to import used nodes
+              Drop save to import recipes and used nodes
             </Text>
           </div>
         </Dropzone.Accept>

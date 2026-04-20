@@ -10,7 +10,6 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import {
   IconBrush,
   IconCheck,
@@ -116,7 +115,6 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
   const setOnlyPurity = useStore(state => state.setOnlyPurity);
   const setHideUsedNodes = useStore(state => state.setHideUsedNodes);
   const clearGameUsedNodes = useStore(state => state.clearGameUsedNodes);
-  const setGameUsedNodes = useStore(state => state.setGameUsedNodes);
   const resetMapFilters = useStore(state => state.resetMapFilters);
   const setSumMode = useStore(state => state.setSumMode);
   const clearSelection = useStore(state => state.clearSelection);
@@ -131,39 +129,16 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
     state => state.clearGameCollectedItems,
   );
 
-  const { importing, progress, importFile } = useSavegameImport();
+  const { importing, progress, importAndApplyToGame } = useSavegameImport();
 
   const handleUsedNodesImport = (file: File | null) => {
     if (!file) return;
-    if (!gameId) {
-      notifications.show({
-        title: 'No game selected',
-        message: 'Create or select a game before importing a save.',
-        color: 'yellow',
-      });
-      return;
-    }
-    importFile(file)
-      .then(save => {
-        setGameUsedNodes(gameId, save.usedNodeIds);
-        const count = save.usedNodeIds.length;
-        notifications.show({
-          title: 'Used nodes imported',
-          message:
-            count === 0
-              ? 'No miners found in the save. Cleared used marks.'
-              : `Marked ${count} node${count === 1 ? '' : 's'} as used from the save.`,
-          color: 'green',
-        });
-      })
-      .catch(e => {
-        console.error('Error while parsing savegame:', e?.message ?? e);
-        notifications.show({
-          title: 'Error while parsing savegame',
-          message: e?.message ?? 'Unknown parser error',
-          color: 'red',
-        });
-      });
+    importAndApplyToGame(file, gameId, {
+      defaultRecipes: true,
+      usedNodes: true,
+    }).catch(() => {
+      // Notification surfaced by the hook; nothing else to do here.
+    });
   };
 
   const allNodes = useMemo(() => getWorldResourceNodes(gameId), [gameId]);
@@ -325,7 +300,7 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
         <Tooltip
           label={
             gameId
-              ? 'Parse a .sav file and replace used-node marks with miners found in it'
+              ? "Parse a .sav file and replace this game's used-node marks and recipe defaults with the save"
               : 'Select a game to enable save import'
           }
           withinPortal
