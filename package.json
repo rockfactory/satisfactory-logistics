@@ -21,7 +21,7 @@
     "@caldwell619/react-kanban": "^0.0.11",
     "@clickbar/dot-diver": "^1.0.7",
     "@dagrejs/dagre": "^1.1.4",
-    "@etothepii/satisfactory-file-parser": "^3.3.1",
+    "@etothepii/satisfactory-file-parser": "^4.0.1",
     "@hello-pangea/dnd": "^18.0.0",
     "@mantine/colors-generator": "^9.0.0",
     "@mantine/core": "^9.0.0",
