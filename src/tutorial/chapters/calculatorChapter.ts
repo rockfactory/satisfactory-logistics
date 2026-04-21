@@ -2,6 +2,7 @@ import { ensureDemoFactory } from './demoFactories';
 import {
   chainHooks,
   clickSelector,
+  dblclickSelector,
   ensureAbsent,
   ensurePresent,
   openAndRehighlight,
@@ -271,6 +272,29 @@ export const calculatorChapter: TutorialChapter = {
             '.react-flow__node-Machine',
             '[data-tutorial-id="machine-action-switch-recipe"]',
           ),
+        },
+
+        // === Highlight the surrounding chain ===
+        {
+          element: '[data-tutorial-id="solver-graph"]',
+          popover: {
+            title: 'See what feeds a machine',
+            description:
+              'Double-click (or double-tap on touch) any node to highlight it and dim everything that is not directly connected. I just did it on a machine for you. Tap the empty space to clear, or double-tap again to toggle off. Handy on mobile when the action panel covers the chain.',
+            side: 'top',
+            align: 'start',
+            popoverClass: 'sl-tutorial-popover sl-tutorial-popover-graph-top',
+          },
+          // Click the pane first (closes any popover and clears any prior
+          // highlight from a previous step entry), then trigger the
+          // double-click on the first machine to demo the dim effect.
+          onHighlightStarted: chainHooks(
+            () => clickSelector('.react-flow__pane'),
+            () => dblclickSelector('.react-flow__node-Machine'),
+          ),
+          // Always clear on the way out so the next step (and the rest of
+          // the chapter) sees a clean graph regardless of Back/Next path.
+          onDeselected: () => clickSelector('.react-flow__pane'),
         },
 
         // === Byproduct / output node walkthrough ===

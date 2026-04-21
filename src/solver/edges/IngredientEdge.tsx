@@ -23,6 +23,7 @@ import { type FactoryItem, FactoryItemForm } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { getConfigurableEdgePath } from '@/solver/edges/getConfigurableEdgePath';
 import { useEdgeAnimationEnabled } from '@/solver/edges/useEdgeAnimationEnabled';
+import { useSolverHighlightOptional } from '@/solver/layout/highlight/SolverHighlightContext';
 import { getEdgeParams, getSpecialPath } from './utils';
 
 export interface IIngredientEdgeData {
@@ -70,6 +71,7 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
     | boolean
     | undefined;
   const animationEnabled = useEdgeAnimationEnabled();
+  const highlight = useSolverHighlightOptional();
   const isOverMaxBelt = maxBelt && (data?.value ?? 0) > maxBelt.conveyor!.speed;
   const isOverMaxPipeline =
     maxPipeline && (data?.value ?? 0) > maxPipeline.pipeline!.flowRate;
@@ -119,26 +121,43 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
   const usedLogistic = isLiquidOrGas ? usedPipeline : usedBelt;
   const usedLogisticMax = isLiquidOrGas ? neededPipelines : neededBelts;
 
+  const highlightedNodeId = highlight?.highlightedNodeId ?? null;
+  const isHighlighted =
+    highlightedNodeId != null &&
+    (highlightedNodeId === source || highlightedNodeId === target);
+  const isDimmed = highlightedNodeId != null && !isHighlighted;
+  const edgeOpacity = isDimmed ? 0.15 : 1;
+  const labelOpacity = isDimmed ? 0.3 : 1;
+
   return (
     <>
-      <BaseEdge
-        id={id}
-        path={edgePath}
-        {...edgeProps}
+      <g
         style={{
-          stroke:
-            sx < tx ? 'url(#edge-gradient)' : 'url(#edge-gradient-reverse)',
+          opacity: edgeOpacity,
+          transition: 'opacity 0.2s',
         }}
-      />
-      {animationEnabled && (
-        <circle r="2" fill="var(--mantine-color-indigo-3)">
-          <animateMotion
-            dur={`${duration}s`}
-            repeatCount="indefinite"
-            path={edgePath}
-          />
-        </circle>
-      )}
+      >
+        <BaseEdge
+          id={id}
+          path={edgePath}
+          {...edgeProps}
+          style={{
+            stroke:
+              sx < tx ? 'url(#edge-gradient)' : 'url(#edge-gradient-reverse)',
+            strokeWidth: isHighlighted ? 3 : undefined,
+            transition: 'stroke-width 0.2s',
+          }}
+        />
+        {animationEnabled && (
+          <circle r="2" fill="var(--mantine-color-indigo-3)">
+            <animateMotion
+              dur={`${duration}s`}
+              repeatCount="indefinite"
+              path={edgePath}
+            />
+          </circle>
+        )}
+      </g>
       <EdgeLabelRenderer>
         <Box
           p={'4px'}
@@ -151,6 +170,8 @@ export const IngredientEdge: FC<EdgeProps<Edge<IIngredientEdgeData>>> = ({
             ),
             position: 'absolute',
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+            opacity: labelOpacity,
+            transition: 'opacity 0.2s',
           }}
           className="nodrag"
         >

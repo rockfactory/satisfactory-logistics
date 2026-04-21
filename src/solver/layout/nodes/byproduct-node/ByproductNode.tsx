@@ -6,6 +6,10 @@ import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import type { FactoryOutput } from '@/factories/Factory';
 import type { FactoryItem } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import {
+  useIsNodeHighlighted,
+  useSolverHighlightOptional,
+} from '@/solver/layout/highlight/SolverHighlightContext';
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import type { SolverNodeState } from '@/solver/store/Solver';
@@ -34,6 +38,10 @@ export const ByproductNode = memo((props: IByproductNodeProps) => {
 
   const [isHovering, { close, open }] = useDisclosure(false);
 
+  const highlight = useSolverHighlightOptional();
+  const isPrimaryHighlighted = highlight?.highlightedNodeId === props.id;
+  const isDimmed = useIsNodeHighlighted(props.id) === false;
+
   return (
     <Popover
       opened={(isHovering || props.selected) && !props.dragging}
@@ -47,7 +55,11 @@ export const ByproductNode = memo((props: IByproductNodeProps) => {
             borderRadius: 4,
             border: props.selected
               ? '1px solid var(--mantine-color-gray-3)'
-              : '1px solid transparent',
+              : isPrimaryHighlighted
+                ? '1px solid var(--mantine-color-blue-4)'
+                : '1px solid transparent',
+            opacity: isDimmed ? 0.25 : 1,
+            transition: 'border-color 0.2s, opacity 0.2s',
           }}
           bg="teal.9"
           onMouseEnter={open}

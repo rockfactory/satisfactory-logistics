@@ -11,6 +11,10 @@ import { type FactoryInput, WORLD_SOURCE_ID } from '@/factories/Factory';
 import type { FactoryItem } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { isWorldResource } from '@/recipes/WorldResources';
+import {
+  useIsNodeHighlighted,
+  useSolverHighlightOptional,
+} from '@/solver/layout/highlight/SolverHighlightContext';
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import { useSolverSolution } from '@/solver/layout/solution-context/SolverSolutionContext';
@@ -48,6 +52,10 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
 
   const [isHovering, { close, open }] = useDisclosure(false);
 
+  const highlight = useSolverHighlightOptional();
+  const isPrimaryHighlighted = highlight?.highlightedNodeId === id;
+  const isDimmed = useIsNodeHighlighted(id) === false;
+
   const solverId = useFactoryContext();
 
   // If this is an input to the solver, we need to show the factory
@@ -77,7 +85,11 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
             borderRadius: 4,
             border: props.selected
               ? '1px solid var(--mantine-color-gray-3)'
-              : '1px solid transparent',
+              : isPrimaryHighlighted
+                ? '1px solid var(--mantine-color-blue-4)'
+                : '1px solid transparent',
+            opacity: isDimmed ? 0.25 : 1,
+            transition: 'border-color 0.2s, opacity 0.2s',
           }}
           bg={isRaw ? 'blue.8' : 'blue.6'}
           onMouseEnter={open}
