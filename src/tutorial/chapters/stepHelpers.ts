@@ -18,6 +18,20 @@ export function clickSelector(selector: string) {
 }
 
 /**
+ * Fire a native `dblclick` event on the first element matching
+ * `selector`. Useful for triggering React Flow's `onNodeDoubleClick`
+ * (and equivalent React `onDoubleClick` props) from a tutorial step,
+ * e.g. to demo the double-tap-to-highlight gesture in the solver.
+ */
+export function dblclickSelector(selector: string) {
+  const element = document.querySelector<HTMLElement>(selector);
+  if (!element) return;
+  element.dispatchEvent(
+    new MouseEvent('dblclick', { bubbles: true, cancelable: true }),
+  );
+}
+
+/**
  * Hook that, on every entry of a step (forward OR back), runs `fix` if
  * `presenceSelector` is NOT mounted in the DOM. Use it as a precondition
  * to ensure something (a drawer, a popover, an opened menu) is present

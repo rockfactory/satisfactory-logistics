@@ -9,6 +9,7 @@ import { useFactoryContext } from '@/FactoryContext';
 import { useFactoryInputsOutputs } from '@/factories/store/factoriesSelectors';
 import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
 import { SolverInspectorDrawer } from '@/solver/inspector/SolverInspectorDrawer';
+import { SolverHighlightProvider } from '@/solver/layout/highlight/SolverHighlightContext';
 import { SolverLayout } from '@/solver/layout/SolverLayout';
 import { SolverSolutionProvider } from '@/solver/layout/solution-context/SolverSolutionContext';
 import { SolverLayoutButtons } from '@/solver/layout/state/SolverLayoutButtons';
@@ -44,25 +45,27 @@ export const SolverSolutionFragment = ({
       {solution && hasSolution && (
         <ReactFlowProvider>
           <SolverSolutionProvider solution={solution}>
-            <SolverLayout
-              nodes={solution.nodes}
-              edges={solution.edges}
-              id={solverId}
-            >
-              <Panel>
-                <Group gap="xs">
-                  <SolverSummaryDrawer solution={solution} id={solverId} />
-                  <SolverShareButton id={solverId} />
-                  <SolverLayoutButtons
-                    solution={solution}
-                    solverId={solverId}
-                  />
-                  {import.meta.env.DEV && (
-                    <SolverInspectorDrawer solution={solution} />
-                  )}
-                </Group>
-              </Panel>
-            </SolverLayout>
+            <SolverHighlightProvider>
+              <SolverLayout
+                nodes={solution.nodes}
+                edges={solution.edges}
+                id={solverId}
+              >
+                <Panel>
+                  <Group gap="xs">
+                    <SolverSummaryDrawer solution={solution} id={solverId} />
+                    <SolverShareButton id={solverId} />
+                    <SolverLayoutButtons
+                      solution={solution}
+                      solverId={solverId}
+                    />
+                    {import.meta.env.DEV && (
+                      <SolverInspectorDrawer solution={solution} />
+                    )}
+                  </Group>
+                </Panel>
+              </SolverLayout>
+            </SolverHighlightProvider>
           </SolverSolutionProvider>
         </ReactFlowProvider>
       )}

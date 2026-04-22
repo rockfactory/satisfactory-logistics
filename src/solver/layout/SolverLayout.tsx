@@ -30,6 +30,7 @@ import { toggleFullscreen } from '@/utils/toggleFullscreen';
 import '@xyflow/react/dist/style.css';
 import { isEqual } from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSolverHighlight } from './highlight/SolverHighlightContext';
 import { ByproductNode } from './nodes/byproduct-node/ByproductNode';
 import { MachineNode } from './nodes/machine-node/MachineNode';
 import { ResourceNode } from './nodes/resource-node/ResourceNode';
@@ -206,6 +207,8 @@ const edgeTypes = {
 export const SolverLayout = (props: SolverLayoutProps) => {
   const savedLayout = usePathSolverLayout(props.id);
   const { fitView, getNodes, getEdges } = useReactFlow<SolutionNode, Edge>();
+  const { highlightedNodeId, toggleHighlightedNodeId, clearHighlight } =
+    useSolverHighlight();
 
   const [nodes, setNodes, onNodesChange] = useNodesState(props.nodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(props.edges);
@@ -258,6 +261,16 @@ export const SolverLayout = (props: SolverLayoutProps) => {
 
     // setTimeout(() => {}, 1);
   }, [props.edges, props.nodes, setEdges, setNodes]);
+
+  // Clear highlight if the highlighted node is no longer in the graph
+  // (e.g. solution recomputed). Avoids holding a dangling id that would
+  // dim every edge with no visible "selected" node to explain why.
+  useEffect(() => {
+    if (highlightedNodeId == null) return;
+    if (!props.nodes.some(n => n.id === highlightedNodeId)) {
+      clearHighlight();
+    }
+  }, [props.nodes, highlightedNodeId, clearHighlight]);
 
   const { getCompatiblePreviousLayout, cachePreviousLayout } =
     usePreviousSolverLayoutStates();
@@ -362,6 +375,22 @@ export const SolverLayout = (props: SolverLayoutProps) => {
     [cachePreviousLayout, getNodes, onNodesChange, savedLayout, props.id],
   );
 
+  // Double-click / double-tap a node to highlight its incident edges.
+  // Single click keeps its existing behavior (selects the node and opens
+  // the popover) so this gesture is purely additive: on touch devices
+  // users can inspect connections without committing to the popover.
+  const handleNodeDoubleClick = useCallback(
+    (_event: React.MouseEvent, node: Node) => {
+      toggleHighlightedNodeId(node.id);
+    },
+    [toggleHighlightedNodeId],
+  );
+
+  // Tap/click the empty pane to clear the highlight.
+  const handlePaneClick = useCallback(() => {
+    clearHighlight();
+  }, [clearHighlight]);
+
   // Context menu
   // const onNodeContextMenu = useCallback(
   //   (event: React.MouseEvent, node: Node) => {
@@ -394,6 +423,8 @@ export const SolverLayout = (props: SolverLayoutProps) => {
       edgeTypes={edgeTypes}
       onNodesChange={handleNodesChange}
       onEdgesChange={onEdgesChange}
+      onNodeDoubleClick={handleNodeDoubleClick}
+      onPaneClick={handlePaneClick}
       connectionLineType={ConnectionLineType.SmoothStep}
       selectNodesOnDrag={false}
       // onNodeContextMenu={onNodeContextMenu}

@@ -39,6 +39,10 @@ import {
   getRecipeDisplayName,
 } from '@/recipes/FactoryRecipe';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import {
+  useIsNodeHighlighted,
+  useSolverHighlightOptional,
+} from '@/solver/layout/highlight/SolverHighlightContext';
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import { MachineNodeActions } from './MachineNodeActions';
@@ -72,6 +76,10 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
   const { updateNode } = useReactFlow();
 
   const [isHovering, { close, open }] = useDisclosure(false);
+
+  const highlight = useSolverHighlightOptional();
+  const isPrimaryHighlighted = highlight?.highlightedNodeId === props.id;
+  const isDimmed = useIsNodeHighlighted(props.id) === false;
 
   const solverId = useFactoryContext();
 
@@ -131,7 +139,11 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
             borderRadius: 4,
             border: props.selected
               ? '1px solid var(--mantine-color-gray-3)'
-              : '1px solid transparent',
+              : isPrimaryHighlighted
+                ? '1px solid var(--mantine-color-blue-4)'
+                : '1px solid transparent',
+            opacity: isDimmed ? 0.25 : 1,
+            transition: 'border-color 0.2s, opacity 0.2s',
           }}
           bg={nodeState?.done ? '#304d3e' : 'dark.4'}
           onMouseEnter={open}
