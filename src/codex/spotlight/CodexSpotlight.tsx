@@ -6,6 +6,7 @@ import {
   IconChevronRight,
   IconCornerDownLeft,
   IconHomeCog,
+  IconStairsUp,
   IconToolsKitchen2,
 } from '@tabler/icons-react';
 import { Command } from 'cmdk';
@@ -26,9 +27,10 @@ import {
 } from '@/recipes/FactoryItem';
 import { AllFactoryRecipes, type FactoryRecipe } from '@/recipes/FactoryRecipe';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { type TierGroup, TierGroups } from '../tiers/tierUnlocks';
 import './cmdk.css';
 
-type Page = 'items' | 'buildings' | 'recipes' | 'factories';
+type Page = 'items' | 'buildings' | 'recipes' | 'factories' | 'tiers';
 
 const validItems = AllFactoryItems.filter(
   item => item.form !== FactoryItemForm.Invalid,
@@ -118,7 +120,9 @@ export function CodexSpotlight() {
                   ? 'Items'
                   : p === 'buildings'
                     ? 'Buildings'
-                    : 'Recipes'}
+                    : p === 'tiers'
+                      ? 'Tiers'
+                      : 'Recipes'}
             </span>
           ))}
         </div>
@@ -137,7 +141,9 @@ export function CodexSpotlight() {
                 ? 'Search items...'
                 : page === 'buildings'
                   ? 'Search buildings...'
-                  : 'Search recipes...'
+                  : page === 'tiers'
+                    ? 'Search tiers...'
+                    : 'Search recipes...'
         }
         onKeyDown={(e: React.KeyboardEvent) => {
           if (
@@ -165,6 +171,7 @@ export function CodexSpotlight() {
         {page === 'items' && <ItemsPage select={select} />}
         {page === 'buildings' && <BuildingsPage select={select} />}
         {page === 'recipes' && <RecipesPage select={select} />}
+        {page === 'tiers' && <TiersPage select={select} />}
       </Command.List>
 
       <div className="cmdk-footer">
@@ -257,6 +264,19 @@ function RootPage({
         </div>
         <IconChevronRight size={16} className="cmdk-item-chevron" />
       </Command.Item>
+
+      <Command.Item value="tiers" onSelect={() => pushPage('tiers')}>
+        <div className="cmdk-item-icon">
+          <IconStairsUp size={22} />
+        </div>
+        <div className="cmdk-item-content">
+          <span className="cmdk-item-label">Tiers</span>
+          <span className="cmdk-item-description">
+            {TierGroups.length} HUB tiers and what each milestone unlocks
+          </span>
+        </div>
+        <IconChevronRight size={16} className="cmdk-item-chevron" />
+      </Command.Item>
     </Command.Group>
   );
 }
@@ -307,6 +327,16 @@ function RecipesPage({ select }: { select: (path: string) => void }) {
   );
 }
 
+function TiersPage({ select }: { select: (path: string) => void }) {
+  return (
+    <Command.Group heading="Tiers">
+      {TierGroups.map(g => (
+        <TierRow key={g.tier} group={g} select={select} />
+      ))}
+    </Command.Group>
+  );
+}
+
 function UnifiedResultsPage({
   factories,
   select,
@@ -336,6 +366,11 @@ function UnifiedResultsPage({
       <Command.Group heading="Recipes">
         {AllFactoryRecipes.map(r => (
           <RecipeRow key={r.id} recipe={r} select={select} />
+        ))}
+      </Command.Group>
+      <Command.Group heading="Tiers">
+        {TierGroups.map(g => (
+          <TierRow key={g.tier} group={g} select={select} />
         ))}
       </Command.Group>
     </>
@@ -370,7 +405,7 @@ function FactoryRow({
               return (
                 <span key={o.resource} className="cmdk-item-output">
                   {i > 0 && <span className="cmdk-item-output-sep">·</span>}
-                  <FactoryItemImage id={o.resource} size={16} />
+                  <FactoryItemImage id={o.resource} size={16} withTooltip />
                   <span>{item?.displayName ?? o.resource}</span>
                   {o.amount != null && (
                     <span className="cmdk-item-output-amount">
@@ -401,7 +436,7 @@ function ItemRow({
       onSelect={() => select(`/codex/items/${item.id}`)}
     >
       <div className="cmdk-item-icon">
-        <FactoryItemImage id={item.id} size={24} />
+        <FactoryItemImage id={item.id} size={24} withTooltip />
       </div>
       <div className="cmdk-item-content">
         <span className="cmdk-item-label">{item.displayName}</span>
@@ -461,10 +496,35 @@ function RecipeRow({
       onSelect={() => select(`/codex/recipes/${r.id}`)}
     >
       <div className="cmdk-item-icon">
-        <FactoryItemImage id={r.products[0]?.resource} size={24} />
+        <FactoryItemImage id={r.products[0]?.resource} size={24} withTooltip />
       </div>
       <div className="cmdk-item-content">
         <span className="cmdk-item-label">{r.name}</span>
+      </div>
+    </Command.Item>
+  );
+}
+
+function TierRow({
+  group,
+  select,
+}: {
+  group: TierGroup;
+  select: (path: string) => void;
+}) {
+  const milestoneNames = group.schematics.map(s => s.name).join(', ');
+  return (
+    <Command.Item
+      value={`Tier ${group.tier} ${milestoneNames}`}
+      keywords={group.schematics.map(s => s.id)}
+      onSelect={() => select(`/codex/tiers/${group.tier}`)}
+    >
+      <div className="cmdk-item-icon">
+        <IconStairsUp size={22} />
+      </div>
+      <div className="cmdk-item-content">
+        <span className="cmdk-item-label">Tier {group.tier}</span>
+        <span className="cmdk-item-description">{milestoneNames}</span>
       </div>
     </Command.Item>
   );

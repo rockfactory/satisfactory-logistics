@@ -46,6 +46,15 @@ export const codexAndToolsChapter: TutorialChapter = {
             side: 'bottom',
           },
         },
+        {
+          element: '[data-tutorial-id="codex-category-tiers"]',
+          popover: {
+            title: 'Tiers',
+            description:
+              'Tiers walks the HUB progression and shows what each milestone unlocks. Use it to plan ahead, see when a recipe or building becomes available, or just remind yourself what is gated behind the next tier.',
+            side: 'bottom',
+          },
+        },
       ],
     },
     {

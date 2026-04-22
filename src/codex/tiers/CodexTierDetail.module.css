@@ -1,0 +1,139 @@
+.header {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 0;
+  overflow: hidden;
+}
+
+.headerStripe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    180deg,
+    var(--mantine-color-grape-7) 0%,
+    var(--mantine-color-grape-9) 100%
+  );
+  color: var(--mantine-color-white);
+  padding: 12px 8px;
+}
+
+.headerStripeKicker {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  margin-bottom: 2px;
+  text-align: center;
+}
+
+.headerStripeNumber {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-align: center;
+}
+
+.headerBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 16px;
+  min-width: 0;
+}
+
+.headerNav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px;
+  border-left: 1px solid var(--mantine-color-default-border);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: var(--mantine-spacing-md);
+  align-items: start;
+}
+
+.contentColumn {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .desktopRail {
+    display: none;
+  }
+}
+
+.mobileNav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobileNav {
+    display: block;
+  }
+}
+
+.milestoneRail {
+  position: sticky;
+  top: calc(var(--mantine-spacing-md) + 56px);
+}
+
+.statRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  align-items: center;
+  font-size: var(--mantine-font-size-sm);
+  color: var(--mantine-color-dimmed);
+}
+
+.statRow strong {
+  color: var(--mantine-color-text);
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.statDot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: currentColor;
+  opacity: 0.5;
+}
+
+.unlockGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--mantine-spacing-md);
+}
+
+.milestoneTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.milestoneIndex {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: var(--mantine-radius-sm);
+  background-color: var(--mantine-color-grape-light);
+  color: var(--mantine-color-grape-light-color);
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}

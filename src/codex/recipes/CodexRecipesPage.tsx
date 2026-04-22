@@ -5,6 +5,7 @@ import {
   Group,
   Image,
   SegmentedControl,
+  Select,
   Stack,
   Table,
   Text,
@@ -19,6 +20,7 @@ import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryRecipes, type FactoryRecipe } from '@/recipes/FactoryRecipe';
 import { isDefaultRecipe, isMAMRecipe } from '@/recipes/graph/SchematicGraph';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import { AllTierNumbers, RecipeTierMap } from '../tiers/tierUnlocks';
 
 type RecipeFilter = 'All' | 'Default' | 'Alternate' | 'MAM';
 
@@ -34,13 +36,23 @@ function getRecipeTypeBadge(type: string) {
   return { label: 'Alternate', color: 'orange' };
 }
 
+const tierFilterOptions = [
+  { value: 'all', label: 'All tiers' },
+  ...AllTierNumbers.map(t => ({ value: String(t), label: `Tier ${t}` })),
+];
+
 export function CodexRecipesPage() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<RecipeFilter>('All');
+  const [tierFilter, setTierFilter] = useState<string>('all');
 
   const filtered = useMemo(() => {
     return AllFactoryRecipes.filter(recipe => {
       if (filter !== 'All' && getRecipeType(recipe) !== filter) return false;
+      if (tierFilter !== 'all') {
+        const tier = RecipeTierMap[recipe.id];
+        if (tier == null || String(tier) !== tierFilter) return false;
+      }
       if (search) {
         const q = search.toLowerCase();
         if (
@@ -51,7 +63,7 @@ export function CodexRecipesPage() {
       }
       return true;
     });
-  }, [search, filter]);
+  }, [search, filter, tierFilter]);
 
   return (
     <Container size="lg" py="xl">
@@ -71,6 +83,13 @@ export function CodexRecipesPage() {
             onChange={v => setFilter(v as RecipeFilter)}
             data={['All', 'Default', 'Alternate', 'MAM']}
           />
+          <Select
+            value={tierFilter}
+            onChange={v => setTierFilter(v ?? 'all')}
+            data={tierFilterOptions}
+            allowDeselect={false}
+            w={140}
+          />
         </Group>
 
         <Text size="sm" c="dimmed">
@@ -82,6 +101,7 @@ export function CodexRecipesPage() {
             <Table.Tr>
               <Table.Th>Recipe</Table.Th>
               <Table.Th>Type</Table.Th>
+              <Table.Th>Tier</Table.Th>
               <Table.Th>Building</Table.Th>
               <Table.Th>Ingredients</Table.Th>
               <Table.Th>Products</Table.Th>
@@ -93,6 +113,7 @@ export function CodexRecipesPage() {
               const type = getRecipeType(recipe);
               const badge = getRecipeTypeBadge(type);
               const building = AllFactoryBuildingsMap[recipe.producedIn];
+              const tier = RecipeTierMap[recipe.id];
 
               return (
                 <Table.Tr key={recipe.id}>
@@ -109,6 +130,23 @@ export function CodexRecipesPage() {
                     <Badge size="xs" variant="light" color={badge.color}>
                       {badge.label}
                     </Badge>
+                  </Table.Td>
+                  <Table.Td>
+                    {tier != null ? (
+                      <Anchor
+                        component={Link}
+                        to={`/codex/tiers/${tier}`}
+                        underline="never"
+                      >
+                        <Badge size="xs" variant="light" color="grape">
+                          T{tier}
+                        </Badge>
+                      </Anchor>
+                    ) : (
+                      <Text size="xs" c="dimmed">
+                        ·
+                      </Text>
+                    )}
                   </Table.Td>
                   <Table.Td>
                     {building && (
@@ -129,6 +167,7 @@ export function CodexRecipesPage() {
                           key={ing.resource}
                           id={ing.resource}
                           size={20}
+                          withTooltip
                         />
                       ))}
                     </Group>
@@ -140,6 +179,7 @@ export function CodexRecipesPage() {
                           key={prod.resource}
                           id={prod.resource}
                           size={20}
+                          withTooltip
                         />
                       ))}
                     </Group>

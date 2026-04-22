@@ -1,0 +1,98 @@
+[
+  {
+    "script": "Recipe_BladeRunners_C",
+    "name": "Blade Runners",
+    "description": "",
+    "imagePath": "/images/game/sprinting-stilts_256.png"
+  },
+  {
+    "script": "Recipe_CandyCaneBasher_C",
+    "name": "Candy Cane Basher",
+    "description": "",
+    "imagePath": "/images/game/cane-equipment_256.png"
+  },
+  {
+    "script": "Recipe_Chainsaw_C",
+    "name": "Chainsaw",
+    "description": "",
+    "imagePath": "/images/game/chainsaw_256.png"
+  },
+  {
+    "script": "Recipe_FactoryCart_C",
+    "name": "Factory Cart™",
+    "description": "",
+    "imagePath": "/images/game/golf-cart_256.png"
+  },
+  {
+    "script": "Recipe_Gasmask_C",
+    "name": "Gas Mask",
+    "description": "",
+    "imagePath": "/images/game/gas-mask_256.png"
+  },
+  {
+    "script": "Recipe_GoldenCart_C",
+    "name": "Golden Factory Cart™",
+    "description": "",
+    "imagePath": "/images/game/golf-cart-gold_256.png"
+  },
+  {
+    "script": "Recipe_HazmatSuit_C",
+    "name": "Hazmat Suit",
+    "description": "",
+    "imagePath": "/images/game/hazmat-suit_256.png"
+  },
+  {
+    "script": "Recipe_Hoverpack_C",
+    "name": "Hoverpack",
+    "description": "",
+    "imagePath": "/images/game/hoverpack_256.png"
+  },
+  {
+    "script": "Recipe_JetPack_C",
+    "name": "Jetpack",
+    "description": "",
+    "imagePath": "/images/game/jetpack_256.png"
+  },
+  {
+    "script": "Recipe_NobeliskDetonator_C",
+    "name": "Nobelisk Detonator",
+    "description": "",
+    "imagePath": "/images/game/detonator_256.png"
+  },
+  {
+    "script": "Recipe_ObjectScanner_C",
+    "name": "Object Scanner",
+    "description": "",
+    "imagePath": "/images/game/object-scanner_256.png"
+  },
+  {
+    "script": "Recipe_RebarGun_C",
+    "name": "Rebar Gun",
+    "description": "",
+    "imagePath": "/images/game/rebar-gun_256.png"
+  },
+  {
+    "script": "Recipe_SpaceRifleMk1_C",
+    "name": "Rifle",
+    "description": "",
+    "imagePath": "/images/game/rifle-mk-1_256.png"
+  },
+  {
+    "script": "Recipe_XenoBasher_C",
+    "name": "Xeno-Basher",
+    "description": "",
+    "imagePath": "/images/game/xeno-basher_256.png"
+  },
+  {
+    "script": "Recipe_XenoZapper_C",
+    "name": "Xeno-Zapper",
+    "description": "",
+    "imagePath": "/images/game/xeno-zapper_256.png"
+  },
+  {
+    "script": "Recipe_ZipLine_C",
+    "name": "Zipline",
+    "description": "",
+    "imagePath": "/images/game/zipline_256.png"
+  }
+]

@@ -10,12 +10,14 @@ import {
 import {
   IconBox,
   IconBuildingFactory2,
+  IconStairsUp,
   IconToolsKitchen2,
 } from '@tabler/icons-react';
 import { Link } from 'react-router-dom';
 import { AllFactoryBuildings } from '@/recipes/FactoryBuilding';
 import { AllFactoryItems } from '@/recipes/FactoryItem';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
+import { TierTotals } from './tiers/tierUnlocks';
 
 const categories = [
   {
@@ -47,6 +49,16 @@ const categories = [
       'View all recipes including default, alternate, and MAM research recipes.',
     count: AllFactoryRecipes.length,
   },
+  {
+    id: 'tiers',
+    to: '/codex/tiers',
+    icon: IconStairsUp,
+    color: 'grape',
+    title: 'Tiers',
+    description:
+      'Walk the HUB progression and see what each tier and milestone unlocks.',
+    count: TierTotals.tiers,
+  },
 ];
 
 export function CodexPage() {
@@ -59,7 +71,7 @@ export function CodexPage() {
           Satisfactory.
         </Text>
 
-        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="md">
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
           {categories.map(cat => (
             <Card
               key={cat.id}

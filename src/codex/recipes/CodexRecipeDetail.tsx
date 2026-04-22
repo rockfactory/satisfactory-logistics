@@ -10,6 +10,7 @@ import {
   Stack,
   Text,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import {
   IconArrowLeft,
@@ -139,7 +140,11 @@ export function CodexRecipeDetail() {
                   >
                     <Paper withBorder p="xs" radius="sm" w="100%">
                       <Group gap={8} wrap="nowrap">
-                        <FactoryItemImage id={ing.resource} size={32} />
+                        <FactoryItemImage
+                          id={ing.resource}
+                          size={32}
+                          withTooltip
+                        />
                         <Stack gap={0}>
                           <Text size="sm" fw={500} lineClamp={1}>
                             {item?.displayName ?? ing.resource}
@@ -162,14 +167,17 @@ export function CodexRecipeDetail() {
                 color="var(--mantine-color-dimmed)"
               />
               {building && (
-                <Box>
-                  <Image
-                    w={40}
-                    h={40}
-                    fit="contain"
-                    src={building.imagePath?.replace('_256', '_64')}
-                  />
-                </Box>
+                <Tooltip label={building.name} withArrow openDelay={250}>
+                  <Box>
+                    <Image
+                      w={40}
+                      h={40}
+                      fit="contain"
+                      src={building.imagePath?.replace('_256', '_64')}
+                      alt={building.name}
+                    />
+                  </Box>
+                </Tooltip>
               )}
               <Text size="xs" c="dimmed">
                 {recipe.time}s
@@ -189,7 +197,11 @@ export function CodexRecipeDetail() {
                   >
                     <Paper withBorder p="xs" radius="sm" w="100%">
                       <Group gap={8} wrap="nowrap">
-                        <FactoryItemImage id={prod.resource} size={32} />
+                        <FactoryItemImage
+                          id={prod.resource}
+                          size={32}
+                          withTooltip
+                        />
                         <Stack gap={0}>
                           <Text size="sm" fw={500} lineClamp={1}>
                             {item?.displayName ?? prod.resource}
@@ -213,22 +225,42 @@ export function CodexRecipeDetail() {
             <Group gap="sm">
               {unlockedBy.map(unlock => {
                 const schematic = AllFactorySchematicsMap[unlock.id];
+                const color =
+                  unlock.type === 'Milestone'
+                    ? 'blue'
+                    : unlock.type === 'MAM'
+                      ? 'violet'
+                      : unlock.type === 'Alternate'
+                        ? 'orange'
+                        : 'gray';
+                const label = schematic?.name ?? unlock.id;
+                const tier = schematic?.tier ?? null;
+                const display = tier != null ? `T${tier} · ${label}` : label;
+
+                if (unlock.type === 'Milestone' && tier != null) {
+                  return (
+                    <Badge
+                      key={unlock.id}
+                      component={Link}
+                      to={`/codex/tiers/${tier}`}
+                      variant="light"
+                      size="lg"
+                      color={color}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {display}
+                    </Badge>
+                  );
+                }
+
                 return (
                   <Badge
                     key={unlock.id}
                     variant="light"
                     size="lg"
-                    color={
-                      unlock.type === 'Milestone'
-                        ? 'blue'
-                        : unlock.type === 'MAM'
-                          ? 'violet'
-                          : unlock.type === 'Alternate'
-                            ? 'orange'
-                            : 'gray'
-                    }
+                    color={color}
                   >
-                    {schematic?.name ?? unlock.id}
+                    {display}
                   </Badge>
                 );
               })}
