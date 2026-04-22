@@ -28,15 +28,18 @@ export function getPurityLabel(purity: Purity): string {
   return PURITY_LABEL[purity];
 }
 
-// Pin silhouette: circle (center 18,18 r=10*sqrt(2) ≈ 14.14) tangent to the
-// two straight sides that meet at the tip (18,38) forming a right angle. The
-// tangent points are (8,28) and (28,28), so the transition from arc to line
-// is mathematically smooth (no seam) and the tip angle is exactly 90°.
-const PIN_VIEW_WIDTH = 36;
-const PIN_VIEW_HEIGHT = 40;
-const PIN_HEAD_CENTER = 18;
-const PIN_TIP_Y = 38;
-const PIN_PATH = 'M 18 38 L 28 28 A 14.1421 14.1421 0 1 0 8 28 Z';
+// Pin silhouette: head circle (center (16,16), radius 10·√2 ≈ 14.14) with
+// a tip at (30.14, 30.14). The two straight sides run from the tip to the
+// head's rightmost tangent point (30.14, 16) and to its bottommost tangent
+// point (16, 30.14); they meet at the tip at exactly 90° and the arc-to-
+// line transitions are smooth (tangent = no seam). The pin natively leans
+// 45° toward its upper-left, so the glyph inside the head and the corner
+// badges stay upright with no CSS rotation.
+const PIN_VIEW_SIZE = 32;
+const PIN_HEAD_CENTER = 16;
+const PIN_HEAD_RADIUS = 14.1421;
+const PIN_TIP = 30.1421;
+const PIN_PATH = `M ${PIN_TIP} ${PIN_TIP} L ${PIN_TIP} ${PIN_HEAD_CENTER} A ${PIN_HEAD_RADIUS} ${PIN_HEAD_RADIUS} 0 1 0 ${PIN_HEAD_CENTER} ${PIN_TIP} Z`;
 
 interface PinIconParams {
   /** Outer SVG width in pixels; height is scaled from the pin viewBox. */
@@ -68,9 +71,9 @@ function buildPinIcon({
   classes,
   badgesHtml,
 }: PinIconParams): L.DivIcon {
-  const scale = width / PIN_VIEW_WIDTH;
-  const height = Math.round(PIN_VIEW_HEIGHT * scale);
-  const tipY = Math.round(PIN_TIP_Y * scale);
+  const scale = width / PIN_VIEW_SIZE;
+  const size = Math.round(PIN_VIEW_SIZE * scale);
+  const tipOffset = Math.round(PIN_TIP * scale);
   // Center the icon on the pin head circle (whose center is at
   // (PIN_HEAD_CENTER, PIN_HEAD_CENTER) in viewBox units).
   const iconOffset = PIN_HEAD_CENTER - innerSize / 2;
@@ -86,8 +89,8 @@ function buildPinIcon({
   }
 
   const html = `
-    <div class="${classes.join(' ')}" style="--ring:${ringColor}; width:${width}px; height:${height}px;">
-      <svg class="map-marker__shape" viewBox="0 0 ${PIN_VIEW_WIDTH} ${PIN_VIEW_HEIGHT}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <div class="${classes.join(' ')}" style="--ring:${ringColor}; width:${size}px; height:${size}px;">
+      <svg class="map-marker__shape" viewBox="0 0 ${PIN_VIEW_SIZE} ${PIN_VIEW_SIZE}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path class="map-marker__shape-path" d="${PIN_PATH}" />
         ${iconNode}
       </svg>
@@ -98,13 +101,20 @@ function buildPinIcon({
   return L.divIcon({
     html,
     className: 'map-marker-wrapper',
-    iconSize: [width, height],
-    iconAnchor: [width / 2, tipY],
-    popupAnchor: [0, -tipY],
+    iconSize: [size, size],
+    iconAnchor: [tipOffset, tipOffset],
+    // Place the popup tail above the pin's visual center (midpoint between
+    // head center and tip), not the tip itself. Anchoring on the tip pushes
+    // the wide popup body to the right of the pin since the tip is the
+    // pin's rightmost point; centering balances it.
+    popupAnchor: [
+      Math.round(((PIN_HEAD_CENTER - PIN_TIP) / 2) * scale),
+      -Math.round((PIN_TIP - (PIN_HEAD_CENTER - PIN_HEAD_RADIUS)) * scale),
+    ],
   });
 }
 
-const RESOURCE_MARKER_WIDTH = 36;
+const RESOURCE_MARKER_WIDTH = 28;
 // The pin head is a circle (center 18,18 r≈14.14), whose inscribed square
 // is ~20 units. We size the icon just under that so the corners stay clear
 // of the curved edge and the stroke has a sliver of room.
@@ -159,7 +169,7 @@ export function getResourceMarkerIcon(
 // Slightly smaller markers for collectibles, so several collectibles
 // clustered around the same biome don't crowd out the resource nodes,
 // but big enough that the (mostly small) Tabler glyphs stay legible.
-const COLLECTIBLE_MARKER_WIDTH = 32;
+const COLLECTIBLE_MARKER_WIDTH = 24;
 const COLLECTIBLE_INNER_SIZE = 18;
 
 /**

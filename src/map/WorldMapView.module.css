@@ -140,11 +140,12 @@
 
 :global(.map-marker) {
   position: relative;
-  width: 36px;
-  height: 40px;
-  /* Tip sits at y=38 of a 40-tall box (95%). Scaling from here keeps the
-     pin point pinned to the map coordinate regardless of zoom scale. */
-  transform-origin: 50% 95%;
+  width: 32px;
+  height: 32px;
+  /* Tip sits at (30.14, 30.14) of a 32-square viewBox (~94%). Scaling from
+     the tip keeps the pin point anchored to the map coordinate regardless
+     of zoom scale. */
+  transform-origin: 94% 94%;
   transform: scale(var(--marker-zoom-scale, 1));
   /* `filter` is intentionally not in the transition list: it forces a per-
      frame raster of every marker, and at hundreds of nodes the cost shows
