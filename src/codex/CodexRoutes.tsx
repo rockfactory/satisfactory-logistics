@@ -6,6 +6,8 @@ import { CodexItemDetail } from './items/CodexItemDetail';
 import { CodexItemsPage } from './items/CodexItemsPage';
 import { CodexRecipeDetail } from './recipes/CodexRecipeDetail';
 import { CodexRecipesPage } from './recipes/CodexRecipesPage';
+import { CodexTierDetail } from './tiers/CodexTierDetail';
+import { CodexTiersPage } from './tiers/CodexTiersPage';
 
 export function CodexRoutes() {
   return (
@@ -17,6 +19,8 @@ export function CodexRoutes() {
       <Route path="buildings/:id" element={<CodexBuildingDetail />} />
       <Route path="recipes" element={<CodexRecipesPage />} />
       <Route path="recipes/:id" element={<CodexRecipeDetail />} />
+      <Route path="tiers" element={<CodexTiersPage />} />
+      <Route path="tiers/:tier" element={<CodexTierDetail />} />
     </Routes>
   );
 }

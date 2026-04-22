@@ -32,6 +32,10 @@ import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import { isDefaultRecipe, isMAMRecipe } from '@/recipes/graph/SchematicGraph';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { SectionCard, StatCard } from '../components/StatCard';
+import {
+  getEarliestTierForBuilding,
+  getMilestonesForBuilding,
+} from '../tiers/tierUnlocks';
 
 function calcOverclockedPower(
   basePower: number,
@@ -52,6 +56,9 @@ export function CodexBuildingDetail() {
   }, [id]);
 
   if (!building) return <Navigate to="/codex/buildings" replace />;
+
+  const earliestTier = getEarliestTierForBuilding(building.id);
+  const buildingMilestones = getMilestonesForBuilding(building.id);
 
   const isProduction =
     !building.conveyor &&
@@ -110,6 +117,17 @@ export function CodexBuildingDetail() {
                 {isProduction && (
                   <Badge variant="light" color="teal">
                     Production
+                  </Badge>
+                )}
+                {earliestTier != null && (
+                  <Badge
+                    component={Link}
+                    to={`/codex/tiers/${earliestTier}`}
+                    variant="light"
+                    color="grape"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    Unlocked at Tier {earliestTier}
                   </Badge>
                 )}
               </Group>
@@ -220,7 +238,11 @@ export function CodexBuildingDetail() {
                   >
                     <Paper withBorder p="xs" radius="sm">
                       <Group gap={8}>
-                        <FactoryItemImage id={cost.resource} size={32} />
+                        <FactoryItemImage
+                          id={cost.resource}
+                          size={32}
+                          withTooltip
+                        />
                         <Stack gap={0}>
                           <Text size="sm" fw={500}>
                             {item?.displayName ?? cost.resource}
@@ -232,6 +254,52 @@ export function CodexBuildingDetail() {
                       </Group>
                     </Paper>
                   </Anchor>
+                );
+              })}
+            </Group>
+          </SectionCard>
+        )}
+
+        {buildingMilestones.length > 0 && (
+          <SectionCard title="Unlocked By">
+            <Group gap="sm">
+              {buildingMilestones.map(milestone => {
+                const color =
+                  milestone.type === 'Milestone'
+                    ? 'blue'
+                    : milestone.type === 'MAM'
+                      ? 'violet'
+                      : milestone.type === 'Alternate'
+                        ? 'orange'
+                        : 'gray';
+                const label =
+                  milestone.tier != null
+                    ? `T${milestone.tier} · ${milestone.name}`
+                    : milestone.name;
+                if (milestone.type === 'Milestone' && milestone.tier != null) {
+                  return (
+                    <Badge
+                      key={milestone.id}
+                      component={Link}
+                      to={`/codex/tiers/${milestone.tier}`}
+                      variant="light"
+                      size="lg"
+                      color={color}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {label}
+                    </Badge>
+                  );
+                }
+                return (
+                  <Badge
+                    key={milestone.id}
+                    variant="light"
+                    size="lg"
+                    color={color}
+                  >
+                    {label}
+                  </Badge>
                 );
               })}
             </Group>
@@ -318,7 +386,11 @@ export function CodexBuildingDetail() {
                     >
                       <Paper withBorder p="xs" radius="sm">
                         <Group gap={8}>
-                          <FactoryItemImage id={fuel.resource} size={28} />
+                          <FactoryItemImage
+                            id={fuel.resource}
+                            size={28}
+                            withTooltip
+                          />
                           <Text size="sm">
                             {item?.displayName ?? fuel.resource}
                           </Text>
@@ -369,6 +441,7 @@ export function CodexBuildingDetail() {
                               key={ing.resource}
                               id={ing.resource}
                               size={20}
+                              withTooltip
                             />
                           ))}
                         </Group>
@@ -380,6 +453,7 @@ export function CodexBuildingDetail() {
                               key={prod.resource}
                               id={prod.resource}
                               size={20}
+                              withTooltip
                             />
                           ))}
                         </Group>

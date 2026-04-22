@@ -80,7 +80,7 @@ export function CodexItemsPage() {
               style={{ cursor: 'pointer' }}
             >
               <Stack gap="xs" align="center">
-                <FactoryItemImage id={item.id} size={64} highRes />
+                <FactoryItemImage id={item.id} size={64} highRes withTooltip />
                 <Text size="sm" ta="center" fw={500} lineClamp={2}>
                   {item.displayName}
                 </Text>

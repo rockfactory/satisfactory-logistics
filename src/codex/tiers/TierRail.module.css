@@ -1,0 +1,54 @@
+.rail {
+  position: sticky;
+  top: var(--mantine-spacing-md);
+  z-index: 5;
+  backdrop-filter: blur(6px);
+  background-color: light-dark(rgba(255, 255, 255, 0.8), rgba(20, 21, 23, 0.7));
+}
+
+.scroller {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 2px;
+}
+
+.chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: var(--mantine-radius-sm);
+  font-size: var(--mantine-font-size-xs);
+  font-weight: 600;
+  color: var(--mantine-color-dimmed);
+  background-color: light-dark(
+    var(--mantine-color-gray-1),
+    var(--mantine-color-dark-6)
+  );
+  text-decoration: none;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease,
+    transform 120ms ease;
+}
+
+.chip:hover {
+  color: var(--mantine-color-text);
+  background-color: light-dark(
+    var(--mantine-color-gray-2),
+    var(--mantine-color-dark-5)
+  );
+}
+
+.chipActive {
+  color: var(--mantine-color-white);
+  background-color: var(--mantine-color-grape-6);
+}
+
+.chipActive:hover {
+  background-color: var(--mantine-color-grape-7);
+  color: var(--mantine-color-white);
+}

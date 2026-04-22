@@ -26,6 +26,7 @@ import { AllFactoryRecipes, type FactoryRecipe } from '@/recipes/FactoryRecipe';
 import { isDefaultRecipe, isMAMRecipe } from '@/recipes/graph/SchematicGraph';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { SectionCard, StatCard } from '../components/StatCard';
+import { getEarliestTierForItem } from '../tiers/tierUnlocks';
 
 function getRecipeTypeBadge(recipe: FactoryRecipe) {
   if (isDefaultRecipe(recipe.id)) return { label: 'Default', color: 'teal' };
@@ -51,6 +52,8 @@ export function CodexItemDetail() {
 
   if (!item) return <Navigate to="/codex/items" replace />;
 
+  const earliestTier = getEarliestTierForItem(item.id);
+
   return (
     <Container size="lg" py="xl">
       <Stack gap="lg">
@@ -63,13 +66,24 @@ export function CodexItemDetail() {
 
         <Paper withBorder p="lg" radius="sm">
           <Group gap="lg" align="flex-start">
-            <FactoryItemImage id={item.id} size={96} highRes />
+            <FactoryItemImage id={item.id} size={96} highRes withTooltip />
             <Stack gap="xs" style={{ flex: 1 }}>
               <Title order={2}>{item.displayName}</Title>
               <Group gap="xs">
                 <Badge variant="light" color="gray">
                   {item.form}
                 </Badge>
+                {earliestTier != null && (
+                  <Badge
+                    component={Link}
+                    to={`/codex/tiers/${earliestTier}`}
+                    variant="light"
+                    color="grape"
+                    style={{ cursor: 'pointer' }}
+                  >
+                    Unlocked at Tier {earliestTier}
+                  </Badge>
+                )}
                 {item.isFicsmas && (
                   <Badge variant="light" color="red">
                     FICSMAS
@@ -204,6 +218,7 @@ function RecipeTable({
                       key={ing.resource}
                       id={ing.resource}
                       size={20}
+                      withTooltip
                     />
                   ))}
                 </Group>
@@ -215,6 +230,7 @@ function RecipeTable({
                       key={prod.resource}
                       id={prod.resource}
                       size={20}
+                      withTooltip
                     />
                   ))}
                 </Group>

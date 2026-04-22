@@ -18,10 +18,7 @@
     },
     "imagePath": "/images/game/pipe-pump-mk-2_256.png",
     "conveyor": null,
-    "pipeline": {
-      "isPipeline": true,
-      "flowRate": null
-    },
+    "pipeline": null,
     "extractor": null,
     "buildCost": [
       {
@@ -57,10 +54,7 @@
     },
     "imagePath": "/images/game/pipe-pump_256.png",
     "conveyor": null,
-    "pipeline": {
-      "isPipeline": true,
-      "flowRate": null
-    },
+    "pipeline": null,
     "extractor": null,
     "buildCost": [
       {
@@ -92,10 +86,7 @@
     },
     "imagePath": "/images/game/valve_256.png",
     "conveyor": null,
-    "pipeline": {
-      "isPipeline": true,
-      "flowRate": null
-    },
+    "pipeline": null,
     "extractor": null,
     "buildCost": [
       {
@@ -631,10 +622,7 @@
     },
     "imagePath": "/images/game/pipeline-junction_256.png",
     "conveyor": null,
-    "pipeline": {
-      "isPipeline": true,
-      "flowRate": null
-    },
+    "pipeline": null,
     "extractor": null,
     "buildCost": [
       {
@@ -1633,6 +1621,2490 @@
       {
         "resource": "Desc_Cement_C",
         "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_RailroadTrack_C",
+    "name": "Railway",
+    "index": 41,
+    "description": "Carries trains reliably and quickly.\r\nHas a wide turn angle, so make sure to plan it out properly.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/track_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 1
+      },
+      {
+        "resource": "Desc_SteelPlate_C",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "id": "Build_TradingPost_C",
+    "name": "The HUB",
+    "index": 42,
+    "description": "The heart of your factory. This is where you complete FICSIT milestones to unlock additional schematics for buildings, vehicles, parts, equipment, etc.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 14,
+      "length": 26,
+      "height": 8.5
+    },
+    "imagePath": "/images/game/hub_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_OreIron_C",
+        "amount": 20
+      }
+    ]
+  },
+  {
+    "id": "Build_PowerPoleMk1_C",
+    "name": "Power Pole Mk.1",
+    "index": 43,
+    "description": "Allows for up to 4 Power Line connections.\r\n\r\nConnect Power Poles, Power Generators, and factory buildings with Power Lines to create a power grid. The power grid supplies all connected buildings with power.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 0.8,
+      "length": 0.8,
+      "height": 7.6
+    },
+    "imagePath": "/images/game/power-pole-mk-1_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 3
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 1
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "id": "Build_PowerPoleWall_C",
+    "name": "Wall Outlet Mk.1",
+    "index": 44,
+    "description": "Functions like a Power Pole, but attaches to a wall.\r\n\r\nAllows for up to 4 Power Line connections.\r\n\r\nConnect Power Poles, Power Generators and factory buildings with Power Lines to create a power grid. The power grid supplies all connected buildings with power.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 0.89640068,
+      "length": 0.56551498,
+      "height": 0.56551582
+    },
+    "imagePath": "/images/game/power-pole-wall-mk-1_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 4
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "id": "Build_PowerTower_C",
+    "name": "Power Tower",
+    "index": 45,
+    "description": "Helps span Power Lines across greater distances.\r\nThere is an additional power connector at the bottom of the Power Tower to connect it to other buildings, such as Power Poles.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 12,
+      "length": 14,
+      "height": 7
+    },
+    "imagePath": "/images/game/power-tower_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_SteelPlate_C",
+        "amount": 20
+      }
+    ]
+  },
+  {
+    "id": "Build_PowerTowerPlatform_C",
+    "name": "Power Tower Platform",
+    "index": 46,
+    "description": "Helps span Power Lines across greater distances.\r\nThere is an additional power connector at the bottom of the Power Tower to connect it to other buildings, such as Power Poles.\r\n\r\nNote: This Power Tower variant includes a ladder and platform for improved utility.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 12,
+      "length": 14,
+      "height": 7
+    },
+    "imagePath": "/images/game/power-tower-platform_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_SteelPlate_C",
+        "amount": 20
+      }
+    ]
+  },
+  {
+    "id": "Build_PowerPoleMk3_C",
+    "name": "Power Pole Mk.3",
+    "index": 47,
+    "description": "Allows for up to 10 Power Line connections.\r\n\r\nConnect Power Poles, Power Generators, and factory buildings with Power Lines to create a power grid. The power grid supplies all connected buildings with power.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 0.8,
+      "length": 0.8,
+      "height": 8.7
+    },
+    "imagePath": "/images/game/power-pole-mk-3_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_HighSpeedConnector_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_Rubber_C",
+        "amount": 3
+      }
+    ]
+  },
+  {
+    "id": "Build_PowerPoleMk2_C",
+    "name": "Power Pole Mk.2",
+    "index": 48,
+    "description": "Allows for up to 7 Power Line connections.\r\n\r\nConnect Power Poles, Power Generators, and factory buildings with Power Lines to create a power grid. The power grid supplies all connected buildings with power.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 0.8,
+      "length": 0.8,
+      "height": 7.4
+    },
+    "imagePath": "/images/game/power-pole-mk-2_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_HighSpeedWire_C",
+        "amount": 6
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_PowerPoleWallDouble_C",
+    "name": "Double Wall Outlet Mk.1",
+    "index": 49,
+    "description": "Functions like a Power Pole, but attaches to a wall. Has one connector on each side of the wall.\r\n\r\nAllows for up to 4 Power Line connections per side.\r\n\r\nConnect Power Poles, Power Generators and factory buildings with Power Lines to create a power grid. The power grid supplies all connected buildings with power.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 2.0031363,
+      "length": 0.56551498,
+      "height": 0.56551582
+    },
+    "imagePath": "/images/game/power-pole-wall-double-mk-1_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 8
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_PowerPoleWallDouble_Mk2_C",
+    "name": "Double Wall Outlet Mk.2",
+    "index": 50,
+    "description": "Functions like a Power Pole, but attaches to a wall. Has one connector on each side of the wall.\r\n\r\nAllows for up to 7 Power Line connections per side.\r\n\r\nConnect Power Poles, Power Generators and factory buildings with Power Lines to create a power grid. The power grid supplies all connected buildings with power.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 2.0031363,
+      "length": 0.69121078,
+      "height": 0.69121064
+    },
+    "imagePath": "/images/game/double-wall-outlet-mk-2_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": []
+  },
+  {
+    "id": "Build_PowerPoleWall_Mk2_C",
+    "name": "Wall Outlet Mk.2",
+    "index": 51,
+    "description": "Functions like a Power Pole, but attaches to a wall.\r\n\r\nAllows for up to 7 Power Line connections.\r\n\r\nConnect Power Poles, Power Generators and factory buildings with Power Lines to create a power grid. The power grid supplies all connected buildings with power.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 0.89640068,
+      "length": 0.69121078,
+      "height": 0.69121064
+    },
+    "imagePath": "/images/game/wall-outlet-mk-2_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": []
+  },
+  {
+    "id": "Build_PowerPoleWallDouble_Mk3_C",
+    "name": "Double Wall Outlet Mk.3",
+    "index": 52,
+    "description": "Functions like a Power Pole, but attaches to a wall. Has one connector on each side of the wall.\r\n\r\nAllows for up to 10 Power Line connections per side.\r\n\r\nConnect Power Poles, Power Generators and factory buildings with Power Lines to create a power grid. The power grid supplies all connected buildings with power.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 2.0031363,
+      "length": 0.8651617500000001,
+      "height": 0.8651621199999999
+    },
+    "imagePath": "/images/game/double-wall-outlet-mk-3_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": []
+  },
+  {
+    "id": "Build_PowerPoleWall_Mk3_C",
+    "name": "Wall Outlet Mk.3",
+    "index": 53,
+    "description": "Functions like a Power Pole, but attaches to a wall.\r\n\r\nAllows for up to 10 Power Line connections.\r\n\r\nConnect Power Poles, Power Generators and factory buildings with Power Lines to create a power grid. The power grid supplies all connected buildings with power.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 0.89640068,
+      "length": 0.8651617500000001,
+      "height": 0.8651621199999999
+    },
+    "imagePath": "/images/game/wall-outlet-mk-3_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": []
+  },
+  {
+    "id": "Build_PipeStorageTank_C",
+    "name": "Fluid Buffer",
+    "index": 54,
+    "description": "Holds up to 400 m³ of fluid.\r\nHas Pipeline input and output ports.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 6,
+      "length": 6,
+      "height": 8
+    },
+    "imagePath": "/images/game/fluid-storage_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_CopperSheet_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_ModularFrame_C",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "id": "Build_IndustrialTank_C",
+    "name": "Industrial Fluid Buffer",
+    "index": 55,
+    "description": "Holds up to 2400 m³ of fluid.\r\nHas Pipeline input and output ports.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 14,
+      "length": 14,
+      "height": 12
+    },
+    "imagePath": "/images/game/fluid-storage-industrial_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 5
+      },
+      {
+        "resource": "Desc_CopperSheet_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_Plastic_C",
+        "amount": 25
+      }
+    ]
+  },
+  {
+    "id": "Build_ResourceSink_C",
+    "name": "AWESOME Sink",
+    "index": 56,
+    "description": "Got excess resources? Fear not, for FICSIT does not waste! The newly developed AWESOME Sink turns any and all useful parts into research data just as fast as you can supply them! \r\nParticipating pioneers will be compensated with Coupons that can be spent at the AWESOME Shop.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 30,
+    "powerConsumption": 30,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 16,
+      "length": 14,
+      "height": 9.5
+    },
+    "imagePath": "/images/game/resource-sink_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlateReinforced_C",
+        "amount": 15
+      },
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 30
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 45
+      }
+    ]
+  },
+  {
+    "id": "Build_ResourceSinkShop_C",
+    "name": "AWESOME Shop",
+    "index": 57,
+    "description": "Redeem your FICSIT Coupons here! \r\nFor those employees going the extra kilometer we have set aside special bonus milestones and rewards! Get your Coupons in the AWESOME Sink program now!\r\n\r\n*No refunds possible.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 4,
+      "length": 6,
+      "height": 5
+    },
+    "imagePath": "/images/game/resource-sink-shop_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronScrew_C",
+        "amount": 200
+      },
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 10
+      }
+    ]
+  },
+  {
+    "id": "Build_FrackingSmasher_C",
+    "name": "Resource Well Pressurizer",
+    "index": 58,
+    "description": "Activates a Resource Well by pressurizing the underground resource. Must be placed on a Resource Well.\r\nOnce activated, Resource Well Extractors can be placed on the surrounding sub-nodes to extract the resource.\r\nRequires power. Overclocking increases the output potential of the entire Resource Well.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 150,
+    "powerConsumption": 150,
+    "powerConsumptionExponent": 1.321929,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 15,
+      "length": 15,
+      "height": 22.5
+    },
+    "imagePath": "/images/game/smasher_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": {
+      "type": "None",
+      "allowedForms": [
+        "Liquid",
+        "Gas",
+        "Heat"
+      ],
+      "allowedResources": [
+        "Desc_LiquidOil_C",
+        "Desc_NitrogenGas_C",
+        "Desc_Water_C"
+      ],
+      "itemsPerCycle": null,
+      "cycleTime": null,
+      "itemsPerMinute": null
+    },
+    "buildCost": [
+      {
+        "resource": "Desc_ModularFrameLightweight_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_ModularFrameHeavy_C",
+        "amount": 25
+      },
+      {
+        "resource": "Desc_Motor_C",
+        "amount": 50
+      },
+      {
+        "resource": "Desc_AluminumPlate_C",
+        "amount": 50
+      },
+      {
+        "resource": "Desc_Rubber_C",
+        "amount": 100
+      }
+    ]
+  },
+  {
+    "id": "Build_DroneStation_C",
+    "name": "Drone Port",
+    "index": 59,
+    "description": "Functions as home Port to a single Drone, which transports available input back and forth between its home Port and destination Port.\r\nDrone Ports can have one other Port assigned as their transport destination.\r\n\r\nThe Drone Port interface provides delivery details and allows management of Port connections.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 100,
+    "powerConsumption": 100,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 24,
+      "length": 24,
+      "height": 3.5
+    },
+    "imagePath": "/images/game/drone-port_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_ModularFrameHeavy_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_HighSpeedConnector_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_AluminumPlate_C",
+        "amount": 50
+      },
+      {
+        "resource": "Desc_AluminumCasing_C",
+        "amount": 50
+      },
+      {
+        "resource": "Desc_ModularFrameLightweight_C",
+        "amount": 10
+      }
+    ]
+  },
+  {
+    "id": "Build_ConveyorLiftMk1_C",
+    "name": "Conveyor Lift Mk.1",
+    "index": 60,
+    "description": "Transports up to 60 resources per minute. Used to move resources between floors.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/conveyor-lift-mk-1_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_ConveyorLiftMk5_C",
+    "name": "Conveyor Lift Mk.5",
+    "index": 61,
+    "description": "Transports up to 780 resources per minute. Used to move resources between floors.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/conveyor-lift-mk-5_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_AluminumPlate_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_ConveyorLiftMk6_C",
+    "name": "Conveyor Lift Mk.6",
+    "index": 62,
+    "description": "Transports up to 1200 resources per minute. Used to move resources between floors.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/conveyor-lift-mk-6_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_FicsiteMesh_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_TimeCrystal_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_ConveyorLiftMk4_C",
+    "name": "Conveyor Lift Mk.4",
+    "index": 63,
+    "description": "Transports up to 480 resources per minute. Used to move resources between floors.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/conveyor-lift-mk-4_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_ConveyorLiftMk3_C",
+    "name": "Conveyor Lift Mk.3",
+    "index": 64,
+    "description": "Transports up to 270 resources per minute. Used to move resources between floors.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/conveyor-lift-mk-3_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPlate_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_ConveyorLiftMk2_C",
+    "name": "Conveyor Lift Mk.2",
+    "index": 65,
+    "description": "Transports up to 120 resources per minute. Used to move resources between floors.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/conveyor-lift-mk-2_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlateReinforced_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_Portal_C",
+    "name": "Main Portal",
+    "index": 66,
+    "description": "Enables pioneer teleportation between two linked Portals.\r\n\r\nEach Portal can only have a single link. \r\nA link can only be made between a Main and Satellite Portal.\r\n\r\nSingularity Cells need to be supplied to the Main Portal and will be consumed to establish and maintain the Portal link.\r\n\r\nWARNINGS:\r\n- Massive power draw will occur during start-up and usage.\r\n- Power draw on use increases with travel distance.\r\n- Link start-up will take time. Letting the connection expire is not recommended.\r\n- Failure to deliver sufficient Singularity Cells will cause the link to expire.\r\n- FICSIT does not condone the use of wormhole technology. Any usage of wormhole technology is at the user's own risk.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 250,
+    "powerConsumption": 250,
+    "powerConsumptionExponent": 1.321929,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 8,
+      "length": 8,
+      "height": 12
+    },
+    "imagePath": "/images/game/portal_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_MotorLightweight_C",
+        "amount": 5
+      },
+      {
+        "resource": "Desc_ModularFrameLightweight_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_QuantumOscillator_C",
+        "amount": 15
+      },
+      {
+        "resource": "Desc_SAMFluctuator_C",
+        "amount": 25
+      },
+      {
+        "resource": "Desc_FicsiteMesh_C",
+        "amount": 50
+      }
+    ]
+  },
+  {
+    "id": "Build_PortalSatellite_C",
+    "name": "Satellite Portal",
+    "index": 67,
+    "description": "Enables pioneer teleportation between two linked Portals.\r\n\r\nEach Portal can only have a single link. \r\nA link can only be made between a Main and Satellite Portal.\r\n\r\nSingularity Cells need to be supplied to the Main Portal and will be consumed to establish and maintain the Portal link.\r\n\r\nWARNINGS:\r\n- Massive power draw will occur during start-up and usage.\r\n- Power draw on use increases with travel distance.\r\n- Link start-up will take time. Letting the connection expire is not recommended.\r\n- Failure to deliver sufficient Singularity Cells will cause the link to expire.\r\n- FICSIT does not condone the use of wormhole technology. Any usage of wormhole technology is at the user's own risk.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 250,
+    "powerConsumption": 250,
+    "powerConsumptionExponent": 1.321929,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 8,
+      "length": 8,
+      "height": 10
+    },
+    "imagePath": "/images/game/portal-satellite_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_ModularFrameLightweight_C",
+        "amount": 5
+      },
+      {
+        "resource": "Desc_QuantumOscillator_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_SAMFluctuator_C",
+        "amount": 25
+      },
+      {
+        "resource": "Desc_FicsiteMesh_C",
+        "amount": 25
+      }
+    ]
+  },
+  {
+    "id": "Build_BlueprintDesigner_Mk3_C",
+    "name": "Blueprint Designer Mk.3",
+    "index": 68,
+    "description": "The Blueprint Designer is used to create custom factory designs and save them as Blueprints.\r\nBlueprints can be accessed from the Blueprint tab of the Build Menu.\r\n\r\nNote that buildings can only be placed in the Blueprint Designer if they are fully within the boundary frame.\r\n\r\nDimensions: 48 m x 48 m x 48 m",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/blueprint-designer-mk-3_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": []
+  },
+  {
+    "id": "Build_BlueprintDesigner_MK2_C",
+    "name": "Blueprint Designer Mk.2",
+    "index": 69,
+    "description": "The Blueprint Designer is used to create custom factory designs and save them as Blueprints.\r\nBlueprints can be accessed from the Blueprint tab of the Build Menu.\r\n\r\nNote that buildings can only be placed in the Blueprint Designer if they are fully within the boundary frame.\r\n\r\nDimensions: 40 m x 40 m x 40 m",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/blueprint-designer-mk-2_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_ModularFrameHeavy_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_Computer_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_Rubber_C",
+        "amount": 100
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 100
+      }
+    ]
+  },
+  {
+    "id": "Build_BlueprintDesigner_C",
+    "name": "Blueprint Designer Mk.1",
+    "index": 70,
+    "description": "The Blueprint Designer is used to create custom factory designs and save them as Blueprints.\r\nBlueprints can be accessed from the Blueprint tab of the Build Menu.\r\n\r\nNote that buildings can only be placed in the Blueprint Designer if they are fully within the boundary frame.\r\n\r\nDimensions: 32 m x 32 m x 32 m",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/blueprint-designer_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_ModularFrame_C",
+        "amount": 15
+      },
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 25
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 100
+      },
+      {
+        "resource": "Desc_SteelPlate_C",
+        "amount": 100
+      }
+    ]
+  },
+  {
+    "id": "Build_RailroadBlockSignal_C",
+    "name": "Block Signal",
+    "index": 71,
+    "description": "Directs the movement of trains to avoid collisions and bottlenecks.\r\n\r\nBlock Signals can be placed on Railways to create 'Blocks' between them. When a train is occupying one of these Blocks, other trains will be unable to enter it.\r\n\r\nCaution: Signals are directional! Trains are unable to move against this direction, so be sure to set up Signals in both directions for bi-directional Railways.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/block-signal_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_Computer_C",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "id": "Build_RailroadPathSignal_C",
+    "name": "Path Signal",
+    "index": 72,
+    "description": "Directs the movement of trains to avoid collisions and bottlenecks.\r\n\r\nPath Signals are advanced signals that are especially useful for bi-directional Railways and complex intersections. They function similarly to Block Signals, but rather than occupying the entire Block, trains can reserve a specific path through it and will only enter the Block if their path allows them to fully pass through.\r\n\r\nCaution: Signals are directional! Trains are unable to move against this direction, so be sure to set up Signals in both directions for bi-directional Railways.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/path-signal_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_Computer_C",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "id": "Build_RailroadEndStop_C",
+    "name": "Buffer Stop",
+    "index": 73,
+    "description": "Prevents trains from derailing at the end of a railway.\r\n\r\nWhile automated driving systems have made Buffer Stops mostly obsolete, their use is still recommended to mitigate potential human error.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 6,
+      "length": 6,
+      "height": 2.5
+    },
+    "imagePath": "/images/game/buffer-stop_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 5
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 20
+      }
+    ]
+  },
+  {
+    "id": "Build_TrainDockingStation_C",
+    "name": "Freight Platform",
+    "index": 74,
+    "description": "Loads and unloads Freight Cars that stop at the Freight Platform.\r\nLoading and unloading options can be set by configuring the building.\r\nSnaps to other Platforms and Stations.\r\nNeeds to be connected to a powered Railway to function.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 50,
+    "powerConsumption": 50,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 16,
+      "length": 34,
+      "height": 20
+    },
+    "imagePath": "/images/game/docking-station_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Motor_C",
+        "amount": 5
+      },
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_Plastic_C",
+        "amount": 25
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 50
+      },
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 100
+      }
+    ]
+  },
+  {
+    "id": "Build_TrainDockingStationLiquid_C",
+    "name": "Fluid Freight Platform",
+    "index": 75,
+    "description": "Loads and unloads Freight Cars that stop at the Freight Platform.\r\nLoading and unloading options can be set by configuring the building.\r\nSnaps to other Platforms and Stations.\r\nNeeds to be connected to a powered Railway to function.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 50,
+    "powerConsumption": 50,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 16,
+      "length": 34,
+      "height": 20
+    },
+    "imagePath": "/images/game/train-docking-fluid_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Motor_C",
+        "amount": 5
+      },
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_Plastic_C",
+        "amount": 25
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 50
+      },
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 100
+      }
+    ]
+  },
+  {
+    "id": "Build_TrainPlatformEmpty_C",
+    "name": "Empty Platform",
+    "index": 76,
+    "description": "Creates empty space where necessary.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 16,
+      "length": 34,
+      "height": 8
+    },
+    "imagePath": "/images/game/empty-platform_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 50
+      }
+    ]
+  },
+  {
+    "id": "Build_TrainPlatformEmpty_02_C",
+    "name": "Empty Platform With Catwalk",
+    "index": 77,
+    "description": "Creates empty space where necessary.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 16,
+      "length": 34,
+      "height": 9
+    },
+    "imagePath": "/images/game/platform-catwalk_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 50
+      }
+    ]
+  },
+  {
+    "id": "Build_TrainStation_C",
+    "name": "Train Station",
+    "index": 78,
+    "description": "Serves as a hub for Locomotives, which can be set to navigate to and stop at a Train Station.\r\nYou can connect power to a Train Station to power up the trains on the Railway as well as feed power to other stations.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 50,
+    "powerConsumption": 50,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 16,
+      "length": 34,
+      "height": 21
+    },
+    "imagePath": "/images/game/train-station_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_Plastic_C",
+        "amount": 50
+      },
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 50
+      },
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 200
+      }
+    ]
+  },
+  {
+    "id": "Build_StorageContainerMk2_C",
+    "name": "Industrial Storage Container",
+    "index": 79,
+    "description": "Contains 48 slots for storing large amounts of items.\r\nHas 2 Conveyor Belt input ports and 2 Conveyor Belt output ports.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 5,
+      "length": 11,
+      "height": 8
+    },
+    "imagePath": "/images/game/storage-container-mk-2_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPlate_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 20
+      }
+    ]
+  },
+  {
+    "id": "Build_StoragePlayer_C",
+    "name": "Personal Storage Box",
+    "index": 80,
+    "description": "Contains 25 slots for storing large amounts of items.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 1,
+      "length": 1.6,
+      "height": 0.8
+    },
+    "imagePath": "/images/game/player-storage_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 6
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 6
+      }
+    ]
+  },
+  {
+    "id": "Build_StorageMedkit_C",
+    "name": "Medical Storage Box",
+    "index": 81,
+    "description": "Contains 25 slots for storing large amounts of items.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 1,
+      "length": 1.6,
+      "height": 0.8
+    },
+    "imagePath": "/images/game/storage-medkit_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 6
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 6
+      }
+    ]
+  },
+  {
+    "id": "Build_StorageHazard_C",
+    "name": "Hazard Storage Box",
+    "index": 82,
+    "description": "Contains 25 slots for storing large amounts of items.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 1,
+      "length": 1.6,
+      "height": 0.8
+    },
+    "imagePath": "/images/game/storage-hazard_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 6
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 6
+      }
+    ]
+  },
+  {
+    "id": "Build_StorageContainerMk1_C",
+    "name": "Storage Container",
+    "index": 83,
+    "description": "Contains 24 slots for storing large amounts of items.\r\nHas 1 Conveyor Belt input port and 1 Conveyor Belt output port.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 5,
+      "length": 11,
+      "height": 4
+    },
+    "imagePath": "/images/game/storage-container_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 10
+      }
+    ]
+  },
+  {
+    "id": "Build_HyperTubeJunction_C",
+    "name": "Hypertube Junction",
+    "index": 84,
+    "description": "A three-way Hypertube Junction that allows travel to and from any of its directions.\r\n\r\nCan be built on its own or attached to a Hypertube Support or Junction.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 2,
+      "length": 3.5,
+      "height": 2
+    },
+    "imagePath": "/images/game/hypertube-junction_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_SteelPlate_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_CopperSheet_C",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "id": "Build_HypertubeTJunction_C",
+    "name": "Hypertube Branch",
+    "index": 85,
+    "description": "A one-way Hypertube Branch that allows another Hypertube to split off from an existing path. The branching Hypertube can only be accessed when entering from the longer side.\r\n\r\nCan be built on its own, onto an existing Hypertube, or attached to a Hypertube Support or Junction.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 5,
+      "length": 2,
+      "height": 2
+    },
+    "imagePath": "/images/game/hypertube-branch_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_CopperSheet_C",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "id": "Build_PipeHyper_C",
+    "name": "Hypertube",
+    "index": 86,
+    "description": "Transports FICSIT employees.\r\nA Hypertube system cannot be powered up or used until a Hypertube Entrance is attached.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/hyper-tube_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_CopperSheet_C",
+        "amount": 1
+      },
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "id": "Build_PowerStorageMk1_C",
+    "name": "Power Storage",
+    "index": 87,
+    "description": "Connects to a power grid to store excess power produced. The stored power can be harnessed if power grid consumption exceeds production.\r\n\r\nStorage Capacity: 100 MWh (100 MW for 1 hour)\r\nMaximum Charge Rate: 100 MW\r\nMaximum Discharge Rate: Unlimited",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 6,
+      "length": 6,
+      "height": 12
+    },
+    "imagePath": "/images/game/power-storage_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 5
+      },
+      {
+        "resource": "Desc_ModularFrame_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 100
+      }
+    ]
+  },
+  {
+    "id": "Build_TruckStation_C",
+    "name": "Truck Station",
+    "index": 88,
+    "description": "Sends or receives resources to/from vehicles.\r\n\r\nHas 48 inventory slots.\r\n\r\nTransfers up to 120 stacks per minute to/from docked vehicles. \r\nAlways refuels vehicles if it has access to a matching fuel type.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 20,
+    "powerConsumption": 20,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 17,
+      "length": 9,
+      "height": 6.2
+    },
+    "imagePath": "/images/game/truck-station_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_ModularFrame_C",
+        "amount": 15
+      },
+      {
+        "resource": "Desc_Rotor_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 50
+      }
+    ]
+  },
+  {
+    "id": "Build_JumpPadAdjustable_C",
+    "name": "Jump Pad",
+    "index": 89,
+    "description": "Launches pioneers for quick, vertical traversal.\r\nThe launch angle can be adjusted while building.\r\nCaution: Be sure to land safely!",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 5,
+    "powerConsumption": 5,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 6,
+      "length": 6,
+      "height": 3
+    },
+    "imagePath": "/images/game/jump-pad_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Rotor_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 15
+      },
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 10
+      }
+    ]
+  },
+  {
+    "id": "Build_Mam_C",
+    "name": "MAM",
+    "index": 90,
+    "description": "The Molecular Analysis Machine is used to analyze new and exotic materials found on alien planets.\r\nThrough the MAM, R&D will assist pioneers in turning any valuable data into usable research options and new technologies.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 6,
+      "length": 9,
+      "height": 5
+    },
+    "imagePath": "/images/game/mam_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlateReinforced_C",
+        "amount": 5
+      },
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 15
+      },
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 45
+      }
+    ]
+  },
+  {
+    "id": "Build_ConveyorAttachmentMerger_C",
+    "name": "Conveyor Merger",
+    "index": 91,
+    "description": "Merges up to three Conveyor Belts into one.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 4,
+      "length": 4,
+      "height": 2.6
+    },
+    "imagePath": "/images/game/conveyor-merger_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_ConveyorAttachmentSplitter_C",
+    "name": "Conveyor Splitter",
+    "index": 92,
+    "description": "Splits one Conveyor Belt into two or three. \r\nUseful for diverting parts and resources away from backlogged Conveyor Belts.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 4,
+      "length": 4,
+      "height": 2.6
+    },
+    "imagePath": "/images/game/conveyor-splitter_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_AlienPowerBuilding_C",
+    "name": "Alien Power Augmenter",
+    "index": 93,
+    "description": "Generates power based on the total amount of power on the attached power grid.\r\n\r\nThis experimental technology is somehow able to extract power from the Somersloop by blasting it with energy.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 30,
+      "length": 30,
+      "height": 25
+    },
+    "imagePath": "/images/game/alien-power-augmenter_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_WAT1_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_SAMFluctuator_C",
+        "amount": 50
+      },
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 100
+      },
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 50
+      },
+      {
+        "resource": "Desc_Motor_C",
+        "amount": 25
+      },
+      {
+        "resource": "Desc_Computer_C",
+        "amount": 10
+      }
+    ]
+  },
+  {
+    "id": "Build_ConveyorAttachmentSplitterProgrammable_C",
+    "name": "Programmable Splitter",
+    "index": 94,
+    "description": "Splits one Conveyor Belt into two or three. \r\nMultiple filters can be set for each output to allow specific parts to pass through.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 4,
+      "length": 4,
+      "height": 2.6
+    },
+    "imagePath": "/images/game/programmable-splitter_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_ModularFrameHeavy_C",
+        "amount": 1
+      },
+      {
+        "resource": "Desc_Computer_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_CircuitBoardHighSpeed_C",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "id": "Build_ConveyorAttachmentSplitterSmart_C",
+    "name": "Smart Splitter",
+    "index": 95,
+    "description": "Splits one Conveyor Belt into two or three.\r\nA filter can be set for each output to allow a specific part to pass through.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 4,
+      "length": 4,
+      "height": 2.6
+    },
+    "imagePath": "/images/game/smart-splitter_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlateReinforced_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_Rotor_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_CircuitBoardHighSpeed_C",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "id": "Build_PriorityPowerSwitch_C",
+    "name": "Priority Power Switch",
+    "index": 96,
+    "description": "Priority Power Switches can be ranked by priority. When power production is too low, Switches will start turning off automatically until the power stabilizes, starting with Priority Group 8.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 2,
+      "length": 1,
+      "height": 3
+    },
+    "imagePath": "/images/game/smart-switch_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_HighSpeedConnector_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_SteelPlate_C",
+        "amount": 6
+      },
+      {
+        "resource": "Desc_HighSpeedWire_C",
+        "amount": 50
+      }
+    ]
+  },
+  {
+    "id": "Build_PowerSwitch_C",
+    "name": "Power Switch",
+    "index": 97,
+    "description": "Enables/disables the connection between 2 power grids when switched ON/OFF.\r\n\r\nNote the A and B connector labels.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 2,
+      "length": 1,
+      "height": 3
+    },
+    "imagePath": "/images/game/power-switch_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_HighSpeedWire_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_SteelPlate_C",
+        "amount": 4
+      },
+      {
+        "resource": "Desc_CircuitBoardHighSpeed_C",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "id": "Build_ConveyorAttachmentMergerPriority_C",
+    "name": "Priority Merger",
+    "index": 98,
+    "description": "Merges up to three Conveyor Belts into one.\r\nInputs can be prioritized to always be merged before others.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 4,
+      "length": 4,
+      "height": 2.6
+    },
+    "imagePath": "/images/game/priority-merger_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlateReinforced_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_ModularFrame_C",
+        "amount": 1
+      },
+      {
+        "resource": "Desc_CrystalOscillator_C",
+        "amount": 1
+      }
+    ]
+  },
+  {
+    "id": "Build_RadarTower_C",
+    "name": "Radar Tower",
+    "index": 99,
+    "description": "Scans the surrounding area to display additional information on the Map.\r\n\r\nInformation revealed on the Map includes:\r\n- Resource node locations\r\n- Terrain data\r\n- Flora & fauna information\r\n- Notable signal readings",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 30,
+    "powerConsumption": 30,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 10,
+      "length": 10,
+      "height": 118
+    },
+    "imagePath": "/images/game/radar-tower_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Computer_C",
+        "amount": 10
+      },
+      {
+        "resource": "Desc_ModularFrameHeavy_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_CrystalOscillator_C",
+        "amount": 25
+      },
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 100
+      }
+    ]
+  },
+  {
+    "id": "Build_TreeGiftProducer_C",
+    "name": "FICSMAS Gift Tree",
+    "index": 100,
+    "description": "A festively disguised production building. Reminder: Nothing is ever truly free.\r\nProduces 15 Gifts per minute.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 8,
+      "length": 8,
+      "height": 17
+    },
+    "imagePath": "/images/game/christmas-tree_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Gift_C",
+        "amount": 50
+      },
+      {
+        "resource": "Desc_XmasBranch_C",
+        "amount": 100
+      },
+      {
+        "resource": "Desc_XmasBall1_C",
+        "amount": 30
+      },
+      {
+        "resource": "Desc_XmasBall2_C",
+        "amount": 30
+      }
+    ]
+  },
+  {
+    "id": "Build_SpaceElevator_C",
+    "name": "Space Elevator",
+    "index": 101,
+    "description": "Requires deliveries of special Project Parts to complete Project Assembly Phases.\r\nCompleting these Phases will unlock new Tiers in the HUB Terminal.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 0,
+    "powerConsumption": 0,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 17,
+      "length": 48,
+      "height": 35
+    },
+    "imagePath": "/images/game/space-elevator_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 500
+      },
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 250
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 400
+      },
+      {
+        "resource": "Desc_Wire_C",
+        "amount": 1500
+      }
+    ]
+  },
+  {
+    "id": "Build_LookoutTower_C",
+    "name": "Lookout Tower",
+    "index": 102,
+    "description": "Provides a good vantage point to facilitate factory construction.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 8,
+      "length": 8,
+      "height": 1.5
+    },
+    "imagePath": "/images/game/look-out-tower_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_IronPlate_C",
+        "amount": 5
+      },
+      {
+        "resource": "Desc_IronRod_C",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "id": "Build_PipeHyperStart_C",
+    "name": "Hypertube Entrance",
+    "index": 103,
+    "description": "Powers up a Hypertube system and allows it to be entered.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 10,
+    "powerConsumption": 10,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": null,
+      "length": null,
+      "height": null
+    },
+    "imagePath": "/images/game/hyper-tube-start_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_SteelPlateReinforced_C",
+        "amount": 4
+      },
+      {
+        "resource": "Desc_Rotor_C",
+        "amount": 4
+      },
+      {
+        "resource": "Desc_SteelPipe_C",
+        "amount": 10
+      }
+    ]
+  },
+  {
+    "id": "Build_Wall_8x4_01_C",
+    "name": "Basic Wall (4 m)",
+    "index": 104,
+    "description": "Snaps to Foundations and other Walls.\r\nUseful for building multi-floor structures.\r\n\r\nSize: 8 m x 4 m",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 0.5,
+      "length": 8,
+      "height": 4
+    },
+    "imagePath": "/images/game/ficsit-wall-8-x-4_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_Wall_Orange_8x1_C",
+    "name": "Basic Wall (1 m)",
+    "index": 105,
+    "description": "Snaps to Foundations and other Walls.\r\nUseful for building multi-floor structures.\r\n\r\nSize: 8 m x 1 m",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 0.5,
+      "length": 8,
+      "height": 1
+    },
+    "imagePath": "/images/game/ficsit-wall-8-x-1_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 2
+      }
+    ]
+  },
+  {
+    "id": "Build_JumpPad_C",
+    "name": "Old Jump Pad",
+    "index": 106,
+    "description": "Propels you upwards through the air.\r\nMake sure you land softly.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 2,
+    "powerConsumption": 2,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 6,
+      "length": 6,
+      "height": 6
+    },
+    "imagePath": "/images/game/jump-pad_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": []
+  },
+  {
+    "id": "Build_JumpPadTilted_C",
+    "name": "Old Tilted Jump Pad",
+    "index": 107,
+    "description": "Propels you forwards through the air.\r\nMake sure you land softly.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 2,
+    "powerConsumption": 2,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 6,
+      "length": 6,
+      "height": 6
+    },
+    "imagePath": "/images/game/jump-pad_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": []
+  },
+  {
+    "id": "Build_LandingPad_C",
+    "name": "U-Jelly Landing Pad",
+    "index": 108,
+    "description": "Generates a speed-dampening jelly.\r\nGuarantees a safe landing.",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": 5,
+    "powerConsumption": 5,
+    "powerConsumptionExponent": 1.6,
+    "somersloopPowerConsumptionExponent": 2,
+    "somersloopSlots": 0,
+    "clearance": {
+      "width": 10,
+      "length": 10,
+      "height": 5
+    },
+    "imagePath": "/images/game/landing-pad_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Rotor_C",
+        "amount": 2
+      },
+      {
+        "resource": "Desc_Cable_C",
+        "amount": 20
+      },
+      {
+        "resource": "Desc_GenericBiomass_C",
+        "amount": 200
+      }
+    ]
+  },
+  {
+    "id": "Build_Foundation_8x1_01_C",
+    "name": "Foundation (1 m)",
+    "index": 109,
+    "description": "Provides a flat floor to build your factory on.\r\n\r\nBuildings on top of the Foundation snap to a grid, making it easier to line them up with each other.\r\n\r\nSize: 8 m x 1 m",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 8,
+      "length": 8,
+      "height": 1
+    },
+    "imagePath": "/images/game/ficsit-foundation-1-m_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "id": "Build_Foundation_8x2_01_C",
+    "name": "Foundation (2 m)",
+    "index": 110,
+    "description": "Provides a flat floor to build your factory on.\r\n\r\nBuildings on top of the Foundation snap to a grid, making it easier to line them up with each other.\r\n\r\nSize: 8 m x 2 m",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 8,
+      "length": 8,
+      "height": 2
+    },
+    "imagePath": "/images/game/ficsit-foundation-2-m_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "id": "Build_Foundation_8x4_01_C",
+    "name": "Foundation (4 m)",
+    "index": 111,
+    "description": "Provides a flat floor to build your factory on.\r\n\r\nBuildings on top of the Foundation snap to a grid, making it easier to line them up with each other.\r\n\r\nSize: 8 m x 4 m",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 8,
+      "length": 8,
+      "height": 4
+    },
+    "imagePath": "/images/game/ficsit-foundation-4-m_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "id": "Build_Ramp_8x1_01_C",
+    "name": "Ramp (1 m)",
+    "index": 112,
+    "description": "Snaps to Foundations and makes it easier to get onto them.\r\n\r\nBuildings on top of the Ramp snap to a grid, making it easier to line them up with each other.\r\n\r\nSize: 8 m x 1 m",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 8,
+      "length": 8,
+      "height": 1
+    },
+    "imagePath": "/images/game/ficsit-ramp-1-m_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "id": "Build_Ramp_8x2_01_C",
+    "name": "Ramp (2 m)",
+    "index": 113,
+    "description": "Snaps to Foundations and makes it easier to get onto them.\r\n\r\nBuildings on top of the Ramp snap to a grid, making it easier to line them up with each other.\r\n\r\nSize: 8 m x 2 m",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 8,
+      "length": 8,
+      "height": 2
+    },
+    "imagePath": "/images/game/ficsit-ramp-2-m_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 5
+      }
+    ]
+  },
+  {
+    "id": "Build_Ramp_8x4_01_C",
+    "name": "Ramp (4 m)",
+    "index": 114,
+    "description": "Snaps to Foundations and makes it easier to get onto them.\r\n\r\nBuildings on top of the Ramp snap to a grid, making it easier to line them up with each other.\r\n\r\nSize: 8 m x 4 m",
+    "minimumPowerConsumption": null,
+    "maximumPowerConsumption": null,
+    "averagePowerConsumption": null,
+    "powerConsumption": null,
+    "powerConsumptionExponent": null,
+    "somersloopPowerConsumptionExponent": null,
+    "somersloopSlots": null,
+    "clearance": {
+      "width": 8,
+      "length": 8,
+      "height": 4
+    },
+    "imagePath": "/images/game/ficsit-ramp-4-m_256.png",
+    "conveyor": null,
+    "pipeline": null,
+    "extractor": null,
+    "buildCost": [
+      {
+        "resource": "Desc_Cement_C",
+        "amount": 5
       }
     ]
   }
