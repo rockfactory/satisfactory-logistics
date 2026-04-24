@@ -7,6 +7,7 @@ import {
   useFactoryInputsOutputs,
   useFactoryOutputConsumers,
 } from '@/factories/store/factoriesSelectors';
+import { useShowOutputFactoriesNodes } from '@/games/gamesSlice';
 import { isByproductNode } from '@/solver/algorithm/getSolutionNodes';
 import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
 import { solveProduction, useHighs } from '@/solver/algorithm/solveProduction';
@@ -82,6 +83,7 @@ export const useSolverSolution = (id: string, mode: 'game' | 'standalone') => {
   const outputConsumers = useFactoryOutputConsumers(id);
   const instance = usePathSolverInstance(id);
   const solverGameId = useSolverGameId(id);
+  const showOutputFactoriesNodes = useShowOutputFactoriesNodes();
 
   // 1. Initialize solver instance and factory defaults if missing
   useEffect(() => {
@@ -116,6 +118,7 @@ export const useSolverSolution = (id: string, mode: 'game' | 'standalone') => {
       ...instance.request,
       ...inputsOutputs,
       outputConsumers,
+      showOutputFactoriesNodes,
       nodes: instance.nodes,
     });
     logger.log('Solved ->', solution);
@@ -138,6 +141,7 @@ export const useSolverSolution = (id: string, mode: 'game' | 'standalone') => {
     instance?.nodes,
     inputsOutputs,
     outputConsumers,
+    showOutputFactoriesNodes,
     loading,
   ]);
 

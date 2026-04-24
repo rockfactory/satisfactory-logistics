@@ -1,6 +1,7 @@
 import {
   Badge,
   Box,
+  Divider,
   Flex,
   Group,
   Popover,
@@ -25,6 +26,7 @@ import {
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import type { SolverNodeState } from '@/solver/store/Solver';
+import { ShowOutputFactoriesNodesAction } from './ShowOutputFactoriesNodesAction';
 
 export type IUnallocatedOutputNodeData = {
   resource: FactoryItem;
@@ -162,12 +164,14 @@ export const UnallocatedOutputNode = memo(
               </Text>
             </Box>
             <NodeActionsBox>
-              <Stack>
-                <Text fs="italic" size="sm">
+              <Stack gap="sm">
+                <Text fs="italic" size="xs" c="dimmed">
                   This much production has no downstream consumer factory
                   declared. Add an input pointing at this factory from another
                   factory to allocate it.
                 </Text>
+                <Divider />
+                <ShowOutputFactoriesNodesAction />
               </Stack>
             </NodeActionsBox>
           </Flex>

@@ -2,6 +2,8 @@ import {
   Anchor,
   Badge,
   Box,
+  Button,
+  Divider,
   Flex,
   Group,
   Popover,
@@ -27,6 +29,7 @@ import {
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import type { SolverNodeState } from '@/solver/store/Solver';
+import { ShowOutputFactoriesNodesAction } from './ShowOutputFactoriesNodesAction';
 
 export type IOutputConsumerNodeData = {
   resource: FactoryItem;
@@ -85,7 +88,7 @@ export const OutputConsumerNode = memo((props: IOutputConsumerNodeProps) => {
             opacity: isDimmed ? 0.25 : 1,
             transition: 'border-color 0.2s, opacity 0.2s',
           }}
-          bg="blue.9"
+          bg="pink.9"
           onMouseEnter={open}
           onMouseLeave={close}
         >
@@ -168,17 +171,22 @@ export const OutputConsumerNode = memo((props: IOutputConsumerNodeProps) => {
             </Text>
           </Box>
           <NodeActionsBox>
-            <Stack>
-              <Text fs="italic" size="sm">
-                This factory supplies{' '}
-                <Anchor
-                  component={Link}
-                  to={`/factories/${consumerFactoryId}/calculator`}
-                >
-                  {factoryLabel}
-                </Anchor>
-                . Edit the link from the consumer factory's inputs.
+            <Stack gap="sm">
+              <Text fs="italic" size="xs" c="dimmed">
+                Edit the link from the consumer factory's inputs.
               </Text>
+              <Button
+                component={Link}
+                to={`/factories/${consumerFactoryId}/calculator`}
+                size="xs"
+                variant="light"
+                leftSection={<IconBuildingFactory2 size={14} />}
+                rightSection={<IconExternalLink size={12} />}
+              >
+                Open {factoryLabel}
+              </Button>
+              <Divider />
+              <ShowOutputFactoriesNodesAction />
             </Stack>
           </NodeActionsBox>
         </Flex>

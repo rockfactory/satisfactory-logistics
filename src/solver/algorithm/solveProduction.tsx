@@ -3,6 +3,7 @@ import highloader, { type Highs, type HighsSolution } from 'highs';
 import { useEffect, useRef, useState } from 'react';
 import { log } from '@/core/logger/log';
 import type { FactoryInput, FactoryOutput } from '@/factories/Factory';
+import type { ShowOutputFactoriesNodesMode } from '@/games/Game';
 import type { FactoryItem } from '@/recipes/FactoryItem';
 import type { IIngredientEdgeData } from '@/solver/edges/IngredientEdge';
 import type { IByproductNodeData } from '@/solver/layout/nodes/byproduct-node/ByproductNode';
@@ -46,6 +47,12 @@ export interface SolverProductionRequest extends SolverRequest {
   inputs: FactoryInput[];
   outputs: FactoryOutput[];
   outputConsumers?: FactoryOutputConsumer[];
+  /**
+   * Per-game preference for whether the solver graph displays
+   * output-consumer / unallocated nodes. Defaults to `'allocated'` if
+   * the request omits it (matches the migration default).
+   */
+  showOutputFactoriesNodes?: ShowOutputFactoriesNodesMode;
   nodes?: Record<string, SolverNodeState>;
 }
 
@@ -116,7 +123,12 @@ export function solveProduction(
   //     These are pure display markers — they live in the graph so we can
   //     iterate them after the LP solves, but they do not add any LP
   //     constraints (see addOutputConsumerNode for why).
-  const outputConsumers = request.outputConsumers ?? [];
+  //     The per-game `showOutputFactoriesNodes` setting gates the entire
+  //     feature: 'none' skips emitting both consumer and unallocated nodes.
+  const showOutputFactoriesNodes =
+    request.showOutputFactoriesNodes ?? 'allocated';
+  const outputConsumers =
+    showOutputFactoriesNodes === 'none' ? [] : (request.outputConsumers ?? []);
   for (let i = 0; i < outputConsumers.length; i++) {
     const consumer = outputConsumers[i];
     if (!consumer.resource || consumer.amount == null) continue;
@@ -342,11 +354,14 @@ export function solveProduction(
 
     // 6. Unallocated output nodes — one per resource where production
     //    exceeds the sum of declared consumer claims. Hidden when zero
-    //    so a fully-allocated factory doesn't get extra clutter.
+    //    so a fully-allocated factory doesn't get extra clutter, and
+    //    only emitted at all when the user has opted into the 'all' mode.
+    const skipUnallocated = showOutputFactoriesNodes !== 'all';
     for (const {
       item,
       total: totalAllocated,
     } of allocatedByResource.values()) {
+      if (skipUnallocated) break;
       const byproductId = `b${item.index}`;
       const byproductCol = result.Columns[byproductId];
       if (!byproductCol) continue;
