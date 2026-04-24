@@ -30,6 +30,25 @@ export type SolverRawInputNode = {
   inputIndex?: number;
 };
 
+/**
+ * A "raw output" — represents a portion of this factory's output that flows
+ * to a downstream consumer factory. Mirrors `SolverRawInputNode` but on the
+ * output side. Created by scanning other factories' inputs that reference
+ * this factory's id and resource.
+ */
+export type SolverRawOutputNode = {
+  type: 'raw_output';
+  label: string;
+  resource: FactoryItem;
+  variable: string;
+  output?: FactoryOutput;
+  outputIndex?: number;
+  consumerFactoryId: string;
+  consumerFactoryName?: string | null;
+  consumerInputIndex: number;
+  consumerAmount: number;
+};
+
 export type SolverOutputNode = {
   type: 'output';
   label: string;
@@ -83,6 +102,7 @@ export type SolverAreaNode = {
 export type SolverNode =
   | SolverRawNode
   | SolverRawInputNode
+  | SolverRawOutputNode
   | SolverOutputNode
   | SolverByproductNode
   | SolverInputNode

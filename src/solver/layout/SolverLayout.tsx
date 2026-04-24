@@ -33,6 +33,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSolverHighlight } from './highlight/SolverHighlightContext';
 import { ByproductNode } from './nodes/byproduct-node/ByproductNode';
 import { MachineNode } from './nodes/machine-node/MachineNode';
+import { OutputConsumerNode } from './nodes/output-consumer-node/OutputConsumerNode';
+import { UnallocatedOutputNode } from './nodes/output-consumer-node/UnallocatedOutputNode';
 import { ResourceNode } from './nodes/resource-node/ResourceNode';
 import classes from './SolverLayout.module.css';
 import {
@@ -197,6 +199,8 @@ const nodeTypes = {
   Machine: MachineNode,
   Resource: ResourceNode,
   Byproduct: ByproductNode,
+  OutputConsumer: OutputConsumerNode,
+  UnallocatedOutput: UnallocatedOutputNode,
 };
 
 const edgeTypes = {
