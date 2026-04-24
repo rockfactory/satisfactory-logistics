@@ -7,6 +7,7 @@ import { chartsSlice } from '@/factories/charts/store/chartsSlice';
 import { factoriesSlice } from '@/factories/store/factoriesSlice';
 import { factoryViewSlice } from '@/factories/store/factoryViewSlice';
 import { factoryViewSortActions } from '@/factories/store/factoryViewSortActions';
+import { DEFAULT_SHOW_OUTPUT_FACTORIES_NODES, type Game } from '@/games/Game';
 import { gamesSlice } from '@/games/gamesSlice';
 import { gameSaveSlice } from '@/games/save/gameSaveSlice';
 import { gameFactoriesActions } from '@/games/store/gameFactoriesActions';
@@ -66,7 +67,7 @@ export const useStore = create(
     persist(slicesWithActions, {
       name: 'zustand:persist',
       partialize: state => omit(state, ['gameSave', 'peers', 'mapSelection']),
-      version: 8,
+      version: 9,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
       ),
@@ -237,6 +238,31 @@ export const useStore = create(
               ...(state as any),
               map: next,
             };
+          }
+          return state;
+        }
+
+        if (version === 8) {
+          logger.log(
+            'Migrating from version 8 to 9 [seed showOutputFactoriesNodes per-game setting]',
+          );
+          // v9 adds `showOutputFactoriesNodes` to each game's settings,
+          // controlling whether the solver graph renders downstream
+          // output-consumer nodes (and the unallocated leftover node).
+          // Default existing games to 'allocated' so the feature is
+          // visible but conservative — only declared consumers show up,
+          // matching what a user upgrading would expect to see now that
+          // we surface this data.
+          const games = (
+            state as { games?: { games?: Record<string, Partial<Game>> } }
+          ).games?.games;
+          if (!games) return state;
+          for (const game of Object.values(games)) {
+            if (!game.settings) game.settings = {};
+            if (game.settings.showOutputFactoriesNodes == null) {
+              game.settings.showOutputFactoriesNodes =
+                DEFAULT_SHOW_OUTPUT_FACTORIES_NODES;
+            }
           }
           return state;
         }

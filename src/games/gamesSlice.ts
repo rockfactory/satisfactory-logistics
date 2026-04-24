@@ -10,7 +10,13 @@ import {
 } from '@/recipes/FactoryBuilding';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import type { ParsedSatisfactorySave } from '@/recipes/savegame/ParseSavegameMessages';
-import type { Game, GameRemoteData, GameSettings } from './Game';
+import type {
+  Game,
+  GameRemoteData,
+  GameSettings,
+  ShowOutputFactoriesNodesMode,
+} from './Game';
+import { DEFAULT_SHOW_OUTPUT_FACTORIES_NODES } from './Game';
 
 /**
  * Which slices of game state a savegame import should overwrite. All
@@ -59,6 +65,7 @@ export const gamesSlice = createSlice({
         settings: {
           noHighlight100PercentUsage: false,
           highlight100PercentColor: '#339af0',
+          showOutputFactoriesNodes: DEFAULT_SHOW_OUTPUT_FACTORIES_NODES,
         },
       };
     },
@@ -345,6 +352,35 @@ export function useGameSettingMaxBelt() {
   if (!maxBelt) return null;
 
   return FactoryConveyorBelts.find(belt => belt.id === maxBelt)!;
+}
+
+/**
+ * Typed reader for the `showOutputFactoriesNodes` setting that falls
+ * back to the documented default for games (or store states) where the
+ * field hasn't been backfilled yet. Use this anywhere the solver graph
+ * needs to know whether to render output-consumer / unallocated nodes.
+ */
+export function useShowOutputFactoriesNodes(): ShowOutputFactoriesNodesMode {
+  return useStore(
+    state =>
+      (state.games.games[state.games.selected ?? '']?.settings
+        ?.showOutputFactoriesNodes as
+        | ShowOutputFactoriesNodesMode
+        | undefined) ?? DEFAULT_SHOW_OUTPUT_FACTORIES_NODES,
+  );
+}
+
+/**
+ * Imperative setter for the same setting — handy from outside React
+ * (e.g. from popover dropdowns that prefer `useStore.getState()` over
+ * threading the slice action through props).
+ */
+export function setShowOutputFactoriesNodes(
+  value: ShowOutputFactoriesNodesMode,
+) {
+  useStore.getState().updateGameSettings(state => {
+    state.showOutputFactoriesNodes = value;
+  });
 }
 
 export function useGameSettingMaxPipeline() {
