@@ -358,9 +358,14 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                         machineCalc.partialBuildingOverclock,
                       ) !== PercentageFormatter.format(overclock) && (
                         <Text size="xs" c="dimmed">
-                          {machineCalc.fullBuildingsAmount} at{' '}
-                          {PercentageFormatter.format(overclock)}
-                          {' + 1 at '}
+                          {machineCalc.fullBuildingsAmount > 0 && (
+                            <>
+                              {machineCalc.fullBuildingsAmount} at{' '}
+                              {PercentageFormatter.format(overclock)}
+                              {' + '}
+                            </>
+                          )}
+                          1 at{' '}
                           {PercentageFormatter.format(
                             machineCalc.partialBuildingOverclock,
                           )}
@@ -396,6 +401,11 @@ export const MachineNode = memo((props: IMachineNodeProps) => {
                       <Text size="sm" fw={overclock != 1 ? 'bold' : 'normal'}>
                         {PercentageFormatter.format(overclock)}
                       </Text>
+                      {machineCalc.totalPowerShards > 0 && (
+                        <Text size="sm" c="dimmed">
+                          · {machineCalc.totalPowerShards}
+                        </Text>
+                      )}
                     </Group>
                   </Table.Td>
                   {amplifiedRate > 1 && (

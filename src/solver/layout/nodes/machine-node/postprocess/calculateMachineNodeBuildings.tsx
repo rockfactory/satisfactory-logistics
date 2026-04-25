@@ -4,6 +4,10 @@ import { getRecipeProductPerBuilding } from '@/recipes/FactoryRecipe';
 import type { IMachineNodeData } from '@/solver/layout/nodes/machine-node/MachineNode';
 import type { SolverNodeState } from '@/solver/store/Solver';
 
+function calculatePowerShards(overclock: number): number {
+  return overclock > 1 ? Math.ceil((overclock - 1) * 2) : 0;
+}
+
 export function calculateMachineNodeBuildings(
   data: IMachineNodeData,
   nodeState: SolverNodeState | null | undefined,
@@ -55,6 +59,14 @@ export function calculateMachineNodeBuildings(
     overclock ** building.somersloopPowerConsumptionExponent;
   const totalPower = normalPower + boostedPower;
 
+  const powerShardsPerMachine = calculatePowerShards(overclock);
+  const partialBuildingPowerShards = calculatePowerShards(
+    partialBuildingOverclock,
+  );
+  const totalPowerShards =
+    powerShardsPerMachine * fullBuildingsAmount +
+    partialBuildingPowerShards * partialBuildingAmount;
+
   return {
     overclock,
     somersloops,
@@ -71,5 +83,8 @@ export function calculateMachineNodeBuildings(
     partialBuildingOverclock,
     totalPower,
     boostedBuildings,
+    powerShardsPerMachine,
+    partialBuildingPowerShards,
+    totalPowerShards,
   };
 }
