@@ -8,7 +8,7 @@ import {
   TextInput,
   Tooltip,
 } from '@mantine/core';
-import { IconCalculator, IconTrash } from '@tabler/icons-react';
+import { IconCalculator } from '@tabler/icons-react';
 import type * as React from 'react';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
@@ -22,6 +22,7 @@ import {
 import type { Factory } from '@/factories/Factory';
 import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
 import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
+import { FactoryActionsMenu } from '@/factories/list/FactoryActionsMenu';
 import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
 import { useGameFactoryIsCollapsed } from '@/games/gamesSlice';
 import { FactoryPeers } from '@/games/sync/ui/FactoryPeers';
@@ -128,14 +129,7 @@ export function FactoryRow(props: IFactoryRowProps) {
             </ActionIcon>
           </Tooltip>
 
-          <ActionIcon
-            variant="filled"
-            color="red"
-            size="lg"
-            onClick={() => useStore.getState().removeGameFactory(id)}
-          >
-            <IconTrash stroke={2} size={16} />
-          </ActionIcon>
+          <FactoryActionsMenu factoryId={id} showOpen />
         </Group>
       </Group>
       {/* </Grid.Col> */}

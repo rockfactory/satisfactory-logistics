@@ -42,16 +42,15 @@ export function SolverShareImporterPage(props: ISolverShareImporterPageProps) {
           throw new Error('Old shared solver format, cannot load');
         }
 
-        const isOwner =
-          useStore.getState().auth.session?.user?.id === data.user_id;
+        // Always mint a fresh UUID: the share link is a "preview" view and
+        // must never collide with a local factory's id (would overwrite or
+        // be overwritten by it). Owners who want to keep the shared copy
+        // use the existing "Add to Game" button on the calculator.
+        const localId = v4();
 
-        const localId = isOwner ? instance.id : v4();
-
-        const existing = isOwner
-          ? useStore.getState().solvers.instances[id]
-          : Object.entries(useStore.getState().solvers.instances).find(
-              ([iid, inst]) => inst.remoteSharedId === sharedId,
-            )?.[1];
+        const existing = Object.entries(
+          useStore.getState().solvers.instances,
+        ).find(([_iid, inst]) => inst.remoteSharedId === sharedId)?.[1];
 
         if (existing) {
           logger.info(
@@ -75,7 +74,6 @@ export function SolverShareImporterPage(props: ISolverShareImporterPageProps) {
           { instance },
         ); // prettier-ignore
         useStore.getState().loadSharedSolver(instance, factory, {
-          isOwner,
           localId,
           sharedId,
         });
