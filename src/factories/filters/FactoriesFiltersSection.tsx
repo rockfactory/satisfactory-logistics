@@ -88,6 +88,7 @@ export function FactoriesFiltersSection(_props: IFactoriesFiltersSectionProps) {
         />
         <FactoryItemInput
           size="sm"
+          width={220}
           placeholder="Filter by resource..."
           value={factoryView?.filterResource ?? ''}
           clearable
