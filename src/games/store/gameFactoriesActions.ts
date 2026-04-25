@@ -4,6 +4,7 @@ import { v4 } from 'uuid';
 import { useStore } from '@/core/zustand';
 import { createActions } from '@/core/zustand-helpers/actions';
 import type { Factory } from '@/factories/Factory';
+import { generateFactoryName } from '@/factories/factoryNameGenerator';
 import type { Game } from '@/games/Game';
 import { allowedToBlockedBuildings } from '@/solver/store/allowedToBlockedBuildings';
 import type { SolverInstance } from '@/solver/store/Solver';
@@ -60,7 +61,7 @@ export const gameFactoriesActions = createActions({
     state.games.selected = gameId;
     state.factories.factories[factoryId] = {
       id: factoryId,
-      // name: 'New Factory',
+      name: generateFactoryName(),
       inputs: [],
       outputs: [{ resource: null, amount: null }],
       progress: 'draft',
@@ -89,7 +90,12 @@ export const gameFactoriesActions = createActions({
         throw new Error('No game selected');
       }
 
-      get().createFactory(factoryId, factory);
+      const factoryWithName: Partial<Omit<Factory, 'id'>> = {
+        ...factory,
+        name: factory?.name ?? generateFactoryName(),
+      };
+
+      get().createFactory(factoryId, factoryWithName);
       get().addFactoryIdToGame(targetId, factoryId);
     },
   cloneGameFactory: (factoryId: string) => state => {
