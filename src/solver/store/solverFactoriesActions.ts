@@ -293,27 +293,39 @@ export const solverFactoriesActions = createActions({
       delete solver.nodes[nodeId].done;
     }
   },
+  /**
+   * Loads a shared solver as a dangling "preview" view: the new factory and
+   * solver are stored under a freshly-minted `localId` that the caller
+   * generates, and they are NOT added to any game's `factoriesIds`. This
+   * keeps the share link non-destructive even when the owner opens their
+   * own link from another game (or after editing the original): the
+   * preview never collides with an existing local id.
+   *
+   * To save the preview into the current game, the user clicks the
+   * existing "Add to Game" button on the calculator.
+   */
   loadSharedSolver:
     (
       instance: SolverInstance,
       factory: Factory,
       data: {
-        isOwner: boolean;
         localId: string;
         sharedId: string;
       },
     ) =>
     state => {
-      const { isOwner, localId } = data;
-      state.solvers.instances[localId] = instance;
-      instance.id = localId;
-      state.factories.factories[localId] = factory;
-      factory.id = localId;
-      if (!isOwner) {
-        state.solvers.instances[localId].sharedId = undefined; // We need to unlink the shared instance
-        state.solvers.instances[localId].isOwner = false;
-        state.solvers.instances[localId].isFactory = false;
-        state.solvers.instances[localId].remoteSharedId = data.sharedId;
-      }
+      const { localId } = data;
+      state.solvers.instances[localId] = {
+        ...instance,
+        id: localId,
+        sharedId: undefined,
+        remoteSharedId: data.sharedId,
+        isOwner: false,
+        isFactory: false,
+      };
+      state.factories.factories[localId] = {
+        ...factory,
+        id: localId,
+      };
     },
 });
