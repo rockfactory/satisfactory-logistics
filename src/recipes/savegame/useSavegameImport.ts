@@ -137,9 +137,7 @@ export function useSavegameImport(): UseSavegameImportResult {
           infrastructureCount =
             save.infrastructure.buildings.count +
             save.infrastructure.splines.reduce((s, b) => s + b.count, 0);
-          useStore
-            .getState()
-            .setInfrastructure(gameId, save.infrastructure);
+          useStore.getState().setInfrastructure(gameId, save.infrastructure);
         }
 
         notifications.show({

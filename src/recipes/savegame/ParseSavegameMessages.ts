@@ -89,6 +89,15 @@ export interface InfrastructureSplinesBlock {
    * re-scanning their points every frame.
    */
   polylineBounds: Float32Array;
+  /**
+   * `null` when the source has no Hermite tangents (power-line wires);
+   * otherwise `totalPoints*4` floats in world cm per point, laid out
+   * `[arriveX, arriveY, leaveX, leaveY]`. Lets the canvas layer turn
+   * each segment into a `bezierCurveTo` so curved track / belt
+   * sections render as actual curves instead of straight chords
+   * between control points.
+   */
+  tangentsXY: Float32Array | null;
 }
 
 export interface ParsedInfrastructure {
@@ -159,6 +168,9 @@ export function collectInfrastructureTransferables(
     buffers.push(spline.offsets.buffer as ArrayBuffer);
     buffers.push(spline.pointsXY.buffer as ArrayBuffer);
     buffers.push(spline.polylineBounds.buffer as ArrayBuffer);
+    if (spline.tangentsXY) {
+      buffers.push(spline.tangentsXY.buffer as ArrayBuffer);
+    }
   }
   return buffers;
 }

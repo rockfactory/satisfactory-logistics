@@ -1,18 +1,40 @@
 import { describe, expect, it } from 'vitest';
-import {
-  readPowerLineWires,
-  readSplineLocations,
-} from './readSaveProperties';
+import { readPowerLineWires, readSplineLocations } from './readSaveProperties';
 
-function makeSplinePoint(x: number, y: number, z = 0) {
+function makeSplinePoint(
+  x: number,
+  y: number,
+  z = 0,
+  tangents: {
+    arriveX?: number;
+    arriveY?: number;
+    leaveX?: number;
+    leaveY?: number;
+  } = {},
+) {
   return {
-    properties: { Location: { value: { x, y, z } } },
+    properties: {
+      Location: { value: { x, y, z } },
+      ArriveTangent: {
+        value: { x: tangents.arriveX ?? 0, y: tangents.arriveY ?? 0, z: 0 },
+      },
+      LeaveTangent: {
+        value: { x: tangents.leaveX ?? 0, y: tangents.leaveY ?? 0, z: 0 },
+      },
+    },
   };
 }
 
 function makeWireValue(x: number, y: number, z = 0) {
   return { value: { x, y, z } };
 }
+
+const ZERO_TANGENTS = {
+  arriveX: 0,
+  arriveY: 0,
+  leaveX: 0,
+  leaveY: 0,
+};
 
 describe('readSplineLocations', () => {
   it('returns null when mSplineData is missing', () => {
@@ -36,8 +58,31 @@ describe('readSplineLocations', () => {
       },
     });
     expect(result).toEqual([
-      { x: 0, y: 0, z: 0 },
-      { x: 100, y: 200, z: 5 },
+      { x: 0, y: 0, z: 0, ...ZERO_TANGENTS },
+      { x: 100, y: 200, z: 5, ...ZERO_TANGENTS },
+    ]);
+  });
+
+  it('parses ArriveTangent and LeaveTangent when present', () => {
+    const result = readSplineLocations({
+      mSplineData: {
+        values: [
+          makeSplinePoint(0, 0, 0, { leaveX: 100, leaveY: 50 }),
+          makeSplinePoint(200, 0, 0, { arriveX: 100, arriveY: -50 }),
+        ],
+      },
+    });
+    expect(result).toEqual([
+      { x: 0, y: 0, z: 0, arriveX: 0, arriveY: 0, leaveX: 100, leaveY: 50 },
+      {
+        x: 200,
+        y: 0,
+        z: 0,
+        arriveX: 100,
+        arriveY: -50,
+        leaveX: 0,
+        leaveY: 0,
+      },
     ]);
   });
 
@@ -48,14 +93,18 @@ describe('readSplineLocations', () => {
           makeSplinePoint(0, 0),
           // Non-numeric and Infinity entries should be skipped.
           { properties: { Location: { value: { x: 'oops', y: 1 } } } },
-          { properties: { Location: { value: { x: 1, y: Number.POSITIVE_INFINITY } } } },
+          {
+            properties: {
+              Location: { value: { x: 1, y: Number.POSITIVE_INFINITY } },
+            },
+          },
           makeSplinePoint(50, 50),
         ],
       },
     });
     expect(result).toEqual([
-      { x: 0, y: 0, z: 0 },
-      { x: 50, y: 50, z: 0 },
+      { x: 0, y: 0, z: 0, ...ZERO_TANGENTS },
+      { x: 50, y: 50, z: 0, ...ZERO_TANGENTS },
     ]);
   });
 });

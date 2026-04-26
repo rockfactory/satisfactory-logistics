@@ -34,9 +34,7 @@ describe('classifyTypePath', () => {
 
   it('classifies hyper tubes before falling through to the generic pipe regex', () => {
     expect(
-      classifyTypePath(
-        '/Game/.../Build_PipelineHyper.Build_PipelineHyper_C',
-      ),
+      classifyTypePath('/Game/.../Build_PipelineHyper.Build_PipelineHyper_C'),
     ).toEqual({ mode: 'spline', kind: 'hyper', tier: 0 });
   });
 

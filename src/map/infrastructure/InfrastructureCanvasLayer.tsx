@@ -11,7 +11,7 @@ import {
   SPLINE_KINDS,
   type SplineKind,
 } from '@/recipes/savegame/ParseSavegameMessages';
-import { gameToLatLng } from '../coords';
+import { gameToLatLng, latLngToGame, MAX_ZOOM, MIN_ZOOM } from '../coords';
 import {
   type Hit,
   hitTestBuildings,
@@ -37,33 +37,21 @@ interface AffineGameToContainer {
   oy: number;
   /** Pixel per game cm along the world's X axis. */
   ax: number;
-  /** Pixel per game cm along the world's Y axis (positive: Leaflet
-   * mirrors Y so a positive game Y still produces a positive container
-   * Y delta in our setup). */
+  /** Pixel per game cm along the world's Y axis. */
   by: number;
 }
 
 const HIDDEN_CATEGORIES_BY_ZOOM: Array<[number, InfrastructureCategory[]]> = [
-  [3, ['decor']],
+  // Foundations + decor are usually >70% of the entity count on
+  // endgame saves and at low zoom collapse into illegible blobs;
+  // hiding them keeps the factory cores readable and dramatically
+  // reduces per-tile draw work.
+  [3, ['foundation', 'decor']],
+  [2, ['storage']],
 ];
 
-/**
- * Padding (game cm) added to the viewport bounds when culling
- * buildings, so a large structure (e.g. a 33m Train Station) whose
- * center is just off-screen still gets drawn instead of clipping at
- * the edge. ~60m covers the largest hand-tuned clearances in
- * `extractInfrastructure`.
- */
-const VIEWPORT_PAD_CM = 6000;
+const BIN_DEDUP_PX = 4;
 
-/**
- * Per-zoom step used to subsample spline polylines. A belt with
- * thousands of points crammed into a few hundred pixels at zoom 1
- * paints into the exact same canvas cells over and over; skipping
- * `step - 1` points between each `lineTo` cuts both JS work and the
- * browser's rasterisation work without any visible quality loss.
- * At zoom 5+ we keep every point so curves stay smooth.
- */
 function splineStepForZoom(zoom: number): number {
   if (zoom < 2) return 8;
   if (zoom < 3) return 4;
@@ -81,24 +69,8 @@ function categoryHiddenByLOD(
   return false;
 }
 
-/**
- * Probe distance (in game cm) used to derive the affine transform.
- * Leaflet's `latLngToContainerPoint` rounds the result to integer
- * pixels (`_round()` inside `latLngToLayerPoint`), so probing with a
- * 1-cm delta collapses to 0 px and the per-cm scale ends up zero.
- * 100_000 cm at the lowest supported zoom is still ~0.3 px, but a
- * larger probe + division gives us sub-pixel-accurate ratios
- * regardless of zoom level.
- */
 const AFFINE_PROBE_CM = 100_000;
 
-/**
- * Builds the linear transform from game cm to container px. Both
- * `gameToLatLng` and `map.latLngToContainerPoint` are linear in our
- * CRS.Simple setup, so two probes plus the origin nail the affine map
- * down completely. Used in tight inner loops to avoid hammering
- * Leaflet's projection helpers per point.
- */
 function computeAffine(map: L.Map): AffineGameToContainer {
   const origin = map.latLngToContainerPoint(gameToLatLng(0, 0));
   const xUnit = map.latLngToContainerPoint(gameToLatLng(AFFINE_PROBE_CM, 0));
@@ -111,42 +83,661 @@ function computeAffine(map: L.Map): AffineGameToContainer {
   };
 }
 
+// ---- Spatial index ---------------------------------------------------------
+
+const SPATIAL_CELL_CM = 10_000;
+
 /**
- * Custom Leaflet layer that renders the user's built infrastructure on
- * a single backing `<canvas>` mounted in the `overlayPane`. Reactive
- * to map view changes (`viewreset` / `zoom` / `move` / `resize`) and
- * to its own state via {@link InfrastructureLayer.update}. Redraws are
- * coalesced through `requestAnimationFrame` so a flurry of pan events
- * collapses into one paint.
+ * Fixed-grid spatial index over a `ParsedInfrastructure`. Bucketing by
+ * a coarse worldspace grid (default 100 m cells) lets each tile fetch
+ * just the buildings + spline polylines it actually paints in O(cells)
+ * — the dominant per-tile cost ends up being the rasterisation, not
+ * the lookup.
+ *
+ * Building bucketing keys by the entity's centre (no half-extent
+ * inflation): the consumer is expected to query with a small
+ * worldspace pad (~50 m, the largest hand-tuned clearance) so a
+ * building straddling the tile edge still gets picked up.
+ *
+ * Spline polylines are inserted into every cell their AABB intersects,
+ * and `querySplines` dedups via a `Set` so a polyline that runs across
+ * multiple cells in the query range is returned once.
  */
+class SpatialIndex {
+  readonly cellSizeCm: number;
+  private readonly buildingsByCell: Map<number, Uint32Array>;
+  private readonly splinesByCell: Map<number, Uint32Array>;
+
+  constructor(infra: ParsedInfrastructure, cellSizeCm = SPATIAL_CELL_CM) {
+    this.cellSizeCm = cellSizeCm;
+
+    const buildingTmp = new Map<number, number[]>();
+    const { positionsXY, count } = infra.buildings;
+    for (let i = 0; i < count; i++) {
+      const x = positionsXY[i * 2];
+      const y = positionsXY[i * 2 + 1];
+      const key = SpatialIndex.cellKey(
+        Math.floor(x / cellSizeCm),
+        Math.floor(y / cellSizeCm),
+      );
+      let arr = buildingTmp.get(key);
+      if (!arr) {
+        arr = [];
+        buildingTmp.set(key, arr);
+      }
+      arr.push(i);
+    }
+    this.buildingsByCell = new Map();
+    for (const [k, arr] of buildingTmp) {
+      this.buildingsByCell.set(k, Uint32Array.from(arr));
+    }
+
+    const splineTmp = new Map<number, number[]>();
+    for (let blockIdx = 0; blockIdx < infra.splines.length; blockIdx++) {
+      const block = infra.splines[blockIdx];
+      const { polylineBounds } = block;
+      for (let polyIdx = 0; polyIdx < block.count; polyIdx++) {
+        const minX = polylineBounds[polyIdx * 4];
+        const minY = polylineBounds[polyIdx * 4 + 1];
+        const maxX = polylineBounds[polyIdx * 4 + 2];
+        const maxY = polylineBounds[polyIdx * 4 + 3];
+        const cMinX = Math.floor(minX / cellSizeCm);
+        const cMinY = Math.floor(minY / cellSizeCm);
+        const cMaxX = Math.floor(maxX / cellSizeCm);
+        const cMaxY = Math.floor(maxY / cellSizeCm);
+        // Pack `(blockIdx, polyIdx)` into one 32-bit ref so a single
+        // Uint32Array per cell carries the lookup payload.
+        const ref = (blockIdx << 20) | (polyIdx & 0xfffff);
+        for (let cx = cMinX; cx <= cMaxX; cx++) {
+          for (let cy = cMinY; cy <= cMaxY; cy++) {
+            const key = SpatialIndex.cellKey(cx, cy);
+            let arr = splineTmp.get(key);
+            if (!arr) {
+              arr = [];
+              splineTmp.set(key, arr);
+            }
+            arr.push(ref);
+          }
+        }
+      }
+    }
+    this.splinesByCell = new Map();
+    for (const [k, arr] of splineTmp) {
+      this.splinesByCell.set(k, Uint32Array.from(arr));
+    }
+  }
+
+  /** Returns building indices whose centre falls in any cell intersecting
+   * the query bbox. Caller pads the bbox to compensate for the centre-
+   * only insertion. */
+  queryBuildings(
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+  ): number[] {
+    const cMinX = Math.floor(minX / this.cellSizeCm);
+    const cMinY = Math.floor(minY / this.cellSizeCm);
+    const cMaxX = Math.floor(maxX / this.cellSizeCm);
+    const cMaxY = Math.floor(maxY / this.cellSizeCm);
+    const out: number[] = [];
+    for (let cx = cMinX; cx <= cMaxX; cx++) {
+      for (let cy = cMinY; cy <= cMaxY; cy++) {
+        const arr = this.buildingsByCell.get(SpatialIndex.cellKey(cx, cy));
+        if (!arr) continue;
+        for (let i = 0; i < arr.length; i++) out.push(arr[i]);
+      }
+    }
+    return out;
+  }
+
+  /** Returns packed `(blockIdx<<20 | polyIdx)` refs deduped across cells. */
+  querySplines(
+    minX: number,
+    minY: number,
+    maxX: number,
+    maxY: number,
+  ): number[] {
+    const cMinX = Math.floor(minX / this.cellSizeCm);
+    const cMinY = Math.floor(minY / this.cellSizeCm);
+    const cMaxX = Math.floor(maxX / this.cellSizeCm);
+    const cMaxY = Math.floor(maxY / this.cellSizeCm);
+    const seen = new Set<number>();
+    for (let cx = cMinX; cx <= cMaxX; cx++) {
+      for (let cy = cMinY; cy <= cMaxY; cy++) {
+        const arr = this.splinesByCell.get(SpatialIndex.cellKey(cx, cy));
+        if (!arr) continue;
+        for (let i = 0; i < arr.length; i++) seen.add(arr[i]);
+      }
+    }
+    return [...seen];
+  }
+
+  private static cellKey(cx: number, cy: number): number {
+    // `(cx + 32768) * 65536 + (cy + 32768)` keeps the key positive and
+    // collision-free for any worldspace within ±32768 cells (= ±3.3·10^8 cm
+    // at 10 000 cm cells, i.e. ±3300 km — many orders of magnitude
+    // larger than Satisfactory's playable area).
+    return (cx + 32768) * 65536 + (cy + 32768);
+  }
+}
+
+// ---- Tile painters ---------------------------------------------------------
+
+/** Worldspace pad (cm) used when querying the spatial index for a tile,
+ * so a building or spline whose centre / bbox sits just outside the
+ * tile but whose footprint extends into it still gets drawn. ~50 m
+ * covers the largest hand-tuned clearances. */
+const TILE_QUERY_PAD_CM = 5000;
+
+function paintTileBuildings(
+  ctx: CanvasRenderingContext2D,
+  infra: ParsedInfrastructure,
+  indices: number[],
+  a: AffineGameToContainer,
+  zoom: number,
+  state: RenderState,
+): void {
+  if (indices.length === 0) return;
+  const { categories, positionsXY, yaw, sizeWL } = infra.buildings;
+
+  const visibleByCat: boolean[] = INFRASTRUCTURE_CATEGORIES.map(
+    cat =>
+      (state.categoryVisibility?.[cat] ?? true) &&
+      !categoryHiddenByLOD(zoom, cat),
+  );
+
+  const paths: (Path2D | null)[] = INFRASTRUCTURE_CATEGORIES.map(() => null);
+  const dotCells: (Set<number> | null)[] = INFRASTRUCTURE_CATEGORIES.map(
+    () => null,
+  );
+
+  for (let k = 0; k < indices.length; k++) {
+    const i = indices[k];
+    const catIdx = categories[i];
+    if (!visibleByCat[catIdx]) continue;
+
+    const gx = positionsXY[i * 2];
+    const gy = positionsXY[i * 2 + 1];
+    const widthCm = sizeWL[i * 2];
+    const lengthCm = sizeWL[i * 2 + 1];
+
+    const cx = a.ox + gx * a.ax;
+    const cy = a.oy + gy * a.by;
+    const halfW = (widthCm / 2) * Math.abs(a.ax);
+    const halfL = (lengthCm / 2) * Math.abs(a.by);
+
+    if (halfW < BIN_DEDUP_PX && halfL < BIN_DEDUP_PX) {
+      const binX = Math.floor(cx / BIN_DEDUP_PX);
+      const binY = Math.floor(cy / BIN_DEDUP_PX);
+      const key = ((binX + 32768) << 16) | ((binY + 32768) & 0xffff);
+      let cellSet = dotCells[catIdx];
+      if (!cellSet) {
+        cellSet = new Set();
+        dotCells[catIdx] = cellSet;
+      }
+      if (cellSet.has(key)) continue;
+      cellSet.add(key);
+      let path = paths[catIdx];
+      if (!path) {
+        path = new Path2D();
+        paths[catIdx] = path;
+      }
+      path.rect(
+        binX * BIN_DEDUP_PX,
+        binY * BIN_DEDUP_PX,
+        BIN_DEDUP_PX,
+        BIN_DEDUP_PX,
+      );
+      continue;
+    }
+
+    const angle = yaw[i];
+    const cosA = Math.cos(angle);
+    const sinA = Math.sin(angle);
+    const dx = halfW * cosA;
+    const dy = halfW * sinA;
+    const ex = -halfL * sinA;
+    const ey = halfL * cosA;
+    let path = paths[catIdx];
+    if (!path) {
+      path = new Path2D();
+      paths[catIdx] = path;
+    }
+    path.moveTo(cx - dx - ex, cy - dy - ey);
+    path.lineTo(cx + dx - ex, cy + dy - ey);
+    path.lineTo(cx + dx + ex, cy + dy + ey);
+    path.lineTo(cx - dx + ex, cy - dy + ey);
+    path.closePath();
+  }
+
+  for (let c = 0; c < INFRASTRUCTURE_CATEGORIES.length; c++) {
+    const path = paths[c];
+    if (!path) continue;
+    const cat = INFRASTRUCTURE_CATEGORIES[c];
+    const color = CategoryColor[cat];
+    const quiet = cat === 'foundation' || cat === 'decor';
+    ctx.fillStyle = color;
+    ctx.globalAlpha = quiet ? 0.12 : 0.35;
+    ctx.fill(path);
+    ctx.globalAlpha = quiet ? 0.6 : 1;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = quiet ? 0.75 : 1.5;
+    ctx.stroke(path);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function paintTileSplines(
+  ctx: CanvasRenderingContext2D,
+  infra: ParsedInfrastructure,
+  splineRefs: number[],
+  a: AffineGameToContainer,
+  zoom: number,
+  state: RenderState,
+): void {
+  if (zoom < 1 || splineRefs.length === 0) return;
+
+  const baseLineWidth = zoom >= 6 ? 3 : zoom >= 4 ? 2 : zoom >= 2 ? 1.25 : 1;
+  const lineWidthMultiplier: Record<SplineKind, number> = {
+    belt: 1,
+    pipe: 1,
+    hyper: 1,
+    rail: 1.8,
+    power: 0.75,
+  };
+
+  const step = splineStepForZoom(zoom);
+  // One Path2D per (kind, tier) block so each colour/lineWidth pair
+  // rasterises in a single `stroke` call.
+  const pathsByBlock = new Map<number, Path2D>();
+
+  for (let k = 0; k < splineRefs.length; k++) {
+    const ref = splineRefs[k];
+    const blockIdx = ref >>> 20;
+    const polyIdx = ref & 0xfffff;
+    const block = infra.splines[blockIdx];
+    if (!block) continue;
+    if (!SPLINE_KINDS.includes(block.kind)) continue;
+    if ((state.splineVisibility?.[block.kind] ?? true) === false) continue;
+
+    const start = block.offsets[polyIdx];
+    const end = block.offsets[polyIdx + 1];
+    if (end - start < 2) continue;
+
+    let path = pathsByBlock.get(blockIdx);
+    if (!path) {
+      path = new Path2D();
+      pathsByBlock.set(blockIdx, path);
+    }
+
+    const { pointsXY, tangentsXY } = block;
+    const useBezier = step === 1 && tangentsXY != null;
+    const sx = a.ox + pointsXY[start * 2] * a.ax;
+    const sy = a.oy + pointsXY[start * 2 + 1] * a.by;
+    path.moveTo(sx, sy);
+
+    if (useBezier) {
+      const t = tangentsXY;
+      let p0x = sx;
+      let p0y = sy;
+      for (let j = start + 1; j < end; j++) {
+        const p1x = a.ox + pointsXY[j * 2] * a.ax;
+        const p1y = a.oy + pointsXY[j * 2 + 1] * a.by;
+        const leaveX = (t[(j - 1) * 4 + 2] * a.ax) / 3;
+        const leaveY = (t[(j - 1) * 4 + 3] * a.by) / 3;
+        const arriveX = (t[j * 4] * a.ax) / 3;
+        const arriveY = (t[j * 4 + 1] * a.by) / 3;
+        path.bezierCurveTo(
+          p0x + leaveX,
+          p0y + leaveY,
+          p1x - arriveX,
+          p1y - arriveY,
+          p1x,
+          p1y,
+        );
+        p0x = p1x;
+        p0y = p1y;
+      }
+      continue;
+    }
+
+    let lastDX = sx;
+    let lastDY = sy;
+    const lastIdx = end - 1;
+    for (let j = start + step; j < lastIdx; j += step) {
+      const px = a.ox + pointsXY[j * 2] * a.ax;
+      const py = a.oy + pointsXY[j * 2 + 1] * a.by;
+      const dx = px - lastDX;
+      const dy = py - lastDY;
+      if (dx * dx + dy * dy < 1) continue;
+      path.lineTo(px, py);
+      lastDX = px;
+      lastDY = py;
+    }
+    const lx = a.ox + pointsXY[lastIdx * 2] * a.ax;
+    const ly = a.oy + pointsXY[lastIdx * 2 + 1] * a.by;
+    const ldx = lx - lastDX;
+    const ldy = ly - lastDY;
+    if (ldx * ldx + ldy * ldy >= 1 || end - start === 2) {
+      path.lineTo(lx, ly);
+    }
+  }
+
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  for (const [blockIdx, path] of pathsByBlock) {
+    const block = infra.splines[blockIdx];
+    ctx.strokeStyle = splineColor(block.kind, block.tier);
+    ctx.lineWidth = baseLineWidth * lineWidthMultiplier[block.kind];
+    ctx.stroke(path);
+  }
+}
+
+// ---- Highlight (hover) -----------------------------------------------------
+
+function drawHighlight(
+  ctx: CanvasRenderingContext2D,
+  infra: ParsedInfrastructure,
+  a: AffineGameToContainer,
+  hit: Hit,
+): void {
+  ctx.save();
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  if (hit.kind === 'building') {
+    const cx = a.ox + hit.positionGame.x * a.ax;
+    const cy = a.oy + hit.positionGame.y * a.by;
+    const halfW = (hit.size.width / 2) * Math.abs(a.ax);
+    const halfL = (hit.size.length / 2) * Math.abs(a.by);
+    const angle = hit.yaw;
+    const cosA = Math.cos(angle);
+    const sinA = Math.sin(angle);
+    const dx = halfW * cosA;
+    const dy = halfW * sinA;
+    const ex = -halfL * sinA;
+    const ey = halfL * cosA;
+
+    const path = new Path2D();
+    path.moveTo(cx - dx - ex, cy - dy - ey);
+    path.lineTo(cx + dx - ex, cy + dy - ey);
+    path.lineTo(cx + dx + ex, cy + dy + ey);
+    path.lineTo(cx - dx + ex, cy - dy + ey);
+    path.closePath();
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.lineWidth = 4;
+    ctx.stroke(path);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke(path);
+    ctx.restore();
+    return;
+  }
+
+  const block = infra.splines[hit.blockIndex];
+  if (!block) {
+    ctx.restore();
+    return;
+  }
+  const start = block.offsets[hit.polylineIndex];
+  const end = block.offsets[hit.polylineIndex + 1];
+  if (end - start < 2) {
+    ctx.restore();
+    return;
+  }
+  const path = new Path2D();
+  const sx = a.ox + block.pointsXY[start * 2] * a.ax;
+  const sy = a.oy + block.pointsXY[start * 2 + 1] * a.by;
+  path.moveTo(sx, sy);
+  for (let j = start + 1; j < end; j++) {
+    const px = a.ox + block.pointsXY[j * 2] * a.ax;
+    const py = a.oy + block.pointsXY[j * 2 + 1] * a.by;
+    path.lineTo(px, py);
+  }
+
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+  ctx.lineWidth = 6;
+  ctx.stroke(path);
+  ctx.strokeStyle = splineColor(block.kind, block.tier);
+  ctx.lineWidth = 3;
+  ctx.stroke(path);
+
+  ctx.restore();
+}
+
 type HoverPayload = {
   hit: Hit | null;
   mousePx: { x: number; y: number } | null;
 };
 
-class InfrastructureLayer extends L.Layer {
+// ---- GridLayer (tile-based main renderer) ---------------------------------
+
+/**
+ * Tile-based renderer for the imported infrastructure. By extending
+ * `L.GridLayer` we get the entire production-grade pipeline that
+ * Leaflet uses for its base map: viewport-only tile creation, CSS
+ * scale during zoom transitions (so pinch / scroll-zoom stay 60 fps
+ * even on an endgame save), automatic tile recycling, and culling of
+ * tiles outside the current bounds. Per-tile cost is bounded by the
+ * spatial index, so the heaviest single piece of work is the tile
+ * paint itself (small, fits well inside one frame) rather than a
+ * monolithic full-canvas redraw.
+ */
+const InfrastructureGridLayer = L.GridLayer.extend({
+  options: {
+    tileSize: 256,
+    minZoom: MIN_ZOOM,
+    maxZoom: MAX_ZOOM,
+    // Keep the default keepBuffer (2): one extra row/col of tiles
+    // around the viewport so a small pan never shows a blank rim
+    // before new tiles render.
+  },
+
+  initialize(this: GridLayerInternals, options?: L.GridLayerOptions) {
+    // `L.GridLayer.prototype.initialize` exists at runtime (it's how
+    // every Leaflet class boots) but isn't declared in the `@types`
+    // because the `extend()` factory normally hides it from authors.
+    (
+      L.GridLayer.prototype as unknown as {
+        initialize?: (opts?: L.GridLayerOptions) => void;
+      }
+    ).initialize?.call(this, options);
+    this._spatialIndex = null;
+    this._renderState = null;
+  },
+
+  setRenderState(this: GridLayerInternals, state: RenderState) {
+    const previous = this._renderState;
+    this._renderState = state;
+    const previousInfra = previous?.infrastructure ?? null;
+    const nowInfra = state.infrastructure;
+    if (previousInfra !== nowInfra) {
+      this._spatialIndex = nowInfra ? new SpatialIndex(nowInfra) : null;
+      if (nowInfra) {
+        logger.info(
+          'spatial index built',
+          `${nowInfra.buildings.count} buildings,`,
+          `${nowInfra.splines.reduce((s, b) => s + b.count, 0)} polylines`,
+        );
+      }
+    }
+    // Anything that affects what a tile paints requires re-rendering
+    // every visible tile. `redraw()` (a method on L.GridLayer) drops
+    // the existing tile cache and re-creates them on demand.
+    if (
+      !previous ||
+      previous.master !== state.master ||
+      previous.infrastructure !== state.infrastructure ||
+      previous.categoryVisibility !== state.categoryVisibility ||
+      previous.splineVisibility !== state.splineVisibility
+    ) {
+      this.redraw();
+    }
+  },
+
+  createTile(
+    this: GridLayerInternals,
+    coords: L.Coords,
+    done: (error: Error | undefined, tile: HTMLElement) => void,
+  ): HTMLCanvasElement {
+    const tile = L.DomUtil.create('canvas') as HTMLCanvasElement;
+    const tileSize = this.getTileSize();
+    const dpr = window.devicePixelRatio || 1;
+    tile.width = tileSize.x * dpr;
+    tile.height = tileSize.y * dpr;
+    tile.style.width = `${tileSize.x}px`;
+    tile.style.height = `${tileSize.y}px`;
+
+    // Defer the actual rasterisation by one rAF so a burst of new
+    // tiles (e.g. on zoom-in) doesn't all run inside the same frame.
+    // Leaflet shows the previous-zoom tiles scaled-up until `done`
+    // fires, so the user sees a smooth zoom rather than a blank rim.
+    requestAnimationFrame(() => {
+      try {
+        this._renderTile(tile, coords);
+        done(undefined, tile);
+      } catch (e) {
+        done(e as Error, tile);
+      }
+    });
+    return tile;
+  },
+
+  _renderTile(
+    this: GridLayerInternals,
+    canvas: HTMLCanvasElement,
+    coords: L.Coords,
+  ): void {
+    const state = this._renderState;
+    if (!state || !state.master || !state.infrastructure) return;
+    const idx = this._spatialIndex;
+    if (!idx) return;
+
+    const tileSize = this.getTileSize();
+    const dpr = window.devicePixelRatio || 1;
+    const zoom = coords.z;
+
+    const map = (this as unknown as { _map: L.Map | null })._map;
+    if (!map) return;
+
+    // Compute this tile's worldspace bbox by unprojecting its corners.
+    // `coords.scaleBy(tileSize)` returns the NW pixel of the tile in
+    // the layer's global pixel space at zoom `coords.z`.
+    const nwPoint = coords.scaleBy(tileSize);
+    const sePoint = nwPoint.add(tileSize);
+    const nwLatLng = map.unproject(nwPoint, zoom);
+    const seLatLng = map.unproject(sePoint, zoom);
+    const nwGame = latLngToGame(nwLatLng);
+    const seGame = latLngToGame(seLatLng);
+    const tileMinX = Math.min(nwGame.x, seGame.x);
+    const tileMaxX = Math.max(nwGame.x, seGame.x);
+    const tileMinY = Math.min(nwGame.y, seGame.y);
+    const tileMaxY = Math.max(nwGame.y, seGame.y);
+
+    if (tileMaxX - tileMinX <= 0 || tileMaxY - tileMinY <= 0) return;
+
+    // Affine: world cm → tile pixel (CSS units, the 2D ctx is scaled
+    // by dpr below). Tile (0, 0) is the corner with smaller game x
+    // and smaller game y in our `gameToLatLng` orientation.
+    const ax = tileSize.x / (tileMaxX - tileMinX);
+    const by = tileSize.y / (tileMaxY - tileMinY);
+    const tileAffine: AffineGameToContainer = {
+      ax,
+      by,
+      ox: -tileMinX * ax,
+      oy: -tileMinY * by,
+    };
+
+    const queryMinX = tileMinX - TILE_QUERY_PAD_CM;
+    const queryMaxX = tileMaxX + TILE_QUERY_PAD_CM;
+    const queryMinY = tileMinY - TILE_QUERY_PAD_CM;
+    const queryMaxY = tileMaxY + TILE_QUERY_PAD_CM;
+    const buildingIndices = idx.queryBuildings(
+      queryMinX,
+      queryMinY,
+      queryMaxX,
+      queryMaxY,
+    );
+    const splineRefs = idx.querySplines(
+      queryMinX,
+      queryMinY,
+      queryMaxX,
+      queryMaxY,
+    );
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, tileSize.x, tileSize.y);
+
+    paintTileSplines(
+      ctx,
+      state.infrastructure,
+      splineRefs,
+      tileAffine,
+      zoom,
+      state,
+    );
+    paintTileBuildings(
+      ctx,
+      state.infrastructure,
+      buildingIndices,
+      tileAffine,
+      zoom,
+      state,
+    );
+  },
+}) as unknown as new (
+  options?: L.GridLayerOptions,
+) => InfrastructureGridLayerType;
+
+interface GridLayerInternals extends L.GridLayer {
+  _spatialIndex: SpatialIndex | null;
+  _renderState: RenderState | null;
+  _renderTile: (canvas: HTMLCanvasElement, coords: L.Coords) => void;
+  setRenderState: (state: RenderState) => void;
+}
+
+interface InfrastructureGridLayerType extends L.GridLayer {
+  setRenderState(state: RenderState): void;
+  spatialIndex(): SpatialIndex | null;
+}
+
+// ---- Highlight overlay layer (hover hit-test + accent paint) --------------
+
+/**
+ * Single-canvas overlay that sits above the GridLayer. It owns the
+ * mousemove hit test and paints the accent stroke on the hovered
+ * entity. Decoupling it from the main renderer lets us redraw only
+ * the tiny highlight on every mousemove without touching the tile
+ * cache.
+ */
+class InfrastructureHighlightLayer extends L.Layer {
   private canvas: HTMLCanvasElement | null = null;
   private state: RenderState | null = null;
-  private rafId: number | null = null;
   private affine: AffineGameToContainer | null = null;
-  private currentZoom: number = 0;
+  private currentZoom = 0;
   private hovered: Hit | null = null;
   private hoverMousePx: { x: number; y: number } | null = null;
   private hoverCallback: ((payload: HoverPayload) => void) | null = null;
+  private rafId: number | null = null;
+  private isInteracting = false;
 
   onAdd(map: L.Map): this {
     const canvas = L.DomUtil.create(
       'canvas',
-      'leaflet-infrastructure-layer',
+      'leaflet-infrastructure-highlight',
     ) as HTMLCanvasElement;
     canvas.style.position = 'absolute';
     canvas.style.pointerEvents = 'none';
     canvas.style.willChange = 'transform';
     map.getPanes().overlayPane.appendChild(canvas);
     this.canvas = canvas;
-    logger.info('layer mounted on overlayPane');
 
-    map.on('viewreset zoom move resize', this.scheduleRedraw, this);
+    map.on('viewreset moveend zoomend resize', this.scheduleRedraw, this);
+    map.on('movestart zoomstart', this.onInteractionStart, this);
     map.on('mousemove', this.handleMouseMove, this);
     map.on('mouseout', this.handleMouseOut, this);
     this.scheduleRedraw();
@@ -162,27 +753,15 @@ class InfrastructureLayer extends L.Layer {
       this.canvas.remove();
       this.canvas = null;
     }
-    map.off('viewreset zoom move resize', this.scheduleRedraw, this);
+    map.off('viewreset moveend zoomend resize', this.scheduleRedraw, this);
+    map.off('movestart zoomstart', this.onInteractionStart, this);
     map.off('mousemove', this.handleMouseMove, this);
     map.off('mouseout', this.handleMouseOut, this);
     return this;
   }
 
   setState(state: RenderState): void {
-    const previousHadData = this.state?.infrastructure != null;
-    const nowHasData = state.infrastructure != null;
-    if (!previousHadData && nowHasData) {
-      const infra = state.infrastructure;
-      logger.info(
-        'received infrastructure',
-        infra ? `${infra.buildings.count} buildings` : 'null',
-        infra
-          ? `${infra.splines.reduce((s, b) => s + b.count, 0)} polylines`
-          : '',
-      );
-    }
     this.state = state;
-    // Drop a stale hover when the underlying data changes.
     if (this.hovered) {
       this.hovered = null;
       this.hoverMousePx = null;
@@ -195,7 +774,18 @@ class InfrastructureLayer extends L.Layer {
     this.hoverCallback = cb;
   }
 
+  private onInteractionStart = (): void => {
+    this.isInteracting = true;
+    if (this.hovered) {
+      this.hovered = null;
+      this.hoverMousePx = null;
+      this.hoverCallback?.({ hit: null, mousePx: null });
+      this.scheduleRedraw();
+    }
+  };
+
   private scheduleRedraw = (): void => {
+    this.isInteracting = false;
     if (this.rafId != null) return;
     this.rafId = requestAnimationFrame(() => {
       this.rafId = null;
@@ -204,6 +794,7 @@ class InfrastructureLayer extends L.Layer {
   };
 
   private handleMouseMove = (event: L.LeafletMouseEvent): void => {
+    if (this.isInteracting) return;
     if (!this.state?.master || !this.state.infrastructure || !this.affine) {
       this.updateHover(null, null);
       return;
@@ -225,8 +816,6 @@ class InfrastructureLayer extends L.Layer {
 
     let hit: Hit | null = buildingHit;
     if (!hit) {
-      // Hover threshold widens with how few px there are per cm so the
-      // user can still pick up thin belts at zoomed-out levels.
       const splineThresholdGameCm = 6 / Math.max(Math.abs(a.ax), 1e-9);
       hit = hitTestSplines(
         infra,
@@ -291,11 +880,6 @@ class InfrastructureLayer extends L.Layer {
     const topLeft = map.containerPointToLayerPoint([0, 0]);
     L.DomUtil.setPosition(canvas, topLeft);
 
-    // HiDPI: back the canvas with `size * dpr` physical pixels and
-    // keep CSS at `size`, then scale the 2D context by dpr so the
-    // stroke widths and font sizes stay device-independent. Without
-    // this, the strokes blur into "pixelated" smears on Retina
-    // displays.
     const dpr = window.devicePixelRatio || 1;
     const targetW = Math.round(size.x * dpr);
     const targetH = Math.round(size.y * dpr);
@@ -309,365 +893,19 @@ class InfrastructureLayer extends L.Layer {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, size.x, size.y);
 
-    const state = this.state;
     const affine = computeAffine(map);
     const zoom = map.getZoom();
     this.affine = affine;
     this.currentZoom = zoom;
 
-    if (!state?.master || !state.infrastructure) return;
-
-    if (logger.getLevel() <= 1 /* trace/debug */) {
-      const sample = state.infrastructure.buildings;
-      if (sample.count > 0) {
-        const cx = affine.ox + sample.positionsXY[0] * affine.ax;
-        const cy = affine.oy + sample.positionsXY[1] * affine.by;
-        logger.debug('redraw', {
-          zoom,
-          canvasSize: `${canvas.width}x${canvas.height}`,
-          firstBuildingPx: `${cx.toFixed(0)},${cy.toFixed(0)}`,
-        });
-      }
-    }
-
-    // Viewport bounds in game cm. Used by the draw functions to skip
-    // any building / polyline that's outside the visible region.
-    // Inverse of `cx = ox + gx * ax` is `gx = (cx - ox) / ax`; min/max
-    // pair handles either sign of the affine scale.
-    const cornerX0 = (0 - affine.ox) / affine.ax;
-    const cornerX1 = (size.x - affine.ox) / affine.ax;
-    const cornerY0 = (0 - affine.oy) / affine.by;
-    const cornerY1 = (size.y - affine.oy) / affine.by;
-    const viewMinX = Math.min(cornerX0, cornerX1) - VIEWPORT_PAD_CM;
-    const viewMaxX = Math.max(cornerX0, cornerX1) + VIEWPORT_PAD_CM;
-    const viewMinY = Math.min(cornerY0, cornerY1) - VIEWPORT_PAD_CM;
-    const viewMaxY = Math.max(cornerY0, cornerY1) + VIEWPORT_PAD_CM;
-
-    drawSplines(
-      ctx,
-      state,
-      affine,
-      zoom,
-      viewMinX,
-      viewMaxX,
-      viewMinY,
-      viewMaxY,
-    );
-    drawBuildings(
-      ctx,
-      state,
-      affine,
-      zoom,
-      viewMinX,
-      viewMaxX,
-      viewMinY,
-      viewMaxY,
-    );
-    if (this.hovered) {
-      drawHighlight(ctx, state.infrastructure, affine, this.hovered);
+    if (this.hovered && this.state?.master && this.state.infrastructure) {
+      drawHighlight(ctx, this.state.infrastructure, affine, this.hovered);
     }
   }
 }
 
-function drawBuildings(
-  ctx: CanvasRenderingContext2D,
-  state: RenderState,
-  a: AffineGameToContainer,
-  zoom: number,
-  viewMinX: number,
-  viewMaxX: number,
-  viewMinY: number,
-  viewMaxY: number,
-): void {
-  const infra = state.infrastructure;
-  if (!infra) return;
-  const { count, categories, positionsXY, yaw, sizeWL } = infra.buildings;
-  if (count === 0) return;
+// ---- Misc helpers ---------------------------------------------------------
 
-  const visibleByCat: boolean[] = INFRASTRUCTURE_CATEGORIES.map(
-    cat =>
-      (state.categoryVisibility?.[cat] ?? true) &&
-      !categoryHiddenByLOD(zoom, cat),
-  );
-
-  // One Path2D per category lets us collapse N fillStyle / fill cycles
-  // into 8: cheap on context state, friendly to compositors. Sub-pixel
-  // dot dedup uses one Set<int> per category keyed by `(px, py)` so
-  // hundreds of decor / foundation entities collapsing into the same
-  // pixel only paint that pixel once.
-  const paths: (Path2D | null)[] = INFRASTRUCTURE_CATEGORIES.map(() => null);
-  const dotCells: (Set<number> | null)[] = INFRASTRUCTURE_CATEGORIES.map(
-    () => null,
-  );
-  for (let i = 0; i < count; i++) {
-    const catIdx = categories[i];
-    if (!visibleByCat[catIdx]) continue;
-
-    const gx = positionsXY[i * 2];
-    const gy = positionsXY[i * 2 + 1];
-    if (gx < viewMinX || gx > viewMaxX || gy < viewMinY || gy > viewMaxY) {
-      continue;
-    }
-    const widthCm = sizeWL[i * 2];
-    const lengthCm = sizeWL[i * 2 + 1];
-
-    const cx = a.ox + gx * a.ax;
-    const cy = a.oy + gy * a.by;
-    const halfW = (widthCm / 2) * Math.abs(a.ax);
-    const halfL = (lengthCm / 2) * Math.abs(a.by);
-    if (halfW < 0.5 && halfL < 0.5) {
-      // Sub-pixel: every entity in the same canvas cell paints into the
-      // same dot — dedup so a packed foundation grid doesn't queue up
-      // tens of thousands of identical 1x1 rects.
-      const px = cx | 0;
-      const py = cy | 0;
-      // (px + 32768) << 16 keeps the key positive and collision-free
-      // for any reasonable canvas size.
-      const key = ((px + 32768) << 16) | ((py + 32768) & 0xffff);
-      let cellSet = dotCells[catIdx];
-      if (!cellSet) {
-        cellSet = new Set();
-        dotCells[catIdx] = cellSet;
-      }
-      if (cellSet.has(key)) continue;
-      cellSet.add(key);
-      let path = paths[catIdx];
-      if (!path) {
-        path = new Path2D();
-        paths[catIdx] = path;
-      }
-      path.rect(cx - 0.5, cy - 0.5, 1, 1);
-      continue;
-    }
-
-    // gameToLatLng maps game (X, Y) directly onto canvas (X, Y) with
-    // no axis flip (game +Y and canvas +Y both increase downward), so
-    // the world-frame yaw is also the canvas-frame angle. Inline-
-    // compose a rotated rectangle into the category's Path2D instead
-    // of touching ctx.translate/rotate per building. Clearance in
-    // FactoryBuildings.json uses Unreal's local frame: `width` is
-    // the extent along forward (local +X), `length` is perpendicular
-    // (local +Y) — for a train docking station that's 16 m of track
-    // frontage and 34 m of platform extending toward the conveyor.
-    const angle = yaw[i];
-    const cosA = Math.cos(angle);
-    const sinA = Math.sin(angle);
-    const dx = halfW * cosA;
-    const dy = halfW * sinA;
-    const ex = -halfL * sinA;
-    const ey = halfL * cosA;
-    let path = paths[catIdx];
-    if (!path) {
-      path = new Path2D();
-      paths[catIdx] = path;
-    }
-    path.moveTo(cx - dx - ex, cy - dy - ey);
-    path.lineTo(cx + dx - ex, cy + dy - ey);
-    path.lineTo(cx + dx + ex, cy + dy + ey);
-    path.lineTo(cx - dx + ex, cy - dy + ey);
-    path.closePath();
-  }
-
-  // SCIM-style two-pass paint: a translucent fill body keeps adjacent
-  // footprints distinguishable without bleeding, and an opaque stroke
-  // draws crisp outlines so the actual building shape is readable
-  // even when zoomed out. Foundations and decor get a quieter
-  // treatment (lower fill alpha, thinner stroke) — there are usually
-  // hundreds of them and they should sit behind the factory machines,
-  // not compete with them for attention.
-  for (let c = 0; c < INFRASTRUCTURE_CATEGORIES.length; c++) {
-    const path = paths[c];
-    if (!path) continue;
-    const cat = INFRASTRUCTURE_CATEGORIES[c];
-    const color = CategoryColor[cat];
-    const quiet = cat === 'foundation' || cat === 'decor';
-    ctx.fillStyle = color;
-    ctx.globalAlpha = quiet ? 0.12 : 0.35;
-    ctx.fill(path);
-    ctx.globalAlpha = quiet ? 0.6 : 1;
-    ctx.strokeStyle = color;
-    ctx.lineWidth = quiet ? 0.75 : 1.5;
-    ctx.stroke(path);
-  }
-  ctx.globalAlpha = 1;
-}
-
-function drawSplines(
-  ctx: CanvasRenderingContext2D,
-  state: RenderState,
-  a: AffineGameToContainer,
-  zoom: number,
-  viewMinX: number,
-  viewMaxX: number,
-  viewMinY: number,
-  viewMaxY: number,
-): void {
-  const infra = state.infrastructure;
-  if (!infra) return;
-
-  // At extremely low zoom the splines collapse into a smudge: skip
-  // them entirely so the resource layer stays readable.
-  if (zoom < 1) return;
-
-  const baseLineWidth = zoom >= 6 ? 3 : zoom >= 4 ? 2 : zoom >= 2 ? 1.25 : 1;
-  // Per-kind multiplier on top of the zoom-based base width. Rails are
-  // visually thicker than belts in-game and live in a sparser part of
-  // the map, so they need a bit more weight to read at all zooms.
-  // Power lines stay thinner so a hub of overlapping wires doesn't
-  // crowd out the buildings underneath them.
-  const lineWidthMultiplier: Record<SplineKind, number> = {
-    belt: 1,
-    pipe: 1,
-    hyper: 1,
-    rail: 1.8,
-    power: 0.75,
-  };
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-
-  const step = splineStepForZoom(zoom);
-
-  for (const block of infra.splines) {
-    if (!SPLINE_KINDS.includes(block.kind)) continue;
-    if ((state.splineVisibility?.[block.kind] ?? true) === false) continue;
-    if (block.count === 0) continue;
-
-    const path = new Path2D();
-    const { offsets, pointsXY, polylineBounds } = block;
-    for (let i = 0; i < block.count; i++) {
-      // Viewport cull via the precomputed per-polyline AABB.
-      const bMinX = polylineBounds[i * 4];
-      const bMinY = polylineBounds[i * 4 + 1];
-      const bMaxX = polylineBounds[i * 4 + 2];
-      const bMaxY = polylineBounds[i * 4 + 3];
-      if (bMaxX < viewMinX || bMinX > viewMaxX) continue;
-      if (bMaxY < viewMinY || bMinY > viewMaxY) continue;
-
-      const start = offsets[i];
-      const end = offsets[i + 1];
-      if (end - start < 2) continue;
-      const sx = a.ox + pointsXY[start * 2] * a.ax;
-      const sy = a.oy + pointsXY[start * 2 + 1] * a.by;
-      path.moveTo(sx, sy);
-      // Stride through intermediate points by `step` (zoom-dependent),
-      // and additionally drop any that sit within 1 px of the last
-      // emitted vertex — saves both `lineTo` calls and rasterisation
-      // work without a visible difference at the chosen zoom level.
-      // The final point is always emitted so the polyline ends at the
-      // right place.
-      let lastDX = sx;
-      let lastDY = sy;
-      const lastIdx = end - 1;
-      for (let j = start + step; j < lastIdx; j += step) {
-        const px = a.ox + pointsXY[j * 2] * a.ax;
-        const py = a.oy + pointsXY[j * 2 + 1] * a.by;
-        const dx = px - lastDX;
-        const dy = py - lastDY;
-        if (dx * dx + dy * dy < 1) continue;
-        path.lineTo(px, py);
-        lastDX = px;
-        lastDY = py;
-      }
-      const lx = a.ox + pointsXY[lastIdx * 2] * a.ax;
-      const ly = a.oy + pointsXY[lastIdx * 2 + 1] * a.by;
-      const ldx = lx - lastDX;
-      const ldy = ly - lastDY;
-      if (ldx * ldx + ldy * ldy >= 1 || end - start === 2) {
-        path.lineTo(lx, ly);
-      }
-    }
-    ctx.strokeStyle = splineColor(block.kind, block.tier);
-    ctx.lineWidth = baseLineWidth * lineWidthMultiplier[block.kind];
-    ctx.stroke(path);
-  }
-}
-
-/**
- * Paints a bright accent on top of the hovered building or polyline so
- * the user gets instant visual confirmation of what the popover is
- * describing. Drawn last so it's always on top of the regular pass.
- */
-function drawHighlight(
-  ctx: CanvasRenderingContext2D,
-  infra: ParsedInfrastructure,
-  a: AffineGameToContainer,
-  hit: Hit,
-): void {
-  ctx.save();
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-
-  if (hit.kind === 'building') {
-    const cx = a.ox + hit.positionGame.x * a.ax;
-    const cy = a.oy + hit.positionGame.y * a.by;
-    const halfW = (hit.size.width / 2) * Math.abs(a.ax);
-    const halfL = (hit.size.length / 2) * Math.abs(a.by);
-    // Same convention as drawBuildings: yaw maps directly to canvas
-    // angle (no Y-axis flip), `width` is forward, `length` is
-    // perpendicular.
-    const angle = hit.yaw;
-    const cosA = Math.cos(angle);
-    const sinA = Math.sin(angle);
-    const dx = halfW * cosA;
-    const dy = halfW * sinA;
-    const ex = -halfL * sinA;
-    const ey = halfL * cosA;
-
-    const path = new Path2D();
-    path.moveTo(cx - dx - ex, cy - dy - ey);
-    path.lineTo(cx + dx - ex, cy + dy - ey);
-    path.lineTo(cx + dx + ex, cy + dy + ey);
-    path.lineTo(cx - dx + ex, cy - dy + ey);
-    path.closePath();
-
-    // White halo behind a colored stroke gives the hovered shape a
-    // double-line outline that reads even on busy / saturated layers.
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
-    ctx.lineWidth = 4;
-    ctx.stroke(path);
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 1.5;
-    ctx.stroke(path);
-    return;
-  }
-
-  // Spline highlight
-  const block = infra.splines[hit.blockIndex];
-  if (!block) {
-    ctx.restore();
-    return;
-  }
-  const start = block.offsets[hit.polylineIndex];
-  const end = block.offsets[hit.polylineIndex + 1];
-  if (end - start < 2) {
-    ctx.restore();
-    return;
-  }
-  const path = new Path2D();
-  const sx = a.ox + block.pointsXY[start * 2] * a.ax;
-  const sy = a.oy + block.pointsXY[start * 2 + 1] * a.by;
-  path.moveTo(sx, sy);
-  for (let j = start + 1; j < end; j++) {
-    const px = a.ox + block.pointsXY[j * 2] * a.ax;
-    const py = a.oy + block.pointsXY[j * 2 + 1] * a.by;
-    path.lineTo(px, py);
-  }
-
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
-  ctx.lineWidth = 6;
-  ctx.stroke(path);
-  ctx.strokeStyle = splineColor(block.kind, block.tier);
-  ctx.lineWidth = 3;
-  ctx.stroke(path);
-
-  ctx.restore();
-}
-
-/**
- * Computes a Leaflet bounds covering every building + spline polyline
- * in the infrastructure payload. Returns null if the payload contains
- * no usable geometry.
- */
 function infrastructureLatLngBounds(
   infra: ParsedInfrastructure,
 ): L.LatLngBounds | null {
@@ -701,12 +939,14 @@ function infrastructureLatLngBounds(
   return L.latLngBounds(gameToLatLng(minX, minY), gameToLatLng(maxX, maxY));
 }
 
+// ---- React wrapper --------------------------------------------------------
+
 /**
- * React wrapper around {@link InfrastructureLayer}. Reads the in-memory
- * `mapInfrastructure` slice plus the persisted visibility flags from
- * `mapSlice`, and pushes them into the imperative layer whenever they
- * change. The layer is mounted once per `<MapContainer>` and torn down
- * with the host component.
+ * React wrapper around the tile-based grid layer + a thin highlight
+ * overlay. Reads the in-memory `mapInfrastructure` slice plus the
+ * persisted visibility flags from `mapSlice`, and pushes them into
+ * the imperative layers whenever they change. The layers are mounted
+ * once per `<MapContainer>` and torn down with the host component.
  */
 export function InfrastructureCanvasLayer() {
   const map = useMap();
@@ -721,15 +961,13 @@ export function InfrastructureCanvasLayer() {
   );
   const splineVisibility = useStore(s => s.map.infrastructureSplineVisibility);
 
-  // Surface only the in-memory payload that matches the active game.
-  // Switching games shouldn't show stale geometry on a different map
-  // until the user re-imports.
   const activeInfrastructure =
     ownerGameId != null && ownerGameId === selectedGameId
       ? infrastructure
       : null;
 
-  const layerRef = useRef<InfrastructureLayer | null>(null);
+  const gridRef = useRef<InfrastructureGridLayerType | null>(null);
+  const highlightRef = useRef<InfrastructureHighlightLayer | null>(null);
 
   const [hoverHit, setHoverHit] = useState<Hit | null>(null);
   const [hoverMousePx, setHoverMousePx] = useState<{
@@ -738,27 +976,35 @@ export function InfrastructureCanvasLayer() {
   } | null>(null);
 
   useEffect(() => {
-    const layer = new InfrastructureLayer();
-    layer.addTo(map);
-    layer.setHoverCallback(({ hit, mousePx }) => {
+    const grid = new InfrastructureGridLayer();
+    grid.addTo(map);
+    const highlight = new InfrastructureHighlightLayer();
+    highlight.addTo(map);
+    highlight.setHoverCallback(({ hit, mousePx }) => {
       setHoverHit(hit);
       setHoverMousePx(mousePx);
     });
-    layerRef.current = layer;
+    gridRef.current = grid;
+    highlightRef.current = highlight;
+    logger.info('infrastructure layers mounted');
     return () => {
-      layer.setHoverCallback(null);
-      layer.remove();
-      layerRef.current = null;
+      highlight.setHoverCallback(null);
+      highlight.remove();
+      grid.remove();
+      gridRef.current = null;
+      highlightRef.current = null;
     };
   }, [map]);
 
   useEffect(() => {
-    layerRef.current?.setState({
+    const state: RenderState = {
       master,
       infrastructure: activeInfrastructure,
       categoryVisibility,
       splineVisibility,
-    });
+    };
+    gridRef.current?.setRenderState(state);
+    highlightRef.current?.setState(state);
   }, [master, activeInfrastructure, categoryVisibility, splineVisibility]);
 
   // Frame the camera on the loaded infrastructure when the slice asks
@@ -784,10 +1030,6 @@ export function InfrastructureCanvasLayer() {
     );
   }, [hoverHit, activeInfrastructure]);
 
-  // Portal the popover into Leaflet's map container so it stays anchored
-  // to viewport coords instead of riding the layer panes through every
-  // zoom/pan animation. The container is `position: relative`, which
-  // makes our absolute coords resolve to the visible map area.
   return createPortal(
     <InfrastructureHoverPopover
       hit={hoverHit}

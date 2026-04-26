@@ -4,7 +4,9 @@ import { getClearance } from './getClearance';
 describe('getClearance', () => {
   it('returns hand-tuned values for hard-coded connector ids', () => {
     expect(
-      getClearance('/Game/.../ConveyorPole/Build_ConveyorPole.Build_ConveyorPole_C'),
+      getClearance(
+        '/Game/.../ConveyorPole/Build_ConveyorPole.Build_ConveyorPole_C',
+      ),
     ).toEqual({ width: 100, length: 100, height: 200 });
   });
 
@@ -29,9 +31,7 @@ describe('getClearance', () => {
 
   it('falls back to 8x8m for completely unknown buildables', () => {
     expect(
-      getClearance(
-        '/Game/.../Build_TotallyMadeUp.Build_TotallyMadeUp_C',
-      ),
+      getClearance('/Game/.../Build_TotallyMadeUp.Build_TotallyMadeUp_C'),
     ).toEqual({ width: 800, length: 800, height: 200 });
   });
 });

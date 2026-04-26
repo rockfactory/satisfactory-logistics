@@ -26,6 +26,12 @@ interface SplineBucket {
   tier: number;
   /** Each polyline is a flat [x0,y0,x1,y1,...] number[]. */
   polylines: number[][];
+  /**
+   * Per-polyline Hermite tangents, layout `[aX, aY, lX, lY]` per point.
+   * `null` when the polyline came from a source without tangents
+   * (power-line wires, fallback lineTo paths).
+   */
+  tangents: (number[] | null)[];
 }
 
 /**
@@ -87,7 +93,7 @@ function getOrCreateBucket(
   const key = `${kind}|${tier}`;
   let bucket = acc.splineBuckets.get(key);
   if (!bucket) {
-    bucket = { kind, tier, polylines: [] };
+    bucket = { kind, tier, polylines: [], tangents: [] };
     acc.splineBuckets.set(key, bucket);
   }
   return bucket;
@@ -186,7 +192,9 @@ export function ingestEntity(
     const points = readSplineLocations(obj.properties);
     if (points) {
       const bucket = getOrCreateBucket(acc, cls.kind, cls.tier);
-      bucket.polylines.push(buildRotatedPolyline(tx, ty, yaw, points));
+      const built = buildRotatedPolyline(tx, ty, yaw, points);
+      bucket.polylines.push(built.flat);
+      bucket.tangents.push(built.tangents);
       acc.splineCounts[cls.kind]++;
       return;
     }
@@ -197,7 +205,9 @@ export function ingestEntity(
     if (wires.length > 0) {
       const bucket = getOrCreateBucket(acc, 'power', 0);
       for (const wire of wires) {
-        bucket.polylines.push(buildAbsolutePolyline(wire));
+        const built = buildAbsolutePolyline(wire);
+        bucket.polylines.push(built.flat);
+        bucket.tangents.push(built.tangents);
         acc.splineCounts.power++;
       }
       return;
@@ -248,10 +258,19 @@ export function finalizeInfrastructure(
     offsets[polylineCount] = totalPoints;
     const pointsXY = new Float32Array(totalPoints * 2);
     const polylineBounds = new Float32Array(polylineCount * 4);
+    // A bucket is homogeneous: all polylines either come with Hermite
+    // tangents (mSplineData) or none do (power-line wires). Probing the
+    // first entry is enough.
+    const hasTangents = polylineCount > 0 && bucket.tangents[0] != null;
+    const tangentsXY = hasTangents ? new Float32Array(totalPoints * 4) : null;
     let cursor = 0;
     for (let i = 0; i < polylineCount; i++) {
       const flat = bucket.polylines[i];
       pointsXY.set(flat, cursor);
+      if (tangentsXY) {
+        const t = bucket.tangents[i];
+        if (t) tangentsXY.set(t, cursor * 2);
+      }
       let minX = Infinity;
       let minY = Infinity;
       let maxX = -Infinity;
@@ -277,6 +296,7 @@ export function finalizeInfrastructure(
       offsets,
       pointsXY,
       polylineBounds,
+      tangentsXY,
     });
   }
 

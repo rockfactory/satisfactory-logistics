@@ -1,30 +1,53 @@
 import type { Vec3 } from './types';
 
 /**
+ * One point of an Unreal `mSplineData` array: the location plus
+ * `ArriveTangent` / `LeaveTangent` (Hermite tangents in the entity's
+ * local frame). The renderer turns the tangents into Bezier control
+ * points so curved track / belt sections actually look curved instead
+ * of being approximated by straight chords between control points.
+ * Tangents default to zero on entries that don't expose them, which
+ * makes the resulting Bezier collapse to a straight `lineTo`.
+ */
+export interface SplinePoint {
+  x: number;
+  y: number;
+  z: number;
+  arriveX: number;
+  arriveY: number;
+  leaveX: number;
+  leaveY: number;
+}
+
+/**
  * Reads `properties.mSplineData` (an `ArrayProperty<StructProperty>` of
- * `SplinePointData`) into a flat list of locations relative to the
- * entity's transform. Each entry's `Location.value.{x,y,z}` is the
- * point in local space — the worker is expected to rotate/translate
+ * `SplinePointData`) into a flat list of points + tangents relative to
+ * the entity's transform. The worker is expected to rotate/translate
  * them into world space afterwards. Returns null if the field is
  * absent or contains fewer than 2 valid points (a single-point
  * "polyline" can't be drawn).
  */
 export function readSplineLocations(
   properties: Record<string, unknown> | undefined,
-): Vec3[] | null {
+): SplinePoint[] | null {
   const sd = (
     properties as { mSplineData?: { values?: unknown[] } } | undefined
   )?.mSplineData;
   if (!sd || !Array.isArray(sd.values)) return null;
-  const out: Vec3[] = [];
+  const out: SplinePoint[] = [];
   for (const sp of sd.values) {
-    const loc = (
+    const props = (
       sp as
         | {
-            properties?: { Location?: { value?: Partial<Vec3> } };
+            properties?: {
+              Location?: { value?: Partial<Vec3> };
+              ArriveTangent?: { value?: Partial<Vec3> };
+              LeaveTangent?: { value?: Partial<Vec3> };
+            };
           }
         | undefined
-    )?.properties?.Location?.value;
+    )?.properties;
+    const loc = props?.Location?.value;
     if (
       !loc ||
       typeof loc.x !== 'number' ||
@@ -34,7 +57,25 @@ export function readSplineLocations(
     ) {
       continue;
     }
-    out.push({ x: loc.x, y: loc.y, z: typeof loc.z === 'number' ? loc.z : 0 });
+    const arrive = props?.ArriveTangent?.value;
+    const leave = props?.LeaveTangent?.value;
+    out.push({
+      x: loc.x,
+      y: loc.y,
+      z: typeof loc.z === 'number' ? loc.z : 0,
+      arriveX:
+        typeof arrive?.x === 'number' && Number.isFinite(arrive.x)
+          ? arrive.x
+          : 0,
+      arriveY:
+        typeof arrive?.y === 'number' && Number.isFinite(arrive.y)
+          ? arrive.y
+          : 0,
+      leaveX:
+        typeof leave?.x === 'number' && Number.isFinite(leave.x) ? leave.x : 0,
+      leaveY:
+        typeof leave?.y === 'number' && Number.isFinite(leave.y) ? leave.y : 0,
+    });
   }
   return out.length >= 2 ? out : null;
 }
