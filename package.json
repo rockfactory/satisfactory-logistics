@@ -34,6 +34,8 @@
     "@nivo/sankey": "^0.99.0",
     "@sentry/react": "^8.37.1",
     "@sentry/vite-plugin": "^5.2.0",
+    "@streamparser/json": "^0.0.22",
+    "@streamparser/json-whatwg": "^0.0.22",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/sentry-js-integration": "^0.3.0",

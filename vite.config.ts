@@ -84,6 +84,17 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './src/'),
+      // `@etothepii/satisfactory-file-parser` does an optimistic
+      // `require('stream/web')` for Node; in the browser Vite
+      // externalises that to an empty object, so the library's own
+      // fallback to `globalThis.ReadableStream` never fires and the
+      // streaming parser explodes with "ReadableStream is not a
+      // constructor". Point the import at a tiny shim that re-exports
+      // the WHATWG globals.
+      'stream/web': path.resolve(
+        import.meta.dirname,
+        './src/recipes/savegame/nodeStreamWebShim.ts',
+      ),
     },
   },
   define: {
