@@ -45,10 +45,27 @@ export interface InfrastructureBuildingsBlock {
   categories: Uint8Array;
   /** count*2, world cm. */
   positionsXY: Float32Array;
+  /**
+   * count, world cm. Z translation (the building's base elevation).
+   * Used together with {@link heights} to pick the topmost building
+   * under the cursor — a constructor stacked on a foundation should
+   * win the hit over the foundation it sits on.
+   */
+  positionsZ: Float32Array;
   /** count, radians (yaw around vertical axis, world frame). */
   yaw: Float32Array;
   /** count*2, width and length in cm (footprint). */
   sizeWL: Float32Array;
+  /** count, height of the building in cm (clearance.height). */
+  heights: Float32Array;
+  /**
+   * Per-building typePath (e.g. `Build_AssemblerMk1_C`), used for the
+   * hover popover's display name. Stored as a parallel string array
+   * rather than a transferable view because each unique typePath is a
+   * shared interned string in the worker, so the structured-clone copy
+   * is cheap (one pointer per building).
+   */
+  typePaths: string[];
 }
 
 /**
@@ -125,8 +142,10 @@ export function collectInfrastructureTransferables(
   const buffers: ArrayBuffer[] = [
     infra.buildings.categories.buffer as ArrayBuffer,
     infra.buildings.positionsXY.buffer as ArrayBuffer,
+    infra.buildings.positionsZ.buffer as ArrayBuffer,
     infra.buildings.yaw.buffer as ArrayBuffer,
     infra.buildings.sizeWL.buffer as ArrayBuffer,
+    infra.buildings.heights.buffer as ArrayBuffer,
   ];
   for (const spline of infra.splines) {
     buffers.push(spline.offsets.buffer as ArrayBuffer);

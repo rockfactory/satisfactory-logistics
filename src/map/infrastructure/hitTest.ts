@@ -70,7 +70,10 @@ export function hitTestBuildings(
     const halfL = sizeWL[i * 2 + 1] / 2;
 
     // Inverse rotation: project the world point into the building's
-    // local frame, then check against an axis-aligned half-extents box.
+    // local frame, then check against an axis-aligned half-extents
+    // box. `width` extends along the forward axis (local +X) and
+    // `length` extends along the side axis (local +Y), matching the
+    // mapping used by drawBuildings in InfrastructureCanvasLayer.
     const a = -yaw[i];
     const cosA = Math.cos(a);
     const sinA = Math.sin(a);

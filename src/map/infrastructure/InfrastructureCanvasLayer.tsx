@@ -358,13 +358,18 @@ function drawBuildings(
       continue;
     }
 
-    // Negate yaw because gameToLatLng mirrors the Y axis: a +CCW
-    // rotation in game frame becomes -CCW in canvas frame.
-    const angle = -yaw[i];
+    // gameToLatLng maps game (X, Y) directly onto canvas (X, Y) with
+    // no axis flip (game +Y and canvas +Y both increase downward), so
+    // the world-frame yaw is also the canvas-frame angle. Inline-
+    // compose a rotated rectangle into the category's Path2D instead
+    // of touching ctx.translate/rotate per building. Clearance in
+    // FactoryBuildings.json uses Unreal's local frame: `width` is
+    // the extent along forward (local +X), `length` is perpendicular
+    // (local +Y) — for a train docking station that's 16 m of track
+    // frontage and 34 m of platform extending toward the conveyor.
+    const angle = yaw[i];
     const cosA = Math.cos(angle);
     const sinA = Math.sin(angle);
-    // Inline-compose a rotated rectangle into the category's Path2D
-    // instead of touching ctx.translate/rotate per building.
     const dx = halfW * cosA;
     const dy = halfW * sinA;
     const ex = -halfL * sinA;
@@ -480,7 +485,10 @@ function drawHighlight(
     const cy = a.oy + hit.positionGame.y * a.by;
     const halfW = (hit.size.width / 2) * Math.abs(a.ax);
     const halfL = (hit.size.length / 2) * Math.abs(a.by);
-    const angle = -hit.yaw;
+    // Same convention as drawBuildings: yaw maps directly to canvas
+    // angle (no Y-axis flip), `width` is forward, `length` is
+    // perpendicular.
+    const angle = hit.yaw;
     const cosA = Math.cos(angle);
     const sinA = Math.sin(angle);
     const dx = halfW * cosA;
