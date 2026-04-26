@@ -66,6 +66,38 @@ export interface InfrastructureBuildingsBlock {
    * is cheap (one pointer per building).
    */
   typePaths: string[];
+  /**
+   * Per-building overclock multiplier (`mCurrentPotential` in the save:
+   * 1.0 = 100%, 1.5 = 150% / overclocked, 0.5 = 50% / underclocked).
+   * `NaN` for entities that don't expose the property (foundations,
+   * decor, every instance inside the lightweight buildable subsystem).
+   * The hover popover only renders the value when it's a finite
+   * number that isn't ~1.0.
+   */
+  overclocks: Float32Array;
+  /**
+   * Per-building somersloop / production-shard count
+   * (`mAddedSomersloops` in the save). 0 for entities without slots
+   * filled. The popover renders this as `Somersloop ×N` when N > 0.
+   */
+  somersloops: Uint8Array;
+  /**
+   * Per-building recipe id selected in the production machine
+   * (last segment of `mCurrentRecipeRef.pathName`, e.g.
+   * `Recipe_IronPlate_C`). Empty string when the entity has no
+   * recipe slot or hasn't been set.
+   */
+  recipes: string[];
+  /**
+   * Per-building resource node id this entity extracts from
+   * (last segment of `mExtractableResource.value.pathName`, e.g.
+   * `BP_ResourceDeposit1642`). Empty string for non-extractor
+   * entities. Water pumps point at `FGWaterVolume_*` entries which
+   * aren't in the static node dataset; the hover popover special-
+   * cases the typePath to render "Water" for those instead of
+   * trying to resolve the id.
+   */
+  extractedNodes: string[];
 }
 
 /**
@@ -163,6 +195,8 @@ export function collectInfrastructureTransferables(
     infra.buildings.yaw.buffer as ArrayBuffer,
     infra.buildings.sizeWL.buffer as ArrayBuffer,
     infra.buildings.heights.buffer as ArrayBuffer,
+    infra.buildings.overclocks.buffer as ArrayBuffer,
+    infra.buildings.somersloops.buffer as ArrayBuffer,
   ];
   for (const spline of infra.splines) {
     buffers.push(spline.offsets.buffer as ArrayBuffer);

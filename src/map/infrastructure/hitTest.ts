@@ -17,6 +17,20 @@ export interface BuildingHit {
   yaw: number;
   typePath: string;
   categoryIndex: number;
+  /** Overclock multiplier (1.0 = 100%). `NaN` for entities without
+   * `mCurrentPotential` (foundations, decor, lightweight instances). */
+  overclock: number;
+  /** Somersloop / production-shard count. 0 when not applicable. */
+  somersloop: number;
+  /** Selected recipe id (last segment of `mCurrentRecipeRef.pathName`).
+   * Empty string when none. */
+  recipe: string;
+  /** Resource node id this entity extracts from (last segment of
+   * `mExtractableResource.value.pathName`). Empty string when the
+   * entity isn't an extractor. Water pumps point at `FGWaterVolume_*`
+   * which won't resolve in the static node dataset; the popover
+   * falls back on the building's typePath in that case. */
+  extractedNode: string;
 }
 
 export interface SplineHit {
@@ -55,6 +69,10 @@ export function hitTestBuildings(
     sizeWL,
     heights,
     typePaths,
+    overclocks,
+    somersloops,
+    recipes,
+    extractedNodes,
   } = infra.buildings;
   let bestTopZ = -Infinity;
   let bestArea = Infinity;
@@ -109,6 +127,10 @@ export function hitTestBuildings(
     yaw: yaw[bestIdx],
     typePath: typePaths[bestIdx],
     categoryIndex: categories[bestIdx],
+    overclock: overclocks[bestIdx],
+    somersloop: somersloops[bestIdx],
+    recipe: recipes[bestIdx],
+    extractedNode: extractedNodes[bestIdx],
   };
 }
 

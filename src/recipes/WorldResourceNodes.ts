@@ -88,6 +88,22 @@ const StaticWorldResourceNodes: WorldResourceNode[] = (
 }));
 
 /**
+ * Static `id` → node lookup. Used by call sites that have a node id
+ * from a savegame (e.g. an extractor's `mExtractableResource`) and
+ * want to resolve it to its resource type / display name without
+ * scanning the full array. Excludes savegame overrides; consumers
+ * that need them should layer those on top.
+ */
+export const StaticWorldResourceNodesById: Record<string, WorldResourceNode> =
+  StaticWorldResourceNodes.reduce(
+    (acc, node) => {
+      acc[node.id] = node;
+      return acc;
+    },
+    {} as Record<string, WorldResourceNode>,
+  );
+
+/**
  * Per-game savegame-derived overrides. Returns an empty list today; the
  * savegame parser will populate this in a future iteration. Kept as a
  * stable hook so the consumer (`getWorldResourceNodes`) does not change

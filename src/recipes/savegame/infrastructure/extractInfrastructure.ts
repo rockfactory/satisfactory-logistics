@@ -54,6 +54,15 @@ export interface InfrastructureAccumulator {
   bSizesL: number[];
   bHeights: number[];
   bTypePaths: string[];
+  /** Overclock multiplier per building (NaN when not applicable). */
+  bOverclocks: number[];
+  /** Somersloop count per building (0 when not applicable). */
+  bSomersloops: number[];
+  /** Selected recipe id per building (empty string when none). */
+  bRecipes: string[];
+  /** Resource node id this building extracts from (empty string when
+   * the entity isn't an extractor). */
+  bExtractedNodes: string[];
 }
 
 function emptyCategoryCounts(): Record<InfrastructureCategory, number> {
@@ -82,6 +91,10 @@ export function createInfrastructureAccumulator(): InfrastructureAccumulator {
     bSizesL: [],
     bHeights: [],
     bTypePaths: [],
+    bOverclocks: [],
+    bSomersloops: [],
+    bRecipes: [],
+    bExtractedNodes: [],
   };
 }
 
@@ -106,6 +119,7 @@ function pushBuilding(
   ty: number,
   tz: number,
   yaw: number,
+  machine: MachineDetails | null = null,
 ): void {
   const category = categoryFor(typePath);
   const { width, length, height } = getClearance(typePath);
@@ -118,7 +132,93 @@ function pushBuilding(
   acc.bSizesL.push(length);
   acc.bHeights.push(height);
   acc.bTypePaths.push(typePath);
+  acc.bOverclocks.push(machine?.overclock ?? Number.NaN);
+  acc.bSomersloops.push(machine?.somersloop ?? 0);
+  acc.bRecipes.push(machine?.recipe ?? '');
+  acc.bExtractedNodes.push(machine?.extractedNode ?? '');
   acc.counts[category]++;
+}
+
+interface MachineDetails {
+  overclock: number;
+  somersloop: number;
+  recipe: string;
+  extractedNode: string;
+}
+
+/**
+ * Pulls overclock / somersloop / recipe out of a `SaveEntity`'s
+ * `properties` bag, when the building is the kind that exposes them.
+ * Returns null when none of the three are set, so the caller can skip
+ * the per-building entry. Failures (missing fields, malformed values)
+ * silently fall back to defaults — every machine in a save has a
+ * different mix of these properties depending on its tier and on
+ * whether the player ever touched it.
+ */
+function readNumberProperty(value: unknown): number | null {
+  const v = (value as { value?: unknown })?.value;
+  return typeof v === 'number' && Number.isFinite(v) ? v : null;
+}
+
+function readObjectPathName(value: unknown): string | null {
+  const v = (value as { value?: { pathName?: unknown } })?.value?.pathName;
+  return typeof v === 'string' && v.length > 0 ? v : null;
+}
+
+function readMachineDetails(
+  properties: Record<string, unknown> | undefined,
+): MachineDetails | null {
+  if (!properties) return null;
+
+  // Overclock — `mCurrentPotential` is the live value, `mPendingPotential`
+  // is the slider position the player set; we prefer the live value
+  // and fall back so a freshly-cranked machine still shows something.
+  const potential =
+    readNumberProperty(properties.mCurrentPotential) ??
+    readNumberProperty(properties.mPendingPotential);
+
+  // Somersloop / production shard count. The save format has been
+  // through several renames across U1.0 / U1.1 builds; try them all.
+  const somersloops =
+    readNumberProperty(properties.mProductionShardCount) ??
+    readNumberProperty(properties.mAddedSomersloops) ??
+    readNumberProperty(properties.mNumOccupiedAlienOrgan);
+
+  // Selected recipe — `mCurrentRecipe` is the canonical
+  // `FGBuildableManufacturer` field, but a few save versions / mods
+  // expose it as `mCurrentRecipeRef`.
+  const recipeRef =
+    readObjectPathName(properties.mCurrentRecipe) ??
+    readObjectPathName(properties.mCurrentRecipeRef);
+
+  // Resource node id — `mExtractableResource` is set on miners, oil
+  // pumps, fracking extractors and water pumps. The popover uses it
+  // (with the static `WorldResourceNodesById` lookup) to render the
+  // "extracts: …" line.
+  const extractRef = readObjectPathName(properties.mExtractableResource);
+
+  const overclock = potential ?? Number.NaN;
+  const somersloop = somersloops != null ? somersloops | 0 : 0;
+  let recipe = '';
+  if (recipeRef) {
+    const tail = recipeRef.split('.').pop();
+    if (tail) recipe = tail;
+  }
+  let extractedNode = '';
+  if (extractRef) {
+    const tail = extractRef.split('.').pop();
+    if (tail) extractedNode = tail;
+  }
+
+  if (
+    Number.isNaN(overclock) &&
+    somersloop === 0 &&
+    recipe === '' &&
+    extractedNode === ''
+  ) {
+    return null;
+  }
+  return { overclock, somersloop, recipe, extractedNode };
 }
 
 /**
@@ -215,7 +315,13 @@ export function ingestEntity(
     // No wire data: render as building marker so it isn't lost.
   }
 
-  pushBuilding(acc, typePath, tx, ty, tz, yaw);
+  // Production-machine bookkeeping (overclock / somersloop / recipe).
+  // Lightweight-subsystem instances (foundations, walls, decor, …) are
+  // bare transforms with no `properties` bag, so they never surface
+  // these — `readMachineDetails(undefined)` returns null and
+  // pushBuilding falls back to the defaults.
+  const machine = readMachineDetails(obj.properties);
+  pushBuilding(acc, typePath, tx, ty, tz, yaw, machine);
 }
 
 /**
@@ -244,6 +350,10 @@ export function finalizeInfrastructure(
     sizeWL,
     heights: Float32Array.from(acc.bHeights),
     typePaths: acc.bTypePaths,
+    overclocks: Float32Array.from(acc.bOverclocks),
+    somersloops: Uint8Array.from(acc.bSomersloops),
+    recipes: acc.bRecipes,
+    extractedNodes: acc.bExtractedNodes,
   };
 
   const splines: InfrastructureSplinesBlock[] = [];
