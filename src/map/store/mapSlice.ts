@@ -139,6 +139,29 @@ function ensureMapSliceShape(state: MapSlice): void {
   if (typeof state.hideCollectedCollectibles !== 'boolean') {
     state.hideCollectedCollectibles = false;
   }
+  if (typeof state.infrastructureMaster !== 'boolean') {
+    state.infrastructureMaster = true;
+  }
+  if (!state.infrastructureCategoryVisibility) {
+    state.infrastructureCategoryVisibility =
+      defaultInfrastructureCategoryVisibility();
+  } else {
+    for (const cat of INFRASTRUCTURE_CATEGORIES) {
+      if (typeof state.infrastructureCategoryVisibility[cat] !== 'boolean') {
+        state.infrastructureCategoryVisibility[cat] = true;
+      }
+    }
+  }
+  if (!state.infrastructureSplineVisibility) {
+    state.infrastructureSplineVisibility =
+      defaultInfrastructureSplineVisibility();
+  } else {
+    for (const kind of SPLINE_KINDS) {
+      if (typeof state.infrastructureSplineVisibility[kind] !== 'boolean') {
+        state.infrastructureSplineVisibility[kind] = true;
+      }
+    }
+  }
 }
 
 export const mapSlice = createSlice({
