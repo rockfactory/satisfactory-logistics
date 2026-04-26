@@ -26,6 +26,8 @@ export interface SavegameImportApplied {
   applied: ApplySavegameToGameOptions;
   recipeCount: number;
   usedNodeCount: number;
+  /** Sum of buildings + spline polylines extracted, when applicable. */
+  infrastructureCount: number;
 }
 
 export interface UseSavegameImportResult {
@@ -37,7 +39,10 @@ export interface UseSavegameImportResult {
    * {@link UseSavegameImportResult.importAndApplyToGame} so import
    * semantics stay consistent across surfaces.
    */
-  importFile: (file: File) => Promise<ParsedSatisfactorySave>;
+  importFile: (
+    file: File,
+    options?: { extractInfrastructure?: boolean },
+  ) => Promise<ParsedSatisfactorySave>;
   /**
    * High-level: parses the file, applies the requested slices of
    * derivable state to the game in a single store patch, and surfaces
@@ -76,12 +81,19 @@ export function useSavegameImport(): UseSavegameImportResult {
     useState<SavegameImportProgress>(IDLE_PROGRESS);
 
   const importFile = useCallback(
-    (file: File): Promise<ParsedSatisfactorySave> => {
+    (
+      file: File,
+      options: { extractInfrastructure?: boolean } = {},
+    ): Promise<ParsedSatisfactorySave> => {
       setImporting(true);
       setProgress(IDLE_PROGRESS);
-      return startSavegameParsing(file, (value, message) => {
-        setProgress({ value, message });
-      })
+      return startSavegameParsing(
+        file,
+        (value, message) => {
+          setProgress({ value, message });
+        },
+        { extractInfrastructure: options.extractInfrastructure },
+      )
         .then(save => {
           setImporting(false);
           return save;
@@ -110,7 +122,9 @@ export function useSavegameImport(): UseSavegameImportResult {
       }
 
       try {
-        const save = await importFile(file);
+        const save = await importFile(file, {
+          extractInfrastructure: apply.infrastructure,
+        });
         useStore.getState().updateGameFromSavegame(gameId, save, apply);
 
         const recipeCount = apply.defaultRecipes
@@ -118,13 +132,34 @@ export function useSavegameImport(): UseSavegameImportResult {
           : 0;
         const usedNodeCount = apply.usedNodes ? save.usedNodeIds.length : 0;
 
+        let infrastructureCount = 0;
+        if (apply.infrastructure && save.infrastructure) {
+          infrastructureCount =
+            save.infrastructure.buildings.count +
+            save.infrastructure.splines.reduce((s, b) => s + b.count, 0);
+          useStore
+            .getState()
+            .setInfrastructure(gameId, save.infrastructure);
+        }
+
         notifications.show({
           title: 'Savegame imported',
-          message: buildSummaryMessage(apply, recipeCount, usedNodeCount),
+          message: buildSummaryMessage(
+            apply,
+            recipeCount,
+            usedNodeCount,
+            infrastructureCount,
+          ),
           color: 'green',
         });
 
-        return { save, applied: apply, recipeCount, usedNodeCount };
+        return {
+          save,
+          applied: apply,
+          recipeCount,
+          usedNodeCount,
+          infrastructureCount,
+        };
       } catch (err) {
         const message =
           err instanceof Error ? err.message : 'Unknown parser error';
@@ -152,6 +187,7 @@ function buildSummaryMessage(
   apply: ApplySavegameToGameOptions,
   recipeCount: number,
   usedNodeCount: number,
+  infrastructureCount: number,
 ): string {
   const parts: string[] = [];
   if (apply.defaultRecipes) {
@@ -165,6 +201,11 @@ function buildSummaryMessage(
     } else {
       parts.push(`${usedNodeCount} used node${usedNodeCount === 1 ? '' : 's'}`);
     }
+  }
+  if (apply.infrastructure) {
+    parts.push(
+      `${infrastructureCount} built structure${infrastructureCount === 1 ? '' : 's'}`,
+    );
   }
   if (parts.length === 0) {
     return 'Save parsed successfully (no game state updated).';

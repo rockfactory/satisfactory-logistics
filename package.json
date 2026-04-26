@@ -15,7 +15,8 @@
     "parse-docs": "tsx scripts/parseDocs.ts",
     "extract-world-nodes": "tsx scripts/extractWorldNodes.ts",
     "generate-pwa-icons": "tsx scripts/generatePwaIcons.ts",
-    "generate-map-tiles": "tsx scripts/generateMapTiles.ts"
+    "generate-map-tiles": "tsx scripts/generateMapTiles.ts",
+    "dump-save": "tsx scripts/dumpSavegame.ts"
   },
   "dependencies": {
     "@caldwell619/react-kanban": "^0.0.11",

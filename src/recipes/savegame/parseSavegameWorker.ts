@@ -5,12 +5,24 @@ import {
   type SatisfactorySave,
 } from '@etothepii/satisfactory-file-parser';
 import { loglev } from '@/core/logger/log';
-import type {
-  IParseSavegameRequest,
-  IParseSavegameResponse,
+import { extractInfrastructure } from './extractInfrastructure';
+import {
+  collectInfrastructureTransferables,
+  type IParseSavegameRequest,
+  type IParseSavegameResponse,
+  type ParsedSatisfactorySave,
 } from './ParseSavegameMessages';
 
 const logger = loglev.getLogger('parse-savegame');
+
+// `postMessage` inside a Worker module accepts a `transfer` array, but
+// the default DOM lib in tsconfig types it as the window-scoped variant
+// (which expects a `targetOrigin` string). Locally re-typed to avoid
+// pulling the WebWorker lib into the whole project.
+const workerPostMessage = postMessage as (
+  message: IParseSavegameResponse,
+  transfer?: ArrayBuffer[],
+) => void;
 
 /**
  * Full Unreal typePath strings for every placeable extractor we
@@ -40,7 +52,10 @@ function isExtractorTypePath(typePath: string): boolean {
   return lastSegment != null && MINER_LAST_SEGMENT_RE.test(lastSegment);
 }
 
-async function parseSavegame(file: File) {
+async function parseSavegame(
+  file: File,
+  options: { extractInfrastructure?: boolean },
+) {
   try {
     const json = Parser.ParseSave('Save', await file.arrayBuffer(), {
       onProgressCallback: (progress: number, msg?: string) => {
@@ -54,13 +69,31 @@ async function parseSavegame(file: File) {
 
     const { availableRecipes, usedNodeIds } = inspectSavegame(json);
 
-    postMessage({
-      type: 'parsed',
-      save: {
-        availableRecipes,
-        usedNodeIds,
-      },
-    } as IParseSavegameResponse);
+    const save: ParsedSatisfactorySave = {
+      availableRecipes,
+      usedNodeIds,
+    };
+
+    let transfer: ArrayBuffer[] = [];
+    if (options.extractInfrastructure) {
+      postMessage({
+        type: 'progress',
+        progress: 0.99,
+        message: 'Extracting built infrastructure...',
+      } as IParseSavegameResponse);
+      save.infrastructure = extractInfrastructure(json);
+      transfer = collectInfrastructureTransferables(save.infrastructure);
+      logger.log(
+        'Infrastructure extracted:',
+        save.infrastructure.buildings.count,
+        'buildings,',
+        save.infrastructure.splines.reduce((sum, s) => sum + s.count, 0),
+        'spline polylines',
+      );
+    }
+
+    const response: IParseSavegameResponse = { type: 'parsed', save };
+    workerPostMessage(response, transfer);
   } catch (e) {
     logger.error(`Error while parsing`, e);
     postMessage({
@@ -118,6 +151,8 @@ function inspectSavegame(save: SatisfactorySave) {
 addEventListener('message', (event: MessageEvent<IParseSavegameRequest>) => {
   const { data } = event;
   if (data.type === 'parse') {
-    parseSavegame(data.file);
+    parseSavegame(data.file, {
+      extractInfrastructure: data.extractInfrastructure ?? false,
+    });
   }
 });

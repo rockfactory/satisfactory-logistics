@@ -37,6 +37,13 @@ export interface ApplySavegameToGameOptions {
    * clean.
    */
   usedNodes?: boolean;
+  /**
+   * Also extract every user-built buildable (machines, belts, pipes,
+   * foundations, ...) and load it into the in-memory
+   * `mapInfrastructure` slice for the map's infrastructure canvas
+   * layer. Session-only — see `mapInfrastructureSlice`.
+   */
+  infrastructure?: boolean;
 }
 
 export interface GamesSlice {

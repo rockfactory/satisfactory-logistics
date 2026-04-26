@@ -1,5 +1,11 @@
 import { createSlice } from '@/core/zustand-helpers/slices';
 import {
+  INFRASTRUCTURE_CATEGORIES,
+  type InfrastructureCategory,
+  SPLINE_KINDS,
+  type SplineKind,
+} from '@/recipes/savegame/ParseSavegameMessages';
+import {
   COLLECTIBLE_TYPES,
   type CollectibleType,
 } from '@/recipes/WorldCollectibles';
@@ -36,6 +42,24 @@ export interface MapSlice {
    * {@link hideUsedNodes}.
    */
   hideCollectedCollectibles: boolean;
+  /**
+   * Master toggle for the built-infrastructure canvas layer. When
+   * false the layer is hidden regardless of the per-category /
+   * per-spline-kind toggles below. Persists as a view preference.
+   */
+  infrastructureMaster: boolean;
+  /**
+   * Per-category visibility for the infrastructure canvas layer
+   * (production / logistics / power / ...). Categories not in the
+   * record default to visible at rehydrate via
+   * {@link ensureMapSliceShape}.
+   */
+  infrastructureCategoryVisibility: Record<InfrastructureCategory, boolean>;
+  /**
+   * Per-kind visibility for the spline networks rendered by the
+   * infrastructure layer (belts / pipes / hyper / rail / power).
+   */
+  infrastructureSplineVisibility: Record<SplineKind, boolean>;
 }
 
 function defaultResourceFilters(): Record<string, Purity[]> {
@@ -58,6 +82,21 @@ function defaultCollectibleVisibility(): Record<CollectibleType, boolean> {
   return visibility;
 }
 
+function defaultInfrastructureCategoryVisibility(): Record<
+  InfrastructureCategory,
+  boolean
+> {
+  const visibility = {} as Record<InfrastructureCategory, boolean>;
+  for (const cat of INFRASTRUCTURE_CATEGORIES) visibility[cat] = true;
+  return visibility;
+}
+
+function defaultInfrastructureSplineVisibility(): Record<SplineKind, boolean> {
+  const visibility = {} as Record<SplineKind, boolean>;
+  for (const kind of SPLINE_KINDS) visibility[kind] = true;
+  return visibility;
+}
+
 /**
  * Factory for a fresh {@link MapSlice}. Exported so the persist
  * migration can replace the old slice shape wholesale — zustand's
@@ -69,6 +108,9 @@ export const initialMapSliceState = (): MapSlice => ({
   hideUsedNodes: false,
   collectibleVisibility: defaultCollectibleVisibility(),
   hideCollectedCollectibles: false,
+  infrastructureMaster: true,
+  infrastructureCategoryVisibility: defaultInfrastructureCategoryVisibility(),
+  infrastructureSplineVisibility: defaultInfrastructureSplineVisibility(),
 });
 
 /**
@@ -226,6 +268,37 @@ export const mapSlice = createSlice({
       ensureMapSliceShape(state);
       state.hideCollectedCollectibles = hide;
     },
+    setInfrastructureMaster: (visible: boolean) => state => {
+      ensureMapSliceShape(state);
+      state.infrastructureMaster = visible;
+    },
+    toggleInfrastructureCategory:
+      (category: InfrastructureCategory) => state => {
+        ensureMapSliceShape(state);
+        state.infrastructureCategoryVisibility[category] =
+          !state.infrastructureCategoryVisibility[category];
+      },
+    setInfrastructureCategoryVisibility:
+      (category: InfrastructureCategory, visible: boolean) => state => {
+        ensureMapSliceShape(state);
+        state.infrastructureCategoryVisibility[category] = visible;
+      },
+    setAllInfrastructureCategoriesVisible: (visible: boolean) => state => {
+      ensureMapSliceShape(state);
+      for (const cat of INFRASTRUCTURE_CATEGORIES) {
+        state.infrastructureCategoryVisibility[cat] = visible;
+      }
+    },
+    toggleInfrastructureSplineKind: (kind: SplineKind) => state => {
+      ensureMapSliceShape(state);
+      state.infrastructureSplineVisibility[kind] =
+        !state.infrastructureSplineVisibility[kind];
+    },
+    setInfrastructureSplineVisibility:
+      (kind: SplineKind, visible: boolean) => state => {
+        ensureMapSliceShape(state);
+        state.infrastructureSplineVisibility[kind] = visible;
+      },
     /**
      * Resets only the visibility filters back to "show everything".
      * Used-node marks and collected collectibles live on each
@@ -239,6 +312,10 @@ export const mapSlice = createSlice({
       state.hideUsedNodes = reset.hideUsedNodes;
       state.collectibleVisibility = reset.collectibleVisibility;
       state.hideCollectedCollectibles = reset.hideCollectedCollectibles;
+      state.infrastructureMaster = reset.infrastructureMaster;
+      state.infrastructureCategoryVisibility =
+        reset.infrastructureCategoryVisibility;
+      state.infrastructureSplineVisibility = reset.infrastructureSplineVisibility;
     },
   },
 });
