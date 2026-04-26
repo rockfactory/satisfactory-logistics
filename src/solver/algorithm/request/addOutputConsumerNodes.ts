@@ -1,5 +1,5 @@
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
-import { type SolverContext } from '@/solver/algorithm/SolverContext';
+import type { SolverContext } from '@/solver/algorithm/SolverContext';
 import type { FactoryOutputConsumer } from '@/solver/algorithm/solveProduction';
 
 /**

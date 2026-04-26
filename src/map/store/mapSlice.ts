@@ -315,7 +315,8 @@ export const mapSlice = createSlice({
       state.infrastructureMaster = reset.infrastructureMaster;
       state.infrastructureCategoryVisibility =
         reset.infrastructureCategoryVisibility;
-      state.infrastructureSplineVisibility = reset.infrastructureSplineVisibility;
+      state.infrastructureSplineVisibility =
+        reset.infrastructureSplineVisibility;
     },
   },
 });
