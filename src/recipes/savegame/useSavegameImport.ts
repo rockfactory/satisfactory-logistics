@@ -26,6 +26,18 @@ export interface SavegameImportApplied {
   applied: ApplySavegameToGameOptions;
   recipeCount: number;
   usedNodeCount: number;
+  /**
+   * How many static collectibles the import ended up marking as
+   * collected. Only populated when `apply.usedNodes` is set, since
+   * collected slugs/spheres/sloops piggy-back on that flag.
+   */
+  collectedCount: number;
+  /**
+   * How many resource nodes the save's randomization data rewrites.
+   * Always populated (randomization applies unconditionally); zero
+   * when the save is vanilla.
+   */
+  nodeOverrideCount: number;
   /** Sum of buildings + spline polylines extracted, when applicable. */
   infrastructureCount: number;
 }
@@ -131,6 +143,16 @@ export function useSavegameImport(): UseSavegameImportResult {
           ? save.availableRecipes.length
           : 0;
         const usedNodeCount = apply.usedNodes ? save.usedNodeIds.length : 0;
+        // Mirrors the slice action: the same flag covers
+        // collected slugs/spheres/sloops. We can't recompute the diff
+        // here without reaching into the static dataset, but we know
+        // the post-update collectedItems length on the game — read it
+        // back so the toast counts what actually landed.
+        const collectedCount = apply.usedNodes
+          ? (useStore.getState().games.games[gameId]?.collectedItems?.length ??
+            0)
+          : 0;
+        const nodeOverrideCount = save.nodeOverrides.length;
 
         let infrastructureCount = 0;
         if (apply.infrastructure && save.infrastructure) {
@@ -151,6 +173,8 @@ export function useSavegameImport(): UseSavegameImportResult {
             apply,
             recipeCount,
             usedNodeCount,
+            collectedCount,
+            nodeOverrideCount,
             infrastructureCount,
           ),
           color: 'green',
@@ -161,6 +185,8 @@ export function useSavegameImport(): UseSavegameImportResult {
           applied: apply,
           recipeCount,
           usedNodeCount,
+          collectedCount,
+          nodeOverrideCount,
           infrastructureCount,
         };
       } catch (err) {
@@ -190,6 +216,8 @@ function buildSummaryMessage(
   apply: ApplySavegameToGameOptions,
   recipeCount: number,
   usedNodeCount: number,
+  collectedCount: number,
+  nodeOverrideCount: number,
   infrastructureCount: number,
 ): string {
   const parts: string[] = [];
@@ -204,6 +232,19 @@ function buildSummaryMessage(
     } else {
       parts.push(`${usedNodeCount} used node${usedNodeCount === 1 ? '' : 's'}`);
     }
+    if (collectedCount > 0) {
+      parts.push(
+        `${collectedCount} collected pickup${collectedCount === 1 ? '' : 's'}`,
+      );
+    }
+  }
+  // Randomization applies unconditionally (no flag), so always mention
+  // it when the save actually carried overrides — silent on vanilla
+  // saves so the toast stays terse.
+  if (nodeOverrideCount > 0) {
+    parts.push(
+      `${nodeOverrideCount} randomized node${nodeOverrideCount === 1 ? '' : 's'}`,
+    );
   }
   if (apply.infrastructure) {
     parts.push(

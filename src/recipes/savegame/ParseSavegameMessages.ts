@@ -145,6 +145,42 @@ export interface ParsedPlayerPosition {
   z: number;
 }
 
+/**
+ * Per-node override extracted from a save's resource-actor properties.
+ * In the experimental 1.2 randomizer, `BP_ResourceNode_C` and
+ * `BP_FrackingSatellite_C` / `BP_FrackingCore_C` actors carry an
+ * `mResourceClassOverride` (and, on satellites, an `mPurityOverride`)
+ * that supersedes the resource/purity our static dataset records for
+ * the same id. The map must read these so it shows what the player
+ * will actually extract.
+ *
+ * Always emitted as a **plain pojo string union** so the store stays
+ * serialisable across IndexedDB hydration cycles.
+ */
+export interface SavegameNodeOverride {
+  /**
+   * Matches `WorldResourceNodes.json`'s `id` field — the trailing
+   * segment of the save object's `instanceName`
+   * (e.g. `BP_ResourceNode620`, `BP_FrackingSatellite33`).
+   */
+  id: string;
+  /**
+   * `Desc_*_C` id replacing the static node's `resource`. Always
+   * present when the actor exposes `mResourceClassOverride`; in the
+   * 1.2 randomizer that is every solid node and every fracking
+   * satellite/core in the save.
+   */
+  resource: string;
+  /**
+   * Replacement purity for fracking satellites. Solid nodes do NOT
+   * carry an `mPurityOverride` in the 1.2 randomizer — the static
+   * purity stands. Mapped from the in-save enum
+   * (`RP_Pure` / `RP_Normal` / **`RP_Inpure`** — note the game's
+   * typo) to the project's lowercase `Purity` strings.
+   */
+  purity?: 'impure' | 'normal' | 'pure';
+}
+
 export interface ParsedSatisfactorySave {
   /**
    * Includes all recipes that are available in the savegame, even buildings.
@@ -161,6 +197,25 @@ export interface ParsedSatisfactorySave {
    * our static dataset.
    */
   usedNodeIds: string[];
+  /**
+   * Resource / purity rewrites the in-game randomizer applied on top
+   * of the static node positions. Always populated from the save when
+   * the actors expose the relevant properties; an empty array means
+   * the save is vanilla (no randomization in effect) and the static
+   * dataset stands as-is. Always applied on import — see
+   * `feedback_savegame_import_flags` memory for the rationale.
+   */
+  nodeOverrides: SavegameNodeOverride[];
+  /**
+   * Instance ids of every collectible-style actor still present in
+   * the save (uncollected slugs / Mercer spheres / somersloops).
+   * The slice action diffs this set against the static dataset to
+   * derive "collected" — pickup actors are removed from the save once
+   * the player picks them up, so absence is the signal. Empty when
+   * the save's level objects haven't streamed any of the watched
+   * classes (e.g. brand-new game with no zones loaded).
+   */
+  presentCollectibleIds: string[];
   /**
    * World-cm positions of every `Char_Player_C` actor in the save.
    * Empty array when no player has spawned yet (rare). Used to center

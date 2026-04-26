@@ -218,7 +218,17 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
     });
   };
 
-  const allNodes = useMemo(() => getWorldResourceNodes(gameId), [gameId]);
+  // Subscribed for invalidation only — `getWorldResourceNodes` reads
+  // overrides synchronously from the store; without an explicit dep
+  // the memoized list would skip rebuilding after a `.sav` import.
+  const savegameOverrides = useStore(state =>
+    gameId ? state.games.games[gameId]?.savegameNodeOverrides : undefined,
+  );
+  // biome-ignore lint/correctness/useExhaustiveDependencies: savegameOverrides is read indirectly via getWorldResourceNodes' useStore.getState() lookup; the dep is required to invalidate the memo on import.
+  const allNodes = useMemo(
+    () => getWorldResourceNodes(gameId),
+    [gameId, savegameOverrides],
+  );
   const allCollectibles = useMemo(() => getWorldCollectibles(), []);
 
   /**

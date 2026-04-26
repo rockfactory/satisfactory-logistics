@@ -32,10 +32,20 @@ export function MapSelectionSummary({ gameId }: MapSelectionSummaryProps) {
       sumMode: state.mapSelection?.sumMode ?? false,
     }));
 
+  // Subscribe to the per-game savegame node overrides so the memo
+  // re-evaluates after a `.sav` import: `getWorldResourceNodes` reads
+  // them via `useStore.getState()` synchronously, but without an
+  // explicit dep this `useMemo` would keep returning the pre-import
+  // (static-only) projection.
+  const savegameOverrides = useStore(state =>
+    gameId ? state.games.games[gameId]?.savegameNodeOverrides : undefined,
+  );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: savegameOverrides is read indirectly via getWorldResourceNodes' useStore.getState() lookup; the dep is required to invalidate the memo on import.
   const selectedNodes = useMemo(() => {
     const selectedSet = new Set(selectedNodeIds);
     return getWorldResourceNodes(gameId).filter(n => selectedSet.has(n.id));
-  }, [gameId, selectedNodeIds]);
+  }, [gameId, selectedNodeIds, savegameOverrides]);
 
   const aggregates = useMemo(
     () =>

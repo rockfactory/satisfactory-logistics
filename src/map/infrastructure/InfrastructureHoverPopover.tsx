@@ -1,4 +1,6 @@
 import { Group, Image, Stack, Text } from '@mantine/core';
+import { useMemo } from 'react';
+import { useStore } from '@/core/zustand';
 import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { AllFactoryRecipesMap } from '@/recipes/FactoryRecipe';
@@ -39,6 +41,22 @@ export function InfrastructureHoverPopover({
   mousePx,
   splineLengthCm,
 }: InfrastructureHoverPopoverProps) {
+  // Per-game savegame node overrides for the currently-selected game.
+  // The selector returns the **array reference** so zustand's default
+  // `Object.is` comparison stays stable across renders (Immer preserves
+  // identity on the unmutated path); a previous version returned a
+  // freshly-built `Map` from the selector and triggered an infinite
+  // re-render loop because the Map identity changed every read.
+  const overrides = useStore(state => {
+    const selectedId = state.games.selected;
+    if (!selectedId) return undefined;
+    return state.games.games[selectedId]?.savegameNodeOverrides;
+  });
+  const nodeOverrideById = useMemo(() => {
+    if (!overrides || overrides.length === 0) return null;
+    return new Map(overrides.map(o => [o.id, o] as const));
+  }, [overrides]);
+
   if (!hit || !mousePx) return null;
 
   if (hit.kind === 'building') {
@@ -76,8 +94,9 @@ export function InfrastructureHoverPopover({
     // Water pumps point at `FGWaterVolume_*` ids that aren't in the
     // static node dataset, so we infer the resource from the typePath
     // for those. Miners + pumps + fracking resolve via the bundled
-    // node lookup, falling back to whatever the raw resource id is
-    // (mods, modded nodes) when the dataset doesn't know the entry.
+    // node lookup, then layer in the savegame's per-node randomization
+    // override (1.2+) so the player sees what they'll actually
+    // extract — not the static dataset's pre-randomization resource.
     let extractedResourceId: string | null = null;
     let extractedResourceName: string | null = null;
     let extractedPurity: string | null = null;
@@ -88,12 +107,14 @@ export function InfrastructureHoverPopover({
     } else if (hit.extractedNode) {
       const node = StaticWorldResourceNodesById[hit.extractedNode];
       if (node) {
-        extractedResourceId = node.resource;
+        const override = nodeOverrideById?.get(hit.extractedNode);
+        const resource = override?.resource ?? node.resource;
+        extractedResourceId = resource;
         extractedResourceName =
+          AllFactoryItemsMap[resource]?.displayName ??
           node.displayName ??
-          AllFactoryItemsMap[node.resource]?.displayName ??
-          node.resource;
-        extractedPurity = node.purity;
+          resource;
+        extractedPurity = override?.purity ?? node.purity;
       }
     }
 

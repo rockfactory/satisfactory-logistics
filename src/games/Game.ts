@@ -1,5 +1,6 @@
 import type { JSONContent } from '@tiptap/react';
 import type { Tables } from '@/core/database.types';
+import type { SavegameNodeOverride } from '@/recipes/savegame/ParseSavegameMessages';
 
 export interface Game {
   id: string;
@@ -25,6 +26,16 @@ export interface Game {
    * differ (one-time pickup vs. permanent placement).
    */
   collectedItems?: string[];
+  /**
+   * Per-node randomization overrides extracted from the imported
+   * `.sav`. Layered on top of the static `WorldResourceNodes` dataset
+   * by `getSavegameOverrides` so the map shows what the *player's*
+   * game actually contains. Applied unconditionally on every import
+   * because randomization is the truth of that save, not a user
+   * preference (see `feedback_savegame_import_flags`). Absent for
+   * vanilla saves (no overrides emitted by the worker).
+   */
+  savegameNodeOverrides?: SavegameNodeOverride[];
   // Only if saved
   savedId?: string;
   shareToken?: string | null;

@@ -10,6 +10,7 @@ import {
 } from '@/recipes/FactoryBuilding';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import type { ParsedSatisfactorySave } from '@/recipes/savegame/ParseSavegameMessages';
+import { ABSENCE_AS_COLLECTED_STATIC_IDS } from '@/recipes/WorldCollectibles';
 import type {
   Game,
   GameRemoteData,
@@ -259,6 +260,34 @@ export const gamesSlice = createSlice({
           } else {
             game.usedNodes = [...new Set(save.usedNodeIds)];
           }
+          // The same flag covers "import what the player has done in
+          // the world" — collectible pickups follow the same one-shot,
+          // potentially-conflicts-with-manual-marks shape as used
+          // nodes. Compute "collected = absence-as-collected static
+          // ids \ pickup actors still present in the save" and replace
+          // `collectedItems` with that set.
+          const present = new Set(save.presentCollectibleIds);
+          const collected: string[] = [];
+          for (const id of ABSENCE_AS_COLLECTED_STATIC_IDS) {
+            if (!present.has(id)) collected.push(id);
+          }
+          if (collected.length === 0) {
+            delete game.collectedItems;
+          } else {
+            game.collectedItems = collected;
+          }
+        }
+        // Randomized-node overrides are world-state truth: there is no
+        // user choice that could conflict, so this writes
+        // unconditionally on every import (no `apply` flag — see
+        // `feedback_savegame_import_flags` memory). Empty arrays from
+        // a vanilla save still clear the field so a player who imports
+        // a non-randomized save *after* a randomized one falls back to
+        // the static dataset.
+        if (save.nodeOverrides.length === 0) {
+          delete game.savegameNodeOverrides;
+        } else {
+          game.savegameNodeOverrides = save.nodeOverrides;
         }
       },
     /**
