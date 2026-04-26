@@ -14,6 +14,7 @@ import { gameFactoriesActions } from '@/games/store/gameFactoriesActions';
 import { gameRealtimeActions } from '@/games/store/gameRealtimeActions';
 import { gameRemoteActions } from '@/games/store/gameRemoteActions';
 import { peersSlice } from '@/games/sync/peersSlice';
+import { mapInfrastructureSlice } from '@/map/store/mapInfrastructureSlice';
 import { mapSelectionSlice } from '@/map/store/mapSelectionSlice';
 import {
   initialMapSliceState,
@@ -30,6 +31,7 @@ import { migrateStoreWithPlan } from './migrations/planner/StoreMigrationPlan';
 import { removeMissingFactoriesInGames } from './migrations/removeMissingFactoriesInGames';
 import { storeMigrationV2 } from './migrations/v2';
 import { storeMigrationV4 } from './migrations/v4';
+import { storeMigrationV10 } from './migrations/v10';
 import { withActions } from './zustand-helpers/actions';
 import { forceMigrationOnInitialPersist } from './zustand-helpers/forceMigrationOnInitialPersist';
 import { indexedDbStorage } from './zustand-helpers/indexedDbStorage';
@@ -50,6 +52,7 @@ const slices = withSlices(
   peersSlice,
   mapSlice,
   mapSelectionSlice,
+  mapInfrastructureSlice,
 );
 
 export type RootState = ReturnType<typeof slices>;
@@ -66,8 +69,9 @@ export const useStore = create(
   devtools(
     persist(slicesWithActions, {
       name: 'zustand:persist',
-      partialize: state => omit(state, ['gameSave', 'peers', 'mapSelection']),
-      version: 9,
+      partialize: state =>
+        omit(state, ['gameSave', 'peers', 'mapSelection', 'mapInfrastructure']),
+      version: 10,
       storage: forceMigrationOnInitialPersist(
         createJSONStorage(() => indexedDbStorage),
       ),
@@ -265,6 +269,11 @@ export const useStore = create(
             }
           }
           return state;
+        }
+
+        if (version === 9) {
+          logger.log('Migrating from version 9 to 10 [map infra flags]');
+          return storeMigrationV10(state) as typeof state;
         }
 
         return state;

@@ -255,6 +255,52 @@
   z-index: 2;
 }
 
+/* Player marker (savegame import): violet pulsing dot, distinct from
+   resource / collectible pins so the user can spot themselves at a
+   glance. Rendered via L.divIcon, so all selectors are :global. */
+
+:global(.map-player-marker-wrapper) {
+  background: transparent;
+  border: none;
+  pointer-events: none;
+}
+
+:global(.map-player-marker) {
+  position: relative;
+  width: 28px;
+  height: 28px;
+}
+
+:global(.map-player-marker__pulse) {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--mantine-color-violet-5);
+  opacity: 0.55;
+  animation: map-player-pulse 1.6s ease-out infinite;
+  pointer-events: none;
+}
+
+:global(.map-player-marker__core) {
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+  background: var(--mantine-color-violet-5);
+  border: 2px solid white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+@keyframes map-player-pulse {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
 /* Popup styling */
 
 :global(.map-marker-popup) {

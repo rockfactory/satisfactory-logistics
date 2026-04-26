@@ -1,66 +1,143 @@
-import {
-  type ObjectArrayProperty,
-  type ObjectProperty,
-  Parser,
-  type SatisfactorySave,
-} from '@etothepii/satisfactory-file-parser';
+import { ReadableStreamParser } from '@etothepii/satisfactory-file-parser';
+import { JSONParser } from '@streamparser/json';
 import { loglev } from '@/core/logger/log';
-import type {
-  IParseSavegameRequest,
-  IParseSavegameResponse,
+import {
+  createInfrastructureAccumulator,
+  finalizeInfrastructure,
+  ingestEntity,
+} from './infrastructure/extractInfrastructure';
+import {
+  createInspectAccumulator,
+  finalizeInspect,
+  inspectObject,
+} from './inspectSavegame';
+import {
+  collectInfrastructureTransferables,
+  type IParseSavegameRequest,
+  type IParseSavegameResponse,
+  type ParsedSatisfactorySave,
 } from './ParseSavegameMessages';
+import { installSatisfactoryParserPatches } from './parserPatches';
+
+installSatisfactoryParserPatches();
 
 const logger = loglev.getLogger('parse-savegame');
 
+// `postMessage` inside a Worker module accepts a `transfer` array, but
+// the default DOM lib in tsconfig types it as the window-scoped variant
+// (which expects a `targetOrigin` string). Locally re-typed to avoid
+// pulling the WebWorker lib into the whole project.
+const workerPostMessage = postMessage as (
+  message: IParseSavegameResponse,
+  transfer?: ArrayBuffer[],
+) => void;
+
 /**
- * Full Unreal typePath strings for every placeable extractor we
- * translate into a "used node" mark. Checked against
- * `SaveEntity.typePath`. Water pumps are intentionally excluded:
- * their `mExtractableResource` points at `FGWaterVolume_*` actors
- * rather than a `BP_ResourceNode_*`, so the id does not line up with
- * anything in our `WorldResourceNodes.json` dataset.
- *
- * Miner tiers are matched by regex at the last segment of the
- * typePath (see {@link MINER_LAST_SEGMENT_RE}), so a hypothetical
- * future Mk4 will be picked up without a code change. The
- * non-miner extractors are listed explicitly since their naming is
- * one-offs.
+ * Streaming-friendly parse: pipes the parser library's
+ * `ReadableStream<string>` of JSON through a SAX-style
+ * `JSONParser` TransformStream that emits one fully-formed object
+ * per `levels.*.objects.*` match. Each object is fed into the
+ * inspect / infrastructure accumulators and then dropped, keeping
+ * the worker heap bounded (the parser's WHATWG backpressure pauses
+ * production once the consumer falls behind). This replaces an
+ * earlier eager `Parser.ParseSave` path that materialised the
+ * entire save graph in memory and OOMed on endgame saves.
  */
-const EXPLICIT_EXTRACTOR_TYPE_PATHS = new Set<string>([
-  '/Game/FactoryGame/Buildable/Factory/OilPump/Build_OilPump.Build_OilPump_C',
-  '/Game/FactoryGame/Buildable/Factory/FrackingExtractor/Build_FrackingExtractor.Build_FrackingExtractor_C',
-]);
-
-/** Matches `Build_MinerMk1_C`, `Build_MinerMk2_C`, ... on the last segment. */
-const MINER_LAST_SEGMENT_RE = /^Build_MinerMk\d+_C$/;
-
-function isExtractorTypePath(typePath: string): boolean {
-  if (EXPLICIT_EXTRACTOR_TYPE_PATHS.has(typePath)) return true;
-  const lastSegment = typePath.split('.').pop();
-  return lastSegment != null && MINER_LAST_SEGMENT_RE.test(lastSegment);
-}
-
-async function parseSavegame(file: File) {
+async function parseSavegame(
+  file: File,
+  options: { extractInfrastructure?: boolean },
+) {
   try {
-    const json = Parser.ParseSave('Save', await file.arrayBuffer(), {
-      onProgressCallback: (progress: number, msg?: string) => {
-        postMessage({
-          type: 'progress',
-          progress,
-          message: msg,
-        } as IParseSavegameResponse);
-      },
+    const buffer = await file.arrayBuffer();
+    const { stream, startStreaming } =
+      ReadableStreamParser.CreateReadableStreamFromSaveToJson('Save', buffer, {
+        onProgress: (progress: number, message?: string) => {
+          postMessage({
+            type: 'progress',
+            progress,
+            message,
+          } as IParseSavegameResponse);
+        },
+      });
+
+    const wantInfrastructure = options.extractInfrastructure === true;
+    const inspectAcc = createInspectAccumulator();
+    const infraAcc = wantInfrastructure
+      ? createInfrastructureAccumulator()
+      : null;
+
+    // Consume the parser library's `ReadableStream<string>` directly and
+    // feed each chunk into a `JSONParser` (the non-WHATWG variant). The
+    // WHATWG `TransformStream` wrapper from `@streamparser/json-whatwg`
+    // cannot be used here: its `cloneParsedElementInfo` does
+    // `JSON.parse(JSON.stringify(parent))` on every emit, and with
+    // `keepStack: false` the parent array grows monotonically (deleted
+    // entries leave holes). The clone cost is O(N) per emit, total O(N²)
+    // — effectively hangs on endgame saves with hundreds of thousands
+    // of objects. Driving the parser via the callback path skips the
+    // clone entirely.
+    const jsonParser = new JSONParser({
+      paths: ['$.levels.*.objects.*'],
+      keepStack: false,
+    });
+    jsonParser.onValue = info => {
+      const obj = info.value;
+      inspectObject(inspectAcc, obj);
+      if (infraAcc) ingestEntity(infraAcc, obj);
+    };
+
+    const reader = (stream as ReadableStream<string>).getReader();
+
+    const streamingDone = startStreaming();
+    streamingDone.catch(err => {
+      // If the parser library throws, surface the error through the
+      // reader as well so the await loop below exits.
+      reader.cancel(err).catch(() => {});
     });
 
-    const { availableRecipes, usedNodeIds } = inspectSavegame(json);
+    try {
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        jsonParser.write(value);
+      }
+    } finally {
+      if (!jsonParser.isEnded) jsonParser.end();
+    }
+    // Wait for the parser library's startStreaming to settle. If it
+    // rejected this re-throws here.
+    await streamingDone;
 
-    postMessage({
-      type: 'parsed',
-      save: {
-        availableRecipes,
-        usedNodeIds,
-      },
-    } as IParseSavegameResponse);
+    const { availableRecipes, usedNodeIds, players } =
+      finalizeInspect(inspectAcc);
+    const save: ParsedSatisfactorySave = {
+      availableRecipes,
+      usedNodeIds,
+      players,
+    };
+
+    let transfer: ArrayBuffer[] = [];
+    if (infraAcc) {
+      postMessage({
+        type: 'progress',
+        progress: 0.99,
+        message: 'Finalising infrastructure...',
+      } as IParseSavegameResponse);
+      save.infrastructure = finalizeInfrastructure(infraAcc);
+      transfer = collectInfrastructureTransferables(save.infrastructure);
+      logger.log(
+        'Infrastructure extracted:',
+        save.infrastructure.buildings.count,
+        'buildings,',
+        save.infrastructure.splines.reduce((sum, s) => sum + s.count, 0),
+        'spline polylines',
+      );
+    }
+
+    workerPostMessage(
+      { type: 'parsed', save } as IParseSavegameResponse,
+      transfer,
+    );
   } catch (e) {
     logger.error(`Error while parsing`, e);
     postMessage({
@@ -70,54 +147,11 @@ async function parseSavegame(file: File) {
   }
 }
 
-function inspectSavegame(save: SatisfactorySave) {
-  // All objects in the savegame
-  const objects = Object.values(save.levels).flatMap(level => level.objects);
-
-  // Search for the recipe manager
-  const recipeManager = objects.find(
-    obj => obj.typePath === '/Script/FactoryGame.FGRecipeManager',
-  );
-
-  // Get the available recipes
-  const availableRecipesProperty = recipeManager?.properties
-    ?.mAvailableRecipes as ObjectArrayProperty;
-  const availableRecipesIds = new Set(
-    availableRecipesProperty?.values.map(
-      value => value?.pathName.split('.')[1],
-    ),
-  );
-
-  // Collect resource-node ids that have an extractor sitting on them.
-  // The `mExtractableResource` object property holds a reference like
-  // `Persistent_Level:PersistentLevel.BP_ResourceNode452`; the trailing
-  // segment after the final `.` matches the `id` field we store in
-  // `WorldResourceNodes.json`.
-  const usedNodeIds = new Set<string>();
-  for (const object of objects) {
-    if (typeof object.typePath !== 'string') continue;
-    if (!isExtractorTypePath(object.typePath)) continue;
-    const ref = object.properties?.mExtractableResource as
-      | ObjectProperty
-      | undefined;
-    const pathName = ref?.value?.pathName;
-    if (!pathName) continue;
-    const nodeId = pathName.split('.').pop();
-    if (!nodeId) continue;
-    usedNodeIds.add(nodeId);
-  }
-
-  logger.log('Available recipes:', availableRecipesIds);
-  logger.log('Used node ids:', usedNodeIds);
-  return {
-    availableRecipes: [...availableRecipesIds],
-    usedNodeIds: [...usedNodeIds],
-  };
-}
-
 addEventListener('message', (event: MessageEvent<IParseSavegameRequest>) => {
   const { data } = event;
   if (data.type === 'parse') {
-    parseSavegame(data.file);
+    parseSavegame(data.file, {
+      extractInfrastructure: data.extractInfrastructure ?? false,
+    });
   }
 });

@@ -342,6 +342,106 @@
   color: var(--mantine-color-teal-4);
 }
 
+/*
+ * Built-infrastructure toggles. A 2-column grid of compact chips
+ * (icon + label + count) so an end-game save with 8 categories and 5
+ * spline kinds doesn't push the rest of the panel below the fold.
+ * The chip glows in its category color when active and washes out
+ * to dim grey when toggled off — mirrors the resource segmented
+ * control's "active = tinted" idiom.
+ */
+
+.infraGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.infraChip {
+  --chip-color: var(--mantine-color-gray-5);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--mantine-color-dark-4);
+  border-radius: var(--mantine-radius-sm);
+  background-color: var(--mantine-color-dark-7);
+  color: var(--mantine-color-gray-3);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    opacity 120ms ease;
+}
+
+.infraChip:hover {
+  border-color: var(--chip-color);
+  color: var(--mantine-color-gray-0);
+  background-color: color-mix(in srgb, var(--chip-color) 14%, transparent);
+}
+
+.infraChipActive {
+  background-color: color-mix(in srgb, var(--chip-color) 22%, transparent);
+  border-color: color-mix(in srgb, var(--chip-color) 50%, transparent);
+  color: var(--mantine-color-gray-0);
+}
+
+.infraChipActive:hover {
+  background-color: color-mix(in srgb, var(--chip-color) 30%, transparent);
+}
+
+.infraChipDim {
+  opacity: 0.4;
+}
+
+.infraChipDim:hover {
+  opacity: 0.85;
+}
+
+.infraChipIcon {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--chip-color);
+}
+
+.infraChipLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.infraChipCount {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--mantine-color-gray-4);
+}
+
+.infraChipActive .infraChipCount {
+  color: var(--mantine-color-gray-2);
+}
+
+.infraGroupLabel {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--mantine-color-dark-2);
+  text-transform: uppercase;
+  padding: 4px 2px 0;
+}
+
 @media (max-width: 768px) {
   .panel {
     width: 100%;

@@ -48,6 +48,18 @@ export function gameToLatLng(gameX: number, gameY: number): L.LatLng {
   return L.latLng(py, px);
 }
 
+/**
+ * Inverse of {@link gameToLatLng}: turns a Leaflet `LatLng` (CRS.Simple)
+ * back into a `(gameX, gameY)` pair in cm. Used by the infrastructure
+ * tile layer to map a tile's pixel corners to a worldspace bbox so the
+ * spatial index can be queried for entities that fall inside.
+ */
+export function latLngToGame(latLng: L.LatLng): { x: number; y: number } {
+  const x = (latLng.lng / IMAGE_SIZE) * X_RANGE + WORLD_X_MIN;
+  const y = (-latLng.lat / IMAGE_SIZE) * Y_RANGE + WORLD_Y_MIN;
+  return { x, y };
+}
+
 /** Convenient default center (geometric center of the playable area). */
 export const DEFAULT_CENTER: L.LatLngExpression = [
   -IMAGE_SIZE / 2,
