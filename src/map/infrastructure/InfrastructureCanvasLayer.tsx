@@ -268,6 +268,13 @@ function paintTileBuildings(
     const halfL = (lengthCm / 2) * Math.abs(a.by);
 
     if (halfW < BIN_DEDUP_PX && halfL < BIN_DEDUP_PX) {
+      // The bin is only the *dedup key* — two buildings of the same
+      // category landing in the same bin paint just one dot. The dot
+      // itself is drawn at the building's real footprint size (with a
+      // 0.5 px floor so a sub-pixel building still shows up as a 1 px
+      // dot). Snapping the rect to the bin would make small buildings
+      // look 4-8x bigger than they are at low zoom (e.g. a beam
+      // connector showing up as a chunky 4x4 blob).
       const binX = Math.floor(cx / BIN_DEDUP_PX);
       const binY = Math.floor(cy / BIN_DEDUP_PX);
       const key = ((binX + 32768) << 16) | ((binY + 32768) & 0xffff);
@@ -283,12 +290,9 @@ function paintTileBuildings(
         path = new Path2D();
         paths[catIdx] = path;
       }
-      path.rect(
-        binX * BIN_DEDUP_PX,
-        binY * BIN_DEDUP_PX,
-        BIN_DEDUP_PX,
-        BIN_DEDUP_PX,
-      );
+      const drawHalfW = Math.max(halfW, 0.5);
+      const drawHalfL = Math.max(halfL, 0.5);
+      path.rect(cx - drawHalfW, cy - drawHalfL, drawHalfW * 2, drawHalfL * 2);
       continue;
     }
 
@@ -611,7 +615,7 @@ const InfrastructureGridLayer = L.GridLayer.extend({
     coords: L.Coords,
   ): void {
     const state = this._renderState;
-    if (!state || !state.master || !state.infrastructure) return;
+    if (!state?.master || !state.infrastructure) return;
     const idx = this._spatialIndex;
     if (!idx) return;
 
