@@ -11,18 +11,35 @@ import {
   Tooltip,
 } from '@mantine/core';
 import {
+  IconBolt,
+  IconBox,
   IconBrush,
+  IconBuildingFactory2,
   IconCheck,
   IconCloudUpload,
+  IconCrosshair,
   IconDeviceAudioTape,
+  IconDroplet,
+  IconLayoutGrid,
   IconPackage,
   IconRefresh,
+  IconRoute,
+  IconShape,
   IconSum,
+  IconTrain,
+  IconTransferIn,
+  IconTruck,
 } from '@tabler/icons-react';
 import clsx from 'clsx';
 import { type CSSProperties, type ReactNode, useMemo } from 'react';
 import { useShallowStore, useStore } from '@/core/zustand';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
+import {
+  INFRASTRUCTURE_CATEGORIES,
+  type InfrastructureCategory,
+  SPLINE_KINDS,
+  type SplineKind,
+} from '@/recipes/savegame/ParseSavegameMessages';
 import { useSavegameImport } from '@/recipes/savegame/useSavegameImport';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import {
@@ -37,6 +54,12 @@ import {
   type Purity,
 } from '@/recipes/WorldResourceNodes';
 import { WorldResourcesList } from '@/recipes/WorldResources';
+import {
+  CategoryColor,
+  CategoryLabel,
+  SplineLabel,
+  splineColor,
+} from './infrastructure/infrastructureCategories';
 import classes from './MapFiltersPanel.module.css';
 import { getPurityColor, getPurityLabel } from './markerIcons';
 
@@ -78,6 +101,26 @@ const TABLER_ICON_BY_NAME: Record<string, ReactNode> = {
   IconBrush: <IconBrush size={16} />,
 };
 
+/** Icons rendered inside built-infrastructure chips. */
+const INFRA_CATEGORY_ICONS: Record<InfrastructureCategory, ReactNode> = {
+  production: <IconBuildingFactory2 size={14} />,
+  logistics: <IconTransferIn size={14} />,
+  power: <IconBolt size={14} />,
+  storage: <IconBox size={14} />,
+  transport: <IconTruck size={14} />,
+  foundation: <IconLayoutGrid size={14} />,
+  decor: <IconBrush size={14} />,
+  other: <IconShape size={14} />,
+};
+
+const INFRA_SPLINE_ICONS: Record<SplineKind, ReactNode> = {
+  belt: <IconTransferIn size={14} />,
+  pipe: <IconDroplet size={14} />,
+  hyper: <IconRoute size={14} />,
+  rail: <IconTrain size={14} />,
+  power: <IconBolt size={14} />,
+};
+
 export interface MapFiltersPanelProps {
   gameId?: string | null;
 }
@@ -92,9 +135,16 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
     collectibleVisibility,
     hideCollectedCollectibles,
     collectedForGame,
+    infrastructureMaster,
+    infrastructureCategoryVisibility,
+    infrastructureSplineVisibility,
+    activeInfrastructure,
   } = useShallowStore(state => {
     const mapState = state.map;
     const game = gameId ? state.games.games[gameId] : null;
+    const infraSlice = state.mapInfrastructure;
+    const infraOwnedByActiveGame =
+      infraSlice?.gameId != null && infraSlice.gameId === state.games.selected;
     return {
       resourceFilters: mapState?.resourceFilters ?? EMPTY_RESOURCE_FILTERS,
       hideUsedNodes: mapState?.hideUsedNodes ?? false,
@@ -105,6 +155,13 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
         mapState?.collectibleVisibility ?? EMPTY_COLLECTIBLE_VISIBILITY,
       hideCollectedCollectibles: mapState?.hideCollectedCollectibles ?? false,
       collectedForGame: game?.collectedItems ?? EMPTY_COLLECTED_LIST,
+      infrastructureMaster: mapState?.infrastructureMaster ?? true,
+      infrastructureCategoryVisibility:
+        mapState?.infrastructureCategoryVisibility,
+      infrastructureSplineVisibility: mapState?.infrastructureSplineVisibility,
+      activeInfrastructure: infraOwnedByActiveGame
+        ? infraSlice.infrastructure
+        : null,
     };
   });
   const toggleResourcePurity = useStore(state => state.toggleResourcePurity);
@@ -128,14 +185,34 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
   const clearGameCollectedItems = useStore(
     state => state.clearGameCollectedItems,
   );
+  const setInfrastructureMaster = useStore(
+    state => state.setInfrastructureMaster,
+  );
+  const toggleInfrastructureCategory = useStore(
+    state => state.toggleInfrastructureCategory,
+  );
+  const setAllInfrastructureCategoriesVisible = useStore(
+    state => state.setAllInfrastructureCategoriesVisible,
+  );
+  const toggleInfrastructureSplineKind = useStore(
+    state => state.toggleInfrastructureSplineKind,
+  );
+  const clearInfrastructure = useStore(state => state.clearInfrastructure);
+  const requestInfrastructureFit = useStore(
+    state => state.requestInfrastructureFit,
+  );
 
   const { importing, progress, importAndApplyToGame } = useSavegameImport();
 
-  const handleUsedNodesImport = (file: File | null) => {
+  const handleSavegameImport = (file: File | null) => {
     if (!file) return;
+    // Same surface as the map drop-zone: pull recipes, used nodes, and
+    // built infrastructure in one shot. The button label is "Import
+    // from save" so users expect everything to come along.
     importAndApplyToGame(file, gameId, {
       defaultRecipes: true,
       usedNodes: true,
+      infrastructure: true,
     }).catch(() => {
       // Notification surfaced by the hook; nothing else to do here.
     });
@@ -194,6 +271,14 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
   }, [allNodes]);
 
   const usedNodesCount = usedNodesForGame.length;
+
+  const infrastructureBuildingCount =
+    activeInfrastructure?.buildings.count ?? 0;
+  const infrastructureSplineCount = useMemo(
+    () =>
+      activeInfrastructure?.splines.reduce((sum, s) => sum + s.count, 0) ?? 0,
+    [activeInfrastructure],
+  );
 
   return (
     <Stack
@@ -300,13 +385,13 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
         <Tooltip
           label={
             gameId
-              ? "Parse a .sav file and replace this game's used-node marks and recipe defaults with the save"
+              ? "Parse a .sav and replace this game's recipe defaults and used-node marks, plus load every built structure on the map"
               : 'Select a game to enable save import'
           }
           withinPortal
         >
           <FileButton
-            onChange={handleUsedNodesImport}
+            onChange={handleSavegameImport}
             accept=".sav"
             disabled={!gameId || importing}
           >
@@ -618,6 +703,177 @@ export function MapFiltersPanel({ gameId }: MapFiltersPanelProps) {
             );
           })}
         </Stack>
+      </Stack>
+
+      <Stack gap="xs" data-tutorial-id="map-infrastructure-filter">
+        <Group justify="space-between" align="center" wrap="nowrap" gap="xs">
+          <Text
+            size="xs"
+            fw={600}
+            c="dimmed"
+            tt="uppercase"
+            className={classes.sectionTitle}
+          >
+            Infrastructure
+          </Text>
+          <Switch
+            size="xs"
+            checked={infrastructureMaster}
+            onChange={event =>
+              setInfrastructureMaster(event.currentTarget.checked)
+            }
+            aria-label="Show built infrastructure on the map"
+            label="Show"
+            labelPosition="left"
+            data-tutorial-id="map-infrastructure-toggle"
+            styles={{
+              label: { fontSize: 11, color: 'var(--mantine-color-dimmed)' },
+            }}
+          />
+        </Group>
+
+        {!activeInfrastructure ? (
+          <Text size="xs" c="dimmed">
+            Drop a Satisfactory <code>.sav</code> onto the map to load the
+            buildings, belts, pipes, and rails the player has built.
+          </Text>
+        ) : (
+          <>
+            <Group
+              justify="space-between"
+              align="center"
+              wrap="nowrap"
+              gap="xs"
+            >
+              <Text size="xs" c="dimmed" className={classes.sectionCount}>
+                {infrastructureBuildingCount} build
+                {infrastructureBuildingCount === 1 ? '' : 's'}
+                {infrastructureSplineCount > 0
+                  ? `, ${infrastructureSplineCount} line${infrastructureSplineCount === 1 ? '' : 's'}`
+                  : ''}
+              </Text>
+              <Group gap={4} wrap="nowrap">
+                <Tooltip label="Show every category" withinPortal>
+                  <button
+                    type="button"
+                    className={classes.miniAction}
+                    onClick={() => setAllInfrastructureCategoriesVisible(true)}
+                  >
+                    All
+                  </button>
+                </Tooltip>
+                <Tooltip label="Hide every category" withinPortal>
+                  <button
+                    type="button"
+                    className={classes.miniAction}
+                    onClick={() => setAllInfrastructureCategoriesVisible(false)}
+                  >
+                    None
+                  </button>
+                </Tooltip>
+                <Tooltip
+                  label="Center the map on the loaded infrastructure"
+                  withinPortal
+                >
+                  <Button
+                    variant="subtle"
+                    color="gray"
+                    size="compact-xs"
+                    px={6}
+                    leftSection={<IconCrosshair size={12} />}
+                    onClick={() => requestInfrastructureFit()}
+                  >
+                    Locate
+                  </Button>
+                </Tooltip>
+                <Tooltip
+                  label="Forget the loaded infrastructure (re-import to bring it back)"
+                  withinPortal
+                >
+                  <Button
+                    variant="subtle"
+                    color="gray"
+                    size="compact-xs"
+                    px={6}
+                    onClick={() => clearInfrastructure()}
+                    data-tutorial-id="map-infrastructure-clear"
+                  >
+                    Clear
+                  </Button>
+                </Tooltip>
+              </Group>
+            </Group>
+
+            <Text className={classes.infraGroupLabel}>Buildings</Text>
+            <div className={classes.infraGrid}>
+              {INFRASTRUCTURE_CATEGORIES.map(category => {
+                const count = activeInfrastructure.counts[category] ?? 0;
+                if (count === 0) return null;
+                const visible =
+                  infrastructureCategoryVisibility?.[category] ?? true;
+                return (
+                  <button
+                    key={category}
+                    type="button"
+                    className={clsx(classes.infraChip, {
+                      [classes.infraChipActive]: visible,
+                      [classes.infraChipDim]: !visible,
+                    })}
+                    style={
+                      {
+                        ['--chip-color' as string]: CategoryColor[category],
+                      } as CSSProperties
+                    }
+                    aria-pressed={visible}
+                    onClick={() => toggleInfrastructureCategory(category)}
+                  >
+                    <span className={classes.infraChipIcon} aria-hidden="true">
+                      {INFRA_CATEGORY_ICONS[category]}
+                    </span>
+                    <span className={classes.infraChipLabel}>
+                      {CategoryLabel[category]}
+                    </span>
+                    <span className={classes.infraChipCount}>{count}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <Text className={classes.infraGroupLabel}>Networks</Text>
+            <div className={classes.infraGrid}>
+              {SPLINE_KINDS.map(kind => {
+                const count = activeInfrastructure.splineCounts[kind] ?? 0;
+                if (count === 0) return null;
+                const visible = infrastructureSplineVisibility?.[kind] ?? true;
+                return (
+                  <button
+                    key={kind}
+                    type="button"
+                    className={clsx(classes.infraChip, {
+                      [classes.infraChipActive]: visible,
+                      [classes.infraChipDim]: !visible,
+                    })}
+                    style={
+                      {
+                        ['--chip-color' as string]: splineColor(kind, 0),
+                      } as CSSProperties
+                    }
+                    aria-pressed={visible}
+                    onClick={() => toggleInfrastructureSplineKind(kind)}
+                  >
+                    <span className={classes.infraChipIcon} aria-hidden="true">
+                      {INFRA_SPLINE_ICONS[kind]}
+                    </span>
+                    <span className={classes.infraChipLabel}>
+                      {SplineLabel[kind]}
+                    </span>
+                    <span className={classes.infraChipCount}>{count}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        )}
       </Stack>
     </Stack>
   );

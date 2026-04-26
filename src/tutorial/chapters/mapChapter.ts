@@ -64,6 +64,15 @@ export const mapChapter: TutorialChapter = {
             side: 'right',
           },
         },
+        {
+          element: '[data-tutorial-id="map-infrastructure-filter"]',
+          popover: {
+            title: 'Built infrastructure',
+            description:
+              'Drop a Satisfactory .sav anywhere on the map and the buildings, conveyor belts, pipes, and rails the player has placed are drawn straight on top of the world. The data lives in memory only — switch games or reload and it is gone. Toggle categories or spline kinds to focus on what matters.',
+            side: 'right',
+          },
+        },
       ],
     },
   ],

@@ -24,6 +24,7 @@ import {
   MAX_ZOOM,
   MIN_ZOOM,
 } from './coords';
+import { InfrastructureCanvasLayer } from './infrastructure/InfrastructureCanvasLayer';
 import { MapSelectionSummary } from './MapSelectionSummary';
 import { ResourceMarkersLayer } from './ResourceMarkersLayer';
 import { ShareUrlSync } from './ShareUrlSync';
@@ -166,6 +167,7 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
     importAndApplyToGame(file, gameId, {
       defaultRecipes: true,
       usedNodes: true,
+      infrastructure: true,
     }).catch(() => {
       // Notification surfaced by the hook; nothing else to do here.
     });
@@ -237,6 +239,7 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
             detectRetina
           />
           <MarkerZoomScaleController />
+          <InfrastructureCanvasLayer />
           <ResourceMarkersLayer
             nodes={filteredNodes}
             usedNodes={usedNodes}
@@ -265,7 +268,7 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
         <Dropzone.Accept>
           <div className={classes.dropOverlay}>
             <Text size="lg" fw={700}>
-              Drop save to import recipes and used nodes
+              Drop save to import recipes, used nodes, and built infrastructure
             </Text>
           </div>
         </Dropzone.Accept>

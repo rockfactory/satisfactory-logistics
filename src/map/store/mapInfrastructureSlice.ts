@@ -20,12 +20,20 @@ export interface MapInfrastructureSlice {
   gameId: string | null;
   /** When the payload was set, in ms since epoch. Used for cache keys. */
   loadedAt: number | null;
+  /**
+   * Bumped to a new timestamp whenever the user asks the map to re-frame
+   * itself around the loaded infrastructure (e.g. clicking "Locate"). The
+   * canvas layer owns the camera and listens for changes here so the
+   * filter panel doesn't need a direct handle on the Leaflet `Map`.
+   */
+  requestedFitAt: number | null;
 }
 
 export const initialMapInfrastructureState = (): MapInfrastructureSlice => ({
   infrastructure: null,
   gameId: null,
   loadedAt: null,
+  requestedFitAt: null,
 });
 
 export const mapInfrastructureSlice = createSlice({
@@ -37,11 +45,19 @@ export const mapInfrastructureSlice = createSlice({
         state.infrastructure = infrastructure;
         state.gameId = gameId;
         state.loadedAt = Date.now();
+        // Pan/zoom to the freshly imported geometry the first time it
+        // arrives, otherwise it lives invisibly off-viewport for users
+        // who haven't already centered the map on their factory.
+        state.requestedFitAt = state.loadedAt;
       },
     clearInfrastructure: () => state => {
       state.infrastructure = null;
       state.gameId = null;
       state.loadedAt = null;
+      state.requestedFitAt = null;
+    },
+    requestInfrastructureFit: () => state => {
+      state.requestedFitAt = Date.now();
     },
   },
 });

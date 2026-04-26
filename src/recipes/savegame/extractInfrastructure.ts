@@ -52,6 +52,11 @@ const RE_POWER_LINE = /Build_PowerLine.*_C$/;
 
 const FALLBACK_CLEARANCE_CM = 800;
 
+/** Clearance fields in `FactoryBuildings.json` are in metres (game UI
+ * unit), but the savegame transforms are in centimetres (Unreal native
+ * unit) — multiply to compare apples to apples. */
+const CLEARANCE_M_TO_CM = 100;
+
 function classifyTypePath(typePath: string): Classification {
   const belt = typePath.match(RE_BELT);
   if (belt) {
@@ -143,7 +148,12 @@ function getClearance(typePath: string): { width: number; length: number } {
     const b = AllFactoryBuildingsMap[id];
     if (b?.clearance) {
       const { width, length } = b.clearance;
-      if (width > 0 && length > 0) return { width, length };
+      if (width > 0 && length > 0) {
+        return {
+          width: width * CLEARANCE_M_TO_CM,
+          length: length * CLEARANCE_M_TO_CM,
+        };
+      }
     }
   }
   return { width: FALLBACK_CLEARANCE_CM, length: FALLBACK_CLEARANCE_CM };
@@ -207,7 +217,26 @@ interface SaveEntityLike {
     rotation?: Partial<Vec4>;
   };
   properties?: Record<string, unknown>;
+  specialProperties?: { type?: unknown } & Record<string, unknown>;
 }
+
+interface BuildableInstanceLike {
+  transform?: {
+    translation?: Partial<Vec3>;
+    rotation?: Partial<Vec4>;
+  };
+}
+
+interface BuildableSubsystemLike {
+  type?: string;
+  buildables?: Array<{
+    typeReference?: { pathName?: unknown };
+    instances?: BuildableInstanceLike[];
+  }>;
+}
+
+const LIGHTWEIGHT_SUBSYSTEM_TYPEPATH =
+  '/Script/FactoryGame.FGLightweightBuildableSubsystem';
 
 export function extractInfrastructure(
   save: SatisfactorySave,
@@ -232,12 +261,55 @@ export function extractInfrastructure(
     return bucket;
   }
 
+  function pushBuilding(typePath: string, tx: number, ty: number, yaw: number) {
+    const category = categoryFor(typePath);
+    const { width, length } = getClearance(typePath);
+    bCategories.push(INFRASTRUCTURE_CATEGORIES.indexOf(category));
+    bPositions.push(tx, ty);
+    bYaws.push(yaw);
+    bSizes.push(width, length);
+    counts[category]++;
+  }
+
   for (const level of Object.values(save.levels)) {
     for (const rawObj of level.objects) {
       const obj = rawObj as unknown as SaveEntityLike;
       if (obj.type !== 'SaveEntity') continue;
       const typePath = obj.typePath;
       if (typeof typePath !== 'string') continue;
+
+      // Satisfactory 1.0+ collapses thousands of foundation / wall /
+      // decor instances into a single `FGLightweightBuildableSubsystem`
+      // SaveEntity to keep .sav file sizes manageable. The actual
+      // buildables live in `specialProperties.buildables[].instances[]`
+      // and never appear as standalone SaveEntities, so we have to walk
+      // that nested array explicitly.
+      if (typePath === LIGHTWEIGHT_SUBSYSTEM_TYPEPATH) {
+        const sp = obj.specialProperties as BuildableSubsystemLike | undefined;
+        if (sp?.type === 'BuildableSubsystemSpecialProperties' && sp.buildables) {
+          for (const group of sp.buildables) {
+            const groupTypePath = group.typeReference?.pathName;
+            if (typeof groupTypePath !== 'string' || !group.instances) continue;
+            for (const inst of group.instances) {
+              const itr = inst.transform?.translation;
+              const itx = typeof itr?.x === 'number' ? itr.x : 0;
+              const ity = typeof itr?.y === 'number' ? itr.y : 0;
+              const irot = inst.transform?.rotation;
+              const iyaw =
+                irot &&
+                typeof irot.x === 'number' &&
+                typeof irot.y === 'number' &&
+                typeof irot.z === 'number' &&
+                typeof irot.w === 'number'
+                  ? quaternionToYaw(irot as Vec4)
+                  : 0;
+              pushBuilding(groupTypePath, itx, ity, iyaw);
+            }
+          }
+        }
+        continue;
+      }
+
       if (!typePath.includes('/Buildable/')) continue;
 
       const tr = obj.transform?.translation;
@@ -279,13 +351,7 @@ export function extractInfrastructure(
         // No wire data: render as building marker so it isn't lost.
       }
 
-      const category = categoryFor(typePath);
-      const { width, length } = getClearance(typePath);
-      bCategories.push(INFRASTRUCTURE_CATEGORIES.indexOf(category));
-      bPositions.push(tx, ty);
-      bYaws.push(yaw);
-      bSizes.push(width, length);
-      counts[category]++;
+      pushBuilding(typePath, tx, ty, yaw);
     }
   }
 
