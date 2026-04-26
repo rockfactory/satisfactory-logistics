@@ -22,8 +22,15 @@ export function FactoryUsage(props: IFactoryUsageProps) {
   return <BaseFactoryUsage percentage={percentage} />;
 }
 
-export function BaseFactoryUsage(props: { percentage: number }) {
-  const { percentage } = props;
+export interface IBaseFactoryUsageProps {
+  percentage: number;
+  size?: number;
+  thickness?: number;
+  textWidth?: number;
+}
+
+export function BaseFactoryUsage(props: IBaseFactoryUsageProps) {
+  const { percentage, size = 36, thickness = 6, textWidth = 30 } = props;
   const settings = useGameSettings();
   const is100Percent = Math.abs(percentage - 1) < Number.EPSILON;
   const color =
@@ -32,10 +39,10 @@ export function BaseFactoryUsage(props: { percentage: number }) {
       : colorScale(percentage).hex();
 
   return (
-    <Group gap={0}>
+    <Group gap={0} wrap="nowrap">
       <RingProgress
-        size={36}
-        thickness={6}
+        size={size}
+        thickness={thickness}
         roundCaps
         sections={[
           {
@@ -44,7 +51,7 @@ export function BaseFactoryUsage(props: { percentage: number }) {
           },
         ]}
       />
-      <Text size="xs" ta="right" fw={'bold'} c={color} w={30}>
+      <Text size="xs" ta="right" fw={'bold'} c={color} w={textWidth}>
         {PercentageFormatter.format(percentage)}
       </Text>
     </Group>
