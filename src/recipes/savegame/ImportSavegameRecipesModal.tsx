@@ -62,7 +62,13 @@ export function ImportSavegameRecipesModal(props: IImportSavegameModalProps) {
           </Text>
           <List size="sm" withPadding>
             <List.Item>Available recipes (set as the game default)</List.Item>
-            <List.Item>Used resource nodes on the map</List.Item>
+            <List.Item>
+              Used resource nodes and collected slugs / Mercer spheres /
+              somersloops on the map
+            </List.Item>
+            <List.Item>
+              Randomized resource layout (1.2+), when present in the save
+            </List.Item>
           </List>
 
           <Divider mt="sm" mb="sm" />

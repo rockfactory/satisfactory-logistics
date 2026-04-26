@@ -1,3 +1,4 @@
+import { useStore } from '@/core/zustand';
 import RawWorldResourceNodes from './WorldResourceNodes.json';
 
 export type Purity = 'impure' | 'normal' | 'pure';
@@ -104,15 +105,39 @@ export const StaticWorldResourceNodesById: Record<string, WorldResourceNode> =
   );
 
 /**
- * Per-game savegame-derived overrides. Returns an empty list today; the
- * savegame parser will populate this in a future iteration. Kept as a
- * stable hook so the consumer (`getWorldResourceNodes`) does not change
- * shape when that lands.
+ * Per-game savegame-derived overrides. Reads the latest snapshot from
+ * the zustand store and projects each `SavegameNodeOverride` onto the
+ * corresponding static node, replacing `resource` (always) and
+ * `purity` (when the save provided one — only fracking satellites in
+ * the experimental 1.2 randomizer). Entries whose id has no static
+ * counterpart are dropped: the override-only path is reserved for a
+ * future iteration that handles runtime-spawned `_UAID_…` nodes
+ * (which need a position + nodeType from the save itself).
+ *
+ * Synchronously reads from the store so callers can stay outside of
+ * React; consumers that render based on this list must subscribe to
+ * the same slice (e.g. via `useStore(s => …savegameNodeOverrides)`)
+ * so their `useMemo` invalidates when an import lands.
  */
 export function getSavegameOverrides(
-  _gameId?: string | null,
+  gameId?: string | null,
 ): WorldResourceNode[] {
-  return [];
+  if (!gameId) return [];
+  const game = useStore.getState().games.games[gameId];
+  const overrides = game?.savegameNodeOverrides;
+  if (!overrides || overrides.length === 0) return [];
+  const projected: WorldResourceNode[] = [];
+  for (const o of overrides) {
+    const base = StaticWorldResourceNodesById[o.id];
+    if (!base) continue;
+    projected.push({
+      ...base,
+      resource: o.resource,
+      ...(o.purity && { purity: o.purity }),
+      source: 'savegame',
+    });
+  }
+  return projected;
 }
 
 /**

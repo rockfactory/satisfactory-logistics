@@ -4,6 +4,7 @@ import type {
   SatisfactorySave,
 } from '@etothepii/satisfactory-file-parser';
 import type { Vec3 } from './infrastructure/types';
+import type { SavegameNodeOverride } from './ParseSavegameMessages';
 
 /**
  * Full Unreal typePath strings for every placeable extractor we
@@ -32,14 +33,83 @@ const RECIPE_MANAGER_TYPEPATH = '/Script/FactoryGame.FGRecipeManager';
 const PLAYER_TYPEPATH =
   '/Game/FactoryGame/Character/Player/Char_Player.Char_Player_C';
 
+/**
+ * Resource-actor classes that can carry per-instance randomization
+ * overrides (`mResourceClassOverride` and, on satellites only,
+ * `mPurityOverride`). Cores are included so the lookup table stays
+ * complete even though the map layer hides them — having the override
+ * data already in the store is cheap and means we don't need a second
+ * pass if a future feature opts cores back in.
+ */
+const RANDOMIZABLE_NODE_TYPEPATHS = new Set<string>([
+  '/Game/FactoryGame/Resource/BP_ResourceNode.BP_ResourceNode_C',
+  '/Game/FactoryGame/Resource/BP_FrackingSatellite.BP_FrackingSatellite_C',
+  '/Game/FactoryGame/Resource/BP_FrackingCore.BP_FrackingCore_C',
+]);
+
+/**
+ * Pickup-style classes whose mere presence in the save signals the
+ * collectible has not yet been picked up. Once the player collects
+ * the pickup, the actor is removed from the save entirely — we
+ * derive "collected" by diffing this set against the static
+ * `WorldCollectibles` dataset in the games slice.
+ */
+const COLLECTIBLE_TYPEPATHS = new Set<string>([
+  '/Game/FactoryGame/Resource/Environment/Crystal/BP_Crystal.BP_Crystal_C',
+  '/Game/FactoryGame/Resource/Environment/Crystal/BP_Crystal_mk2.BP_Crystal_mk2_C',
+  '/Game/FactoryGame/Resource/Environment/Crystal/BP_Crystal_mk3.BP_Crystal_mk3_C',
+  '/Game/FactoryGame/Prototype/WAT/BP_WAT1.BP_WAT1_C',
+  '/Game/FactoryGame/Prototype/WAT/BP_WAT2.BP_WAT2_C',
+]);
+
+/**
+ * Maps the in-save `EResourcePurity` enum strings to the project's
+ * lowercase `Purity` strings. Keeps the **`RP_Inpure`** typo from the
+ * game format explicit so a vendored renaming would surface as a test
+ * failure rather than silently dropping the entry on the floor.
+ */
+const PURITY_FROM_SAVE: Record<string, 'impure' | 'normal' | 'pure'> = {
+  RP_Inpure: 'impure',
+  RP_Normal: 'normal',
+  RP_Pure: 'pure',
+};
+
 function isExtractorTypePath(typePath: string): boolean {
   if (EXPLICIT_EXTRACTOR_TYPE_PATHS.has(typePath)) return true;
   const lastSegment = typePath.split('.').pop();
   return lastSegment != null && MINER_LAST_SEGMENT_RE.test(lastSegment);
 }
 
+interface PurityProperty {
+  value?: { value?: unknown };
+}
+
+function readPurityOverride(
+  prop: PurityProperty | undefined,
+): 'impure' | 'normal' | 'pure' | undefined {
+  const enumValue = prop?.value?.value;
+  if (typeof enumValue !== 'string') return undefined;
+  return PURITY_FROM_SAVE[enumValue];
+}
+
+function readResourceOverride(
+  prop: ObjectProperty | undefined,
+): string | undefined {
+  const pathName = prop?.value?.pathName;
+  if (typeof pathName !== 'string' || pathName.length === 0) return undefined;
+  const tail = pathName.split('.').pop();
+  return tail && tail.length > 0 ? tail : undefined;
+}
+
+function instanceTail(instanceName: unknown): string | undefined {
+  if (typeof instanceName !== 'string') return undefined;
+  const tail = instanceName.split('.').pop();
+  return tail && tail.length > 0 ? tail : undefined;
+}
+
 interface SaveObjectLike {
   typePath?: unknown;
+  instanceName?: unknown;
   properties?: Record<string, unknown>;
   transform?: {
     translation?: Partial<Vec3>;
@@ -63,6 +133,20 @@ export interface InspectAccumulator {
    * gives the camera a deterministic centering target.
    */
   players: Vec3[];
+  /**
+   * Per-node randomization overrides keyed by the actor's tail
+   * `instanceName`. Map (not array) so a duplicate object in the
+   * stream — possible when a sublevel is replayed during streaming
+   * — last-write-wins instead of producing two conflicting entries.
+   */
+  nodeOverrides: Map<string, SavegameNodeOverride>;
+  /**
+   * Tail `instanceName`s for every uncollected pickup actor we saw
+   * (slugs / Mercer spheres / somersloops). The downstream slice
+   * action diffs this set against the bundled `WorldCollectibles`
+   * dataset to derive the "collected" complement.
+   */
+  presentCollectibleIds: Set<string>;
 }
 
 export function createInspectAccumulator(): InspectAccumulator {
@@ -70,6 +154,8 @@ export function createInspectAccumulator(): InspectAccumulator {
     availableRecipes: new Set(),
     usedNodeIds: new Set(),
     players: [],
+    nodeOverrides: new Map(),
+    presentCollectibleIds: new Set(),
   };
 }
 
@@ -84,6 +170,33 @@ export function createInspectAccumulator(): InspectAccumulator {
 export function inspectObject(acc: InspectAccumulator, rawObj: unknown): void {
   const obj = rawObj as SaveObjectLike;
   if (typeof obj.typePath !== 'string') return;
+
+  if (RANDOMIZABLE_NODE_TYPEPATHS.has(obj.typePath)) {
+    const id = instanceTail(obj.instanceName);
+    if (!id) return;
+    const props = obj.properties ?? {};
+    const resource = readResourceOverride(
+      props.mResourceClassOverride as ObjectProperty | undefined,
+    );
+    const purity = readPurityOverride(
+      props.mPurityOverride as PurityProperty | undefined,
+    );
+    if (!resource && !purity) return;
+    // Resource is the load-bearing field — every override we apply needs
+    // it. A bare purity-only override (theoretical: a future patch could
+    // drop the resource property) is dropped here rather than written
+    // partially: the consumer uses spread-merge on the static node, so
+    // an entry without `resource` would just be a no-op anyway.
+    if (!resource) return;
+    acc.nodeOverrides.set(id, { id, resource, ...(purity && { purity }) });
+    return;
+  }
+
+  if (COLLECTIBLE_TYPEPATHS.has(obj.typePath)) {
+    const id = instanceTail(obj.instanceName);
+    if (id) acc.presentCollectibleIds.add(id);
+    return;
+  }
 
   if (obj.typePath === PLAYER_TYPEPATH) {
     const t = obj.transform?.translation;
@@ -129,6 +242,8 @@ export interface InspectSummary {
   availableRecipes: string[];
   usedNodeIds: string[];
   players: Vec3[];
+  nodeOverrides: SavegameNodeOverride[];
+  presentCollectibleIds: string[];
 }
 
 export function finalizeInspect(acc: InspectAccumulator): InspectSummary {
@@ -136,6 +251,8 @@ export function finalizeInspect(acc: InspectAccumulator): InspectSummary {
     availableRecipes: [...acc.availableRecipes],
     usedNodeIds: [...acc.usedNodeIds],
     players: acc.players.slice(),
+    nodeOverrides: [...acc.nodeOverrides.values()],
+    presentCollectibleIds: [...acc.presentCollectibleIds],
   };
 }
 

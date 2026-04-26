@@ -143,6 +143,7 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
     collectibleVisibility,
     hideCollectedCollectibles,
     collectedList,
+    savegameOverrides,
   } = useShallowStore(state => {
     const mapState = state.map;
     const game = gameId ? state.games.games[gameId] : null;
@@ -155,19 +156,25 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
         mapState?.collectibleVisibility ?? EMPTY_COLLECTIBLE_VISIBILITY,
       hideCollectedCollectibles: mapState?.hideCollectedCollectibles ?? false,
       collectedList: game?.collectedItems ?? EMPTY_COLLECTED_LIST,
+      // Subscribed-to-but-unused: `getWorldResourceNodes` reads
+      // overrides synchronously from the store, but we need this
+      // selector so the `filteredNodes` memo invalidates when an
+      // import lands.
+      savegameOverrides: game?.savegameNodeOverrides,
     };
   });
 
   const usedNodes = useMemo(() => new Set(usedNodesList), [usedNodesList]);
   const collectedIds = useMemo(() => new Set(collectedList), [collectedList]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: savegameOverrides is read indirectly via getWorldResourceNodes' useStore.getState() lookup; the dep is required to invalidate the memo on import.
   const filteredNodes = useMemo(() => {
     return getWorldResourceNodes(gameId).filter(node => {
       if (!resourceFilters[node.resource]?.includes(node.purity)) return false;
       if (hideUsedNodes && usedNodes.has(node.id)) return false;
       return true;
     });
-  }, [gameId, resourceFilters, hideUsedNodes, usedNodes]);
+  }, [gameId, resourceFilters, hideUsedNodes, usedNodes, savegameOverrides]);
 
   const filteredCollectibles = useMemo(() => {
     return getWorldCollectibles().filter(collectible => {
