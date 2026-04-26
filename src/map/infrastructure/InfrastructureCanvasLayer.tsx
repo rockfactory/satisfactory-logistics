@@ -69,12 +69,8 @@ const AFFINE_PROBE_CM = 100_000;
  */
 function computeAffine(map: L.Map): AffineGameToContainer {
   const origin = map.latLngToContainerPoint(gameToLatLng(0, 0));
-  const xUnit = map.latLngToContainerPoint(
-    gameToLatLng(AFFINE_PROBE_CM, 0),
-  );
-  const yUnit = map.latLngToContainerPoint(
-    gameToLatLng(0, AFFINE_PROBE_CM),
-  );
+  const xUnit = map.latLngToContainerPoint(gameToLatLng(AFFINE_PROBE_CM, 0));
+  const yUnit = map.latLngToContainerPoint(gameToLatLng(0, AFFINE_PROBE_CM));
   return {
     ox: origin.x,
     oy: origin.y,
@@ -159,11 +155,23 @@ class InfrastructureLayer extends L.Layer {
     const size = map.getSize();
     const topLeft = map.containerPointToLayerPoint([0, 0]);
     L.DomUtil.setPosition(canvas, topLeft);
-    if (canvas.width !== size.x) canvas.width = size.x;
-    if (canvas.height !== size.y) canvas.height = size.y;
+
+    // HiDPI: back the canvas with `size * dpr` physical pixels and
+    // keep CSS at `size`, then scale the 2D context by dpr so the
+    // stroke widths and font sizes stay device-independent. Without
+    // this, the strokes blur into "pixelated" smears on Retina
+    // displays.
+    const dpr = window.devicePixelRatio || 1;
+    const targetW = Math.round(size.x * dpr);
+    const targetH = Math.round(size.y * dpr);
+    if (canvas.width !== targetW) canvas.width = targetW;
+    if (canvas.height !== targetH) canvas.height = targetH;
+    canvas.style.width = `${size.x}px`;
+    canvas.style.height = `${size.y}px`;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, size.x, size.y);
 
     const state = this.state;
@@ -258,21 +266,27 @@ function drawBuildings(
   }
 
   // SCIM-style two-pass paint: a translucent fill body keeps adjacent
-  // footprints distinguishable without bleeding, and an opaque 1.5 px
-  // stroke draws crisp outlines so the actual building shape is
-  // readable even when zoomed out (foundations, walls, etc).
+  // footprints distinguishable without bleeding, and an opaque stroke
+  // draws crisp outlines so the actual building shape is readable
+  // even when zoomed out. Foundations and decor get a quieter
+  // treatment (lower fill alpha, thinner stroke) — there are usually
+  // hundreds of them and they should sit behind the factory machines,
+  // not compete with them for attention.
   for (let c = 0; c < INFRASTRUCTURE_CATEGORIES.length; c++) {
     const path = paths[c];
     if (!path) continue;
-    const color = CategoryColor[INFRASTRUCTURE_CATEGORIES[c]];
+    const cat = INFRASTRUCTURE_CATEGORIES[c];
+    const color = CategoryColor[cat];
+    const quiet = cat === 'foundation' || cat === 'decor';
     ctx.fillStyle = color;
-    ctx.globalAlpha = 0.35;
+    ctx.globalAlpha = quiet ? 0.12 : 0.35;
     ctx.fill(path);
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha = quiet ? 0.6 : 1;
     ctx.strokeStyle = color;
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = quiet ? 0.75 : 1.5;
     ctx.stroke(path);
   }
+  ctx.globalAlpha = 1;
 }
 
 function drawSplines(
@@ -289,6 +303,18 @@ function drawSplines(
   if (zoom < 1) return;
 
   const baseLineWidth = zoom >= 6 ? 3 : zoom >= 4 ? 2 : zoom >= 2 ? 1.25 : 1;
+  // Per-kind multiplier on top of the zoom-based base width. Rails are
+  // visually thicker than belts in-game and live in a sparser part of
+  // the map, so they need a bit more weight to read at all zooms.
+  // Power lines stay thinner so a hub of overlapping wires doesn't
+  // crowd out the buildings underneath them.
+  const lineWidthMultiplier: Record<SplineKind, number> = {
+    belt: 1,
+    pipe: 1,
+    hyper: 1,
+    rail: 1.8,
+    power: 0.75,
+  };
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
 
@@ -313,8 +339,7 @@ function drawSplines(
       }
     }
     ctx.strokeStyle = splineColor(block.kind, block.tier);
-    ctx.lineWidth =
-      block.kind === 'power' ? baseLineWidth * 0.75 : baseLineWidth;
+    ctx.lineWidth = baseLineWidth * lineWidthMultiplier[block.kind];
     ctx.stroke(path);
   }
 }
@@ -354,10 +379,7 @@ function infrastructureLatLngBounds(
   }
   if (!Number.isFinite(minX) || !Number.isFinite(minY)) return null;
 
-  return L.latLngBounds(
-    gameToLatLng(minX, minY),
-    gameToLatLng(maxX, maxY),
-  );
+  return L.latLngBounds(gameToLatLng(minX, minY), gameToLatLng(maxX, maxY));
 }
 
 /**

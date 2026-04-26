@@ -1,4 +1,5 @@
 import type { SatisfactorySave } from '@etothepii/satisfactory-file-parser';
+import { loglev } from '@/core/logger/log';
 import {
   buildingIdFromTypePath,
   categoryFor,
@@ -14,6 +15,8 @@ import {
   SPLINE_KINDS,
   type SplineKind,
 } from './ParseSavegameMessages';
+
+const logger = loglev.getLogger('extract-infrastructure');
 
 interface Vec3 {
   x: number;
@@ -56,6 +59,28 @@ const FALLBACK_CLEARANCE_CM = 800;
  * unit), but the savegame transforms are in centimetres (Unreal native
  * unit) — multiply to compare apples to apples. */
 const CLEARANCE_M_TO_CM = 100;
+
+/**
+ * Hand-tuned clearances (in cm) for connector buildings whose entry in
+ * `FactoryBuildings.json` is either absent or has a `null` clearance.
+ * The default 8x8m fallback paints these as factory-sized blobs over
+ * the conveyors/pipes they actually serve as 1x1m attach points.
+ */
+const HARDCODED_CLEARANCE_CM: Record<
+  string,
+  { width: number; length: number }
+> = {
+  Build_ConveyorPole_C: { width: 100, length: 100 },
+  Build_ConveyorPoleStackable_C: { width: 100, length: 100 },
+  Build_ConveyorPoleWall_C: { width: 100, length: 100 },
+  Build_ConveyorCeilingAttachment_C: { width: 100, length: 100 },
+  Build_PipelineSupport_C: { width: 100, length: 100 },
+  Build_PipelineSupportWall_C: { width: 100, length: 100 },
+  Build_PipelineSupportWallHole_C: { width: 100, length: 100 },
+  Build_PipelineFlowIndicator_C: { width: 100, length: 100 },
+};
+
+const SMALL_CLEARANCE_PATTERNS = [/Pole/, /Support/, /FlowIndicator/];
 
 function classifyTypePath(typePath: string): Classification {
   const belt = typePath.match(RE_BELT);
@@ -145,6 +170,8 @@ function readPowerLineWires(
 function getClearance(typePath: string): { width: number; length: number } {
   const id = buildingIdFromTypePath(typePath);
   if (id) {
+    const override = HARDCODED_CLEARANCE_CM[id];
+    if (override) return override;
     const b = AllFactoryBuildingsMap[id];
     if (b?.clearance) {
       const { width, length } = b.clearance;
@@ -154,6 +181,12 @@ function getClearance(typePath: string): { width: number; length: number } {
           length: length * CLEARANCE_M_TO_CM,
         };
       }
+    }
+    // Catalog had a null clearance (or no entry at all) — pick a 1m
+    // footprint for the connector-shaped buildings (poles, supports,
+    // flow indicators) instead of the 8m factory default.
+    if (SMALL_CLEARANCE_PATTERNS.some(re => re.test(id))) {
+      return { width: 100, length: 100 };
     }
   }
   return { width: FALLBACK_CLEARANCE_CM, length: FALLBACK_CLEARANCE_CM };
@@ -250,6 +283,7 @@ export function extractInfrastructure(
   const bPositions: number[] = [];
   const bYaws: number[] = [];
   const bSizes: number[] = [];
+  const bTypePaths: string[] = [];
 
   function getOrCreateBucket(kind: SplineKind, tier: number): SplineBucket {
     const key = `${kind}|${tier}`;
@@ -268,7 +302,15 @@ export function extractInfrastructure(
     bPositions.push(tx, ty);
     bYaws.push(yaw);
     bSizes.push(width, length);
+    bTypePaths.push(typePath);
     counts[category]++;
+    if (
+      logger.getLevel() <= 1 /* trace/debug */ &&
+      /Build_(Train|RailroadSwitch)/.test(typePath)
+    ) {
+      const yawDeg = ((yaw * 180) / Math.PI).toFixed(1);
+      logger.debug(`station yaw ${yawDeg}°`, typePath, { tx, ty });
+    }
   }
 
   for (const level of Object.values(save.levels)) {
@@ -286,7 +328,10 @@ export function extractInfrastructure(
       // that nested array explicitly.
       if (typePath === LIGHTWEIGHT_SUBSYSTEM_TYPEPATH) {
         const sp = obj.specialProperties as BuildableSubsystemLike | undefined;
-        if (sp?.type === 'BuildableSubsystemSpecialProperties' && sp.buildables) {
+        if (
+          sp?.type === 'BuildableSubsystemSpecialProperties' &&
+          sp.buildables
+        ) {
           for (const group of sp.buildables) {
             const groupTypePath = group.typeReference?.pathName;
             if (typeof groupTypePath !== 'string' || !group.instances) continue;
@@ -361,6 +406,7 @@ export function extractInfrastructure(
     positionsXY: Float32Array.from(bPositions),
     yaw: Float32Array.from(bYaws),
     sizeWL: Float32Array.from(bSizes),
+    typePaths: bTypePaths,
   };
 
   const splines: InfrastructureSplinesBlock[] = [];

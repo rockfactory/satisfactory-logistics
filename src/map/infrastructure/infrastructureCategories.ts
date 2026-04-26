@@ -44,18 +44,16 @@ const FOUNDATION_BUILDING_PREFIXES = [
 ];
 
 /**
- * Maps an entity's `typePath` to a category for rendering. Tries first
- * the static building catalog (most accurate for known machines), then
- * falls back to path-prefix heuristics for everything that isn't in
- * `FactoryBuildings.json` (foundations, walls, vehicles, lights, ...).
+ * Maps an entity's `typePath` to a category for rendering. Path-based
+ * checks come *before* the `AllFactoryBuildingsMap` lookup because the
+ * map's per-building category derivation defaults to `production` for
+ * anything without an extractor / conveyor / pipeline / generator
+ * marker — and that misclassifies foundations, walls, train stations,
+ * etc. that *do* have entries (and recipes) in the static catalog.
+ * The catalog still serves as a precise fallback for the things that
+ * aren't matched by any path prefix.
  */
 export function categoryFor(typePath: string): InfrastructureCategory {
-  const id = buildingIdFromTypePath(typePath);
-  if (id) {
-    const known = AllFactoryBuildingsMap[id];
-    if (known) return categoryFromKnownBuilding(known);
-  }
-
   if (typePath.includes('/Buildable/Vehicle/')) return 'transport';
   if (typePath.includes('/Buildable/Factory/Train/')) return 'transport';
 
@@ -81,6 +79,14 @@ export function categoryFor(typePath: string): InfrastructureCategory {
     if (typePath.includes(prefix)) return 'foundation';
   }
   if (typePath.includes('/Buildable/Building/')) return 'foundation';
+
+  // Catalog lookup: precise classification for the remaining factory
+  // machines (assemblers, miners, refineries, ...).
+  const id = buildingIdFromTypePath(typePath);
+  if (id) {
+    const known = AllFactoryBuildingsMap[id];
+    if (known) return categoryFromKnownBuilding(known);
+  }
 
   if (typePath.includes('/Buildable/Factory/')) return 'production';
 
