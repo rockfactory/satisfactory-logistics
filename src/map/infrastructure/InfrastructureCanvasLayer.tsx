@@ -47,6 +47,30 @@ const HIDDEN_CATEGORIES_BY_ZOOM: Array<[number, InfrastructureCategory[]]> = [
   [3, ['decor']],
 ];
 
+/**
+ * Padding (game cm) added to the viewport bounds when culling
+ * buildings, so a large structure (e.g. a 33m Train Station) whose
+ * center is just off-screen still gets drawn instead of clipping at
+ * the edge. ~60m covers the largest hand-tuned clearances in
+ * `extractInfrastructure`.
+ */
+const VIEWPORT_PAD_CM = 6000;
+
+/**
+ * Per-zoom step used to subsample spline polylines. A belt with
+ * thousands of points crammed into a few hundred pixels at zoom 1
+ * paints into the exact same canvas cells over and over; skipping
+ * `step - 1` points between each `lineTo` cuts both JS work and the
+ * browser's rasterisation work without any visible quality loss.
+ * At zoom 5+ we keep every point so curves stay smooth.
+ */
+function splineStepForZoom(zoom: number): number {
+  if (zoom < 2) return 8;
+  if (zoom < 3) return 4;
+  if (zoom < 4) return 2;
+  return 1;
+}
+
 function categoryHiddenByLOD(
   zoom: number,
   category: InfrastructureCategory,
@@ -306,8 +330,39 @@ class InfrastructureLayer extends L.Layer {
       }
     }
 
-    drawSplines(ctx, state, affine, zoom);
-    drawBuildings(ctx, state, affine, zoom);
+    // Viewport bounds in game cm. Used by the draw functions to skip
+    // any building / polyline that's outside the visible region.
+    // Inverse of `cx = ox + gx * ax` is `gx = (cx - ox) / ax`; min/max
+    // pair handles either sign of the affine scale.
+    const cornerX0 = (0 - affine.ox) / affine.ax;
+    const cornerX1 = (size.x - affine.ox) / affine.ax;
+    const cornerY0 = (0 - affine.oy) / affine.by;
+    const cornerY1 = (size.y - affine.oy) / affine.by;
+    const viewMinX = Math.min(cornerX0, cornerX1) - VIEWPORT_PAD_CM;
+    const viewMaxX = Math.max(cornerX0, cornerX1) + VIEWPORT_PAD_CM;
+    const viewMinY = Math.min(cornerY0, cornerY1) - VIEWPORT_PAD_CM;
+    const viewMaxY = Math.max(cornerY0, cornerY1) + VIEWPORT_PAD_CM;
+
+    drawSplines(
+      ctx,
+      state,
+      affine,
+      zoom,
+      viewMinX,
+      viewMaxX,
+      viewMinY,
+      viewMaxY,
+    );
+    drawBuildings(
+      ctx,
+      state,
+      affine,
+      zoom,
+      viewMinX,
+      viewMaxX,
+      viewMinY,
+      viewMaxY,
+    );
     if (this.hovered) {
       drawHighlight(ctx, state.infrastructure, affine, this.hovered);
     }
@@ -319,6 +374,10 @@ function drawBuildings(
   state: RenderState,
   a: AffineGameToContainer,
   zoom: number,
+  viewMinX: number,
+  viewMaxX: number,
+  viewMinY: number,
+  viewMaxY: number,
 ): void {
   const infra = state.infrastructure;
   if (!infra) return;
@@ -332,14 +391,23 @@ function drawBuildings(
   );
 
   // One Path2D per category lets us collapse N fillStyle / fill cycles
-  // into 8: cheap on context state, friendly to compositors.
+  // into 8: cheap on context state, friendly to compositors. Sub-pixel
+  // dot dedup uses one Set<int> per category keyed by `(px, py)` so
+  // hundreds of decor / foundation entities collapsing into the same
+  // pixel only paint that pixel once.
   const paths: (Path2D | null)[] = INFRASTRUCTURE_CATEGORIES.map(() => null);
+  const dotCells: (Set<number> | null)[] = INFRASTRUCTURE_CATEGORIES.map(
+    () => null,
+  );
   for (let i = 0; i < count; i++) {
     const catIdx = categories[i];
     if (!visibleByCat[catIdx]) continue;
 
     const gx = positionsXY[i * 2];
     const gy = positionsXY[i * 2 + 1];
+    if (gx < viewMinX || gx > viewMaxX || gy < viewMinY || gy > viewMaxY) {
+      continue;
+    }
     const widthCm = sizeWL[i * 2];
     const lengthCm = sizeWL[i * 2 + 1];
 
@@ -348,7 +416,21 @@ function drawBuildings(
     const halfW = (widthCm / 2) * Math.abs(a.ax);
     const halfL = (lengthCm / 2) * Math.abs(a.by);
     if (halfW < 0.5 && halfL < 0.5) {
-      // Sub-pixel: skip rotated-rect work, paint a single dot below.
+      // Sub-pixel: every entity in the same canvas cell paints into the
+      // same dot — dedup so a packed foundation grid doesn't queue up
+      // tens of thousands of identical 1x1 rects.
+      const px = cx | 0;
+      const py = cy | 0;
+      // (px + 32768) << 16 keeps the key positive and collision-free
+      // for any reasonable canvas size.
+      const key = ((px + 32768) << 16) | ((py + 32768) & 0xffff);
+      let cellSet = dotCells[catIdx];
+      if (!cellSet) {
+        cellSet = new Set();
+        dotCells[catIdx] = cellSet;
+      }
+      if (cellSet.has(key)) continue;
+      cellSet.add(key);
       let path = paths[catIdx];
       if (!path) {
         path = new Path2D();
@@ -415,6 +497,10 @@ function drawSplines(
   state: RenderState,
   a: AffineGameToContainer,
   zoom: number,
+  viewMinX: number,
+  viewMaxX: number,
+  viewMinY: number,
+  viewMaxY: number,
 ): void {
   const infra = state.infrastructure;
   if (!infra) return;
@@ -439,24 +525,55 @@ function drawSplines(
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
 
+  const step = splineStepForZoom(zoom);
+
   for (const block of infra.splines) {
     if (!SPLINE_KINDS.includes(block.kind)) continue;
     if ((state.splineVisibility?.[block.kind] ?? true) === false) continue;
     if (block.count === 0) continue;
 
     const path = new Path2D();
-    const { offsets, pointsXY } = block;
+    const { offsets, pointsXY, polylineBounds } = block;
     for (let i = 0; i < block.count; i++) {
+      // Viewport cull via the precomputed per-polyline AABB.
+      const bMinX = polylineBounds[i * 4];
+      const bMinY = polylineBounds[i * 4 + 1];
+      const bMaxX = polylineBounds[i * 4 + 2];
+      const bMaxY = polylineBounds[i * 4 + 3];
+      if (bMaxX < viewMinX || bMinX > viewMaxX) continue;
+      if (bMaxY < viewMinY || bMinY > viewMaxY) continue;
+
       const start = offsets[i];
       const end = offsets[i + 1];
       if (end - start < 2) continue;
       const sx = a.ox + pointsXY[start * 2] * a.ax;
       const sy = a.oy + pointsXY[start * 2 + 1] * a.by;
       path.moveTo(sx, sy);
-      for (let j = start + 1; j < end; j++) {
+      // Stride through intermediate points by `step` (zoom-dependent),
+      // and additionally drop any that sit within 1 px of the last
+      // emitted vertex — saves both `lineTo` calls and rasterisation
+      // work without a visible difference at the chosen zoom level.
+      // The final point is always emitted so the polyline ends at the
+      // right place.
+      let lastDX = sx;
+      let lastDY = sy;
+      const lastIdx = end - 1;
+      for (let j = start + step; j < lastIdx; j += step) {
         const px = a.ox + pointsXY[j * 2] * a.ax;
         const py = a.oy + pointsXY[j * 2 + 1] * a.by;
+        const dx = px - lastDX;
+        const dy = py - lastDY;
+        if (dx * dx + dy * dy < 1) continue;
         path.lineTo(px, py);
+        lastDX = px;
+        lastDY = py;
+      }
+      const lx = a.ox + pointsXY[lastIdx * 2] * a.ax;
+      const ly = a.oy + pointsXY[lastIdx * 2 + 1] * a.by;
+      const ldx = lx - lastDX;
+      const ldy = ly - lastDY;
+      if (ldx * ldx + ldy * ldy >= 1 || end - start === 2) {
+        path.lineTo(lx, ly);
       }
     }
     ctx.strokeStyle = splineColor(block.kind, block.tier);

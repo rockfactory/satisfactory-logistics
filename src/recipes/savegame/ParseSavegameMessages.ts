@@ -81,6 +81,14 @@ export interface InfrastructureSplinesBlock {
   offsets: Uint32Array;
   /** Total points across all polylines, *2, world cm. */
   pointsXY: Float32Array;
+  /**
+   * count*4 — per-polyline axis-aligned bounding box in world cm,
+   * laid out as `[minX, minY, maxX, maxY]` per polyline. Computed
+   * once during {@link import('./infrastructure/extractInfrastructure').finalizeInfrastructure}
+   * so the canvas layer can viewport-cull polylines without
+   * re-scanning their points every frame.
+   */
+  polylineBounds: Float32Array;
 }
 
 export interface ParsedInfrastructure {
@@ -150,6 +158,7 @@ export function collectInfrastructureTransferables(
   for (const spline of infra.splines) {
     buffers.push(spline.offsets.buffer as ArrayBuffer);
     buffers.push(spline.pointsXY.buffer as ArrayBuffer);
+    buffers.push(spline.polylineBounds.buffer as ArrayBuffer);
   }
   return buffers;
 }
