@@ -19,6 +19,8 @@ export interface IMachineNodeActionsProps {
   data: IMachineNodeData;
 
   buildingsAmount: number;
+  overclockValue: number | string;
+  setOverclockValue: (value: number | string) => void;
 }
 
 /**
@@ -26,7 +28,7 @@ export interface IMachineNodeActionsProps {
  * These are the ones requiring the "apply" button.
  */
 export function MachineNodeActions(props: IMachineNodeActionsProps) {
-  const { data, buildingsAmount } = props;
+  const { data, buildingsAmount, overclockValue, setOverclockValue } = props;
   const { recipe, value } = data;
 
   const solverId = useFactoryContext();
@@ -48,17 +50,16 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
     changed: recipesChanged,
   } = useRecipeAlternatesInputState(data.recipe.id);
 
-  // 2. Somersloops (stored per-machine, displayed per-machine) and overclock
-  // Clamp stored value to slotsPerBuilding for backward compat with old saves
-  // where the stored value was a total (0..buildings*slots).
+  // 2. Somersloops (stored per-machine, displayed per-machine).
+  // Overclock is lifted into the parent MachineNode so that ingredient rows
+  // can edit it inline (back-solving overclock from a desired /min rate).
+  // Clamp stored somersloops to slotsPerBuilding for backward compat with old
+  // saves where the stored value was a total (0..buildings*slots).
   const storedPerMachine = nodeState?.somersloops
     ? Math.min(nodeState.somersloops, slotsPerBuilding)
     : undefined;
   const [somersloopsValue, setSomersloopsValue] = useInputState(
     (storedPerMachine ?? '') as number | string,
-  );
-  const [overclockValue, setOverclockValue] = useInputState(
-    nodeState?.overclock as number | string,
   );
 
   const perMachineSomersloops = Number(somersloopsValue) || 0;
@@ -158,7 +159,7 @@ export function MachineNodeActions(props: IMachineNodeActionsProps) {
               color="blue"
               variant="outline"
               onClick={() =>
-                useStore.getState().addFactoryInput(solverId!, {
+                useStore.getState().upsertFactoryInput(solverId!, {
                   resource: recipe.products[0].resource,
                   amount: value,
                 })

@@ -53,8 +53,10 @@ export default defineConfig({
         globPatterns: [
           '**/*.{js,css,html,json,woff2,wasm}',
           'images/game/**/*.{png,webp,jpg}',
+          'images/map/**/*.{png,jpg,webp}',
           'icons/*.png',
         ],
+        globIgnores: ['**/world-map-5k.png'],
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [/^\/api/, /^\/auth/],
         cleanupOutdatedCaches: true,
@@ -62,6 +64,15 @@ export default defineConfig({
           {
             urlPattern: /^https:\/\/nymrtujjmzbhxcimjsci\.supabase\.co\/.*/i,
             handler: 'NetworkOnly',
+          },
+          {
+            urlPattern: /\/images\/map\/world-map-5k\.png$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'world-map-hires',
+              expiration: { maxEntries: 1, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
           },
         ],
       },
@@ -73,6 +84,17 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './src/'),
+      // `@etothepii/satisfactory-file-parser` does an optimistic
+      // `require('stream/web')` for Node; in the browser Vite
+      // externalises that to an empty object, so the library's own
+      // fallback to `globalThis.ReadableStream` never fires and the
+      // streaming parser explodes with "ReadableStream is not a
+      // constructor". Point the import at a tiny shim that re-exports
+      // the WHATWG globals.
+      'stream/web': path.resolve(
+        import.meta.dirname,
+        './src/recipes/savegame/nodeStreamWebShim.ts',
+      ),
     },
   },
   define: {

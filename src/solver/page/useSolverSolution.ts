@@ -3,7 +3,11 @@ import { useEffect, useMemo } from 'react';
 import { useFormOnChange } from '@/core/form/useFormOnChange';
 import { loglev } from '@/core/logger/log';
 import { useStore } from '@/core/zustand';
-import { useFactoryInputsOutputs } from '@/factories/store/factoriesSelectors';
+import {
+  useFactoryInputsOutputs,
+  useFactoryOutputConsumers,
+} from '@/factories/store/factoriesSelectors';
+import { useShowOutputFactoriesNodes } from '@/games/gamesSlice';
 import { isByproductNode } from '@/solver/algorithm/getSolutionNodes';
 import { isSolutionFound } from '@/solver/algorithm/solve/isSolutionFound';
 import { solveProduction, useHighs } from '@/solver/algorithm/solveProduction';
@@ -76,8 +80,10 @@ export const useSolverSolution = (id: string, mode: 'game' | 'standalone') => {
   const { highsRef, loading } = useHighs();
   const currentSolverId = useCurrentSolverId();
   const inputsOutputs = useFactoryInputsOutputs(id);
+  const outputConsumers = useFactoryOutputConsumers(id);
   const instance = usePathSolverInstance(id);
   const solverGameId = useSolverGameId(id);
+  const showOutputFactoriesNodes = useShowOutputFactoriesNodes();
 
   // 1. Initialize solver instance and factory defaults if missing
   useEffect(() => {
@@ -111,6 +117,8 @@ export const useSolverSolution = (id: string, mode: 'game' | 'standalone') => {
     const solution = solveProduction(highsRef.current, {
       ...instance.request,
       ...inputsOutputs,
+      outputConsumers,
+      showOutputFactoriesNodes,
       nodes: instance.nodes,
     });
     logger.log('Solved ->', solution);
@@ -127,7 +135,15 @@ export const useSolverSolution = (id: string, mode: 'game' | 'standalone') => {
     logger.log('hasSolution =', isSolutionFound(solution));
     return { solution, suggestions };
     // Re-run only when the request shape changes, not on every instance mutation
-  }, [highsRef, instance?.request, instance?.nodes, inputsOutputs, loading]);
+  }, [
+    highsRef,
+    instance?.request,
+    instance?.nodes,
+    inputsOutputs,
+    outputConsumers,
+    showOutputFactoriesNodes,
+    loading,
+  ]);
 
   // 3. Sync maximized output values back to the factory
   // useEffect is necessary here: this is a side effect (store mutation)

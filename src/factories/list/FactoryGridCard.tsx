@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useStore } from '@/core/zustand';
 import { ProgressChip } from '@/factories/components/ProgressChip';
 import type { Factory } from '@/factories/Factory';
+import { FactoryActionsMenu } from '@/factories/list/FactoryActionsMenu';
 import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
 import { FactoryPeers } from '@/games/sync/ui/FactoryPeers';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
@@ -72,14 +73,32 @@ export function FactoryGridCard(props: IFactoryGridCard) {
             ))}
           </Flex>
         </Stack>
-        {showProgressStatus && (
-          <ProgressChip
-            status={factory.progress ?? undefined}
-            size="md"
-            variant="light"
-            className={classes.progressChip}
-          />
-        )}
+        <Group gap={4} wrap="nowrap" className={classes.progressChip}>
+          {showProgressStatus && (
+            <ProgressChip
+              status={factory.progress ?? undefined}
+              size="md"
+              variant="light"
+            />
+          )}
+          {/* The card itself is a <Link>; stop propagation here so opening
+              the menu and clicking its items don't navigate to the detail
+              page. The Mantine menu still receives the click on its
+              target via React's bubble phase before this handler runs. */}
+          {/* biome-ignore lint/a11y/useKeyWithClickEvents: pure event-stop wrapper, no semantic interaction */}
+          {/* biome-ignore lint/a11y/noStaticElementInteractions: pure event-stop wrapper, no semantic interaction */}
+          <span
+            onClick={e => {
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+            onMouseDown={e => {
+              e.stopPropagation();
+            }}
+          >
+            <FactoryActionsMenu factoryId={id} showOpen />
+          </span>
+        </Group>
       </Group>
     </Card>
   );

@@ -46,7 +46,7 @@ export const FactoryNode = memo((props: IFactoryNodeProps) => {
 
   return (
     <HoverCard
-      width={380}
+      width={420}
       position="top"
       shadow="md"
       withArrow
@@ -185,7 +185,12 @@ function FactoryFlowsTable({ factory }: { factory: Factory }) {
   }
 
   return (
-    <Table withColumnBorders style={{ borderRadius: '0 0 4px 4px' }}>
+    <Table
+      withColumnBorders
+      verticalSpacing={4}
+      horizontalSpacing="xs"
+      style={{ borderRadius: '0 0 4px 4px' }}
+    >
       <Table.Tbody>
         {outputs.length > 0 && (
           <>
@@ -250,7 +255,7 @@ function FactoryOutputFlowRow({
   return (
     <Table.Tr>
       <Table.Td>
-        <FactoryItemImage size={28} highRes id={item.id} />
+        <FactoryItemImage size={22} highRes id={item.id} />
       </Table.Td>
       <Table.Td>
         <Text size="sm">{item.displayName ?? item.name}</Text>
@@ -263,7 +268,7 @@ function FactoryOutputFlowRow({
       <Table.Td>
         {(hasSurplus || isMissing) && (
           <Tooltip label="Unused" withArrow>
-            <Text size="sm" c={isMissing ? 'red.4' : undefined}>
+            <Text size="xs" c={isMissing ? 'red.4' : undefined}>
               {isMissing
                 ? `-${round(usedAmount - producedAmount)}/min`
                 : `+${round(surplus)}/min`}
@@ -273,7 +278,12 @@ function FactoryOutputFlowRow({
       </Table.Td>
       <Table.Td>
         {(output.amount ?? 0) > 0 && (
-          <BaseFactoryUsage percentage={percentage} />
+          <BaseFactoryUsage
+            percentage={percentage}
+            size={26}
+            thickness={4}
+            textWidth={26}
+          />
         )}
       </Table.Td>
     </Table.Tr>
@@ -289,7 +299,7 @@ function FactoryInputFlowRow({ input }: { input: FactoryInput }) {
   return (
     <Table.Tr>
       <Table.Td>
-        <FactoryItemImage size={28} highRes id={item.id} />
+        <FactoryItemImage size={22} highRes id={item.id} />
       </Table.Td>
       <Table.Td>
         <Text size="sm">{item.displayName ?? item.name}</Text>
@@ -300,7 +310,7 @@ function FactoryInputFlowRow({ input }: { input: FactoryInput }) {
         </Text>
       </Table.Td>
       <Table.Td />
-      <Table.Td style={{ height: 44 }} />
+      <Table.Td />
     </Table.Tr>
   );
 }

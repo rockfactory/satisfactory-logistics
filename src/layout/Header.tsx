@@ -13,6 +13,7 @@ import {
   IconBuildingFactory,
   IconCalculator,
   IconChartBar,
+  IconMap2,
   IconPackages,
   IconSearch,
   IconTools,
@@ -32,12 +33,20 @@ import { HotkeyKbd } from '@/utils/HotkeyKbd';
 import classes from './Header.module.css';
 import { HeaderMobileDrawer } from './HeaderMobileDrawer';
 
-const TABS = ['factories', 'charts', 'calculator', 'tools', 'codex'] as const;
+const TABS = [
+  'factories',
+  'map',
+  'charts',
+  'calculator',
+  'tools',
+  'codex',
+] as const;
 
 type HeaderTab = (typeof TABS)[number];
 
 export const TAB_ROUTES: Record<HeaderTab, string> = {
   factories: '/factories',
+  map: '/map',
   charts: '/factories/charts',
   calculator: '/factories/calculator',
   tools: '/tools',
@@ -46,6 +55,7 @@ export const TAB_ROUTES: Record<HeaderTab, string> = {
 
 export const TAB_ICONS: Record<HeaderTab, ReactNode> = {
   factories: <IconBuildingFactory size={16} />,
+  map: <IconMap2 size={16} />,
   charts: <IconChartBar size={16} />,
   calculator: <IconCalculator size={16} />,
   tools: <IconTools size={16} />,
@@ -53,6 +63,7 @@ export const TAB_ICONS: Record<HeaderTab, ReactNode> = {
 };
 
 export function resolveActiveTab(pathname: string): HeaderTab | null {
+  if (pathname.startsWith('/map')) return 'map';
   if (pathname.startsWith('/tools')) return 'tools';
   if (pathname.startsWith('/codex')) return 'codex';
   if (pathname.startsWith('/factories/charts')) return 'charts';

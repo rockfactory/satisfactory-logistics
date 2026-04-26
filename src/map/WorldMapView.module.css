@@ -1,0 +1,603 @@
+/*
+ * Root of the Mantine Dropzone wrapping the map. Mantine's default
+ * Dropzone styling paints a dashed border, md padding, and a dark-6
+ * fill; the drop target here should be transparent chrome around
+ * the existing `mapShell`, which supplies the rounded corners,
+ * clipping, and background. This rule strips the defaults while
+ * keeping the 100% fill behaviour so the map still occupies the
+ * full panel.
+ */
+.dropzoneRoot {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: var(--mantine-radius-md);
+  cursor: default;
+}
+
+/* Neutralize the dark-6 background tint Mantine paints on the
+   Dropzone root when files are being dragged over it. Our own
+   dropOverlay inside `mapShell` handles the visual feedback. */
+.dropzoneRoot:where([data-accept]),
+.dropzoneRoot:where([data-reject]) {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+/*
+ * Mantine renders children inside an `inner` wrapper div (the class
+ * Dropzone.inner) which by default has no `height`. Without this
+ * rule, `mapShell`'s `height: 100%` has no definite parent to
+ * resolve against and the map collapses to 0px. Setting the inner
+ * to 100%/100% lets the existing height chain flow through
+ * untouched.
+ */
+.dropzoneInner {
+  width: 100%;
+  height: 100%;
+}
+
+.mapShell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+  background-color: var(--mantine-color-dark-8);
+  isolation: isolate;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  background-color: var(--mantine-color-dark-5);
+}
+
+.nodeCount {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 500;
+  padding: 4px 10px;
+  border-radius: var(--mantine-radius-sm);
+  background-color: rgba(20, 21, 23, 0.85);
+  color: var(--mantine-color-gray-3);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.sumBanner {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  padding: 6px 14px;
+  border-radius: var(--mantine-radius-sm);
+  background-color: rgba(109, 40, 217, 0.92);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+/* Progress toast shown during a savegame import. Rendered as a
+   sibling of `mapShell` (inside the Dropzone root) rather than a
+   child, so it shares the Dropzone's stacking context with
+   Mantine's LoadingOverlay (default z-index: 400). The 410 value
+   keeps it just above the dimmed backdrop so the user can read the
+   parser status. */
+.importProgress {
+  position: absolute;
+  bottom: 46px;
+  left: 12px;
+  z-index: 410;
+  min-width: 220px;
+  padding: 8px 12px;
+  border-radius: var(--mantine-radius-sm);
+  background-color: rgba(20, 21, 23, 0.92);
+  color: var(--mantine-color-gray-1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+/* Full-area overlay shown while the user is dragging a file over the
+   map. The Dropzone.Accept/Reject slots control when this overlay is
+   rendered at all, so it only ever paints during an active drag. */
+.dropOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  border-radius: var(--mantine-radius-md);
+  background-color: rgba(20, 21, 23, 0.6);
+  color: var(--mantine-color-gray-0);
+  border: 2px dashed var(--mantine-color-teal-5);
+  pointer-events: none;
+  text-align: center;
+}
+
+.dropOverlayReject {
+  border-color: var(--mantine-color-red-5);
+  color: var(--mantine-color-red-1);
+  background-color: rgba(60, 10, 10, 0.55);
+}
+
+/* Marker styling (rendered as raw HTML by Leaflet via divIcon) */
+
+:global(.map-marker-wrapper) {
+  background: transparent;
+  border: none;
+}
+
+:global(.map-marker) {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  /* Tip sits at (30.14, 30.14) of a 32-square viewBox (~94%). Scaling from
+     the tip keeps the pin point anchored to the map coordinate regardless
+     of zoom scale. */
+  transform-origin: 94% 94%;
+  transform: scale(var(--marker-zoom-scale, 1));
+  /* `filter` is intentionally not in the transition list: it forces a per-
+     frame raster of every marker, and at hundreds of nodes the cost shows
+     up as visible lag. Used/selected variant changes are click-driven and
+     read fine without a tween. */
+  transition:
+    transform 120ms ease-out,
+    opacity 120ms ease-out;
+}
+
+:global(.map-marker:hover) {
+  transform: scale(calc(var(--marker-zoom-scale, 1) * 1.1));
+}
+
+:global(.map-marker__shape) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+:global(.map-marker__shape-path) {
+  /* Background = ring color heavily tinted toward white so the game icons
+     stay readable, with a strong dark-ring border doing the purity
+     signalling instead of the fill. */
+  fill: color-mix(in srgb, var(--ring, #f1c40f) 35%, white 65%);
+  /* Border = darker shade of the ring, painted as a native stroke. We
+     initially used 4 stacked drop-shadows (the "fake stroke" trick) for
+     a softer halo look, but at hundreds of markers the filter cost
+     lagged the map. Stroke is GPU-fast and visually close. */
+  stroke: color-mix(in srgb, var(--ring, #f1c40f) 70%, black 30%);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* Collectibles share the pin silhouette but sit on a plain white fill so
+   the themed glyph + ring color do all the communication. */
+:global(.map-marker--collectible) :global(.map-marker__shape-path) {
+  fill: white;
+  stroke: var(--ring, #f1c40f);
+}
+
+:global(.map-marker--used) {
+  opacity: 0.5;
+  filter: grayscale(0.6);
+}
+
+:global(.map-marker--used:hover) {
+  opacity: 0.9;
+  filter: grayscale(0);
+}
+
+:global(.map-marker__used-badge) {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: var(--mantine-color-teal-6);
+  color: white;
+  font-size: 10px;
+  line-height: 14px;
+  text-align: center;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 2;
+}
+
+:global(.map-marker--selected) {
+  opacity: 1;
+  z-index: 1000;
+}
+
+/* Selected variant repaints the pin border with a thicker violet stroke
+   instead of a drop-shadow halo, again to stay off the filter pipeline. */
+:global(.map-marker--selected) :global(.map-marker__shape-path) {
+  stroke: var(--mantine-color-violet-5);
+  stroke-width: 2.5;
+}
+
+:global(.map-marker--used.map-marker--selected) {
+  opacity: 0.85;
+  filter: grayscale(0.3);
+}
+
+:global(.map-marker__selected-badge) {
+  position: absolute;
+  bottom: -4px;
+  left: -4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: var(--mantine-color-violet-6);
+  color: white;
+  font-size: 10px;
+  line-height: 14px;
+  text-align: center;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Player marker (savegame import): violet pulsing dot, distinct from
+   resource / collectible pins so the user can spot themselves at a
+   glance. Rendered via L.divIcon, so all selectors are :global. */
+
+:global(.map-player-marker-wrapper) {
+  background: transparent;
+  border: none;
+  pointer-events: none;
+}
+
+:global(.map-player-marker) {
+  position: relative;
+  width: 28px;
+  height: 28px;
+}
+
+:global(.map-player-marker__pulse) {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--mantine-color-violet-5);
+  opacity: 0.55;
+  animation: map-player-pulse 1.6s ease-out infinite;
+  pointer-events: none;
+}
+
+:global(.map-player-marker__core) {
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+  background: var(--mantine-color-violet-5);
+  border: 2px solid white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+}
+
+@keyframes map-player-pulse {
+  0% {
+    transform: scale(0.55);
+    opacity: 0.65;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+/* Popup styling */
+
+:global(.map-marker-popup) {
+  font-family: var(--mantine-font-family);
+  color: var(--mantine-color-gray-1);
+}
+
+:global(.map-marker-popup__header) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--mantine-color-dark-5);
+}
+
+:global(.map-marker-popup__icon) {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+}
+
+:global(.map-marker-popup__title) {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+:global(.map-marker-popup__name) {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--mantine-color-gray-0);
+}
+
+:global(.map-marker-popup__meta) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--mantine-color-gray-4);
+}
+
+:global(.map-marker-popup__purity-dot) {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35);
+  flex: 0 0 10px;
+}
+
+:global(.map-marker-popup__stats) {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 10px;
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+:global(.map-marker-popup__stats dt) {
+  color: var(--mantine-color-gray-5);
+  font-weight: 500;
+}
+
+:global(.map-marker-popup__stats dd) {
+  margin: 0;
+  color: var(--mantine-color-gray-2);
+  font-variant-numeric: tabular-nums;
+}
+
+:global(.map-marker-popup__method) {
+  margin: 0 0 10px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background-color: var(--mantine-color-dark-6);
+  border-left: 2px solid var(--mantine-color-gray-6);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--mantine-color-gray-3);
+}
+
+:global(.map-marker-popup__rates) {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+  color: var(--mantine-color-gray-1);
+}
+
+:global(.map-marker-popup__rates) th,
+:global(.map-marker-popup__rates) td {
+  padding: 4px 8px;
+  text-align: right;
+  border-bottom: 1px solid var(--mantine-color-dark-5);
+  white-space: nowrap;
+}
+
+:global(.map-marker-popup__rates) thead th {
+  font-weight: 600;
+  color: var(--mantine-color-gray-4);
+  background-color: var(--mantine-color-dark-6);
+}
+
+:global(.map-marker-popup__rates-unit) {
+  font-size: 10px;
+  color: var(--mantine-color-gray-5);
+  margin-left: 2px;
+}
+
+:global(.map-marker-popup__rates) tbody th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--mantine-color-gray-2);
+  background-color: var(--mantine-color-dark-6);
+}
+
+:global(.map-marker-popup__rates) tbody tr:last-child th,
+:global(.map-marker-popup__rates) tbody tr:last-child td {
+  border-bottom: none;
+}
+
+:global(.map-marker-popup__pill) {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  vertical-align: 2px;
+}
+
+:global(.map-marker-popup__pill--used) {
+  background-color: var(--mantine-color-teal-9);
+  color: var(--mantine-color-teal-2);
+}
+
+:global(.map-marker-popup__pill--selected) {
+  background-color: var(--mantine-color-violet-9);
+  color: var(--mantine-color-violet-2);
+}
+
+/*
+ * Drop pod cost chips. Rendered as a labeled row of icon + amount
+ * pills so the player can scan it like a recipe card without us
+ * needing a full table.
+ */
+:global(.map-marker-popup__cost) {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+:global(.map-marker-popup__cost-label) {
+  color: var(--mantine-color-gray-5);
+  font-weight: 500;
+}
+
+:global(.map-marker-popup__cost-items) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+:global(.map-marker-popup__cost-chip) {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px 2px 4px;
+  border-radius: 999px;
+  background-color: var(--mantine-color-dark-6);
+  color: var(--mantine-color-gray-1);
+  font-variant-numeric: tabular-nums;
+}
+
+:global(.map-marker-popup__cost-chip img) {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+}
+
+:global(.map-marker-popup__actions) {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+:global(.map-marker-popup__action) {
+  appearance: none;
+  border: 1px solid var(--mantine-color-dark-4);
+  background-color: var(--mantine-color-dark-6);
+  color: var(--mantine-color-gray-1);
+  padding: 4px 10px;
+  border-radius: var(--mantine-radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+:global(.map-marker-popup__action:hover) {
+  background-color: var(--mantine-color-dark-5);
+  border-color: var(--mantine-color-dark-3);
+  color: var(--mantine-color-gray-0);
+}
+
+:global(.map-marker-popup__action--used) {
+  border-color: var(--mantine-color-teal-7);
+  color: var(--mantine-color-teal-2);
+}
+
+:global(.map-marker-popup__action--used:hover) {
+  background-color: var(--mantine-color-dark-5);
+  color: var(--mantine-color-teal-0);
+}
+
+:global(.map-marker-popup__action--selected) {
+  border-color: var(--mantine-color-violet-7);
+  color: var(--mantine-color-violet-2);
+}
+
+:global(.map-marker-popup__action--selected:hover) {
+  background-color: var(--mantine-color-dark-5);
+  color: var(--mantine-color-violet-0);
+}
+
+/* Dark-theme polish for default Leaflet chrome */
+
+:global(.leaflet-container) {
+  font-family: var(--mantine-font-family);
+}
+
+:global(.leaflet-popup-content-wrapper),
+:global(.leaflet-popup-tip) {
+  background-color: var(--mantine-color-dark-7);
+  color: var(--mantine-color-gray-1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+:global(.leaflet-popup-content) {
+  margin: 12px;
+}
+
+:global(.leaflet-container) :global(a.leaflet-popup-close-button) {
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  box-sizing: border-box;
+  display: block;
+  text-align: center;
+  border-radius: var(--mantine-radius-sm);
+  color: var(--mantine-color-gray-3);
+  font: 700 16px / 28px var(--mantine-font-family);
+  text-decoration: none;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+:global(.leaflet-container) :global(a.leaflet-popup-close-button:hover) {
+  background-color: var(--mantine-color-dark-5);
+  color: var(--mantine-color-gray-0);
+}
+
+:global(.leaflet-control-zoom a) {
+  background-color: var(--mantine-color-dark-7);
+  color: var(--mantine-color-gray-2);
+  border-color: var(--mantine-color-dark-5);
+}
+
+:global(.leaflet-control-zoom a:hover) {
+  background-color: var(--mantine-color-dark-6);
+  color: var(--mantine-color-gray-0);
+}
+
+/* Leaflet adds `leaflet-disabled` at min/max zoom. Its default rule paints
+   the button with a light-gray background that clashes with our dark chrome,
+   so repaint it in the same dark palette with dimmed text. */
+:global(.leaflet-control-zoom a.leaflet-disabled),
+:global(.leaflet-control-zoom a.leaflet-disabled:hover) {
+  background-color: var(--mantine-color-dark-8);
+  color: var(--mantine-color-dark-3);
+  border-color: var(--mantine-color-dark-5);
+  cursor: default;
+}

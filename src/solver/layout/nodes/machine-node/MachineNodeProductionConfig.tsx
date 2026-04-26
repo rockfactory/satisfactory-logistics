@@ -3,6 +3,7 @@ import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
 import type { FactoryItemId } from '@/recipes/FactoryItemId';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import type { IMachineNodeData } from './MachineNode';
+import { roundOverclock } from './roundOverclock';
 
 export interface IMachineNodeProductionConfigProps {
   id: string;
@@ -89,10 +90,14 @@ export function MachineNodeProductionConfig(
         value={
           overclockValue === '' || overclockValue == null
             ? ''
-            : Number(overclockValue) * 100
+            : // Round to 4 decimal places on the percent scale so values like
+              // 2.24 don't render as 224.00000000000003 from float pollution.
+              Math.round(Number(overclockValue) * 100 * 10000) / 10000
         }
         onValueChange={({ floatValue }) =>
-          setOverclockValue(floatValue == null ? '' : floatValue / 100)
+          setOverclockValue(
+            floatValue == null ? '' : roundOverclock(floatValue / 100),
+          )
         }
         min={0}
         max={250}

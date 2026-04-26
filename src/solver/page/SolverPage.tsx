@@ -85,6 +85,16 @@ export function SolverPage(props: ISolverPageProps) {
               <Button
                 variant="filled"
                 onClick={() => {
+                  // Strip share-preview metadata so a dangling shared
+                  // solver becomes a fully-local factory once attached.
+                  // No-op for solvers that were never shared.
+                  useStore.getState().updateSolver(currentSolverId, solver => {
+                    solver.sharedId = undefined;
+                    solver.remoteSharedId = undefined;
+                    solver.isOwner = true;
+                    solver.isFactory = true;
+                  });
+
                   useStore
                     .getState()
                     .addFactoryIdToGame(undefined, currentSolverId);

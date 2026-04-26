@@ -11,6 +11,7 @@ import {
   v8CssVariablesResolver,
 } from '@mantine/core';
 import '@mantine/core/styles.css';
+import '@mantine/dropzone/styles.css';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
 
@@ -40,6 +41,7 @@ import { GamesRoutes } from './games/page/GamesRoutes';
 import { AppLayout } from './layout/AppLayout';
 import { PWAUpdatePrompt } from './pwa/PWAUpdatePrompt';
 import { FactoryRoutes } from './routes/FactoriesRoutes';
+import { MapRoutes } from './routes/MapRoutes';
 import { theme } from './theme';
 import { ToolsRoutes } from './tools/page/ToolsRoutes';
 
@@ -102,6 +104,13 @@ const router = createBrowserRouter(
                 {
                   path: '/tools/*',
                   element: <ToolsRoutes />,
+                  ErrorBoundary: () => {
+                    throw useRouteError();
+                  },
+                },
+                {
+                  path: '/map/*',
+                  element: <MapRoutes />,
                   ErrorBoundary: () => {
                     throw useRouteError();
                   },

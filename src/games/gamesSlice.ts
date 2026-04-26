@@ -8,7 +8,43 @@ import {
   FactoryConveyorBelts,
   FactoryPipelinesExclAlternates,
 } from '@/recipes/FactoryBuilding';
-import type { Game, GameRemoteData, GameSettings } from './Game';
+import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
+import type { ParsedSatisfactorySave } from '@/recipes/savegame/ParseSavegameMessages';
+import type {
+  Game,
+  GameRemoteData,
+  GameSettings,
+  ShowOutputFactoriesNodesMode,
+} from './Game';
+import { DEFAULT_SHOW_OUTPUT_FACTORIES_NODES } from './Game';
+
+/**
+ * Which slices of game state a savegame import should overwrite. All
+ * default to `false` so callers must opt in: importing a save is a
+ * destructive merge of "the game's truth lives in the .sav".
+ */
+export interface ApplySavegameToGameOptions {
+  /**
+   * Replace `game.allowedRecipes` with the recipes available in the
+   * save (custom recipes are always retained since the save format
+   * doesn't reference them).
+   */
+  defaultRecipes?: boolean;
+  /**
+   * Replace `game.usedNodes` with the resource nodes that have a
+   * miner / pump / fracking extractor placed on them in the save.
+   * An empty list clears the field so the persisted shape stays
+   * clean.
+   */
+  usedNodes?: boolean;
+  /**
+   * Also extract every user-built buildable (machines, belts, pipes,
+   * foundations, ...) and load it into the in-memory
+   * `mapInfrastructure` slice for the map's infrastructure canvas
+   * layer. Session-only — see `mapInfrastructureSlice`.
+   */
+  infrastructure?: boolean;
+}
 
 export interface GamesSlice {
   games: Record<string, Game>;
@@ -36,6 +72,7 @@ export const gamesSlice = createSlice({
         settings: {
           noHighlight100PercentUsage: false,
           highlight100PercentColor: '#339af0',
+          showOutputFactoriesNodes: DEFAULT_SHOW_OUTPUT_FACTORIES_NODES,
         },
       };
     },
@@ -143,6 +180,118 @@ export const gamesSlice = createSlice({
           game.collapsedFactoriesIds.push(factoryId);
         }
       },
+    /**
+     * Map page: marks (or unmarks) a resource node id as "used" on
+     * the given game. No-op when no game id is provided so the map
+     * UI stays safe when called before the user picks a game.
+     */
+    toggleGameUsedNode:
+      (gameId: string | null | undefined, nodeId: string) => state => {
+        if (!gameId) return;
+        const game = state.games[gameId];
+        if (!game) return;
+        const current = game.usedNodes ?? [];
+        const idx = current.indexOf(nodeId);
+        if (idx === -1) {
+          game.usedNodes = [...current, nodeId];
+        } else {
+          const next = [...current];
+          next.splice(idx, 1);
+          if (next.length === 0) {
+            delete game.usedNodes;
+          } else {
+            game.usedNodes = next;
+          }
+        }
+      },
+    /** Map page: drops every used-node mark for the given game. */
+    clearGameUsedNodes: (gameId: string | null | undefined) => state => {
+      if (!gameId) return;
+      const game = state.games[gameId];
+      if (!game) return;
+      delete game.usedNodes;
+    },
+    /**
+     * Map page: replaces the used-node marks for the given game with
+     * {@link nodeIds}. Intended for savegame import, the imported set
+     * fully replaces any prior manual marks. An empty list clears the
+     * field so the persisted shape stays clean. Dedupes defensively in
+     * case the caller passed the same id twice.
+     */
+    setGameUsedNodes:
+      (gameId: string | null | undefined, nodeIds: string[]) => state => {
+        if (!gameId) return;
+        const game = state.games[gameId];
+        if (!game) return;
+        if (nodeIds.length === 0) {
+          delete game.usedNodes;
+        } else {
+          game.usedNodes = [...new Set(nodeIds)];
+        }
+      },
+    /**
+     * Single entry point for "this savegame is the source of truth for
+     * this game". Each `apply` flag opts a slice of derivable state in.
+     * Centralizing here keeps every import surface (map drop, map
+     * filter panel, recipes drawer) producing identical store updates
+     * for the same file, in a single Immer patch and a single
+     * subscriber notification.
+     */
+    updateGameFromSavegame:
+      (
+        gameId: string | null | undefined,
+        save: ParsedSatisfactorySave,
+        apply: ApplySavegameToGameOptions = {},
+      ) =>
+      state => {
+        if (!gameId) return;
+        const game = state.games[gameId];
+        if (!game) return;
+        if (apply.defaultRecipes) {
+          const available = new Set(save.availableRecipes);
+          game.allowedRecipes = AllFactoryRecipes.filter(
+            recipe => available.has(recipe.id) || recipe.customType != null,
+          ).map(recipe => recipe.id);
+        }
+        if (apply.usedNodes) {
+          if (save.usedNodeIds.length === 0) {
+            delete game.usedNodes;
+          } else {
+            game.usedNodes = [...new Set(save.usedNodeIds)];
+          }
+        }
+      },
+    /**
+     * Map page: marks (or unmarks) a collectible id as "collected" on
+     * the given game. Mirrors {@link toggleGameUsedNode} so the two
+     * map-side toggles behave identically.
+     */
+    toggleGameCollectedItem:
+      (gameId: string | null | undefined, itemId: string) => state => {
+        if (!gameId) return;
+        const game = state.games[gameId];
+        if (!game) return;
+        const current = game.collectedItems ?? [];
+        const idx = current.indexOf(itemId);
+        if (idx === -1) {
+          game.collectedItems = [...current, itemId];
+        } else {
+          const next = [...current];
+          next.splice(idx, 1);
+          if (next.length === 0) {
+            delete game.collectedItems;
+          } else {
+            game.collectedItems = next;
+          }
+        }
+      },
+    /** Map page: drops every collected mark for the given game. */
+    clearGameCollectedItems: (gameId: string | null | undefined) => state => {
+      if (!gameId) return;
+      const game = state.games[gameId];
+      if (!game) return;
+      delete game.collectedItems;
+    },
     toggleAllFactoriesExpanded: (expanded?: boolean) => state => {
       const game = state.games[state.selected ?? ''];
       if (!game) return;
@@ -210,6 +359,35 @@ export function useGameSettingMaxBelt() {
   if (!maxBelt) return null;
 
   return FactoryConveyorBelts.find(belt => belt.id === maxBelt)!;
+}
+
+/**
+ * Typed reader for the `showOutputFactoriesNodes` setting that falls
+ * back to the documented default for games (or store states) where the
+ * field hasn't been backfilled yet. Use this anywhere the solver graph
+ * needs to know whether to render output-consumer / unallocated nodes.
+ */
+export function useShowOutputFactoriesNodes(): ShowOutputFactoriesNodesMode {
+  return useStore(
+    state =>
+      (state.games.games[state.games.selected ?? '']?.settings
+        ?.showOutputFactoriesNodes as
+        | ShowOutputFactoriesNodesMode
+        | undefined) ?? DEFAULT_SHOW_OUTPUT_FACTORIES_NODES,
+  );
+}
+
+/**
+ * Imperative setter for the same setting — handy from outside React
+ * (e.g. from popover dropdowns that prefer `useStore.getState()` over
+ * threading the slice action through props).
+ */
+export function setShowOutputFactoriesNodes(
+  value: ShowOutputFactoriesNodesMode,
+) {
+  useStore.getState().updateGameSettings(state => {
+    state.showOutputFactoriesNodes = value;
+  });
 }
 
 export function useGameSettingMaxPipeline() {

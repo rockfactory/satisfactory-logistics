@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconExternalLink, IconTrash, IconWorld } from '@tabler/icons-react';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
 import { useShallowStore, useStore } from '@/core/zustand';
@@ -67,14 +67,18 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
     state => state.factories.factories[input.factoryId ?? '']?.outputs,
   );
 
-  // Only if the factory is not selected, we can use the resource to filter
-  // the allowed factories
+  // Restrict the source-factory dropdown to factories that export the
+  // selected item. Always include the currently-selected source so its label
+  // never disappears (e.g. if the source factory's outputs were edited after
+  // it was picked).
   const factoriesIdsProducingInputResource = useShallowStore(state =>
-    input.resource && !input.factoryId
-      ? state.games.games[state.games.selected ?? '']?.factoriesIds.filter(id =>
-          state.factories.factories[id]?.outputs?.some(
-            o => o.resource === input.resource,
-          ),
+    input.resource
+      ? state.games.games[state.games.selected ?? '']?.factoriesIds.filter(
+          id =>
+            id === input.factoryId ||
+            state.factories.factories[id]?.outputs?.some(
+              o => o.resource === input.resource,
+            ),
         )
       : null,
   );
@@ -89,6 +93,30 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   // We use a dedicated onChangeHandler for this component since inputs
   // are synced with solvers
   const onChangeHandler = useFactoryOnChangeHandler(factoryId);
+
+  // When the user picks a source factory that only produces a single item,
+  // auto-fill the resource so they don't have to pick it again.
+  const handleFactoryChange = useCallback(
+    (selectedFactoryId: string | null) => {
+      onChangeHandler(`inputs.${index}.factoryId`)(selectedFactoryId);
+      if (
+        !selectedFactoryId ||
+        selectedFactoryId === WORLD_SOURCE_ID ||
+        input.resource
+      ) {
+        return;
+      }
+      const outputs =
+        useStore.getState().factories.factories[selectedFactoryId]?.outputs;
+      const resourceOutputs = outputs?.filter(o => o.resource);
+      if (resourceOutputs?.length === 1) {
+        onChangeHandler(`inputs.${index}.resource`)(
+          resourceOutputs[0].resource,
+        );
+      }
+    },
+    [onChangeHandler, index, input.resource],
+  );
 
   const isVisible = useIsFactoryVisible(factoryId, false, input.resource);
   if (!isVisible && displayMode === 'factory') return null;
@@ -141,7 +169,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           </Popover>
         }
         w={180}
-        onChange={onChangeHandler(`inputs.${index}.factoryId`)}
+        onChange={handleFactoryChange}
       />
       <FactoryItemInput
         value={input.resource}

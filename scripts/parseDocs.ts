@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import { convertDocsImagesToPublic } from './parsers/images/convertDocsImagesToPublic';
 import { parseBuildings } from './parsers/parseBuildings';
 import { parseItems } from './parsers/parseItems';
+import { parseMilestoneUnlocks } from './parsers/parseMilestoneUnlocks';
 import { parseRecipes } from './parsers/parseRecipes';
 import { parseSchematics } from './parsers/parseSchematic';
 
@@ -23,6 +24,9 @@ async function parseDocs() {
 
   // Schematics
   parseSchematics(docsJson);
+
+  // Milestone-only unlocks (equipment items the regular pipeline drops)
+  parseMilestoneUnlocks(docsJson);
 
   // Images
   if (args.some(a => a === '--with-images')) {

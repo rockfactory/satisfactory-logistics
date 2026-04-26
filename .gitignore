@@ -135,6 +135,15 @@ dist
 
 /data/assets/
 
+# Maintainer-only game-data exports for the node importer (FModel
+# .umap dumps, persistent-level JSON, etc.). These can be hundreds
+# of MB and are regenerated from the game.
+/data/FactoryGame/
+/data/Persistent_Level.json
+
+# Generated map tile pyramid (uploaded to DigitalOcean Spaces, not shipped in build)
+/dist-map-tiles/
+
 # intellij idea
 .idea
 

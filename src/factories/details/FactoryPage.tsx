@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FactoryDeleteButton } from '@/factories/details/FactoryDeleteButton';
 import { FactoryGraph } from '@/factories/details/FactoryGraph';
 import { ProductionView } from '@/factories/details/ProductionView';
+import { FactoryActionsMenu } from '@/factories/list/FactoryActionsMenu';
 import { useFactorySimpleAttributes } from '@/factories/store/factoriesSelectors';
 import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import { FullHeightContainer } from '@/layout/FullHeightContainer';
@@ -57,6 +58,7 @@ export const FactoryPage = ({
                 }
               }}
             />
+            <FactoryActionsMenu factoryId={id} hideDelete />
             <FactoryDeleteButton id={id} />
           </Group>
         </Group>

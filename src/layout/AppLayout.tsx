@@ -9,7 +9,9 @@ export function AppLayout() {
   const { pathname } = useLocation();
 
   const compactFooter =
-    pathname.includes('/charts') || pathname.includes('/calculator');
+    pathname.includes('/charts') ||
+    pathname.includes('/calculator') ||
+    pathname.startsWith('/map');
 
   return (
     <TutorialProvider>

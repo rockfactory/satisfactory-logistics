@@ -149,6 +149,25 @@ Savegame files (`.sav`) are parsed using `@etothepii/satisfactory-file-parser` i
 
 ## Code Conventions
 
+### Definition of Done (for agents and humans)
+
+Before declaring any code change complete (and before reporting "done" to the user), run **both** of these on the touched files / project:
+
+```bash
+npm run lint          # Biome (formatting + linting)
+npm run check-types   # tsc --noEmit
+```
+
+If either fails:
+
+1. Fix the issues (use `npm run format` or `npx biome check --write <files>` for autofixable formatting).
+2. Re-run both commands until clean.
+3. Only then summarise the change to the user.
+
+For a focused check on just the files you touched, scope biome explicitly: `npx biome check --write <paths…>`. Do **not** rely solely on a focused check — a final `npm run lint && npm run check-types` is the contract.
+
+If tests cover the touched area, also run `npm test -- --run`.
+
 ### Writing Style
 
 - **Do not use em dashes (`—`)** in code comments, UI copy, notification messages, commit messages, or any text that ships to users. Prefer commas, parentheses, colons, or separate sentences. Applies to both source code and generated text.

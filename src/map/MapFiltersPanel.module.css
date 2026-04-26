@@ -1,0 +1,450 @@
+.panel {
+  width: 280px;
+  flex-shrink: 0;
+  background-color: var(--mantine-color-dark-7);
+  border-radius: var(--mantine-radius-md);
+  overflow-y: auto;
+}
+
+.panelTitle {
+  letter-spacing: 0.01em;
+}
+
+/* Sum section — intentionally preserved from the previous design.
+   The soft violet wash anchors it as the "primary" action in the
+   panel so the rest of the sidebar recedes by comparison. */
+
+.sumSection {
+  padding: 10px 12px;
+  border-radius: var(--mantine-radius-sm);
+  background: linear-gradient(
+    135deg,
+    rgba(109, 40, 217, 0.12),
+    rgba(139, 92, 246, 0.06)
+  );
+  border: 1px solid rgba(139, 92, 246, 0.25);
+}
+
+.sumHint {
+  line-height: 1.3;
+}
+
+/* Section headers. Uppercase + dimmed; inline counts sit next to them
+   as plain dimmed text rather than Mantine badges so the header stays
+   quiet until its content is interacted with. */
+
+.sectionTitle {
+  letter-spacing: 0.04em;
+}
+
+.sectionCount {
+  font-variant-numeric: tabular-nums;
+}
+
+.inlineAction {
+  align-self: flex-start;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+/* Mini actions in section headers (used for "All" / "None"). These
+   replace the old dedicated "Bulk" section with its chunky button
+   groups. They sit to the right of the "Resources" header so all
+   bulk controls are inline with the title they affect. */
+
+.miniAction {
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--mantine-color-dark-4);
+  border-radius: var(--mantine-radius-sm);
+  background: transparent;
+  color: var(--mantine-color-gray-4);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease,
+    border-color 120ms ease;
+}
+
+.miniAction:hover {
+  border-color: var(--mantine-color-gray-6);
+  color: var(--mantine-color-gray-1);
+  background-color: var(--mantine-color-dark-6);
+}
+
+/* "Only" quick-filter row — one word label followed by three colored
+   chips. Each chip filters the whole map to a single purity. Kept
+   separate from the per-resource rows so they can scan independently. */
+
+.purityOnlyRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.purityOnlyLabel {
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.purityOnlyChip {
+  --chip-color: var(--mantine-color-gray-5);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px 2px 6px;
+  height: 22px;
+  border: 1px solid var(--mantine-color-dark-4);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--mantine-color-gray-3);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease,
+    border-color 120ms ease;
+}
+
+.purityOnlyChip:hover {
+  border-color: var(--chip-color);
+  color: var(--mantine-color-gray-0);
+  background-color: color-mix(in srgb, var(--chip-color) 14%, transparent);
+}
+
+.purityOnlyDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--chip-color);
+  flex-shrink: 0;
+}
+
+/* Per-resource row: left = icon + name; right = segmented purity
+   control. The row itself dims when no purities are active so the
+   eye can quickly scan for what's shown. */
+
+.resourceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 6px;
+  border-radius: var(--mantine-radius-sm);
+  transition:
+    background-color 120ms ease,
+    opacity 120ms ease;
+}
+
+.resourceRow:hover {
+  background-color: var(--mantine-color-dark-6);
+}
+
+.resourceRowDim {
+  opacity: 0.4;
+}
+
+.resourceRowDim:hover {
+  opacity: 0.75;
+}
+
+.resourceLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: var(--mantine-color-gray-1);
+  text-align: left;
+  cursor: pointer;
+}
+
+.resourceName {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Segmented purity control. Three adjoined buttons share one rounded
+   outline so the trio reads as a single control, not three loose
+   chips. Each segment shows I/N/P in its purity color plus a count. */
+
+.puritySegments {
+  display: inline-flex;
+  flex: 0 0 auto;
+  border: 1px solid var(--mantine-color-dark-4);
+  border-radius: var(--mantine-radius-sm);
+  overflow: hidden;
+  background-color: var(--mantine-color-dark-8);
+}
+
+.puritySegment {
+  --chip-color: var(--mantine-color-gray-5);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-width: 34px;
+  padding: 2px 6px;
+  border: 0;
+  border-right: 1px solid var(--mantine-color-dark-4);
+  background: transparent;
+  color: var(--mantine-color-gray-5);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+  font-variant-numeric: tabular-nums;
+  justify-content: center;
+}
+
+.puritySegment:last-child {
+  border-right: 0;
+}
+
+.puritySegment:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--chip-color) 14%, transparent);
+  color: var(--mantine-color-gray-1);
+}
+
+.puritySegmentActive {
+  background-color: color-mix(in srgb, var(--chip-color) 22%, transparent);
+  color: var(--mantine-color-gray-0);
+}
+
+.puritySegmentActive:hover {
+  background-color: color-mix(in srgb, var(--chip-color) 30%, transparent);
+}
+
+.puritySegmentEmpty {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.puritySegmentLetter {
+  font-weight: 700;
+  color: var(--chip-color);
+}
+
+.puritySegmentActive .puritySegmentLetter {
+  color: var(--chip-color);
+}
+
+.puritySegmentCount {
+  color: inherit;
+}
+
+/*
+ * Collectibles list. Each row is a single tap target — toggles
+ * visibility for that category — with a colored swatch on the left
+ * (the category's themed color from COLLECTIBLE_TYPE_META) and a
+ * "collected / total" count on the right. Mirrors the resource
+ * rows visually so the eye reads the panel as one continuous list.
+ */
+
+.collectibleRow {
+  --chip-color: var(--mantine-color-gray-5);
+
+  display: flex;
+  align-items: center;
+  padding: 3px 6px;
+  border-radius: var(--mantine-radius-sm);
+  transition:
+    background-color 120ms ease,
+    opacity 120ms ease;
+}
+
+.collectibleRow:hover {
+  background-color: var(--mantine-color-dark-6);
+}
+
+.collectibleRowDim {
+  opacity: 0.4;
+}
+
+.collectibleRowDim:hover {
+  opacity: 0.75;
+}
+
+.collectibleRowEmpty {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.collectibleLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  color: var(--mantine-color-gray-1);
+  text-align: left;
+  cursor: pointer;
+}
+
+.collectibleLabel:disabled {
+  cursor: not-allowed;
+}
+
+.collectibleSwatch {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--chip-color);
+  background-color: var(--mantine-color-dark-8);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--chip-color);
+  overflow: hidden;
+}
+
+.collectibleSwatch img {
+  width: 14px;
+  height: 14px;
+}
+
+.collectibleName {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.collectibleProgress {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--mantine-color-gray-4);
+}
+
+.collectibleCheck {
+  color: var(--mantine-color-teal-4);
+}
+
+/*
+ * Built-infrastructure toggles. A 2-column grid of compact chips
+ * (icon + label + count) so an end-game save with 8 categories and 5
+ * spline kinds doesn't push the rest of the panel below the fold.
+ * The chip glows in its category color when active and washes out
+ * to dim grey when toggled off — mirrors the resource segmented
+ * control's "active = tinted" idiom.
+ */
+
+.infraGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
+.infraChip {
+  --chip-color: var(--mantine-color-gray-5);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--mantine-color-dark-4);
+  border-radius: var(--mantine-radius-sm);
+  background-color: var(--mantine-color-dark-7);
+  color: var(--mantine-color-gray-3);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    opacity 120ms ease;
+}
+
+.infraChip:hover {
+  border-color: var(--chip-color);
+  color: var(--mantine-color-gray-0);
+  background-color: color-mix(in srgb, var(--chip-color) 14%, transparent);
+}
+
+.infraChipActive {
+  background-color: color-mix(in srgb, var(--chip-color) 22%, transparent);
+  border-color: color-mix(in srgb, var(--chip-color) 50%, transparent);
+  color: var(--mantine-color-gray-0);
+}
+
+.infraChipActive:hover {
+  background-color: color-mix(in srgb, var(--chip-color) 30%, transparent);
+}
+
+.infraChipDim {
+  opacity: 0.4;
+}
+
+.infraChipDim:hover {
+  opacity: 0.85;
+}
+
+.infraChipIcon {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--chip-color);
+}
+
+.infraChipLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.infraChipCount {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--mantine-color-gray-4);
+}
+
+.infraChipActive .infraChipCount {
+  color: var(--mantine-color-gray-2);
+}
+
+.infraGroupLabel {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--mantine-color-dark-2);
+  text-transform: uppercase;
+  padding: 4px 2px 0;
+}
+
+@media (max-width: 768px) {
+  .panel {
+    width: 100%;
+    max-height: 320px;
+  }
+}

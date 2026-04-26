@@ -6,6 +6,10 @@ import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import type { FactoryOutput } from '@/factories/Factory';
 import type { FactoryItem } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
+import {
+  useIsNodeHighlighted,
+  useSolverHighlightOptional,
+} from '@/solver/layout/highlight/SolverHighlightContext';
 import { NodeActionsBox } from '@/solver/layout/nodes/utils/NodeActionsBox';
 import { InvisibleHandles } from '@/solver/layout/rendering/InvisibleHandles';
 import type { SolverNodeState } from '@/solver/store/Solver';
@@ -34,9 +38,12 @@ export const ByproductNode = memo((props: IByproductNodeProps) => {
 
   const [isHovering, { close, open }] = useDisclosure(false);
 
+  const highlight = useSolverHighlightOptional();
+  const isPrimaryHighlighted = highlight?.highlightedNodeId === props.id;
+  const isDimmed = useIsNodeHighlighted(props.id) === false;
+
   return (
     <Popover
-      disabled={isByproduct}
       opened={(isHovering || props.selected) && !props.dragging}
       transitionProps={{}}
       hideDetached={false}
@@ -44,7 +51,16 @@ export const ByproductNode = memo((props: IByproductNodeProps) => {
       <Popover.Target>
         <Box
           p="sm"
-          style={{ borderRadius: 4 }}
+          style={{
+            borderRadius: 4,
+            border: props.selected
+              ? '1px solid var(--mantine-color-gray-3)'
+              : isPrimaryHighlighted
+                ? '1px solid var(--mantine-color-blue-4)'
+                : '1px solid transparent',
+            opacity: isDimmed ? 0.25 : 1,
+            transition: 'border-color 0.2s, opacity 0.2s',
+          }}
           bg="teal.9"
           onMouseEnter={open}
           onMouseLeave={close}
@@ -93,8 +109,9 @@ export const ByproductNode = memo((props: IByproductNodeProps) => {
             ) : (
               <Stack>
                 <Text fs="italic" size="sm">
-                  Click on the node to see available actions, like editing
-                  amount.
+                  {isByproduct
+                    ? 'Click on the node to pick a recipe that processes this byproduct further.'
+                    : 'Click on the node to edit this output or pick a recipe to process it further.'}
                 </Text>
               </Stack>
             )}

@@ -55,6 +55,34 @@ npm run parse-docs
 - Copy the exported `FactoryGame` folder to `data/assets/` (FactoryGame should be a subfolder of `data/assets/`)
 - Run the `npm run parse-docs -- --with-images` command to generate the images
 
+### Resource Node Data (Map)
+
+The map view in `src/map/` ships with a curated copy of every resource node, deposit, fracking core/satellite, and geyser placement at `src/recipes/WorldResourceNodes.json`. The list is rebuilt from the game's persistent level whenever the game updates.
+
+To regenerate after a Satisfactory update:
+
+1. Load the game in [FModel](https://fmodel.app) (same setup as Image Generation above).
+2. Navigate to `FactoryGame/Content/FactoryGame/Map/GameLevel01/Persistent_Level.umap`.
+3. Right-click → **Save Properties (.json)**.
+4. Move the resulting `Persistent_Level.json` (~100MB) to `data/Persistent_Level.json` in this repo. The file is gitignored so it stays out of commits.
+5. Run:
+
+   ```bash
+   npm run extract-world-nodes
+   ```
+
+   The script does a two-pass walk over the export: first to collect every `BP_ResourceNode_C` / `BP_ResourceDeposit_C` / `BP_FrackingCore_C` / `BP_FrackingSatellite_C` / `BP_ResourceNodeGeyser_C` actor with its resource and purity, then to bind each one's `RootComponent` transform for world coordinates. The output is sorted deterministically and a diff vs. the previous bundled file is printed.
+
+   Useful flags:
+
+   - `--dry-run` — parse and report without writing.
+   - `--input <path>` / `--output <path>` — override defaults.
+   - `--verbose` — log every emitted node (debug).
+
+6. Review the diff in the script's summary output, then commit `src/recipes/WorldResourceNodes.json`.
+
+> **Heads up:** the parser holds the entire 100MB JSON in memory. If you see out-of-memory errors, prefix the command with `NODE_OPTIONS="--max-old-space-size=4096"`.
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

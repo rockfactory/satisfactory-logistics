@@ -43,38 +43,39 @@ export function FactoriesSankeyChart(props: IFactoriesSankeyChartProps) {
     nodes: SankeyNode[];
     links: SankeyLink[];
   } = useMemo(() => {
-    const disabledIds = new Set(
-      factories.filter(f => f.progress === 'disabled').map(f => f.id),
+    const validFactories = factories.filter(
+      f => f.name && f.progress !== 'disabled',
     );
 
-    const nodes: SankeyNode[] = factories
-      .filter(f => f.name && f.progress !== 'disabled')
-      .map(f => ({
-        id: f.name!,
-        _originalId: f.id,
-      }));
+    const nodes: SankeyNode[] = validFactories.map(f => ({
+      id: f.name!,
+      _originalId: f.id,
+    }));
 
     nodes.push({
       id: 'World Resources',
       _originalId: 'WORLD',
     });
 
-    const links: SankeyLink[] = factories
-      .filter(target => target.progress !== 'disabled')
-      .flatMap(target => {
-        return (target.inputs ?? [])
-          .filter(
-            i => i.factoryId && target.name && !disabledIds.has(i.factoryId),
-          )
-          .map(input => ({
-            source:
-              nodes.find(n => n._originalId === input.factoryId)?.id ?? '',
-            target: target.name!,
-            value: input.amount ?? 0,
-            resourceLabel: getResourceName(input.resource ?? ''),
-          }))
-          .filter(l => l.source !== l.target);
-      });
+    const factoryIdToName = new Map(validFactories.map(f => [f.id, f.name!]));
+
+    const links: SankeyLink[] = validFactories.flatMap(target => {
+      return (target.inputs ?? [])
+        .flatMap(input => {
+          if (!input.factoryId) return [];
+          const sourceName = factoryIdToName.get(input.factoryId);
+          if (!sourceName) return [];
+          return [
+            {
+              source: sourceName,
+              target: target.name!,
+              value: input.amount ?? 0,
+              resourceLabel: getResourceName(input.resource ?? ''),
+            },
+          ];
+        })
+        .filter(l => l.source !== l.target);
+    });
 
     return { nodes, links };
   }, [factories]);

@@ -4,6 +4,7 @@ import { codexAndToolsChapter } from './codexAndToolsChapter';
 import { factoryBasicsChapter } from './factoryBasicsChapter';
 import { factoryLinkingChapter } from './factoryLinkingChapter';
 import { gamesAndSyncChapter } from './gamesAndSyncChapter';
+import { mapChapter } from './mapChapter';
 import { notesChapter } from './notesChapter';
 import type { TutorialChapter } from './types';
 
@@ -13,6 +14,7 @@ export const tutorialChapters: TutorialChapter[] = [
   calculatorChapter,
   factoryLinkingChapter,
   chartsChapter,
+  mapChapter,
   notesChapter,
   codexAndToolsChapter,
 ];

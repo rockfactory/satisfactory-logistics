@@ -1,4 +1,4 @@
-import { Group, Image, Stack, Table } from '@mantine/core';
+import { Group, Image, Stack, Table, Text } from '@mantine/core';
 import { groupBy, sum } from 'lodash';
 import { useMemo } from 'react';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
@@ -52,7 +52,7 @@ export function SummaryBuildings(props: ISummaryBuildingsProps) {
               <Table.Tr>
                 <Table.Th w={60}>#</Table.Th>
                 <Table.Th>Recipe</Table.Th>
-                <Table.Th w={120}>
+                <Table.Th w={160}>
                   <Group gap={2}>
                     <OverclockImage size={24} /> Overclock
                   </Group>
@@ -67,24 +67,40 @@ export function SummaryBuildings(props: ISummaryBuildingsProps) {
             <Table.Tbody>
               {data.map(node => (
                 <>
-                  <Table.Tr>
-                    <Table.Td>
-                      <RepeatingNumber value={node.fullBuildingsAmount} />
-                    </Table.Td>
-                    <Table.Td>
-                      <Group gap={4}>
-                        <FactoryItemImage size={24} id={node.product.id} />
-                        {node.product.name}
-                      </Group>
-                    </Table.Td>
-                    <Table.Td>
-                      <RepeatingNumber value={node.overclock * 100} />%
-                    </Table.Td>
-                    <Table.Td>
-                      {node.somersloopsPerMachine}/
-                      {node.building.somersloopSlots}
-                    </Table.Td>
-                  </Table.Tr>
+                  {node.fullBuildingsAmount > 0 && (
+                    <Table.Tr>
+                      <Table.Td>
+                        <RepeatingNumber value={node.fullBuildingsAmount} />
+                      </Table.Td>
+                      <Table.Td>
+                        <Group gap={4}>
+                          <FactoryItemImage size={24} id={node.product.id} />
+                          {node.product.name}
+                        </Group>
+                      </Table.Td>
+                      <Table.Td>
+                        <Group gap={6} wrap="nowrap">
+                          <span>
+                            <RepeatingNumber value={node.overclock * 100} />%
+                          </span>
+                          {node.powerShardsPerMachine > 0 && (
+                            <Group gap={2} wrap="nowrap" c="dimmed">
+                              <Text size="sm">
+                                ·{' '}
+                                {node.powerShardsPerMachine *
+                                  node.fullBuildingsAmount}
+                              </Text>
+                              <OverclockImage size={14} />
+                            </Group>
+                          )}
+                        </Group>
+                      </Table.Td>
+                      <Table.Td>
+                        {node.somersloopsPerMachine}/
+                        {node.building.somersloopSlots}
+                      </Table.Td>
+                    </Table.Tr>
+                  )}
                   {node.partialBuildingAmount > Number.EPSILON && (
                     <Table.Tr>
                       <Table.Td>
@@ -97,10 +113,24 @@ export function SummaryBuildings(props: ISummaryBuildingsProps) {
                         </Group>
                       </Table.Td>
                       <Table.Td>
-                        <RepeatingNumber
-                          value={node.partialBuildingOverclock * 100}
-                        />
-                        %
+                        <Group gap={6} wrap="nowrap">
+                          <span>
+                            <RepeatingNumber
+                              value={node.partialBuildingOverclock * 100}
+                            />
+                            %
+                          </span>
+                          {node.partialBuildingPowerShards > 0 && (
+                            <Group gap={2} wrap="nowrap" c="dimmed">
+                              <Text size="sm">
+                                ·{' '}
+                                {node.partialBuildingPowerShards *
+                                  node.partialBuildingAmount}
+                              </Text>
+                              <OverclockImage size={14} />
+                            </Group>
+                          )}
+                        </Group>
                       </Table.Td>
                       <Table.Td>
                         {node.somersloopsPerMachine}/
