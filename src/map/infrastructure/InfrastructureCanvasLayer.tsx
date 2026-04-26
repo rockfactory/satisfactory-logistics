@@ -11,7 +11,7 @@ import {
   SPLINE_KINDS,
   type SplineKind,
 } from '@/recipes/savegame/ParseSavegameMessages';
-import { gameToLatLng, latLngToGame, MAX_ZOOM, MIN_ZOOM } from '../coords';
+import { gameToLatLng, latLngToGame } from '../coords';
 import {
   type Hit,
   hitTestBuildings,
@@ -320,7 +320,11 @@ function paintTileBuildings(
     if (!path) continue;
     const cat = INFRASTRUCTURE_CATEGORIES[c];
     const color = CategoryColor[cat];
-    const quiet = cat === 'foundation' || cat === 'decor';
+    // `other` joins foundation/decor in the quiet bucket: it's a
+    // catch-all that mostly contains tiny connector / accessory
+    // entities (beam connectors, supports, indicators) which would
+    // otherwise dominate the map at low zoom.
+    const quiet = cat === 'foundation' || cat === 'decor' || cat === 'other';
     ctx.fillStyle = color;
     ctx.globalAlpha = quiet ? 0.12 : 0.35;
     ctx.fill(path);
@@ -532,8 +536,11 @@ type HoverPayload = {
 const InfrastructureGridLayer = L.GridLayer.extend({
   options: {
     tileSize: 256,
-    minZoom: MIN_ZOOM,
-    maxZoom: MAX_ZOOM,
+    // No `minZoom` / `maxZoom`: the layer should track the live map at
+    // any zoom level, including past the basemap pyramid's
+    // `MAX_ZOOM` of 7 (Leaflet still allows scrolling further in).
+    // Spatial-index lookups stay cheap even at high zoom because each
+    // tile covers a tiny worldspace bbox.
     // Keep the default keepBuffer (2): one extra row/col of tiles
     // around the viewport so a small pan never shows a blank rim
     // before new tiles render.

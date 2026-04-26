@@ -101,7 +101,7 @@ export const CategoryColor: Record<InfrastructureCategory, string> = {
   transport: '#06b6d4',
   foundation: '#6b7280',
   decor: '#9ca3af',
-  other: '#ef4444',
+  other: '#78716c',
 };
 
 export const CategoryLabel: Record<InfrastructureCategory, string> = {
