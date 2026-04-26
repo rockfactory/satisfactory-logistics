@@ -26,6 +26,7 @@ import {
 } from './coords';
 import { InfrastructureCanvasLayer } from './infrastructure/InfrastructureCanvasLayer';
 import { MapSelectionSummary } from './MapSelectionSummary';
+import { PlayerMarkerLayer } from './PlayerMarkerLayer';
 import { ResourceMarkersLayer } from './ResourceMarkersLayer';
 import { ShareUrlSync } from './ShareUrlSync';
 import classes from './WorldMapView.module.css';
@@ -269,6 +270,7 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
             collectedIds={collectedIds}
             gameId={gameId ?? null}
           />
+          <PlayerMarkerLayer />
           <ShareUrlSync />
         </MapContainer>
         <div className={classes.nodeCount}>

@@ -139,6 +139,11 @@ export function useSavegameImport(): UseSavegameImportResult {
             save.infrastructure.splines.reduce((s, b) => s + b.count, 0);
           useStore.getState().setInfrastructure(gameId, save.infrastructure);
         }
+        // Player positions are cheap to extract, so we always surface
+        // them: the map centers on the player and the marker shows up
+        // even for recipes-only imports (where infrastructure isn't
+        // dispatched).
+        useStore.getState().setPlayers(gameId, save.players);
 
         notifications.show({
           title: 'Savegame imported',

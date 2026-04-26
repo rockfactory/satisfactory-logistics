@@ -239,7 +239,7 @@ function paintTileBuildings(
   state: RenderState,
 ): void {
   if (indices.length === 0) return;
-  const { categories, positionsXY, yaw, sizeWL } = infra.buildings;
+  const { categories, positionsXY, yaw, sizeWL, typePaths } = infra.buildings;
 
   const visibleByCat: boolean[] = INFRASTRUCTURE_CATEGORIES.map(
     cat =>
@@ -963,6 +963,7 @@ export function InfrastructureCanvasLayer() {
   const map = useMap();
 
   const infrastructure = useStore(s => s.mapInfrastructure.infrastructure);
+  const players = useStore(s => s.mapInfrastructure.players);
   const ownerGameId = useStore(s => s.mapInfrastructure.gameId);
   const requestedFitAt = useStore(s => s.mapInfrastructure.requestedFitAt);
   const selectedGameId = useStore(s => s.games.selected);
@@ -1018,17 +1019,35 @@ export function InfrastructureCanvasLayer() {
     highlightRef.current?.setState(state);
   }, [master, activeInfrastructure, categoryVisibility, splineVisibility]);
 
-  // Frame the camera on the loaded infrastructure when the slice asks
-  // for it (after every fresh import, plus on-demand from the filter
-  // panel's "Locate" button). Skipped for empty payloads — fitBounds
-  // would throw on a degenerate bounds.
+  // Frame the camera when the slice asks for it (after every fresh
+  // import, plus on-demand from the filter panel's "Locate" button).
+  // Priority: player position (host pawn) → infrastructure bounds →
+  // noop. The player path always wins when available so users land
+  // on themselves rather than on a foundation in the corner.
   useEffect(() => {
-    if (requestedFitAt == null || !activeInfrastructure) return;
+    if (requestedFitAt == null) return;
+    if (ownerGameId != null && ownerGameId !== selectedGameId) return;
+
+    if (players.length > 0) {
+      const p = players[0];
+      map.setView(gameToLatLng(p.x, p.y), 5, { animate: true });
+      logger.info('framed camera on player');
+      return;
+    }
+
+    if (!activeInfrastructure) return;
     const bounds = infrastructureLatLngBounds(activeInfrastructure);
     if (!bounds?.isValid()) return;
     map.fitBounds(bounds, { padding: [40, 40], maxZoom: 6 });
     logger.info('framed camera on infrastructure');
-  }, [requestedFitAt, activeInfrastructure, map]);
+  }, [
+    requestedFitAt,
+    players,
+    activeInfrastructure,
+    ownerGameId,
+    selectedGameId,
+    map,
+  ]);
 
   const splineLengthCm = useMemo(() => {
     if (!hoverHit || hoverHit.kind !== 'spline' || !activeInfrastructure) {

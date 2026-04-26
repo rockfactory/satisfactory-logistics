@@ -1,5 +1,8 @@
 import { createSlice } from '@/core/zustand-helpers/slices';
-import type { ParsedInfrastructure } from '@/recipes/savegame/ParseSavegameMessages';
+import type {
+  ParsedInfrastructure,
+  ParsedPlayerPosition,
+} from '@/recipes/savegame/ParseSavegameMessages';
 
 /**
  * In-memory only: the parsed user-built infrastructure for the
@@ -16,6 +19,14 @@ import type { ParsedInfrastructure } from '@/recipes/savegame/ParseSavegameMessa
 export interface MapInfrastructureSlice {
   /** Parsed payload from the worker, or `null` if nothing is loaded. */
   infrastructure: ParsedInfrastructure | null;
+  /**
+   * World-cm positions of every `Char_Player_C` actor extracted from
+   * the most recent savegame import. Empty array when nothing is
+   * loaded or the save had no spawned player. The first entry is
+   * treated as the host and used as the centering target on import /
+   * "Locate".
+   */
+  players: ParsedPlayerPosition[];
   /** Game id the payload was imported for. */
   gameId: string | null;
   /** When the payload was set, in ms since epoch. Used for cache keys. */
@@ -31,6 +42,7 @@ export interface MapInfrastructureSlice {
 
 export const initialMapInfrastructureState = (): MapInfrastructureSlice => ({
   infrastructure: null,
+  players: [],
   gameId: null,
   loadedAt: null,
   requestedFitAt: null,
@@ -50,8 +62,20 @@ export const mapInfrastructureSlice = createSlice({
         // who haven't already centered the map on their factory.
         state.requestedFitAt = state.loadedAt;
       },
+    setPlayers: (gameId: string, players: ParsedPlayerPosition[]) => state => {
+      state.players = players;
+      if (state.gameId !== gameId) {
+        state.gameId = gameId;
+        state.loadedAt = Date.now();
+      }
+      // Trigger re-framing so the camera centers on the player even
+      // for recipes-only imports (where `setInfrastructure` is not
+      // dispatched and would otherwise leave the view untouched).
+      state.requestedFitAt = Date.now();
+    },
     clearInfrastructure: () => state => {
       state.infrastructure = null;
+      state.players = [];
       state.gameId = null;
       state.loadedAt = null;
       state.requestedFitAt = null;

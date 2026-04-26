@@ -108,8 +108,13 @@ async function parseSavegame(
     // rejected this re-throws here.
     await streamingDone;
 
-    const { availableRecipes, usedNodeIds } = finalizeInspect(inspectAcc);
-    const save: ParsedSatisfactorySave = { availableRecipes, usedNodeIds };
+    const { availableRecipes, usedNodeIds, players } =
+      finalizeInspect(inspectAcc);
+    const save: ParsedSatisfactorySave = {
+      availableRecipes,
+      usedNodeIds,
+      players,
+    };
 
     let transfer: ArrayBuffer[] = [];
     if (infraAcc) {

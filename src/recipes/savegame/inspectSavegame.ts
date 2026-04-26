@@ -3,6 +3,7 @@ import type {
   ObjectProperty,
   SatisfactorySave,
 } from '@etothepii/satisfactory-file-parser';
+import type { Vec3 } from './infrastructure/types';
 
 /**
  * Full Unreal typePath strings for every placeable extractor we
@@ -28,6 +29,9 @@ const MINER_LAST_SEGMENT_RE = /^Build_MinerMk\d+_C$/;
 
 const RECIPE_MANAGER_TYPEPATH = '/Script/FactoryGame.FGRecipeManager';
 
+const PLAYER_TYPEPATH =
+  '/Game/FactoryGame/Character/Player/Char_Player.Char_Player_C';
+
 function isExtractorTypePath(typePath: string): boolean {
   if (EXPLICIT_EXTRACTOR_TYPE_PATHS.has(typePath)) return true;
   const lastSegment = typePath.split('.').pop();
@@ -37,6 +41,9 @@ function isExtractorTypePath(typePath: string): boolean {
 interface SaveObjectLike {
   typePath?: unknown;
   properties?: Record<string, unknown>;
+  transform?: {
+    translation?: Partial<Vec3>;
+  };
 }
 
 /**
@@ -49,12 +56,20 @@ interface SaveObjectLike {
 export interface InspectAccumulator {
   availableRecipes: Set<string>;
   usedNodeIds: Set<string>;
+  /**
+   * World-cm positions of every `Char_Player_C` actor seen in the
+   * stream. Plain array (not a Set) so the relative order matches the
+   * save's level objects: the host's pawn is typically first, which
+   * gives the camera a deterministic centering target.
+   */
+  players: Vec3[];
 }
 
 export function createInspectAccumulator(): InspectAccumulator {
   return {
     availableRecipes: new Set(),
     usedNodeIds: new Set(),
+    players: [],
   };
 }
 
@@ -69,6 +84,22 @@ export function createInspectAccumulator(): InspectAccumulator {
 export function inspectObject(acc: InspectAccumulator, rawObj: unknown): void {
   const obj = rawObj as SaveObjectLike;
   if (typeof obj.typePath !== 'string') return;
+
+  if (obj.typePath === PLAYER_TYPEPATH) {
+    const t = obj.transform?.translation;
+    if (
+      t &&
+      typeof t.x === 'number' &&
+      typeof t.y === 'number' &&
+      typeof t.z === 'number' &&
+      Number.isFinite(t.x) &&
+      Number.isFinite(t.y) &&
+      Number.isFinite(t.z)
+    ) {
+      acc.players.push({ x: t.x, y: t.y, z: t.z });
+    }
+    return;
+  }
 
   if (obj.typePath === RECIPE_MANAGER_TYPEPATH) {
     const prop = obj.properties?.mAvailableRecipes as
@@ -94,13 +125,17 @@ export function inspectObject(acc: InspectAccumulator, rawObj: unknown): void {
   if (nodeId) acc.usedNodeIds.add(nodeId);
 }
 
-export function finalizeInspect(acc: InspectAccumulator): {
+export interface InspectSummary {
   availableRecipes: string[];
   usedNodeIds: string[];
-} {
+  players: Vec3[];
+}
+
+export function finalizeInspect(acc: InspectAccumulator): InspectSummary {
   return {
     availableRecipes: [...acc.availableRecipes],
     usedNodeIds: [...acc.usedNodeIds],
+    players: acc.players.slice(),
   };
 }
 
@@ -109,10 +144,7 @@ export function finalizeInspect(acc: InspectAccumulator): {
  * for tests and the eager-parse fallback: walks every object in the
  * fully-parsed save and returns the inspected snapshot.
  */
-export function inspectSavegame(save: SatisfactorySave): {
-  availableRecipes: string[];
-  usedNodeIds: string[];
-} {
+export function inspectSavegame(save: SatisfactorySave): InspectSummary {
   const acc = createInspectAccumulator();
   for (const level of Object.values(save.levels)) {
     for (const obj of level.objects) {

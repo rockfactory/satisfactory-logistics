@@ -139,6 +139,12 @@ export interface ParsedInfrastructure {
   splineCounts: Record<SplineKind, number>;
 }
 
+export interface ParsedPlayerPosition {
+  x: number;
+  y: number;
+  z: number;
+}
+
 export interface ParsedSatisfactorySave {
   /**
    * Includes all recipes that are available in the savegame, even buildings.
@@ -155,6 +161,13 @@ export interface ParsedSatisfactorySave {
    * our static dataset.
    */
   usedNodeIds: string[];
+  /**
+   * World-cm positions of every `Char_Player_C` actor in the save.
+   * Empty array when no player has spawned yet (rare). Used to center
+   * the map view on the host on import and to render a Player marker
+   * on the canvas. In-memory only, never persisted.
+   */
+  players: ParsedPlayerPosition[];
   /**
    * User-built infrastructure (buildings + spline networks) packed into
    * typed arrays. Only present when the request had
