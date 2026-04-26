@@ -34,16 +34,34 @@ const DEFAULT_TILES_BASE_URL =
   'https://satisfactory-logistics-maps.fra1.cdn.digitaloceanspaces.com/map/v2';
 
 /**
- * `detectRetina` on the TileLayer internally bumps zoomOffset by 1 and
- * decrements its own maxZoom by 1 (it uses tiles from one pyramid
- * level above). If the map is allowed to reach the raw `MAX_ZOOM`, the
- * TileLayer bails out at that level with no render (grey screen).
- * Retina users already see native-density data at `MAX_ZOOM - 1` (it
- * pulls from the highest URL zoom behind the scenes), so capping the
- * UI zoom to one step below matches what non-retina users get at
- * `MAX_ZOOM` without the bail.
+ * Deepest displayed zoom that still maps 1:1 to a real tile in the
+ * pyramid. `detectRetina` on the TileLayer bumps zoomOffset by 1 (it
+ * pulls tiles from one pyramid level above the displayed zoom) and
+ * decrements its own internal maxZoom by 1, so on retina the highest
+ * URL-backed displayed zoom is `MAX_ZOOM - 1` rather than `MAX_ZOOM`.
  */
-const EFFECTIVE_MAX_ZOOM = L.Browser.retina ? MAX_ZOOM - 1 : MAX_ZOOM;
+const MAX_NATIVE_DISPLAYED_ZOOM = L.Browser.retina ? MAX_ZOOM - 1 : MAX_ZOOM;
+
+/**
+ * Extra zoom steps allowed past the native pyramid. Leaflet stretches
+ * the deepest tiles via CSS for these levels (no extra tile fetches),
+ * so two steps give ~4x more zoom for inspecting individual machines
+ * and splines without the upscaled imagery turning into a blur.
+ */
+const OVERZOOM_LEVELS = 2;
+const MAX_DISPLAYED_ZOOM = MAX_NATIVE_DISPLAYED_ZOOM + OVERZOOM_LEVELS;
+
+/**
+ * `detectRetina` decrements the TileLayer's own maxZoom by 1, and
+ * GridLayer refuses to render any tile zoom strictly greater than that
+ * effective maxZoom (the "grey screen" failure mode). Compensate by
+ * passing a TileLayer maxZoom that is one above the map's maxZoom on
+ * retina, so the post-detectRetina effective value lands on
+ * `MAX_DISPLAYED_ZOOM`.
+ */
+const TILE_LAYER_MAX_ZOOM = L.Browser.retina
+  ? MAX_DISPLAYED_ZOOM + 1
+  : MAX_DISPLAYED_ZOOM;
 
 const TILES_BASE_URL =
   import.meta.env.VITE_MAP_TILES_BASE_URL ?? DEFAULT_TILES_BASE_URL;
@@ -223,7 +241,7 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
           center={DEFAULT_CENTER}
           zoom={DEFAULT_ZOOM}
           minZoom={MIN_ZOOM}
-          maxZoom={EFFECTIVE_MAX_ZOOM}
+          maxZoom={MAX_DISPLAYED_ZOOM}
           maxBounds={IMAGE_BOUNDS}
           attributionControl={false}
           className={classes.map}
@@ -234,8 +252,8 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
             noWrap
             bounds={IMAGE_BOUNDS}
             minZoom={MIN_ZOOM}
-            maxZoom={MAX_ZOOM}
-            maxNativeZoom={MAX_ZOOM}
+            maxZoom={TILE_LAYER_MAX_ZOOM}
+            maxNativeZoom={MAX_NATIVE_DISPLAYED_ZOOM}
             detectRetina
           />
           <MarkerZoomScaleController />
