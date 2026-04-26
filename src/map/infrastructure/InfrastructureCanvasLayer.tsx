@@ -1,5 +1,6 @@
 import L from 'leaflet';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useMap } from 'react-leaflet';
 import { loglev } from '@/core/logger/log';
 import { useStore } from '@/core/zustand';
@@ -11,6 +12,13 @@ import {
   type SplineKind,
 } from '@/recipes/savegame/ParseSavegameMessages';
 import { gameToLatLng } from '../coords';
+import {
+  type Hit,
+  hitTestBuildings,
+  hitTestSplines,
+  splinePolylineLengthCm,
+} from './hitTest';
+import { InfrastructureHoverPopover } from './InfrastructureHoverPopover';
 import { CategoryColor, splineColor } from './infrastructureCategories';
 
 const logger = loglev.getLogger('map:infrastructure-layer');
@@ -87,10 +95,20 @@ function computeAffine(map: L.Map): AffineGameToContainer {
  * coalesced through `requestAnimationFrame` so a flurry of pan events
  * collapses into one paint.
  */
+type HoverPayload = {
+  hit: Hit | null;
+  mousePx: { x: number; y: number } | null;
+};
+
 class InfrastructureLayer extends L.Layer {
   private canvas: HTMLCanvasElement | null = null;
   private state: RenderState | null = null;
   private rafId: number | null = null;
+  private affine: AffineGameToContainer | null = null;
+  private currentZoom: number = 0;
+  private hovered: Hit | null = null;
+  private hoverMousePx: { x: number; y: number } | null = null;
+  private hoverCallback: ((payload: HoverPayload) => void) | null = null;
 
   onAdd(map: L.Map): this {
     const canvas = L.DomUtil.create(
@@ -105,6 +123,8 @@ class InfrastructureLayer extends L.Layer {
     logger.info('layer mounted on overlayPane');
 
     map.on('viewreset zoom move resize', this.scheduleRedraw, this);
+    map.on('mousemove', this.handleMouseMove, this);
+    map.on('mouseout', this.handleMouseOut, this);
     this.scheduleRedraw();
     return this;
   }
@@ -119,6 +139,8 @@ class InfrastructureLayer extends L.Layer {
       this.canvas = null;
     }
     map.off('viewreset zoom move resize', this.scheduleRedraw, this);
+    map.off('mousemove', this.handleMouseMove, this);
+    map.off('mouseout', this.handleMouseOut, this);
     return this;
   }
 
@@ -136,7 +158,17 @@ class InfrastructureLayer extends L.Layer {
       );
     }
     this.state = state;
+    // Drop a stale hover when the underlying data changes.
+    if (this.hovered) {
+      this.hovered = null;
+      this.hoverMousePx = null;
+      this.hoverCallback?.({ hit: null, mousePx: null });
+    }
     this.scheduleRedraw();
+  }
+
+  setHoverCallback(cb: ((payload: HoverPayload) => void) | null): void {
+    this.hoverCallback = cb;
   }
 
   private scheduleRedraw = (): void => {
@@ -146,6 +178,85 @@ class InfrastructureLayer extends L.Layer {
       this.redraw();
     });
   };
+
+  private handleMouseMove = (event: L.LeafletMouseEvent): void => {
+    if (!this.state?.master || !this.state.infrastructure || !this.affine) {
+      this.updateHover(null, null);
+      return;
+    }
+    const infra = this.state.infrastructure;
+    const a = this.affine;
+    if (a.ax === 0 || a.by === 0) return;
+
+    const cp = event.containerPoint;
+    const worldX = (cp.x - a.ox) / a.ax;
+    const worldY = (cp.y - a.oy) / a.by;
+
+    const visibleByCat = INFRASTRUCTURE_CATEGORIES.map(
+      cat =>
+        (this.state?.categoryVisibility?.[cat] ?? true) &&
+        !categoryHiddenByLOD(this.currentZoom, cat),
+    );
+    const buildingHit = hitTestBuildings(infra, visibleByCat, worldX, worldY);
+
+    let hit: Hit | null = buildingHit;
+    if (!hit) {
+      // Hover threshold widens with how few px there are per cm so the
+      // user can still pick up thin belts at zoomed-out levels.
+      const splineThresholdGameCm = 6 / Math.max(Math.abs(a.ax), 1e-9);
+      hit = hitTestSplines(
+        infra,
+        kind => this.state?.splineVisibility?.[kind] ?? true,
+        worldX,
+        worldY,
+        splineThresholdGameCm,
+      );
+    }
+
+    this.updateHover(hit, { x: cp.x, y: cp.y });
+  };
+
+  private handleMouseOut = (): void => {
+    this.updateHover(null, null);
+  };
+
+  private updateHover(
+    hit: Hit | null,
+    mousePx: { x: number; y: number } | null,
+  ): void {
+    const sameHit =
+      hit === this.hovered ||
+      (hit?.kind === 'building' &&
+        this.hovered?.kind === 'building' &&
+        hit.index === this.hovered.index) ||
+      (hit?.kind === 'spline' &&
+        this.hovered?.kind === 'spline' &&
+        hit.blockIndex === this.hovered.blockIndex &&
+        hit.polylineIndex === this.hovered.polylineIndex);
+    const samePx =
+      this.hoverMousePx?.x === mousePx?.x &&
+      this.hoverMousePx?.y === mousePx?.y;
+
+    this.hovered = hit;
+    this.hoverMousePx = mousePx;
+
+    if (!sameHit) this.scheduleRedraw();
+    if (!sameHit || !samePx) {
+      this.hoverCallback?.({ hit, mousePx });
+    }
+    this.updateCursor();
+  }
+
+  private updateCursor(): void {
+    const map = this._map;
+    if (!map) return;
+    const container = map.getContainer();
+    if (this.hovered) {
+      container.style.cursor = 'pointer';
+    } else if (container.style.cursor === 'pointer') {
+      container.style.cursor = '';
+    }
+  }
 
   private redraw(): void {
     const canvas = this.canvas;
@@ -175,10 +286,12 @@ class InfrastructureLayer extends L.Layer {
     ctx.clearRect(0, 0, size.x, size.y);
 
     const state = this.state;
-    if (!state?.master || !state.infrastructure) return;
-
     const affine = computeAffine(map);
     const zoom = map.getZoom();
+    this.affine = affine;
+    this.currentZoom = zoom;
+
+    if (!state?.master || !state.infrastructure) return;
 
     if (logger.getLevel() <= 1 /* trace/debug */) {
       const sample = state.infrastructure.buildings;
@@ -195,6 +308,9 @@ class InfrastructureLayer extends L.Layer {
 
     drawSplines(ctx, state, affine, zoom);
     drawBuildings(ctx, state, affine, zoom);
+    if (this.hovered) {
+      drawHighlight(ctx, state.infrastructure, affine, this.hovered);
+    }
   }
 }
 
@@ -345,6 +461,84 @@ function drawSplines(
 }
 
 /**
+ * Paints a bright accent on top of the hovered building or polyline so
+ * the user gets instant visual confirmation of what the popover is
+ * describing. Drawn last so it's always on top of the regular pass.
+ */
+function drawHighlight(
+  ctx: CanvasRenderingContext2D,
+  infra: ParsedInfrastructure,
+  a: AffineGameToContainer,
+  hit: Hit,
+): void {
+  ctx.save();
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  if (hit.kind === 'building') {
+    const cx = a.ox + hit.positionGame.x * a.ax;
+    const cy = a.oy + hit.positionGame.y * a.by;
+    const halfW = (hit.size.width / 2) * Math.abs(a.ax);
+    const halfL = (hit.size.length / 2) * Math.abs(a.by);
+    const angle = -hit.yaw;
+    const cosA = Math.cos(angle);
+    const sinA = Math.sin(angle);
+    const dx = halfW * cosA;
+    const dy = halfW * sinA;
+    const ex = -halfL * sinA;
+    const ey = halfL * cosA;
+
+    const path = new Path2D();
+    path.moveTo(cx - dx - ex, cy - dy - ey);
+    path.lineTo(cx + dx - ex, cy + dy - ey);
+    path.lineTo(cx + dx + ex, cy + dy + ey);
+    path.lineTo(cx - dx + ex, cy - dy + ey);
+    path.closePath();
+
+    // White halo behind a colored stroke gives the hovered shape a
+    // double-line outline that reads even on busy / saturated layers.
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+    ctx.lineWidth = 4;
+    ctx.stroke(path);
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke(path);
+    return;
+  }
+
+  // Spline highlight
+  const block = infra.splines[hit.blockIndex];
+  if (!block) {
+    ctx.restore();
+    return;
+  }
+  const start = block.offsets[hit.polylineIndex];
+  const end = block.offsets[hit.polylineIndex + 1];
+  if (end - start < 2) {
+    ctx.restore();
+    return;
+  }
+  const path = new Path2D();
+  const sx = a.ox + block.pointsXY[start * 2] * a.ax;
+  const sy = a.oy + block.pointsXY[start * 2 + 1] * a.by;
+  path.moveTo(sx, sy);
+  for (let j = start + 1; j < end; j++) {
+    const px = a.ox + block.pointsXY[j * 2] * a.ax;
+    const py = a.oy + block.pointsXY[j * 2 + 1] * a.by;
+    path.lineTo(px, py);
+  }
+
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+  ctx.lineWidth = 6;
+  ctx.stroke(path);
+  ctx.strokeStyle = splineColor(block.kind, block.tier);
+  ctx.lineWidth = 3;
+  ctx.stroke(path);
+
+  ctx.restore();
+}
+
+/**
  * Computes a Leaflet bounds covering every building + spline polyline
  * in the infrastructure payload. Returns null if the payload contains
  * no usable geometry.
@@ -412,11 +606,22 @@ export function InfrastructureCanvasLayer() {
 
   const layerRef = useRef<InfrastructureLayer | null>(null);
 
+  const [hoverHit, setHoverHit] = useState<Hit | null>(null);
+  const [hoverMousePx, setHoverMousePx] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+
   useEffect(() => {
     const layer = new InfrastructureLayer();
     layer.addTo(map);
+    layer.setHoverCallback(({ hit, mousePx }) => {
+      setHoverHit(hit);
+      setHoverMousePx(mousePx);
+    });
     layerRef.current = layer;
     return () => {
+      layer.setHoverCallback(null);
       layer.remove();
       layerRef.current = null;
     };
@@ -443,5 +648,27 @@ export function InfrastructureCanvasLayer() {
     logger.info('framed camera on infrastructure');
   }, [requestedFitAt, activeInfrastructure, map]);
 
-  return null;
+  const splineLengthCm = useMemo(() => {
+    if (!hoverHit || hoverHit.kind !== 'spline' || !activeInfrastructure) {
+      return undefined;
+    }
+    return splinePolylineLengthCm(
+      activeInfrastructure,
+      hoverHit.blockIndex,
+      hoverHit.polylineIndex,
+    );
+  }, [hoverHit, activeInfrastructure]);
+
+  // Portal the popover into Leaflet's map container so it stays anchored
+  // to viewport coords instead of riding the layer panes through every
+  // zoom/pan animation. The container is `position: relative`, which
+  // makes our absolute coords resolve to the visible map area.
+  return createPortal(
+    <InfrastructureHoverPopover
+      hit={hoverHit}
+      mousePx={hoverMousePx}
+      splineLengthCm={splineLengthCm}
+    />,
+    map.getContainer(),
+  );
 }

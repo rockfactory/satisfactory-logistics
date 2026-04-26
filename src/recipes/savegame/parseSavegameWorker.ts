@@ -5,7 +5,7 @@ import {
   type SatisfactorySave,
 } from '@etothepii/satisfactory-file-parser';
 import { loglev } from '@/core/logger/log';
-import { extractInfrastructure } from './extractInfrastructure';
+import { extractInfrastructure } from './infrastructure/extractInfrastructure';
 import {
   collectInfrastructureTransferables,
   type IParseSavegameRequest,
