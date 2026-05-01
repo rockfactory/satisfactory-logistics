@@ -9,7 +9,9 @@ import {
 import {
   createInspectAccumulator,
   finalizeInspect,
+  inspectCollectableRef,
   inspectObject,
+  isObjectReference,
 } from './inspectSavegame';
 import {
   collectInfrastructureTransferables,
@@ -77,13 +79,22 @@ async function parseSavegame(
     // of objects. Driving the parser via the callback path skips the
     // clone entirely.
     const jsonParser = new JSONParser({
-      paths: ['$.levels.*.objects.*'],
+      paths: ['$.levels.*.objects.*', '$.levels.*.collectables.*'],
       keepStack: false,
     });
     jsonParser.onValue = info => {
-      const obj = info.value;
-      inspectObject(inspectAcc, obj);
-      if (infraAcc) ingestEntity(infraAcc, obj);
+      const value = info.value;
+      // `collectables` entries are bare `ObjectReference`s
+      // (`{ levelName, pathName }`); `objects` entries are
+      // `SaveEntity`/`SaveComponent`s with a `typePath`. Discriminate by
+      // shape: `keepStack: false` clears `info.parent`/`info.stack`, so
+      // path-based dispatch is unreliable here.
+      if (isObjectReference(value)) {
+        inspectCollectableRef(inspectAcc, value);
+        return;
+      }
+      inspectObject(inspectAcc, value);
+      if (infraAcc) ingestEntity(infraAcc, value);
     };
 
     const reader = (stream as ReadableStream<string>).getReader();
@@ -113,14 +124,14 @@ async function parseSavegame(
       usedNodeIds,
       players,
       nodeOverrides,
-      presentCollectibleIds,
+      collectedCollectibleIds,
     } = finalizeInspect(inspectAcc);
     const save: ParsedSatisfactorySave = {
       availableRecipes,
       usedNodeIds,
       players,
       nodeOverrides,
-      presentCollectibleIds,
+      collectedCollectibleIds,
     };
 
     let transfer: ArrayBuffer[] = [];
