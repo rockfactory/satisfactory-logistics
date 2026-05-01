@@ -48,21 +48,6 @@ const RANDOMIZABLE_NODE_TYPEPATHS = new Set<string>([
 ]);
 
 /**
- * Pickup-style classes whose mere presence in the save signals the
- * collectible has not yet been picked up. Once the player collects
- * the pickup, the actor is removed from the save entirely — we
- * derive "collected" by diffing this set against the static
- * `WorldCollectibles` dataset in the games slice.
- */
-const COLLECTIBLE_TYPEPATHS = new Set<string>([
-  '/Game/FactoryGame/Resource/Environment/Crystal/BP_Crystal.BP_Crystal_C',
-  '/Game/FactoryGame/Resource/Environment/Crystal/BP_Crystal_mk2.BP_Crystal_mk2_C',
-  '/Game/FactoryGame/Resource/Environment/Crystal/BP_Crystal_mk3.BP_Crystal_mk3_C',
-  '/Game/FactoryGame/Prototype/WAT/BP_WAT1.BP_WAT1_C',
-  '/Game/FactoryGame/Prototype/WAT/BP_WAT2.BP_WAT2_C',
-]);
-
-/**
  * Maps the in-save `EResourcePurity` enum strings to the project's
  * lowercase `Purity` strings. Keeps the **`RP_Inpure`** typo from the
  * game format explicit so a vendored renaming would surface as a test
@@ -107,6 +92,19 @@ function instanceTail(instanceName: unknown): string | undefined {
   return tail && tail.length > 0 ? tail : undefined;
 }
 
+interface ObjectReferenceLike {
+  levelName?: unknown;
+  pathName?: unknown;
+}
+
+export function isObjectReference(
+  value: unknown,
+): value is ObjectReferenceLike {
+  if (value === null || typeof value !== 'object') return false;
+  const ref = value as ObjectReferenceLike;
+  return typeof ref.pathName === 'string' && typeof ref.levelName === 'string';
+}
+
 interface SaveObjectLike {
   typePath?: unknown;
   instanceName?: unknown;
@@ -141,12 +139,16 @@ export interface InspectAccumulator {
    */
   nodeOverrides: Map<string, SavegameNodeOverride>;
   /**
-   * Tail `instanceName`s for every uncollected pickup actor we saw
-   * (slugs / Mercer spheres / somersloops). The downstream slice
-   * action diffs this set against the bundled `WorldCollectibles`
-   * dataset to derive the "collected" complement.
+   * Tail `pathName`s of every collected pickup ref we saw across the
+   * save's per-level `collectables` lists (slugs, Mercer spheres,
+   * somersloops, hard drives, audio tapes, customization unlocks).
+   * Sourced directly from `Level.collectables` rather than diffed from
+   * `objects`: the latter only persists actors the player has loaded
+   * via World Partition, so its absence does not imply collection.
+   * The downstream slice intersects this with the static dataset to
+   * filter out non-collectible refs (mercer shrines, ships, biomass).
    */
-  presentCollectibleIds: Set<string>;
+  collectedCollectibleIds: Set<string>;
 }
 
 export function createInspectAccumulator(): InspectAccumulator {
@@ -155,8 +157,25 @@ export function createInspectAccumulator(): InspectAccumulator {
     usedNodeIds: new Set(),
     players: [],
     nodeOverrides: new Map(),
-    presentCollectibleIds: new Set(),
+    collectedCollectibleIds: new Set(),
   };
+}
+
+/**
+ * Adds the tail of a `Level.collectables` ref to the accumulator.
+ * `Level.collectables` is the per-sublevel list of pickup-actor refs
+ * the engine has marked as collected — the authoritative signal we use
+ * to populate `Game.collectedItems`. Refs to non-pickup actors (mercer
+ * shrines, ships, biomass) end up here too; the consumer filters them
+ * out by intersecting with the static `WorldCollectibles` dataset.
+ */
+export function inspectCollectableRef(
+  acc: InspectAccumulator,
+  rawRef: unknown,
+): void {
+  if (!isObjectReference(rawRef)) return;
+  const id = instanceTail(rawRef.pathName);
+  if (id) acc.collectedCollectibleIds.add(id);
 }
 
 /**
@@ -189,12 +208,6 @@ export function inspectObject(acc: InspectAccumulator, rawObj: unknown): void {
     // an entry without `resource` would just be a no-op anyway.
     if (!resource) return;
     acc.nodeOverrides.set(id, { id, resource, ...(purity && { purity }) });
-    return;
-  }
-
-  if (COLLECTIBLE_TYPEPATHS.has(obj.typePath)) {
-    const id = instanceTail(obj.instanceName);
-    if (id) acc.presentCollectibleIds.add(id);
     return;
   }
 
@@ -243,7 +256,7 @@ export interface InspectSummary {
   usedNodeIds: string[];
   players: Vec3[];
   nodeOverrides: SavegameNodeOverride[];
-  presentCollectibleIds: string[];
+  collectedCollectibleIds: string[];
 }
 
 export function finalizeInspect(acc: InspectAccumulator): InspectSummary {
@@ -252,7 +265,7 @@ export function finalizeInspect(acc: InspectAccumulator): InspectSummary {
     usedNodeIds: [...acc.usedNodeIds],
     players: acc.players.slice(),
     nodeOverrides: [...acc.nodeOverrides.values()],
-    presentCollectibleIds: [...acc.presentCollectibleIds],
+    collectedCollectibleIds: [...acc.collectedCollectibleIds],
   };
 }
 
@@ -266,6 +279,9 @@ export function inspectSavegame(save: SatisfactorySave): InspectSummary {
   for (const level of Object.values(save.levels)) {
     for (const obj of level.objects) {
       inspectObject(acc, obj);
+    }
+    for (const ref of level.collectables ?? []) {
+      inspectCollectableRef(acc, ref);
     }
   }
   return finalizeInspect(acc);

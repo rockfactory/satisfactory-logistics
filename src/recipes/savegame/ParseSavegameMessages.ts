@@ -207,15 +207,17 @@ export interface ParsedSatisfactorySave {
    */
   nodeOverrides: SavegameNodeOverride[];
   /**
-   * Instance ids of every collectible-style actor still present in
-   * the save (uncollected slugs / Mercer spheres / somersloops).
-   * The slice action diffs this set against the static dataset to
-   * derive "collected" — pickup actors are removed from the save once
-   * the player picks them up, so absence is the signal. Empty when
-   * the save's level objects haven't streamed any of the watched
-   * classes (e.g. brand-new game with no zones loaded).
+   * Tail `pathName`s of every collected pickup ref read from each
+   * sublevel's `Level.collectables`. Includes slugs, Mercer spheres,
+   * somersloops, hard drives, audio tapes, and customization unlocks
+   * (any pickup the engine moves into this list when collected). Also
+   * contains refs to non-pickup actors the engine groups with these
+   * collected lists (mercer shrines, ships, biomass): the slice
+   * intersects with the static `WorldCollectibles` dataset to filter
+   * those out before writing `Game.collectedItems`. Empty when the
+   * save's `collectables` lists are all empty (e.g. brand-new game).
    */
-  presentCollectibleIds: string[];
+  collectedCollectibleIds: string[];
   /**
    * World-cm positions of every `Char_Player_C` actor in the save.
    * Empty array when no player has spawned yet (rare). Used to center

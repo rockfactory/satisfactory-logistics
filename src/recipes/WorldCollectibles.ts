@@ -243,30 +243,15 @@ export function getWorldCollectibles(
 }
 
 /**
- * Collectible types whose pickup actor disappears from the savegame
- * once the player picks it up. Importing a save can therefore derive
- * "collected" by diffing the static set against the actors still
- * present. Other types (drop pods, audio tapes, customization
- * unlocks) work differently in the save format and are NOT included
- * here — the importer must keep its hands off them rather than mass-
- * marking them as collected.
+ * Every static collectible id, used by the savegame importer to
+ * intersect against the per-level `Level.collectables` refs. The save
+ * stores collected pickups as actor refs; non-pickup refs (mercer
+ * shrines, ships, biomass) end up in the same list, so the importer
+ * filters them out by checking membership here. Cached at module load
+ * — the dataset is static.
  */
-export const ABSENCE_AS_COLLECTED_TYPES: ReadonlySet<CollectibleType> = new Set(
-  ['slugMk1', 'slugMk2', 'slugMk3', 'somersloop', 'mercerSphere'],
-);
-
-/**
- * Returns every static collectible id whose `type` participates in the
- * absence-as-collected scheme (see {@link ABSENCE_AS_COLLECTED_TYPES}).
- * Used by the savegame import flow to compute the complement of
- * "collectible actors still present in the save", which is the set of
- * collectible ids the player picked up. Cached at module load — the
- * dataset is static.
- */
-export const ABSENCE_AS_COLLECTED_STATIC_IDS: ReadonlySet<string> = new Set(
-  StaticWorldCollectibles.filter(c =>
-    ABSENCE_AS_COLLECTED_TYPES.has(c.type),
-  ).map(c => c.id),
+export const STATIC_COLLECTIBLE_IDS: ReadonlySet<string> = new Set(
+  StaticWorldCollectibles.map(c => c.id),
 );
 
 /**

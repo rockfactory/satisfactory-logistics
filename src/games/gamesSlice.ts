@@ -10,7 +10,7 @@ import {
 } from '@/recipes/FactoryBuilding';
 import { AllFactoryRecipes } from '@/recipes/FactoryRecipe';
 import type { ParsedSatisfactorySave } from '@/recipes/savegame/ParseSavegameMessages';
-import { ABSENCE_AS_COLLECTED_STATIC_IDS } from '@/recipes/WorldCollectibles';
+import { STATIC_COLLECTIBLE_IDS } from '@/recipes/WorldCollectibles';
 import type {
   Game,
   GameRemoteData,
@@ -263,13 +263,13 @@ export const gamesSlice = createSlice({
           // The same flag covers "import what the player has done in
           // the world" — collectible pickups follow the same one-shot,
           // potentially-conflicts-with-manual-marks shape as used
-          // nodes. Compute "collected = absence-as-collected static
-          // ids \ pickup actors still present in the save" and replace
-          // `collectedItems` with that set.
-          const present = new Set(save.presentCollectibleIds);
+          // nodes. The save's per-level `Level.collectables` lists
+          // every pickup ref the engine has marked as collected; we
+          // intersect with the static dataset to drop non-pickup refs
+          // (mercer shrines, ships, biomass) that share those lists.
           const collected: string[] = [];
-          for (const id of ABSENCE_AS_COLLECTED_STATIC_IDS) {
-            if (!present.has(id)) collected.push(id);
+          for (const id of save.collectedCollectibleIds) {
+            if (STATIC_COLLECTIBLE_IDS.has(id)) collected.push(id);
           }
           if (collected.length === 0) {
             delete game.collectedItems;
