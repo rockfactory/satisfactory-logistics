@@ -7,6 +7,7 @@ import {
   getAllConverterRecipeIds,
   getAllDefaultRecipesIds,
 } from '@/recipes/graph/getAllDefaultRecipes';
+import { WorldResourcesList } from '@/recipes/WorldResources';
 import { allowedToBlockedBuildings } from './allowedToBlockedBuildings';
 import type {
   SolverInstance,
@@ -177,6 +178,11 @@ export const solversSlice = createSlice({
           use,
         );
       },
+    toggleAllBlockedResources: (id: string, block: boolean) => state => {
+      state.instances[id].request.blockedResources = block
+        ? [...WorldResourcesList]
+        : [];
+    },
     setSolverResourcesAmount:
       (id: string, resource: string, amount: number | undefined) => state => {
         const instance = state.instances[id];

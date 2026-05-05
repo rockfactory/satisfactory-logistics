@@ -64,6 +64,8 @@ export function SolverLimitationsDrawer(
       amount => amount !== undefined,
     );
 
+  const allResourcesEnabled = (request?.blockedResources?.length ?? 0) === 0;
+
   const setShowAdvanced = (value: boolean) => {
     setAdvanced(value);
     if (!value) {
@@ -76,7 +78,21 @@ export function SolverLimitationsDrawer(
       <SimpleGrid cols={2} spacing="md">
         <Stack gap="xs">
           <Group gap="xs" justify="space-between">
-            <Text size="lg">World Resources</Text>
+            <Checkbox
+              size="md"
+              checked={allResourcesEnabled}
+              indeterminate={
+                !allResourcesEnabled &&
+                (request?.blockedResources?.length ?? 0) <
+                  WorldResourcesList.length
+              }
+              label={<Text size="lg">World Resources</Text>}
+              onChange={() =>
+                useStore
+                  .getState()
+                  .toggleAllBlockedResources(id!, allResourcesEnabled)
+              }
+            />
             <Group gap="xs">
               {inputResources.length > 0 && (
                 <Switch
