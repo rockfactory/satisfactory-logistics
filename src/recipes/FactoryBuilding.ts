@@ -54,6 +54,7 @@ interface Extractor {
 import { sortBy } from 'lodash';
 import RawFactoryBuildings from './FactoryBuildings.json';
 import type { FactoryItemForm } from './FactoryItem';
+import RawFactoryRecipes from './FactoryRecipes.json';
 export const AllFactoryBuildings: FactoryBuilding[] =
   RawFactoryBuildings as FactoryBuilding[];
 
@@ -93,13 +94,22 @@ export const FactoryPipelinesExclAlternates = sortBy(
   'name',
 );
 
+const BuildingIdsReferencedByRecipes = new Set(
+  (RawFactoryRecipes as Array<{ producedIn?: string }>)
+    .map(r => r.producedIn)
+    .filter((id): id is string => !!id),
+);
+
 /**
  * List of all factory buildings that are usable for recipes,
- * in solver, etc.
+ * in solver, etc. We restrict to buildings that are actually referenced
+ * by at least one recipe via `producedIn`, so cosmetic / logistic items
+ * (walls, foundations, splitters, storage, etc.) don't pollute the
+ * Limitations / Available Buildings UI.
  */
 export const FactoryBuildingsForRecipes = sortBy(
-  AllFactoryBuildings.filter(
-    building => !building.extractor && !building.conveyor && !building.pipeline,
+  AllFactoryBuildings.filter(building =>
+    BuildingIdsReferencedByRecipes.has(building.id),
   ),
   'name',
 );
