@@ -84,6 +84,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.11",
+    "@release-it/conventional-changelog": "^11.0.0",
     "@types/base-64": "^1.0.2",
     "@types/canvas-confetti": "^1.9.0",
     "@types/chroma-js": "^2.4.4",
@@ -98,6 +99,7 @@
     "@vitejs/plugin-react": "^6.0.1",
     "postcss": "^8.5.8",
     "postcss-preset-mantine": "^1.18.0",
+    "release-it": "^20.0.1",
     "sharp": "^0.33.5",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
     "tsx": "^4.21.0",

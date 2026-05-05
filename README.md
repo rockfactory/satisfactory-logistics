@@ -32,8 +32,34 @@ This project uses [Biome](https://biomejs.dev/) to format the code. You can run 
 1. Fork the repository.
 2. Create a new branch with your feature or fix, like `feature/my-feature` or `fix/my-fix`.
 3. Commit your changes and push the branch to your fork.
-4. Create a pull request to the `dev` branch of this repository.
+4. Create a pull request to the `main` branch of this repository.
 5. Wait for the review and approval of your pull request.
+
+## Releases & Deployment
+
+The project runs a single-trunk model on the `main` branch:
+
+- **Preview** (`dev.satisfactory-logistics.xyz`) auto-deploys on every push to `main`.
+- **Production** (`satisfactory-logistics.xyz`) is deployed only when a release is cut from the GitHub Actions UI.
+
+### Cutting a release
+
+Releases are run from the GitHub Actions tab via the [Release workflow](.github/workflows/release.yml):
+
+1. Open the repository on GitHub → **Actions** → **Release** → **Run workflow**.
+2. Pick the bump type (`patch` / `minor` / `major`) and run.
+
+The workflow checks out `main`, runs [release-it](https://github.com/release-it/release-it), and on success:
+
+1. Runs `lint`, `check-types`, and tests as a pre-flight check.
+2. Bumps the version in `package.json`.
+3. Runs `npm run build` to verify the production build succeeds.
+4. Updates `CHANGELOG.md` from conventional commits (`feat:`, `fix:`, `perf:`, `refactor:`).
+5. Creates a `chore: release vX.Y.Z` commit and a `vX.Y.Z` annotated tag, pushes both back to `main`.
+6. Publishes a matching GitHub Release.
+7. Triggers the Render production deploy hook to rebuild `satisfactory-logistics.xyz`.
+
+The Render deploy hook URL is stored as the `RENDER_PROD_DEPLOY_HOOK_URL` repository secret.
 
 ## Scripts
 
