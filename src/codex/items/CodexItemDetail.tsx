@@ -20,7 +20,10 @@ import {
 import { useMemo } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 
-import { AllFactoryBuildingsMap } from '@/recipes/FactoryBuilding';
+import {
+  AllFactoryBuildings,
+  AllFactoryBuildingsMap,
+} from '@/recipes/FactoryBuilding';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { AllFactoryRecipes, type FactoryRecipe } from '@/recipes/FactoryRecipe';
 import { isDefaultRecipe, isMAMRecipe } from '@/recipes/graph/SchematicGraph';
@@ -38,14 +41,17 @@ export function CodexItemDetail() {
   const { id } = useParams<{ id: string }>();
   const item = id ? AllFactoryItemsMap[id] : undefined;
 
-  const { producedBy, usedIn } = useMemo(() => {
-    if (!id) return { producedBy: [], usedIn: [] };
+  const { producedBy, usedIn, usedInBuildings } = useMemo(() => {
+    if (!id) return { producedBy: [], usedIn: [], usedInBuildings: [] };
     return {
       producedBy: AllFactoryRecipes.filter(r =>
         r.products.some(p => p.resource === id),
       ),
       usedIn: AllFactoryRecipes.filter(r =>
         r.ingredients.some(i => i.resource === id),
+      ),
+      usedInBuildings: AllFactoryBuildings.filter(b =>
+        b.buildCost.some(c => c.resource === id),
       ),
     };
   }, [id]);
@@ -143,6 +149,42 @@ export function CodexItemDetail() {
               highlightResource={id!}
               type="ingredient"
             />
+          </SectionCard>
+        )}
+
+        {usedInBuildings.length > 0 && (
+          <SectionCard title={`Used in Buildings (${usedInBuildings.length})`}>
+            <Group gap="md">
+              {usedInBuildings.map(building => {
+                const cost = building.buildCost.find(c => c.resource === id);
+                return (
+                  <Anchor
+                    key={building.id}
+                    component={Link}
+                    to={`/codex/buildings/${building.id}`}
+                    underline="never"
+                  >
+                    <Paper withBorder p="xs" radius="sm">
+                      <Group gap={8} wrap="nowrap">
+                        <Image
+                          w={32}
+                          h={32}
+                          src={building.imagePath?.replace('_256', '_64')}
+                        />
+                        <Stack gap={0}>
+                          <Text size="sm" fw={500}>
+                            {building.name}
+                          </Text>
+                          <Text size="xs" c="dimmed">
+                            x{cost?.amount ?? 0}
+                          </Text>
+                        </Stack>
+                      </Group>
+                    </Paper>
+                  </Anchor>
+                );
+              })}
+            </Group>
           </SectionCard>
         )}
       </Stack>
