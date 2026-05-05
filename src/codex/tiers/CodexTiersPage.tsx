@@ -10,10 +10,16 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconChevronRight } from '@tabler/icons-react';
+import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
+import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import classes from './CodexTiersPage.module.css';
+import {
+  type ProjectAssemblyPhase,
+  ProjectAssemblyPhases,
+} from './projectAssemblyPhases';
 import { type TierGroup, TierGroups, TierTotals } from './tierUnlocks';
 
 export function CodexTiersPage() {
@@ -30,8 +36,21 @@ export function CodexTiersPage() {
         </Stack>
 
         <Stack gap="sm">
-          {TierGroups.map(group => (
-            <TierRow key={group.tier} group={group} />
+          {TierGroups.map(group => {
+            const gatingPhase = ProjectAssemblyPhases.find(
+              phase => phase.tiersUnlocked[0] === group.tier,
+            );
+            return (
+              <Fragment key={group.tier}>
+                {gatingPhase && <PhaseHeaderRow phase={gatingPhase} />}
+                <TierRow group={group} />
+              </Fragment>
+            );
+          })}
+          {ProjectAssemblyPhases.filter(
+            phase => phase.tiersUnlocked.length === 0,
+          ).map(phase => (
+            <PhaseHeaderRow key={phase.id} phase={phase} />
           ))}
         </Stack>
       </Stack>
@@ -177,5 +196,42 @@ function IconDivider() {
         margin: '0 4px',
       }}
     />
+  );
+}
+
+function PhaseHeaderRow({ phase }: { phase: ProjectAssemblyPhase }) {
+  return (
+    <Paper withBorder radius="md" className={classes.phaseHeader}>
+      <div className={classes.phaseHeaderStripe}>
+        <div className={classes.stripeBadge}>
+          <span className={classes.stripeBadgeKicker}>Phase</span>
+          <span className={classes.stripeBadgeNumber}>{phase.id}</span>
+        </div>
+      </div>
+      <div className={classes.phaseHeaderBody}>
+        <div className={classes.phaseHeaderTitleRow}>
+          <Title order={4}>{phase.name}</Title>
+          <Badge variant="light" color="teal" size="sm">
+            Project Assembly
+          </Badge>
+        </div>
+        <div className={classes.phaseRequirements}>
+          {phase.requirements.map(req => {
+            const item = AllFactoryItemsMap[req.itemId];
+            return (
+              <span key={req.itemId} className={classes.phaseRequirementChip}>
+                <FactoryItemImage id={req.itemId} size={20} withTooltip />
+                <span className={classes.phaseRequirementAmount}>
+                  {req.amount.toLocaleString()}
+                </span>
+                <Text size="xs" c="dimmed" component="span">
+                  {item?.displayName ?? req.itemId}
+                </Text>
+              </span>
+            );
+          })}
+        </div>
+      </div>
+    </Paper>
   );
 }
