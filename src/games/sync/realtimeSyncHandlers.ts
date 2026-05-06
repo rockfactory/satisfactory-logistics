@@ -253,10 +253,14 @@ export function requestFullStateWithFallback(
         logger.warn(
           `Local appears truncated vs DB (${verdict.previousFactoryCount} -> ${verdict.nextFactoryCount} factories). Aborting save and pulling DB.`,
         );
+        // Snapshot the LOCAL state we're about to discard, not the
+        // remote one (the remote stays in `games` regardless). If the
+        // shrink heuristic was wrong and local was actually correct,
+        // the user can recover from this snapshot.
         await snapshotRemote(
           savedId,
           'shrink-guard-dbfallback',
-          (data?.data ?? null) as never,
+          localSerialized as unknown as never,
         );
         refs.isApplyingRemote.current = true;
         await loadRemoteGame(gameId, { override: true });

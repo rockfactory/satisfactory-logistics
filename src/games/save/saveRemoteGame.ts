@@ -106,6 +106,21 @@ export async function saveRemoteGame(
     if (error) throw error;
 
     if (!data) {
+      if (options.unconditional) {
+        // Unconditional update can only return 0 rows if the row no longer
+        // exists or the user lost write access — reloading would fail too.
+        // Surface a clear error instead of a confusing "lost race" reload.
+        logger.error(
+          `Unconditional save matched no rows for saved_id=${game.savedId}: row missing or RLS denied`,
+        );
+        notifications.show({
+          color: 'red',
+          title: 'Save failed',
+          message:
+            'The remote game could not be found. It may have been deleted by another user.',
+        });
+        return;
+      }
       // Conditional update matched zero rows: someone else changed the row
       // between our read and our write. Reload remote, drop the in-flight
       // save. The user's local edits sit in pendingPatches/dirty until the
