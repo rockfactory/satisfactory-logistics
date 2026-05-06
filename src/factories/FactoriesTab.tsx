@@ -20,6 +20,13 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
 
   const gameId = useStore(state => state.games.selected);
   const viewMode = useStore(state => state.factoryView.viewMode ?? 'grid');
+  // Bumped only when a remote pull replaces existing local data. Used as
+  // part of the spreadsheet row key so uncontrolled inputs (TextInput
+  // defaultValue) remount and re-read the new value. Grid and kanban
+  // re-render naturally, no remount needed there.
+  const remoteSyncEpoch = useStore(
+    state => state.factoryView.remoteSyncEpoch ?? 0,
+  );
 
   const [loadingFactories, setLoadingFactories] = useState(false);
 
@@ -41,7 +48,11 @@ export function FactoriesTab(_props: IFactoriesTabProps) {
         {viewMode === 'spreadsheet' && (
           <Stack gap="md">
             {factoriesIds.map((factoryId, index) => (
-              <FactoryRow key={factoryId} id={factoryId} index={index} />
+              <FactoryRow
+                key={`${factoryId}:${remoteSyncEpoch}`}
+                id={factoryId}
+                index={index}
+              />
             ))}
           </Stack>
         )}

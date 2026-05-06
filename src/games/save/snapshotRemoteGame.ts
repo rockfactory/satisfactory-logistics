@@ -15,6 +15,7 @@ export type SnapshotReason =
   | 'auto'
   | 'manual'
   | 'pre-restore'
+  | 'pre-cloud-merge'
   | 'shrink-guard'
   | 'shrink-guard-fullstate'
   | 'shrink-guard-dbfallback';

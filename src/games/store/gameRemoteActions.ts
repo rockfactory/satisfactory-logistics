@@ -59,22 +59,41 @@ export interface ILoadRemoteGameOptions {
   override?: boolean;
 }
 
-function loadSerializedGameIntoState(
+export function loadSerializedGameIntoState(
   serialized: SerializedGame,
   data: Partial<GameRemoteData>,
   state: RootState,
   options: ILoadRemoteGameOptions = {},
 ) {
-  if (state.games.games[serialized.game.id] && !options.override) {
-    logger.info('Already loaded game:', serialized);
-    state.games.games[serialized.game.id].authorId = data.author_id;
-    state.games.games[serialized.game.id].createdAt = data.created_at;
-    state.games.games[serialized.game.id].savedId = data.id;
-    state.games.games[serialized.game.id].shareToken = data.share_token;
-    if (data.updated_at) {
-      state.games.games[serialized.game.id].updatedAt = data.updated_at;
+  const existing = state.games.games[serialized.game.id];
+
+  if (existing && !options.override) {
+    // Refresh metadata only when remote is not strictly newer than local.
+    // If remote IS strictly newer (another device pushed changes), fall
+    // through to the full-load path and apply the actual data. Otherwise
+    // we'd bump `updatedAt` to the remote timestamp while keeping stale
+    // data, and the next save's optimistic-locking check (saveRemoteGame:
+    // `eq.updated_at = lastKnown`) would pass against the new timestamp
+    // and overwrite the other device's changes.
+    const localTs = existing.updatedAt
+      ? new Date(existing.updatedAt).getTime()
+      : 0;
+    const remoteTs = data.updated_at ? new Date(data.updated_at).getTime() : 0;
+
+    if (remoteTs <= localTs) {
+      logger.info('Already loaded game:', serialized);
+      existing.authorId = data.author_id;
+      existing.createdAt = data.created_at;
+      existing.savedId = data.id;
+      existing.shareToken = data.share_token;
+      if (data.updated_at) existing.updatedAt = data.updated_at;
+      return;
     }
-    return;
+
+    logger.info(
+      `Remote game "${serialized.game.name}" is newer (remote=${data.updated_at} > local=${existing.updatedAt}); applying full state`,
+    );
+    options = { ...options, override: true };
   }
 
   // Migrations
@@ -95,6 +114,13 @@ function loadSerializedGameIntoState(
           delete state.solvers.instances[oldFactoryId];
         }
       }
+      // Bump the remote-sync epoch so views holding uncontrolled inputs
+      // (spreadsheet's `<TextInput defaultValue=...>`) remount and pick up
+      // the replaced state. We bump only when an existing local game is
+      // actually being replaced, never on first-load (no stale UI to clear)
+      // and never on plain user edits.
+      state.factoryView.remoteSyncEpoch =
+        (state.factoryView.remoteSyncEpoch ?? 0) + 1;
     }
   }
 
