@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.13.0](https://github.com/rockfactory/satisfactory-logistics/compare/v0.12.3...v0.13.0) (2026-05-06)
+
+### Features
+
+* add backup system and some override guards ([f3ec4cc](https://github.com/rockfactory/satisfactory-logistics/commit/f3ec4cc30d4765c2107a156db18bebd4b2afac7f))
+* add checkbox to select/deselect all world resources ([b2ba608](https://github.com/rockfactory/satisfactory-logistics/commit/b2ba608b4f735d4600da19617efc7c232e6f6f20))
+* add remote game override support ([139fce9](https://github.com/rockfactory/satisfactory-logistics/commit/139fce91993335cd874e0ebf6838ad3606a41c6b))
+* add space elevator phases ([486d892](https://github.com/rockfactory/satisfactory-logistics/commit/486d89205ab14e8fb13a3f61820ef874220a0730))
+* display "used in buildings" in codex ([38c99a0](https://github.com/rockfactory/satisfactory-logistics/commit/38c99a048d87e6278a1f17cda208236f70e0cffe))
+
+### Bug Fixes
+
+* avoid dirty tracking when full state i s loaded ([10fd1c1](https://github.com/rockfactory/satisfactory-logistics/commit/10fd1c198d332fb2f30b3b51256931919bc9d904))
+* filter production buildings ([d3196a5](https://github.com/rockfactory/satisfactory-logistics/commit/d3196a5e3d4026919b93244e3529dd77058037e7))
+* handle failed snapshots and session ([6a0ee89](https://github.com/rockfactory/satisfactory-logistics/commit/6a0ee894fef47d61d092a6d065d41fedc7f95771))
+* handle local snapshots better ([4c16b62](https://github.com/rockfactory/satisfactory-logistics/commit/4c16b62acb0c1e4da35e7dd67e2794b05f783f48))
+* removed pressurizer ([17d37f4](https://github.com/rockfactory/satisfactory-logistics/commit/17d37f47b1804d4c14394b0296403c792c213518))
+* width for tier page ([787c108](https://github.com/rockfactory/satisfactory-logistics/commit/787c10843b5cb491b5d40d4236f9d6acd8af4a7b))
+* wrong fallback for zustand `proxyGet` ([6fee646](https://github.com/rockfactory/satisfactory-logistics/commit/6fee64654e11e9d2baf7d36a09d70ec60f3b29db))
+
 ## 0.12.3 (2026-05-05)
 
 ### Features
