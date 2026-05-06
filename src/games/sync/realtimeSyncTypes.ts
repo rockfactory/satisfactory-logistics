@@ -31,6 +31,18 @@ export const ALONE_DOWNGRADE_MS = 60_000;
 // HoverCard open). Prevents spamming the REST endpoint.
 export const PRESENCE_OPPORTUNISTIC_MIN_GAP_MS = 5_000;
 
+// Stale-leader detection threshold for `flushRemoteGameOnUnload`. If a tab
+// has not received or generated any patch in this window AND there are
+// peers in the channel, we treat the tab as potentially isolated (iOS
+// websocket throttling, Chrome tab freezing) and skip the keepalive PATCH
+// to avoid overwriting the DB with stale state. The conditional
+// `updated_at=eq.<lastKnown>` filter on the request is the primary safety
+// net; this heuristic is belt-and-suspenders for the rare case where
+// `lastKnown` happens to match the server (race at millisecond
+// granularity). See issue #127 and the docblock in
+// `flushRemoteGameOnUnload.ts` for the full rationale.
+export const STALE_LEADER_THRESHOLD_MS = 60_000;
+
 export interface PatchBroadcastPayload {
   senderId: string;
   seq: number;

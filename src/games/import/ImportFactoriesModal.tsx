@@ -21,10 +21,12 @@ import dayjs from 'dayjs';
 import { camelCase } from 'lodash';
 import { v4 } from 'uuid';
 import { useStore } from '@/core/zustand';
+import { saveRemoteGame } from '@/games/save/saveRemoteGame';
 import {
   type SerializedGame,
   serializeGame,
 } from '@/games/store/gameFactoriesActions';
+import { withSuppressedBroadcast } from '@/games/sync/realtimeSyncTypes';
 import { remapSerializedGameIds } from './remapSerializedGameIds';
 
 export interface IImportExportGameModalProps {
@@ -75,16 +77,35 @@ export function ImportExportGameModal(props: IImportExportGameModalProps) {
         serialized.game.name = gameName;
       }
 
-      useStore
-        .getState()
-        .loadRemoteGame(
-          serialized,
-          { created_at: dayjs().toISOString() },
-          { override: true },
-        );
+      // Suppress broadcast: the imported state is about to fully replace
+      // the local copy. Letting the patch listener emit the (potentially
+      // huge) override patches to peers would race with anything they
+      // are doing concurrently. Instead, we apply locally with sync
+      // muted, then push a single explicit save (below) which lets the
+      // peers pick up the new state via the next full-state response.
+      withSuppressedBroadcast(() => {
+        useStore
+          .getState()
+          .loadRemoteGame(
+            serialized,
+            { created_at: dayjs().toISOString() },
+            { override: true },
+          );
+      });
 
       if (mode === 'create') {
         useStore.getState().selectGame(serialized.game.id);
+      }
+
+      if (mode === 'restore') {
+        // The game still has its original `savedId`/`updatedAt`. The
+        // imported `data` is a different shape than what the server
+        // currently holds, so a conditional save would race. We
+        // explicitly bypass the optimistic-locking filter — restore is
+        // a user-initiated override and should always win.
+        saveRemoteGame(gameId, { silent: true, unconditional: true }).catch(
+          err => console.error('Failed to push restored game:', err),
+        );
       }
 
       notifications.show({

@@ -16,6 +16,7 @@ import {
   IconDeviceFloppy,
   IconDeviceGamepad,
   IconDownload,
+  IconHistory,
   IconList,
   IconPencil,
   IconPlus,
@@ -30,6 +31,7 @@ import { LoginModal } from '@/auth/LoginModal';
 import { useShallowStore, useStore } from '@/core/zustand';
 import { generateGameName } from '@/games/gameNameGenerator';
 import { ShareGameModal } from '@/games/page/share/ShareGameModal';
+import { BackupHistoryModal } from '@/games/save/BackupHistoryModal';
 import { loadRemoteGame } from '@/games/save/loadRemoteGame';
 import { loadRemoteGamesList } from '@/games/save/loadRemoteGamesList';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
@@ -102,6 +104,8 @@ export function GameMenu(props: IGameMenuProps) {
   const [editOpened, { open: openEdit, close: closeEdit }] = useDisclosure();
   const [shareOpened, { open: openShare, close: closeShare }] = useDisclosure();
   const [loginOpened, { open: openLogin, close: closeLogin }] = useDisclosure();
+  const [backupsOpened, { open: openBackups, close: closeBackups }] =
+    useDisclosure();
 
   const gameOptions = useGameOptions();
 
@@ -259,6 +263,17 @@ export function GameMenu(props: IGameMenuProps) {
                 Load last save
               </Menu.Item>
             )}
+            {selectedId && isSelectedSavedOnRemote && (
+              <Menu.Item
+                data-tutorial-id="game-backup-history-menu"
+                leftSection={
+                  <IconHistory color="var(--mantine-color-red-4)" size={16} />
+                }
+                onClick={openBackups}
+              >
+                Backup history
+              </Menu.Item>
+            )}
             <Menu.Divider />
             <Menu.Item
               data-tutorial-id="games-menu-list"
@@ -284,6 +299,13 @@ export function GameMenu(props: IGameMenuProps) {
           gameId={selectedId}
           opened={shareOpened}
           onClose={closeShare}
+        />
+      )}
+      {selectedId && (
+        <BackupHistoryModal
+          gameId={selectedId}
+          opened={backupsOpened}
+          onClose={closeBackups}
         />
       )}
       <LoginModal

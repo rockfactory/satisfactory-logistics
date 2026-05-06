@@ -12,21 +12,38 @@ const logger = loglev.getLogger('games:remote');
 
 export const gameRemoteActions = createActions({
   // Sync
-  setRemoteGames: (games: RemoteLoadedGamesList) => (state, get) => {
-    for (const existing of Object.values(state.games.games)) {
-      if (!games.find(g => g.id === existing.savedId)) {
-        // Registered game not found in remote list
-        existing.savedId = undefined;
-        existing.shareToken = undefined;
-        existing.authorId = undefined;
+  //
+  // `setRemoteGames` is only allowed to orphan a local game (clear its
+  // sync metadata) when the caller has confirmed the incoming list is
+  // authoritative AND non-empty. An empty payload can mean "the user has
+  // no remote games" but it can also mean transient RLS denial, partial
+  // 5xx, or the user briefly switched accounts — orphaning savedIds in
+  // those cases would force the next `saveRemoteGame` to insert a
+  // duplicate row (see issue #127 audit, vector #5). When in doubt,
+  // leave the savedId alone; the next successful refresh will reconcile.
+  setRemoteGames:
+    (games: RemoteLoadedGamesList, opts?: { authoritative?: boolean }) =>
+    state => {
+      const authoritative = opts?.authoritative ?? true;
+      if (authoritative && games.length > 0) {
+        for (const existing of Object.values(state.games.games)) {
+          if (!existing.savedId) continue;
+          if (!games.find(g => g.id === existing.savedId)) {
+            // Confirmed gone from the user's authoritative view: drop the
+            // sync metadata so it's treated as a fresh local game on the
+            // next save.
+            existing.savedId = undefined;
+            existing.shareToken = undefined;
+            existing.authorId = undefined;
+          }
+        }
       }
-    }
 
-    for (const data of games) {
-      const serialized = data.data as unknown as SerializedGame;
-      loadSerializedGameIntoState(serialized, data, state);
-    }
-  },
+      for (const data of games) {
+        const serialized = data.data as unknown as SerializedGame;
+        loadSerializedGameIntoState(serialized, data, state);
+      }
+    },
   loadRemoteGame:
     (
       serialized: SerializedGame,

@@ -8,7 +8,7 @@ import { onStorePatches } from '@/core/zustand-helpers/immer';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
 import { useCurrentFactoryId } from '@/notes/useNotesContext';
 import { flushRemoteGameOnUnload } from './flushRemoteGameOnUnload';
-import { hasOtherPeersConnectedOnChannel } from './peersSlice';
+import { countOtherPeers, hasOtherPeersConnectedOnChannel } from './peersSlice';
 import {
   computeLeaderAndPeers,
   handleFullStateRequest,
@@ -67,6 +67,11 @@ export function useRealtimeGameSync() {
   const isApplyingRemoteRef = useRef(false);
   const seqRef = useRef(0);
   const isLeaderRef = useRef(false);
+  // See SyncRefs.lastPatchAppliedAt — used by the unload stale-leader
+  // guard. Initialised to "now" so a tab that has just opened doesn't
+  // immediately look stale before it has had a chance to ingest peer
+  // patches.
+  const lastPatchAppliedAtRef = useRef<number>(Date.now());
   const factoryIdRef = useRef(factoryId);
   factoryIdRef.current = factoryId;
 
@@ -176,6 +181,10 @@ export function useRealtimeGameSync() {
       const gamePatches = patches.filter(isGamePatch);
       if (gamePatches.length === 0) return;
 
+      // Local activity also resets the stale-leader window — if we are
+      // generating patches we are clearly not isolated.
+      lastPatchAppliedAtRef.current = Date.now();
+
       pendingPatchesRef.current.push(...gamePatches);
       scheduleAutoSave();
 
@@ -190,7 +199,11 @@ export function useRealtimeGameSync() {
     const onBeforeUnload = () => {
       if (!isEffectiveLeader()) return;
       if (!hasDirtyRef.current) return;
-      flushRemoteGameOnUnload(gameId);
+      const peerCount = countOtherPeers(useStore.getState().peers.peers);
+      flushRemoteGameOnUnload(gameId, {
+        lastPatchAt: lastPatchAppliedAtRef.current,
+        peerCount,
+      });
     };
     window.addEventListener('beforeunload', onBeforeUnload);
 
@@ -202,6 +215,20 @@ export function useRealtimeGameSync() {
         flushTimerRef.current = null;
         flushPatches();
       }
+
+      // Logout (session gone) is a special case: preserve any unflushed
+      // dirty/patch state so a re-login on the same device picks up where
+      // we left off (audit vector #6). Saving would no-op anyway because
+      // saveRemoteGame bails when there is no auth.session.
+      const sessionAtCleanup = useStore.getState().auth.session;
+      if (!sessionAtCleanup) {
+        if (autoSaveTimerRef.current !== null) {
+          clearTimeout(autoSaveTimerRef.current);
+          autoSaveTimerRef.current = null;
+        }
+        return;
+      }
+
       if (autoSaveTimerRef.current !== null) {
         clearTimeout(autoSaveTimerRef.current);
         autoSaveTimerRef.current = null;
@@ -270,6 +297,7 @@ export function useRealtimeGameSync() {
       isApplyingRemote: isApplyingRemoteRef,
       isLeader: isLeaderRef,
       seq: seqRef,
+      lastPatchAppliedAt: lastPatchAppliedAtRef,
     };
     const timers: SyncTimers = { dbFallback: null };
 
