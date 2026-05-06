@@ -42,7 +42,7 @@ export function withActions<
             return (...args: any[]) =>
               target[prop][ImmerActions](state, ...args);
           }
-          return target.prop;
+          return Reflect.get(target, prop);
         },
       });
 
