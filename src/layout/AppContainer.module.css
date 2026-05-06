@@ -14,3 +14,13 @@
   flex-direction: column;
   align-items: stretch;
 }
+
+/*
+ * Mantine Container relies on `margin-inline: auto` for centering, but in a
+ * flex column parent that collapses the cross-axis stretch and makes the
+ * Container shrink to its content's intrinsic size. Force width: 100% so it
+ * fills the parent up to its max-width, then centers as expected.
+ */
+.appContainerPageContent > :global(.mantine-Container-root) {
+  width: 100%;
+}
