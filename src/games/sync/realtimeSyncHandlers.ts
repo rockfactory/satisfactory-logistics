@@ -1,3 +1,4 @@
+import { notifications } from '@mantine/notifications';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 import { loglev } from '@/core/logger/log';
 import { supabaseClient } from '@/core/supabase';
@@ -5,7 +6,9 @@ import { useStore } from '@/core/zustand';
 import type { GameRemoteData } from '@/games/Game';
 import { loadRemoteGame } from '@/games/save/loadRemoteGame';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
+import { snapshotRemote } from '@/games/save/snapshotRemoteGame';
 import { serializeGame } from '@/games/store/gameFactoriesActions';
+import { assessIncomingShrink, assessLocalVsRemote } from './integrityGuard';
 import type { PeerInfo } from './peersSlice';
 import {
   BROADCAST_FULL_REQUEST,
@@ -26,6 +29,14 @@ export interface SyncRefs {
   isApplyingRemote: { current: boolean };
   isLeader: { current: boolean };
   seq: { current: number };
+  /**
+   * Wall-clock timestamp (ms) of the most recent patch this tab has
+   * either applied (incoming peer broadcast) or generated (local edit).
+   * Used by `flushRemoteGameOnUnload` to detect that the tab has been
+   * isolated from the channel for too long to trust its state on
+   * unload — see issue #127.
+   */
+  lastPatchAppliedAt: { current: number };
 }
 
 export interface SyncTimers {
@@ -70,6 +81,7 @@ export function handleIncomingPatches(
     withSuppressedBroadcast(() => {
       useStore.getState().applyRemotePatches(data.patches);
     });
+    refs.lastPatchAppliedAt.current = Date.now();
   } catch (err) {
     logger.error('Failed to apply patches, requesting full state', err);
     requestFullState();
@@ -134,11 +146,39 @@ export function handleFullStateResponse(
 
   logger.info(`Received full state response (seq=${data.seq}), applying`);
   remoteSeqs.set(data.senderId, data.seq);
+
+  // Shrink guard: an incoming full state that drops the factory count
+  // sharply is the signature of issue #127. Snapshot the current local
+  // state to game_versions before applying, so the user can recover
+  // even if the incoming payload turns out to be corrupted. We never
+  // skip applying — that would break convergence with the cluster.
+  const incomingGameId = data.serialized.game.id;
+  const localGame = useStore.getState().games.games[incomingGameId];
+  const verdict = assessIncomingShrink(localGame, data.serialized);
+  if (verdict.suspiciousShrink && localGame?.savedId) {
+    logger.warn(
+      `Suspicious shrink in full-state response: ${verdict.previousFactoryCount} -> ${verdict.nextFactoryCount} factories. Snapshotting current state before applying.`,
+    );
+    const savedId = localGame.savedId;
+    void snapshotRemote(
+      savedId,
+      'shrink-guard-fullstate',
+      serializeGame(incomingGameId) as never,
+    );
+    notifications.show({
+      title: 'Backup snapshot saved before sync',
+      message:
+        'A large drop in factories was detected from another device. The previous state has been backed up under Game settings → Backup history.',
+      color: 'blue',
+    });
+  }
+
   refs.isApplyingRemote.current = true;
   try {
     useStore.getState().loadRemoteGame(data.serialized, data.remoteData, {
       override: true,
     });
+    refs.lastPatchAppliedAt.current = Date.now();
   } finally {
     refs.isApplyingRemote.current = false;
   }
@@ -169,9 +209,12 @@ export function requestFullStateWithFallback(
       const savedId = localGame?.savedId;
       if (!savedId) return;
 
+      // Read both `updated_at` (used for the local-vs-DB winner choice)
+      // and the remote `factoriesIds` (used for the shrink guard before
+      // we let a stale leader overwrite the DB).
       const { data, error } = await supabaseClient
         .from('games')
-        .select('updated_at')
+        .select('updated_at, data')
         .eq('id', savedId)
         .single();
 
@@ -187,12 +230,46 @@ export function requestFullStateWithFallback(
         refs.isApplyingRemote.current = true;
         await loadRemoteGame(gameId, { override: true });
         refs.isApplyingRemote.current = false;
-      } else if (refs.isLeader.current) {
-        logger.info('Local is newer or equal, saving to DB (leader)');
-        await saveRemoteGame(gameId, { silent: true });
-      } else {
-        logger.info('Local is newer or equal, skipping save (not leader)');
+        return;
       }
+
+      if (!refs.isLeader.current) {
+        logger.info('Local is newer or equal, skipping save (not leader)');
+        return;
+      }
+
+      // Leader path: before we save our local state to the DB, sanity-check
+      // it against what's currently there. If our copy looks like a sharp
+      // shrink vs. the DB, we are the stale party (the very issue #127
+      // failure mode) — abort the save, snapshot the DB row for safety,
+      // and reload the remote instead of clobbering it.
+      const remoteFactoryIds =
+        ((data?.data as { game?: { factoriesIds?: string[] } } | null)?.game
+          ?.factoriesIds as string[] | undefined) ?? [];
+      const localSerialized = serializeGame(gameId);
+      const verdict = assessLocalVsRemote(localSerialized, remoteFactoryIds);
+
+      if (verdict.suspiciousShrink) {
+        logger.warn(
+          `Local appears truncated vs DB (${verdict.previousFactoryCount} -> ${verdict.nextFactoryCount} factories). Aborting save and pulling DB.`,
+        );
+        // Snapshot the LOCAL state we're about to discard, not the
+        // remote one (the remote stays in `games` regardless). If the
+        // shrink heuristic was wrong and local was actually correct,
+        // the user can recover from this snapshot.
+        await snapshotRemote(
+          savedId,
+          'shrink-guard-dbfallback',
+          localSerialized as unknown as never,
+        );
+        refs.isApplyingRemote.current = true;
+        await loadRemoteGame(gameId, { override: true });
+        refs.isApplyingRemote.current = false;
+        return;
+      }
+
+      logger.info('Local is newer or equal, saving to DB (leader)');
+      await saveRemoteGame(gameId, { silent: true });
     } catch (err) {
       logger.error('DB fallback reconciliation failed', err);
     }

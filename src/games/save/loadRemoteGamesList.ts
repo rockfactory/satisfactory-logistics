@@ -30,27 +30,33 @@ export async function loadRemoteGamesList() {
   }
 
   useStore.getState().setIsLoading(true);
-  const { data, error } = await loadRemoteGamesQuery;
+  try {
+    const { data, error } = await loadRemoteGamesQuery;
 
-  if (error) {
-    console.error('Error loading games:', error);
-    notifications.show({
-      color: 'red',
-      title: 'Error loading games',
-      message: error.message,
+    if (error) {
+      // Issue #127, audit vector #5: an error response previously
+      // fell through and triggered `setRemoteGames(null/[])`, which
+      // orphaned the savedId of every locally registered game.
+      // Bail out cleanly so the local state is preserved.
+      console.error('Error loading games:', error);
+      notifications.show({
+        color: 'red',
+        title: 'Error loading games',
+        message: error.message,
+      });
+      return;
+    }
+
+    if (!data) {
+      console.log('No games loaded');
+      return;
+    }
+
+    console.log('Loaded games:', data);
+    withSuppressedDirtyTracking(() => {
+      useStore.getState().setRemoteGames(data, { authoritative: true });
     });
+  } finally {
     useStore.getState().setIsLoading(false);
   }
-
-  if (!data) {
-    console.log('No games loaded');
-    useStore.getState().setIsLoading(false);
-    return;
-  }
-
-  console.log('Loaded games:', data);
-  withSuppressedDirtyTracking(() => {
-    useStore.getState().setRemoteGames(data);
-  });
-  useStore.getState().setIsLoading(false);
 }

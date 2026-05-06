@@ -102,6 +102,44 @@ export type Database = {
           },
         ]
       }
+      game_versions: {
+        Row: {
+          author_id: string
+          created_at: string
+          data: Json
+          id: string
+          reason: string
+          saved_id: string
+          version: number
+        }
+        Insert: {
+          author_id: string
+          created_at?: string
+          data: Json
+          id?: string
+          reason?: string
+          saved_id: string
+          version: number
+        }
+        Update: {
+          author_id?: string
+          created_at?: string
+          data?: Json
+          id?: string
+          reason?: string
+          saved_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_versions_saved_id_fkey"
+            columns: ["saved_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       games: {
         Row: {
           author_id: string
@@ -233,6 +271,24 @@ export type Database = {
       share_token_matches_game_id: {
         Args: { gid: string; token: string }
         Returns: boolean
+      }
+      snapshot_game: {
+        Args: { p_data: Json; p_reason?: string; p_saved_id: string }
+        Returns: {
+          author_id: string
+          created_at: string
+          data: Json
+          id: string
+          reason: string
+          saved_id: string
+          version: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "game_versions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
     }
     Enums: {
