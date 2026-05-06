@@ -4,6 +4,7 @@ import { loglev } from '@/core/logger/log';
 import { supabaseClient } from '@/core/supabase';
 import { useStore } from '@/core/zustand';
 import type { GameRemoteData } from '@/games/Game';
+import { withSuppressedDirtyTracking } from '@/games/save/dirtyTrackingSuppression';
 import { loadRemoteGame } from '@/games/save/loadRemoteGame';
 import { saveRemoteGame } from '@/games/save/saveRemoteGame';
 import { snapshotRemote } from '@/games/save/snapshotRemoteGame';
@@ -175,8 +176,10 @@ export function handleFullStateResponse(
 
   refs.isApplyingRemote.current = true;
   try {
-    useStore.getState().loadRemoteGame(data.serialized, data.remoteData, {
-      override: true,
+    withSuppressedDirtyTracking(() => {
+      useStore.getState().loadRemoteGame(data.serialized, data.remoteData, {
+        override: true,
+      });
     });
     refs.lastPatchAppliedAt.current = Date.now();
   } finally {
