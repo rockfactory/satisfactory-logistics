@@ -263,7 +263,7 @@ export function GameMenu(props: IGameMenuProps) {
                 Load last save
               </Menu.Item>
             )}
-            {selectedId && isSelectedSavedOnRemote && (
+            {selectedId && isSelectedSavedOnRemote && session && (
               <Menu.Item
                 data-tutorial-id="game-backup-history-menu"
                 leftSection={

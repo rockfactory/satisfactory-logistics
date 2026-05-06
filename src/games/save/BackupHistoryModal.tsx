@@ -98,25 +98,34 @@ export function BackupHistoryModal(props: IBackupHistoryModalProps) {
 
   const onSaveSnapshotNow = useCallback(async () => {
     if (!savedId) return;
-    try {
-      await snapshotRemote(
-        savedId,
-        'manual',
-        serializeGame(gameId) as unknown as Json,
-      );
+    if (!useStore.getState().auth.session) {
       notifications.show({
-        color: 'green',
-        title: 'Snapshot saved',
-        message: 'A backup of the current state has been saved.',
+        color: 'red',
+        title: 'Login required',
+        message: 'You must be logged in to save a backup snapshot.',
       });
-      await refresh();
-    } catch (err) {
+      return;
+    }
+    const ok = await snapshotRemote(
+      savedId,
+      'manual',
+      serializeGame(gameId) as unknown as Json,
+    );
+    if (!ok) {
       notifications.show({
         color: 'red',
         title: 'Failed to save snapshot',
-        message: err instanceof Error ? err.message : 'Unknown error',
+        message:
+          'The backup could not be saved. Check your connection and try again.',
       });
+      return;
     }
+    notifications.show({
+      color: 'green',
+      title: 'Snapshot saved',
+      message: 'A backup of the current state has been saved.',
+    });
+    await refresh();
   }, [gameId, savedId, refresh]);
 
   const onRestore = useCallback(
@@ -154,12 +163,23 @@ export function BackupHistoryModal(props: IBackupHistoryModalProps) {
         if (!savedId) return;
         setBusyRowId(row.id);
         try {
-          // Pre-restore safety snapshot.
-          await snapshotRemote(
+          // Pre-restore safety snapshot. If this fails the user has no
+          // way to undo the restore, so we abort instead of proceeding
+          // blindly. The modal copy explicitly promises this safety net.
+          const safetyOk = await snapshotRemote(
             savedId,
             'pre-restore',
             serializeGame(gameId) as unknown as Json,
           );
+          if (!safetyOk) {
+            notifications.show({
+              color: 'red',
+              title: 'Restore aborted',
+              message:
+                'Could not save a pre-restore safety snapshot. The restore was cancelled to avoid losing the current state.',
+            });
+            return;
+          }
 
           // Fetch the snapshot payload (the list query intentionally does
           // not include `data` to keep it small).

@@ -43,7 +43,12 @@ export async function snapshotRemote(
   reason: SnapshotReason,
   data: Json,
 ): Promise<boolean> {
-  if (!useStore.getState().auth.session) return false;
+  if (!useStore.getState().auth.session) {
+    logger.warn(
+      `Snapshot skipped (reason=${reason}): no auth session. Snapshots require a logged-in user — the row would be rejected by RLS.`,
+    );
+    return false;
+  }
   try {
     const { error } = await supabaseClient.rpc('snapshot_game', {
       p_saved_id: savedId,
