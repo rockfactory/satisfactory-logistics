@@ -107,3 +107,61 @@
   color: var(--mantine-color-dimmed);
   font-style: italic;
 }
+
+.phaseHeader {
+  position: relative;
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 0;
+  overflow: hidden;
+}
+
+.phaseHeaderStripe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    180deg,
+    var(--mantine-color-teal-7) 0%,
+    var(--mantine-color-teal-9) 100%
+  );
+  color: var(--mantine-color-white);
+}
+
+.phaseHeaderBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  min-width: 0;
+}
+
+.phaseHeaderTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.phaseRequirements {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.phaseRequirementChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px 2px 4px;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: var(--mantine-radius-sm);
+  background-color: var(--mantine-color-default);
+  font-size: var(--mantine-font-size-xs);
+  line-height: 1;
+}
+
+.phaseRequirementAmount {
+  font-weight: 600;
+}
