@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.13.1](https://github.com/rockfactory/satisfactory-logistics/compare/v0.13.0...v0.13.1) (2026-05-09)
+
+### Bug Fixes
+
+* escape dump savegame regex ([74b8ab6](https://github.com/rockfactory/satisfactory-logistics/commit/74b8ab63e23e884ffd0ad7f82707cc66fef40393))
+
 ## [0.13.0](https://github.com/rockfactory/satisfactory-logistics/compare/v0.12.3...v0.13.0) (2026-05-06)
 
 ### Features
