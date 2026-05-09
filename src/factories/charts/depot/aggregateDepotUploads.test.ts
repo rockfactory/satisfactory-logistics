@@ -71,6 +71,23 @@ describe('aggregateDepotUploads', () => {
     expect(result).toEqual([]);
   });
 
+  test('merges duplicate depot rows from the same factory and resource', () => {
+    const result = aggregateDepotUploads([
+      make({
+        id: 'a',
+        name: 'A',
+        outputs: [
+          { resource: 'Desc_IronPlate_C', amount: 30, destination: 'depot' },
+          { resource: 'Desc_IronPlate_C', amount: 25, destination: 'depot' },
+        ],
+      }),
+    ]);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].totalAmount).toBe(55);
+    expect(result[0].sources).toEqual([{ id: 'a', name: 'A', amount: 55 }]);
+  });
+
   test('skips depot rows with missing resource or amount', () => {
     const result = aggregateDepotUploads([
       make({

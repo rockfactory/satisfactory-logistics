@@ -102,6 +102,15 @@ export const factoryBasicsChapter: TutorialChapter = {
           },
         },
         {
+          element: '[data-tutorial-id="factory-output-destination"]',
+          popover: {
+            title: 'Dimensional Depot',
+            description:
+              'Toggle this on to mark an output as uploaded to the Dimensional Depot. Depot uploads are not counted as supply for other factories, and you can review the totals in the Charts → Dimensional Depot tab.',
+            side: 'top',
+          },
+        },
+        {
           element: '[data-tutorial-id="factory-inputs"]',
           popover: {
             title: 'Inputs',

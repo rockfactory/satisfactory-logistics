@@ -22,11 +22,19 @@ export function aggregateDepotUploads(factories: Factory[]): DepotRow[] {
         byResource.set(output.resource, row);
       }
       row.totalAmount += output.amount;
-      row.sources.push({
-        id: factory.id,
-        name: factory.name,
-        amount: output.amount,
-      });
+      // Merge multiple depot rows of the same resource on the same factory
+      // into a single source entry, so consumers can use `source.id` as a
+      // stable React key without collisions.
+      const existingSource = row.sources.find(s => s.id === factory.id);
+      if (existingSource) {
+        existingSource.amount += output.amount;
+      } else {
+        row.sources.push({
+          id: factory.id,
+          name: factory.name,
+          amount: output.amount,
+        });
+      }
     }
   }
 

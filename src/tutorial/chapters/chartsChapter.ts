@@ -40,9 +40,9 @@ export const chartsChapter: TutorialChapter = {
         {
           element: '[data-tutorial-id="charts-view-switcher"]',
           popover: {
-            title: 'Graph or Sankey',
+            title: 'Graph, Sankey, or Dimensional Depot',
             description:
-              'Use this switcher to flip between Graph (the node diagram you just saw) and Sankey (the same data as proportional flows). It really pays off once you have several factories linked together.',
+              'Use this switcher to flip between three views of the same data: Graph (the node diagram you just saw), Sankey (the same data as proportional flows), and Dimensional Depot (a per-item tally of every output you mark as uploaded to the Dimensional Depot). It really pays off once you have several factories linked together.',
             side: 'bottom',
           },
         },
