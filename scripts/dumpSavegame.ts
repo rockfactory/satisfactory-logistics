@@ -4,6 +4,7 @@ import {
   Parser,
   type SatisfactorySave,
 } from '@etothepii/satisfactory-file-parser';
+import escapeRegExp from 'lodash/escapeRegExp';
 
 type IncludeSection =
   | 'header'
@@ -93,7 +94,7 @@ function parseArgs(argv: string[]): CliArgs {
   let typeRegex: RegExp | null = null;
   if (typeof flags.type === 'string') {
     try {
-      typeRegex = new RegExp(flags.type);
+      typeRegex = new RegExp(escapeRegExp(flags.type));
     } catch (e) {
       process.stderr.write(
         `Error: invalid --type regex: ${(e as Error).message}\n\n`,
