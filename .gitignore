@@ -153,4 +153,4 @@ scratch/
 tmp/
 temp/
 playground/
-.claude/settings.local.json
+.claude/

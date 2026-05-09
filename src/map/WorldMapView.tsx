@@ -144,6 +144,7 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
     hideUsedNodes,
     usedNodesList,
     sumMode,
+    selectedNodeIdsList,
     collectibleVisibility,
     hideCollectedCollectibles,
     collectedList,
@@ -156,6 +157,13 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
       hideUsedNodes: mapState?.hideUsedNodes ?? false,
       usedNodesList: game?.usedNodes ?? EMPTY_USED_NODES,
       sumMode: state.mapSelection?.sumMode ?? false,
+      // Subscribed here so the filter memo invalidates when the user
+      // navigates in from the input row's "View on map" button. The
+      // selection seed has to bypass `hideUsedNodes` (assignment
+      // automatically marks nodes as used, otherwise the markers
+      // would arrive on a map that immediately hides them).
+      selectedNodeIdsList:
+        state.mapSelection?.selectedNodeIds ?? EMPTY_USED_NODES,
       collectibleVisibility:
         mapState?.collectibleVisibility ?? EMPTY_COLLECTIBLE_VISIBILITY,
       hideCollectedCollectibles: mapState?.hideCollectedCollectibles ?? false,
@@ -170,6 +178,10 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
 
   const usedNodes = useMemo(() => new Set(usedNodesList), [usedNodesList]);
   const collectedIds = useMemo(() => new Set(collectedList), [collectedList]);
+  const selectedNodeIdsSet = useMemo(
+    () => new Set(selectedNodeIdsList),
+    [selectedNodeIdsList],
+  );
 
   // ─── Node-to-factory assignments. The selector returns the
   //     full per-node ref array (already filtered for orphans and
@@ -195,8 +207,8 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
 
   // ─── Assignment modal state. Owned here (not in the marker
   //     layer) so the same modal instance is reused regardless of
-  //     entry point — popup action, sum-mode summary, or future
-  //     callers — and so the modal renders inside the React tree
+  //     entry point (popup action, sum-mode summary, or future
+  //     callers), and so the modal renders inside the React tree
   //     instead of the imperative Leaflet layer.
   const [assignTarget, setAssignTarget] = useState<WorldResourceNode | null>(
     null,
@@ -213,11 +225,27 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
   // biome-ignore lint/correctness/useExhaustiveDependencies: savegameOverrides is read indirectly via getWorldResourceNodes' useStore.getState() lookup; the dep is required to invalidate the memo on import.
   const filteredNodes = useMemo(() => {
     return getWorldResourceNodes(gameId).filter(node => {
+      // Selection always wins. Reason: the user got here either via
+      // "View on map" from a factory input row (we just programmatic-
+      // ally selected the assigned nodes) or via an explicit click on
+      // the marker. Either way, hiding the very thing they pointed
+      // at would be hostile UX. This also covers the assignment side-
+      // effect: assigning a node marks it as used, so without this
+      // override the freshly-assigned nodes would vanish under
+      // `hideUsedNodes`.
+      if (selectedNodeIdsSet.has(node.id)) return true;
       if (!resourceFilters[node.resource]?.includes(node.purity)) return false;
       if (hideUsedNodes && usedNodes.has(node.id)) return false;
       return true;
     });
-  }, [gameId, resourceFilters, hideUsedNodes, usedNodes, savegameOverrides]);
+  }, [
+    gameId,
+    resourceFilters,
+    hideUsedNodes,
+    usedNodes,
+    selectedNodeIdsSet,
+    savegameOverrides,
+  ]);
 
   const filteredCollectibles = useMemo(() => {
     return getWorldCollectibles().filter(collectible => {

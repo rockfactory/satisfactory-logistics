@@ -148,7 +148,7 @@ function buildPopupHtml(
     .filter(Boolean)
     .join(' ');
 
-  // "Assigned to: X · Y" line — only rendered when there's an actual
+  // "Assigned to: X · Y" line, only rendered when there's an actual
   // label to show. Reuses `__method` styling to match the other
   // metadata lines visually.
   const assignmentLine =

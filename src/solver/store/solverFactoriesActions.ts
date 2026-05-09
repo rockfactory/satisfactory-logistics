@@ -173,7 +173,7 @@ export const solverFactoriesActions = createActions({
 
       // ─── Step 3: also mark the nodes as "used" at the game level
       //     so the map's "hide used" filter behaves consistently.
-      //     Add-only by design — see the action JSDoc for why we
+      //     Add-only by design: see the action JSDoc for why we
       //     never remove from `usedNodes` on unassign.
       if (gameId) {
         const game = state.games.games[gameId];

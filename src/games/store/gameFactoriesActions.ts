@@ -149,10 +149,16 @@ export const gameFactoriesActions = createActions({
         name: disambiguateFactoryName(payload.factory.name, existingNames),
         // Cross-factory references don't exist in the target game, so drop
         // them to avoid orphan links pointing at unrelated factories.
-        inputs: (payload.factory.inputs ?? []).map(input => ({
-          ...input,
-          factoryId: null,
-        })),
+        // `nodeIds` are also game-specific (resource node ids belong to the
+        // source game, especially after savegame randomizer overrides), so
+        // strip them to prevent dormant assignments reactivating if the
+        // user later toggles the source back to WORLD.
+        inputs: (payload.factory.inputs ?? []).map(
+          ({ nodeIds: _nodeIds, ...rest }) => ({
+            ...rest,
+            factoryId: null,
+          }),
+        ),
       };
       state.factories.factories[newFactoryId] = importedFactory;
 
@@ -271,8 +277,11 @@ export function serializeFactory(factoryId: string): SerializedFactory {
 
   const cleanedFactory: Factory = {
     ...cloneDeep(factory),
-    inputs: (factory.inputs ?? []).map(input => ({
-      ...input,
+    // Same scrub as the importer side: drop cross-factory `factoryId`
+    // links AND the game-specific `nodeIds` so the serialized blob has
+    // no dangling references back to the source game.
+    inputs: (factory.inputs ?? []).map(({ nodeIds: _nodeIds, ...rest }) => ({
+      ...rest,
       factoryId: null,
     })),
   };

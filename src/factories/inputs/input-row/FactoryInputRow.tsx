@@ -119,6 +119,15 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   const handleFactoryChange = useCallback(
     (selectedFactoryId: string | null) => {
       onChangeHandler(`inputs.${index}.factoryId`)(selectedFactoryId);
+
+      // `nodeIds` is only meaningful for World inputs. If the user
+      // moves the source away from WORLD, drop any dormant assignment
+      // so a future toggle back to WORLD doesn't silently reactivate
+      // node bindings the user had effectively abandoned.
+      if (selectedFactoryId !== WORLD_SOURCE_ID) {
+        useStore.getState().clearInputAssignment(factoryId, index);
+      }
+
       if (
         !selectedFactoryId ||
         selectedFactoryId === WORLD_SOURCE_ID ||
@@ -138,7 +147,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         );
       }
     },
-    [onChangeHandler, index, input.resource],
+    [onChangeHandler, index, input.resource, factoryId],
   );
 
   const isVisible = useIsFactoryVisible(factoryId, false, input.resource);

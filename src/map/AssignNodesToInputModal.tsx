@@ -27,7 +27,7 @@ export interface AssignNodesToInputModalProps {
 }
 
 // Sentinel for the "Create new World input" option in the input
-// dropdown — never collides with a real input index.
+// dropdown: never collides with a real input index.
 const CREATE_NEW_VALUE = '__create__';
 
 interface ExistingAssignment {
@@ -46,7 +46,7 @@ interface ExistingAssignment {
  *      Hitting "Add" assigns and resets the dropdowns WITHOUT closing,
  *      so the user can chain "this node is fed by 3 factories" in one
  *      session.
- *   3. "Done" closes. Selection is intentionally NOT cleared here —
+ *   3. "Done" closes. Selection is intentionally NOT cleared here:
  *      the caller decides whether the multi-select stays alive after
  *      assignment (e.g. the sum-mode summary keeps it).
  */
@@ -191,7 +191,7 @@ export function AssignNodesToInputModal({
 
   // ─── Remove handler: unassigns ALL matched nodes from a single
   //     (factory, input) pair. The action mutates one node at a time
-  //     because the underlying store action is per-node — this is fine
+  //     because the underlying store action is per-node, this is fine
   //     in practice, the loop runs inside one React render.
   const handleRemove = (entry: ExistingAssignment) => {
     const state = useStore.getState();
@@ -245,7 +245,7 @@ export function AssignNodesToInputModal({
             </Text>
             {existingAssignments.length === 0 ? (
               <Text size="xs" c="dimmed">
-                No assignments yet — pick a factory and input below.
+                No assignments yet. Pick a factory and input below.
               </Text>
             ) : (
               <Table withRowBorders={false} verticalSpacing={4}>
@@ -306,7 +306,7 @@ export function AssignNodesToInputModal({
 
             {factoryOptions.length === 0 ? (
               <Text size="xs" c="dimmed">
-                No factories in this game yet — create one first.
+                No factories in this game yet. Create one first.
               </Text>
             ) : (
               <Group gap="xs" align="flex-end" wrap="nowrap">

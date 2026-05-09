@@ -67,7 +67,7 @@ export const useNodeAssignments = (
         if (!input.nodeIds || input.nodeIds.length === 0) return;
         if (!input.resource) return;
 
-        // One row per assigned node — the resolution step below joins
+        // One row per assigned node. The resolution step below joins
         // each row back to a NodeAssignmentRef.
         for (const nodeId of input.nodeIds) {
           parts.push(
@@ -119,7 +119,7 @@ export const useNodeAssignments = (
         resource,
       };
 
-      // Multiple inputs/factories CAN share the same node — keep them
+      // Multiple inputs/factories CAN share the same node, keep them
       // as an array so the popup can list all of them.
       const arr = result[nodeId] ?? [];
       arr.push(ref);
@@ -148,7 +148,7 @@ export const useFactoryInputAssignedNodes = (
   );
 
   // Encode `[resource, ...nodeIds]` as a single string. Empty when
-  // there's nothing to render — the consumer can short-circuit.
+  // there's nothing to render, the consumer can short-circuit.
   const signature = useStore(state => {
     if (!factoryId || inputIndex == null) return '';
     const input = state.factories.factories[factoryId]?.inputs?.[inputIndex];
@@ -171,7 +171,7 @@ export const useFactoryInputAssignedNodes = (
     const out: WorldResourceNode[] = [];
     for (const id of ids) {
       const node = byId.get(id);
-      if (!node) continue; // orphan — node removed by a savegame import
+      if (!node) continue; // orphan: node removed by a savegame import
       if (node.resource !== resource) continue; // resource swap auto-heal
       out.push(node);
     }
