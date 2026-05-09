@@ -28,7 +28,7 @@ describe('aggregateDepotUploads', () => {
         name: 'A',
         outputs: [
           { resource: 'Desc_IronPlate_C', amount: 60, destination: 'depot' },
-          { resource: 'Desc_IronPlate_C', amount: 40 }, // local — not counted
+          { resource: 'Desc_IronPlate_C', amount: 40 }, // local, not counted
         ],
       }),
       make({

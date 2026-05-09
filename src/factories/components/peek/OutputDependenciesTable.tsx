@@ -50,6 +50,17 @@ export function OutputDependenciesTable(props: IOutputDependenciesTableProps) {
 
   const isDepot = output.destination === 'depot';
 
+  // When the source factory has another (non-depot) output for the same
+  // resource, the listed consumers are validly served by that sibling, so
+  // this depot row is not the one supplying them. Skip the inconsistency
+  // warning in that case.
+  const hasLocalSibling = useShallowStore(
+    state =>
+      state.factories.factories[factoryId]?.outputs?.some(
+        o => o.resource === output.resource && o.destination !== 'depot',
+      ) ?? false,
+  );
+
   if (dependencies.length === 0)
     return (
       <div>
@@ -68,7 +79,7 @@ export function OutputDependenciesTable(props: IOutputDependenciesTableProps) {
               variant="light"
               w="100%"
             >
-              Uploaded to Dimensional Depot — not counted as supply for other
+              Uploaded to Dimensional Depot, not counted as supply for other
               factories.
             </Alert>
           )}
@@ -84,7 +95,26 @@ export function OutputDependenciesTable(props: IOutputDependenciesTableProps) {
 
   return (
     <div>
-      {isDepot && (
+      {isDepot && hasLocalSibling && (
+        <Alert
+          icon={
+            <Image
+              src="/images/game/wat-2_256.png"
+              alt="Dimensional Depot"
+              w={20}
+              h={20}
+            />
+          }
+          color="grape"
+          variant="light"
+          mb="sm"
+        >
+          These consumers are supplied by the local output row for this resource
+          on the same factory. This depot row uploads its own amount to the
+          Dimensional Depot.
+        </Alert>
+      )}
+      {isDepot && !hasLocalSibling && (
         <Alert
           icon={
             <Image
