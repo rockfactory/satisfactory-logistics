@@ -35,6 +35,12 @@ export interface FactoryInput {
   /** @deprecated See constraint = 'exact' */
   forceUsage?: boolean;
   constraint?: FactoryInputConstraint;
+  /**
+   * For World inputs (factoryId === WORLD_SOURCE_ID): the resource node ids
+   * (from WorldResourceNodes) the user has assigned to this input from the
+   * map. Purely informational in v1: the solver does not read this field.
+   */
+  nodeIds?: string[];
 }
 
 export type FactoryInputConstraint =

@@ -1,9 +1,18 @@
-import { Button, Group, SegmentedControl, Select, Text } from '@mantine/core';
-import { IconX } from '@tabler/icons-react';
+import {
+  Button,
+  Group,
+  SegmentedControl,
+  Select,
+  Text,
+  Tooltip,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { IconLink, IconX } from '@tabler/icons-react';
 import { useMemo } from 'react';
 import { useShallowStore, useStore } from '@/core/zustand';
 import { AllFactoryBuildings } from '@/recipes/FactoryBuilding';
 import { getWorldResourceNodes } from '@/recipes/WorldResourceNodes';
+import { AssignNodesToInputModal } from './AssignNodesToInputModal';
 import { OVERCLOCK_STEPS, type OverclockStep } from './extraction';
 import classes from './MapSelectionSummary.module.css';
 import { getSelectionAggregates, SOLID_MINER_CHOICES } from './selectionMath';
@@ -65,6 +74,16 @@ export function MapSelectionSummary({ gameId }: MapSelectionSummaryProps) {
     [],
   );
 
+  // The "Assign to factory input…" action only makes sense when the
+  // selection is homogeneous (a single input takes a single resource).
+  const homogeneousResource = useMemo(() => {
+    if (selectedNodes.length === 0) return null;
+    const first = selectedNodes[0].resource;
+    return selectedNodes.every(n => n.resource === first) ? first : null;
+  }, [selectedNodes]);
+
+  const [assignModalOpened, assignModal] = useDisclosure(false);
+
   if (selectedNodeIds.length === 0) return null;
 
   const handleClear = () => useStore.getState().clearSelection();
@@ -115,6 +134,26 @@ export function MapSelectionSummary({ gameId }: MapSelectionSummaryProps) {
             }))}
             aria-label="Overclock percentage"
           />
+          <Tooltip
+            label={
+              homogeneousResource
+                ? 'Assign these nodes to a factory World input'
+                : 'Select a single resource type to assign.'
+            }
+            withArrow
+          >
+            <Button
+              variant="light"
+              color="blue"
+              size="compact-sm"
+              leftSection={<IconLink size={14} />}
+              onClick={assignModal.open}
+              disabled={!homogeneousResource}
+              data-tutorial-id="map-assign-to-input"
+            >
+              Assign to input…
+            </Button>
+          </Tooltip>
           <Button
             variant="subtle"
             color="gray"
@@ -165,6 +204,14 @@ export function MapSelectionSummary({ gameId }: MapSelectionSummaryProps) {
           settings.
         </Text>
       </Group>
+
+      <AssignNodesToInputModal
+        opened={assignModalOpened}
+        onClose={assignModal.close}
+        gameId={gameId}
+        nodeIds={selectedNodeIds.slice()}
+        resource={homogeneousResource}
+      />
     </section>
   );
 }

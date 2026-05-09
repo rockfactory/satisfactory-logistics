@@ -66,6 +66,9 @@ export const mapSelectionSlice = createSlice({
     clearSelection: () => state => {
       state.selectedNodeIds = [];
     },
+    setSelectedNodeIds: (nodeIds: string[]) => state => {
+      state.selectedNodeIds = Array.from(new Set(nodeIds));
+    },
     setSelectedMinerId: (minerId: string) => state => {
       state.selectedMinerId = minerId;
     },

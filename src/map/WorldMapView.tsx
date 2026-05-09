@@ -3,19 +3,23 @@ import { Dropzone } from '@mantine/dropzone';
 import { notifications } from '@mantine/notifications';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useEffect, useMemo } from 'react';
+import { useDisclosure } from '@mantine/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { useShallowStore } from '@/core/zustand';
+import { useNodeAssignments } from '@/factories/store/factoryNodeAssignmentsSelectors';
 import { useSavegameImport } from '@/recipes/savegame/useSavegameImport';
 import {
   COLLECTIBLE_TYPES,
   type CollectibleType,
   getWorldCollectibles,
 } from '@/recipes/WorldCollectibles';
+import type { WorldResourceNode } from '@/recipes/WorldResourceNodes';
 import {
   getWorldResourceNodes,
   type Purity,
 } from '@/recipes/WorldResourceNodes';
+import { AssignNodesToInputModal } from './AssignNodesToInputModal';
 import { CollectibleMarkersLayer } from './CollectibleMarkersLayer';
 import {
   DEFAULT_CENTER,
@@ -167,6 +171,45 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
   const usedNodes = useMemo(() => new Set(usedNodesList), [usedNodesList]);
   const collectedIds = useMemo(() => new Set(collectedList), [collectedList]);
 
+  // ─── Node-to-factory assignments. The selector returns the
+  //     full per-node ref array (already filtered for orphans and
+  //     resource mismatches). The marker layer only needs two
+  //     projections: a "is this node assigned?" Set for the icon
+  //     badge, and a `nodeId -> "Factory A · Factory B"` map for
+  //     the popup line.
+  const nodeAssignments = useNodeAssignments(gameId ?? null);
+
+  const assignedNodes = useMemo(
+    () => new Set(Object.keys(nodeAssignments)),
+    [nodeAssignments],
+  );
+
+  const assignmentLabels = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const [nodeId, refs] of Object.entries(nodeAssignments)) {
+      const names = refs.map(r => r.factoryName ?? 'Unnamed factory');
+      map.set(nodeId, names.join(' · '));
+    }
+    return map;
+  }, [nodeAssignments]);
+
+  // ─── Assignment modal state. Owned here (not in the marker
+  //     layer) so the same modal instance is reused regardless of
+  //     entry point — popup action, sum-mode summary, or future
+  //     callers — and so the modal renders inside the React tree
+  //     instead of the imperative Leaflet layer.
+  const [assignTarget, setAssignTarget] = useState<WorldResourceNode | null>(
+    null,
+  );
+  const [assignModalOpened, assignModal] = useDisclosure(false);
+  const handleAssignNodeRequest = useCallback(
+    (node: WorldResourceNode) => {
+      setAssignTarget(node);
+      assignModal.open();
+    },
+    [assignModal],
+  );
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: savegameOverrides is read indirectly via getWorldResourceNodes' useStore.getState() lookup; the dep is required to invalidate the memo on import.
   const filteredNodes = useMemo(() => {
     return getWorldResourceNodes(gameId).filter(node => {
@@ -271,6 +314,9 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
             usedNodes={usedNodes}
             gameId={gameId ?? null}
             sumMode={sumMode}
+            assignedNodes={assignedNodes}
+            assignmentLabels={assignmentLabels}
+            onAssignNodeRequest={handleAssignNodeRequest}
           />
           <CollectibleMarkersLayer
             collectibles={filteredCollectibles}
@@ -327,6 +373,16 @@ export function WorldMapView({ gameId }: WorldMapViewProps) {
           <Progress color="orange" value={progress.value * 100} animated />
         </div>
       ) : null}
+      <AssignNodesToInputModal
+        opened={assignModalOpened}
+        onClose={() => {
+          assignModal.close();
+          setAssignTarget(null);
+        }}
+        gameId={gameId ?? null}
+        nodeIds={assignTarget ? [assignTarget.id] : []}
+        resource={assignTarget?.resource ?? null}
+      />
     </Dropzone>
   );
 }

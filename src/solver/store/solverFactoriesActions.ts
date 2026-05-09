@@ -141,6 +141,72 @@ export const solverFactoriesActions = createActions({
       }
     },
 
+  /**
+   * Map → factory bridge: associate one or more world resource node ids
+   * to a World input on a factory. Dedupes against any existing
+   * assignment, and ALSO marks the nodes as used on the owning game so
+   * the "hide used" filter behaves consistently. The reverse direction
+   * (unassign) intentionally does NOT remove from `usedNodes` to avoid
+   * fragile bookkeeping (the user can clear used marks from the map's
+   * filter panel if needed).
+   */
+  assignNodesToFactoryInput:
+    (
+      factoryId: string,
+      inputIndex: number,
+      nodeIds: string[],
+      gameId?: string | null,
+    ) =>
+    state => {
+      // ─── Step 1: locate the input row. Silent no-op if the factory
+      //     or input has been removed under us (the caller is the
+      //     async modal, so a stale id is plausible).
+      const factory = state.factories.factories[factoryId];
+      const input = factory?.inputs?.[inputIndex];
+      if (!input) return;
+
+      // ─── Step 2: union the new ids into the existing assignment.
+      //     Set-based dedup so re-assigning the same node is a no-op.
+      const existing = new Set(input.nodeIds ?? []);
+      for (const id of nodeIds) existing.add(id);
+      input.nodeIds = Array.from(existing);
+
+      // ─── Step 3: also mark the nodes as "used" at the game level
+      //     so the map's "hide used" filter behaves consistently.
+      //     Add-only by design — see the action JSDoc for why we
+      //     never remove from `usedNodes` on unassign.
+      if (gameId) {
+        const game = state.games.games[gameId];
+        if (game) {
+          const usedSet = new Set(game.usedNodes ?? []);
+          for (const id of nodeIds) usedSet.add(id);
+          game.usedNodes = Array.from(usedSet);
+        }
+      }
+    },
+
+  unassignNodeFromFactoryInput:
+    (factoryId: string, inputIndex: number, nodeId: string) => state => {
+      const input = state.factories.factories[factoryId]?.inputs?.[inputIndex];
+      if (!input?.nodeIds) return;
+
+      // Splice in place (Immer turns this into an immutable update).
+      const idx = input.nodeIds.indexOf(nodeId);
+      if (idx !== -1) input.nodeIds.splice(idx, 1);
+
+      // Drop the field entirely when empty so the persisted shape
+      // stays clean (matches the convention used by `usedNodes`).
+      if (input.nodeIds.length === 0) delete input.nodeIds;
+    },
+
+  clearInputAssignment: (factoryId: string, inputIndex: number) => state => {
+    const input = state.factories.factories[factoryId]?.inputs?.[inputIndex];
+    if (!input) return;
+    // Bulk-clear: drop the whole array. `usedNodes` is intentionally
+    // left untouched (add-only sync semantics).
+    delete input.nodeIds;
+  },
+
   addFactoryOutput:
     (factoryId: string, output?: Partial<FactoryOutput>) => state => {
       state.factories.factories[factoryId]?.outputs?.push({

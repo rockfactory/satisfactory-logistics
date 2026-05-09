@@ -32,6 +32,19 @@ export interface ResourceMarkersLayerProps {
    * opening the popup. Forwarded from `mapSelection.sumMode`.
    */
   sumMode: boolean;
+  /** Ids of nodes that are assigned to at least one factory input. */
+  assignedNodes: Set<string>;
+  /**
+   * Per-node human-readable label of factories the node is assigned
+   * to (e.g. "Iron smelter · Pipeworks"). Rendered in the popup.
+   */
+  assignmentLabels: Map<string, string>;
+  /**
+   * Triggered when the user clicks "Assign to factory input…" from a
+   * marker popup. The parent owns the modal state so the same modal
+   * component is reused across map entry points.
+   */
+  onAssignNodeRequest: (node: WorldResourceNode) => void;
 }
 
 const HTML_ESCAPES: Record<string, string> = {
@@ -60,6 +73,8 @@ function buildPopupHtml(
   node: WorldResourceNode,
   isUsed: boolean,
   isSelected: boolean,
+  isAssigned: boolean,
+  assignmentLabel: string | undefined,
 ): string {
   const item = AllFactoryItemsMap[node.resource];
   const name = escapeHtml(item?.displayName ?? node.resource);
@@ -103,13 +118,22 @@ function buildPopupHtml(
     ? `<p class="map-marker-popup__method">${escapeHtml(methodLabel)}</p>`
     : '';
 
+  // Action button labels and CSS modifier flags. Each button toggles
+  // a piece of state; the modifier class lets CSS surface the
+  // currently-active variant (e.g. green "used" buttons).
   const usedLabel = isUsed ? 'Mark as unused' : 'Mark as used';
   const usedModifier = isUsed ? ' map-marker-popup__action--used' : '';
   const selectLabel = isSelected ? 'Remove from selection' : 'Add to selection';
   const selectModifier = isSelected
     ? ' map-marker-popup__action--selected'
     : '';
+  const assignLabel = isAssigned ? 'Reassign factory…' : 'Assign factory…';
+
   const nodeIdAttr = escapeHtml(node.id);
+
+  // Header pills: small badges next to the resource name, summarising
+  // the node's current state at a glance. Empty entries are filtered
+  // so we don't ship `<span> </span>` placeholders to the DOM.
   const pills = [
     isUsed
       ? '<span class="map-marker-popup__pill map-marker-popup__pill--used">Used</span>'
@@ -117,9 +141,20 @@ function buildPopupHtml(
     isSelected
       ? '<span class="map-marker-popup__pill map-marker-popup__pill--selected">Selected</span>'
       : '',
+    isAssigned
+      ? '<span class="map-marker-popup__pill map-marker-popup__pill--assigned">Assigned</span>'
+      : '',
   ]
     .filter(Boolean)
     .join(' ');
+
+  // "Assigned to: X · Y" line — only rendered when there's an actual
+  // label to show. Reuses `__method` styling to match the other
+  // metadata lines visually.
+  const assignmentLine =
+    isAssigned && assignmentLabel
+      ? `<p class="map-marker-popup__method"><strong>Assigned to:</strong> ${escapeHtml(assignmentLabel)}</p>`
+      : '';
 
   return `
     <div class="map-marker-popup" data-node-id="${nodeIdAttr}">
@@ -138,6 +173,7 @@ function buildPopupHtml(
         <dt>Altitude</dt><dd>${altitude}</dd>
       </dl>
       ${methodHtml}
+      ${assignmentLine}
       ${tableHtml}
       <div class="map-marker-popup__actions">
         <button
@@ -152,6 +188,12 @@ function buildPopupHtml(
           data-action="toggle-used"
           data-node-id="${nodeIdAttr}"
         >${escapeHtml(usedLabel)}</button>
+        <button
+          type="button"
+          class="map-marker-popup__action"
+          data-action="assign-to-input"
+          data-node-id="${nodeIdAttr}"
+        >${escapeHtml(assignLabel)}</button>
       </div>
     </div>
   `;
@@ -178,6 +220,9 @@ export function ResourceMarkersLayer({
   usedNodes,
   gameId,
   sumMode,
+  assignedNodes,
+  assignmentLabels,
+  onAssignNodeRequest,
 }: ResourceMarkersLayerProps) {
   const map = useMap();
 
@@ -199,16 +244,26 @@ export function ResourceMarkersLayer({
       if (!marker || !node) return;
       const isUsed = usedNodes.has(nodeId);
       const isSelected = getCurrentSelection().has(nodeId);
+      const isAssigned = assignedNodes.has(nodeId);
       marker.setIcon(
         getResourceMarkerIcon(node.resource, node.purity, {
           used: isUsed,
           selected: isSelected,
+          assigned: isAssigned,
         }),
       );
       // `getPopup()` is only non-null in normal mode, since compare
       // mode skips `bindPopup` entirely.
       if (marker.getPopup()) {
-        marker.setPopupContent(buildPopupHtml(node, isUsed, isSelected));
+        marker.setPopupContent(
+          buildPopupHtml(
+            node,
+            isUsed,
+            isSelected,
+            isAssigned,
+            assignmentLabels.get(nodeId),
+          ),
+        );
       }
     };
 
@@ -218,10 +273,12 @@ export function ResourceMarkersLayer({
       nodesByNodeId.set(node.id, node);
       const isUsed = usedNodes.has(node.id);
       const isSelected = initialSelection.has(node.id);
+      const isAssigned = assignedNodes.has(node.id);
       const marker = L.marker(gameToLatLng(node.x, node.y), {
         icon: getResourceMarkerIcon(node.resource, node.purity, {
           used: isUsed,
           selected: isSelected,
+          assigned: isAssigned,
         }),
       });
 
@@ -238,11 +295,20 @@ export function ResourceMarkersLayer({
         // enough to fit the widest content we produce — two
         // extractors × 5 overclock columns × `m³/min` units — while
         // still letting Leaflet auto-size narrower popups naturally.
-        marker.bindPopup(buildPopupHtml(node, isUsed, isSelected), {
-          closeButton: true,
-          offset: [0, -4],
-          maxWidth: 720,
-        });
+        marker.bindPopup(
+          buildPopupHtml(
+            node,
+            isUsed,
+            isSelected,
+            isAssigned,
+            assignmentLabels.get(node.id),
+          ),
+          {
+            closeButton: true,
+            offset: [0, -4],
+            maxWidth: 720,
+          },
+        );
       }
 
       markersByNodeId.set(node.id, marker);
@@ -273,6 +339,17 @@ export function ResourceMarkersLayer({
         useStore.getState().toggleGameUsedNode(gameId, nodeId);
       } else if (action === 'toggle-selected') {
         useStore.getState().toggleNodeSelected(nodeId);
+      } else if (action === 'assign-to-input') {
+        // Delegate to the parent: opening a Mantine modal from inside
+        // an imperative Leaflet popup would mean rendering React into a
+        // Leaflet-managed DOM, which fights with both lifecycles. The
+        // parent owns the modal state and re-renders normally.
+        const node = nodesByNodeId.get(nodeId);
+        if (node) onAssignNodeRequest(node);
+        // Skip `repaintMarker`: the assignment hasn't actually changed
+        // yet (the modal is just opening). The marker will repaint on
+        // its own when `assignedNodes` flips after the user confirms.
+        return;
       } else {
         return;
       }
@@ -313,7 +390,16 @@ export function ResourceMarkersLayer({
     // `sumMode` is in the deps so we fully rebind markers whenever
     // the mode flips — compact and unambiguous behaviour vs. trying
     // to detach/attach click handlers on the fly.
-  }, [map, nodes, usedNodes, gameId, sumMode]);
+  }, [
+    map,
+    nodes,
+    usedNodes,
+    gameId,
+    sumMode,
+    assignedNodes,
+    assignmentLabels,
+    onAssignNodeRequest,
+  ]);
 
   return null;
 }

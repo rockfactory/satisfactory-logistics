@@ -132,6 +132,12 @@ export interface ResourceMarkerIconOptions {
    * combine (dim + halo + check).
    */
   selected?: boolean;
+  /**
+   * When true, the marker is assigned to one or more factory inputs.
+   * Renders a blue corner badge in the top-left, distinct from the
+   * top-right "used" check and the bottom-left "selected" sparkle.
+   */
+  assigned?: boolean;
 }
 
 /**
@@ -150,11 +156,15 @@ export function getResourceMarkerIcon(
   const classes = ['map-marker'];
   if (options.used) classes.push('map-marker--used');
   if (options.selected) classes.push('map-marker--selected');
+  if (options.assigned) classes.push('map-marker--assigned');
   const usedBadge = options.used
     ? '<div class="map-marker__used-badge" aria-hidden="true">✓</div>'
     : '';
   const selectedBadge = options.selected
     ? '<div class="map-marker__selected-badge" aria-hidden="true">✦</div>'
+    : '';
+  const assignedBadge = options.assigned
+    ? '<div class="map-marker__assigned-badge" aria-hidden="true">◆</div>'
     : '';
   return buildPinIcon({
     width: RESOURCE_MARKER_WIDTH,
@@ -162,7 +172,7 @@ export function getResourceMarkerIcon(
     iconHref: imagePath,
     ringColor,
     classes,
-    badgesHtml: `${usedBadge}${selectedBadge}`,
+    badgesHtml: `${usedBadge}${selectedBadge}${assignedBadge}`,
   });
 }
 
