@@ -4,6 +4,7 @@ import {
   Box,
   Group,
   HoverCard,
+  Image,
   Stack,
   Table,
   Text,
@@ -248,6 +249,7 @@ function FactoryOutputFlowRow({
 
   if (!item) return null;
 
+  const isDepot = output.destination === 'depot';
   const surplus = producedAmount - usedAmount;
   const hasSurplus = producedAmount > 0 && surplus > 0.001;
   const isMissing = usedAmount > producedAmount + 0.001;
@@ -266,18 +268,37 @@ function FactoryOutputFlowRow({
         </Text>
       </Table.Td>
       <Table.Td>
-        {(hasSurplus || isMissing) && (
-          <Tooltip label="Unused" withArrow>
-            <Text size="xs" c={isMissing ? 'red.4' : undefined}>
-              {isMissing
-                ? `-${round(usedAmount - producedAmount)}/min`
-                : `+${round(surplus)}/min`}
-            </Text>
+        {isDepot ? (
+          <Tooltip
+            label="Uploaded to Dimensional Depot — not counted as supply for other factories"
+            withArrow
+          >
+            <Group gap={4} wrap="nowrap">
+              <Image
+                src="/images/game/wat-2_256.png"
+                alt="Dimensional Depot"
+                w={16}
+                h={16}
+              />
+              <Text size="xs" c="grape.4">
+                Depot
+              </Text>
+            </Group>
           </Tooltip>
+        ) : (
+          (hasSurplus || isMissing) && (
+            <Tooltip label="Unused" withArrow>
+              <Text size="xs" c={isMissing ? 'red.4' : undefined}>
+                {isMissing
+                  ? `-${round(usedAmount - producedAmount)}/min`
+                  : `+${round(surplus)}/min`}
+              </Text>
+            </Tooltip>
+          )
         )}
       </Table.Td>
       <Table.Td>
-        {(output.amount ?? 0) > 0 && (
+        {!isDepot && (output.amount ?? 0) > 0 && (
           <BaseFactoryUsage
             percentage={percentage}
             size={26}

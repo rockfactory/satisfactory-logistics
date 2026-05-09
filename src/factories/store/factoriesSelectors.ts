@@ -73,8 +73,14 @@ export const useFactoryOutputConsumers = (
         if (!input.resource || input.amount == null) return;
 
         const matchingOutputIndex = sourceFactory.outputs.findIndex(
+          o => o.resource === input.resource && o.destination !== 'depot',
+        );
+        const hasAnyOutputForResource = sourceFactory.outputs.some(
           o => o.resource === input.resource,
         );
+        // Skip when the only matching outputs are depot uploads: they do
+        // not propagate as supply to downstream factories.
+        if (matchingOutputIndex < 0 && hasAnyOutputForResource) return;
 
         parts.push(
           [

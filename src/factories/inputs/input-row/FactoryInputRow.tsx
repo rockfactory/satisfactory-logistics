@@ -7,7 +7,12 @@ import {
   TextInput,
   Tooltip,
 } from '@mantine/core';
-import { IconExternalLink, IconTrash, IconWorld } from '@tabler/icons-react';
+import {
+  IconExternalLink,
+  IconHandStop,
+  IconTrash,
+  IconWorld,
+} from '@tabler/icons-react';
 import { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { FormOnChangeHandler } from '@/core/form/useFormOnChange';
@@ -22,6 +27,7 @@ import {
   type Factory,
   type FactoryInput,
   type FactoryOutput,
+  MANUAL_SOURCE_ID,
   WORLD_SOURCE_ID,
 } from '@/factories/Factory';
 import { FactoryItemInput } from '@/factories/inputs/FactoryItemInput';
@@ -48,9 +54,16 @@ const useAllowedItems = (
     if (input.factoryId === WORLD_SOURCE_ID) {
       return WorldResourcesList;
     }
+    if (input.factoryId === MANUAL_SOURCE_ID) {
+      // Manual inputs let the user pick any item: there is no upstream
+      // factory whose outputs would constrain the choice.
+      return undefined;
+    }
 
     return (
-      sourceOutputs?.filter(o => o.resource).map(o => o.resource!) ?? undefined
+      sourceOutputs
+        ?.filter(o => o.resource && o.destination !== 'depot')
+        .map(o => o.resource!) ?? undefined
     );
   }, [input.factoryId, sourceOutputs]);
 };
@@ -70,14 +83,15 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
   // Restrict the source-factory dropdown to factories that export the
   // selected item. Always include the currently-selected source so its label
   // never disappears (e.g. if the source factory's outputs were edited after
-  // it was picked).
+  // it was picked). Outputs marked as Dimensional Depot are not real supply
+  // and must not surface a factory as a candidate source.
   const factoriesIdsProducingInputResource = useShallowStore(state =>
     input.resource
       ? state.games.games[state.games.selected ?? '']?.factoriesIds.filter(
           id =>
             id === input.factoryId ||
             state.factories.factories[id]?.outputs?.some(
-              o => o.resource === input.resource,
+              o => o.resource === input.resource && o.destination !== 'depot',
             ),
         )
       : null,
@@ -102,13 +116,16 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
       if (
         !selectedFactoryId ||
         selectedFactoryId === WORLD_SOURCE_ID ||
+        selectedFactoryId === MANUAL_SOURCE_ID ||
         input.resource
       ) {
         return;
       }
       const outputs =
         useStore.getState().factories.factories[selectedFactoryId]?.outputs;
-      const resourceOutputs = outputs?.filter(o => o.resource);
+      const resourceOutputs = outputs?.filter(
+        o => o.resource && o.destination !== 'depot',
+      );
       if (resourceOutputs?.length === 1) {
         onChangeHandler(`inputs.${index}.resource`)(
           resourceOutputs[0].resource,
@@ -130,7 +147,8 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         showOnlyIds={factoriesIdsProducingInputResource}
         factorySection={
           input.factoryId &&
-          input.factoryId !== WORLD_SOURCE_ID && (
+          input.factoryId !== WORLD_SOURCE_ID &&
+          input.factoryId !== MANUAL_SOURCE_ID && (
             <ActionIcon
               component={Link}
               to={`/factories/${input.factoryId}`}
@@ -168,6 +186,30 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
             </Popover.Dropdown>
           </Popover>
         }
+        manualSection={
+          <Popover width={220} position="bottom-start" withArrow shadow="md">
+            <Popover.Target>
+              <ActionIcon
+                size="sm"
+                color="orange"
+                variant={input.note ? 'filled' : 'outline'}
+                title={input.note ?? 'Manual input'}
+              >
+                <IconHandStop size={16} />
+              </ActionIcon>
+            </Popover.Target>
+            <Popover.Dropdown>
+              <TextInput
+                size="xs"
+                description="Hand-fed amount; useful for transient or seeded inputs"
+                label="Notes"
+                placeholder="Note"
+                value={input.note ?? ''}
+                onChange={onChangeHandler(`inputs.${index}.note`)}
+              />
+            </Popover.Dropdown>
+          </Popover>
+        }
         w={180}
         onChange={handleFactoryChange}
       />
@@ -180,29 +222,34 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
       />
       <Tooltip
         label={
-          <Group gap="sm">
-            <span>Usage</span>
-            {input.factoryId && input.resource ? (
-              <BaseFactoryUsage percentage={usage.percentage} />
-            ) : (
-              <span>N/A (Choose factory & resource)</span>
-            )}
-            <Group gap="sm" align="center">
-              {usage.percentage > 1 && (
-                <span>
-                  Missing{' '}
-                  {Math.round((usage.usedAmount - usage.producedAmount) * 100) /
-                    100}
-                </span>
+          input.factoryId === MANUAL_SOURCE_ID ? (
+            <span>Manual input — you supply this resource</span>
+          ) : (
+            <Group gap="sm">
+              <span>Usage</span>
+              {input.factoryId && input.resource ? (
+                <BaseFactoryUsage percentage={usage.percentage} />
+              ) : (
+                <span>N/A (Choose factory & resource)</span>
               )}
-              <Text size="sm">
-                <FactoryOutputIcon size={16} /> {usage.producedAmount}
-              </Text>
-              <Text size="sm">
-                <FactoryInputIcon size={16} /> {usage.usedAmount}
-              </Text>
+              <Group gap="sm" align="center">
+                {usage.percentage > 1 && (
+                  <span>
+                    Missing{' '}
+                    {Math.round(
+                      (usage.usedAmount - usage.producedAmount) * 100,
+                    ) / 100}
+                  </span>
+                )}
+                <Text size="sm">
+                  <FactoryOutputIcon size={16} /> {usage.producedAmount}
+                </Text>
+                <Text size="sm">
+                  <FactoryInputIcon size={16} /> {usage.usedAmount}
+                </Text>
+              </Group>
             </Group>
-          </Group>
+          )
         }
         position="top-start"
         opened={focused || forceUsageTooltip}
@@ -215,13 +262,17 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           rightSection={
             <FactoryInputIcon
               size={16}
-              color={usage.percentage > 1 ? 'red' : undefined}
+              color={
+                input.factoryId !== MANUAL_SOURCE_ID && usage.percentage > 1
+                  ? 'red'
+                  : undefined
+              }
             />
           }
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           error={
-            usage.percentage > 1 ? (
+            input.factoryId !== MANUAL_SOURCE_ID && usage.percentage > 1 ? (
               <span>
                 Missing{' '}
                 {Math.round((usage.usedAmount - usage.producedAmount) * 100) /

@@ -59,8 +59,8 @@ export function FactoriesSankeyChart(props: IFactoriesSankeyChartProps) {
 
     const factoryIdToName = new Map(validFactories.map(f => [f.id, f.name!]));
 
-    const links: SankeyLink[] = validFactories.flatMap(target => {
-      return (target.inputs ?? [])
+    const factoryToFactoryLinks: SankeyLink[] = validFactories.flatMap(target =>
+      (target.inputs ?? [])
         .flatMap(input => {
           if (!input.factoryId) return [];
           const sourceName = factoryIdToName.get(input.factoryId);
@@ -74,8 +74,28 @@ export function FactoriesSankeyChart(props: IFactoriesSankeyChartProps) {
             },
           ];
         })
-        .filter(l => l.source !== l.target);
-    });
+        .filter(l => l.source !== l.target),
+    );
+
+    const depotLinks: SankeyLink[] = validFactories.flatMap(source =>
+      (source.outputs ?? [])
+        .filter(o => o.destination === 'depot' && o.resource && o.amount)
+        .map(o => ({
+          source: source.name!,
+          target: 'Dimensional Depot',
+          value: o.amount ?? 0,
+          resourceLabel: getResourceName(o.resource ?? ''),
+        })),
+    );
+
+    if (depotLinks.length > 0) {
+      nodes.push({
+        id: 'Dimensional Depot',
+        _originalId: 'DEPOT',
+      });
+    }
+
+    const links: SankeyLink[] = [...factoryToFactoryLinks, ...depotLinks];
 
     return { nodes, links };
   }, [factories]);
@@ -121,21 +141,22 @@ export function FactoriesSankeyChart(props: IFactoriesSankeyChartProps) {
           if (
             node &&
             typeof node._originalId === 'string' &&
-            node._originalId !== 'WORLD'
+            node._originalId !== 'WORLD' &&
+            node._originalId !== 'DEPOT'
           ) {
             navigate(`/factories/${node._originalId}`);
           }
         }}
         nodeTooltip={info => {
           const originalId = (info.node as SankeyNode)._originalId;
-          const isWorld = originalId === 'WORLD';
+          const isVirtual = originalId === 'WORLD' || originalId === 'DEPOT';
           return (
             <Paper shadow="sm" radius="sm" p="md">
               <Stack gap="xs">
                 <Text size="md" fw={500}>
                   {info.node.id}
                 </Text>
-                {!isWorld && (
+                {!isVirtual && (
                   <Group gap="xs">
                     <MantineTooltip label="Open factory" withArrow>
                       <ActionIcon

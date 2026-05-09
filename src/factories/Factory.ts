@@ -47,9 +47,12 @@ export interface FactoryOutput {
   amount: number | null;
   somersloops?: number | null;
   objective?: FactoryOutputObjective;
+  destination?: FactoryOutputDestination;
 }
 
 export type FactoryOutputObjective = 'default' | 'max';
+
+export type FactoryOutputDestination = 'default' | 'depot';
 
 interface FactoriesSettings {
   noHighlight100PercentUsage?: boolean;
@@ -57,3 +60,4 @@ interface FactoriesSettings {
 }
 
 export const WORLD_SOURCE_ID = 'WORLD';
+export const MANUAL_SOURCE_ID = 'MANUAL';

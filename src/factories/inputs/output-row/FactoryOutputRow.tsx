@@ -10,6 +10,7 @@ import { IconTrash } from '@tabler/icons-react';
 import cx from 'clsx';
 import { useState } from 'react';
 import { useStore } from '@/core/zustand';
+import { DepotToggleButton } from '@/factories/components/depot/DepotToggleButton';
 import { FactoryOutputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
 import { OutputDependenciesPeekModal } from '@/factories/components/peek/OutputDependenciesPeekModal';
 import { FactoryUsage } from '@/factories/components/usage/FactoryUsage';
@@ -135,6 +136,26 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
         />
       </Tooltip>
 
+      <Tooltip
+        label={
+          output.destination === 'depot'
+            ? 'Uploaded to Dimensional Depot. View totals under Charts → Dimensional Depot.'
+            : 'Mark as Dimensional Depot upload. Totals appear under Charts → Dimensional Depot.'
+        }
+        position="top"
+        withArrow
+      >
+        <DepotToggleButton
+          data-tutorial-id="factory-output-destination"
+          active={output.destination === 'depot'}
+          onToggle={() => {
+            useStore.getState().updateFactoryOutput(factoryId, index, {
+              destination: output.destination === 'depot' ? 'default' : 'depot',
+            });
+          }}
+        />
+      </Tooltip>
+
       {displayMode === 'solver' && (
         <FactoryOutputObjectiveSelect
           objective={output.objective}
@@ -155,7 +176,9 @@ export function FactoryOutputRow(props: IFactoryOutputRowProps) {
       </ActionIcon>
       <OutputDependenciesPeekModal factoryId={factoryId} output={output} />
 
-      <FactoryUsage factoryId={factoryId} output={output.resource} />
+      {output.destination !== 'depot' && (
+        <FactoryUsage factoryId={factoryId} output={output.resource} />
+      )}
     </Group>
   );
 }

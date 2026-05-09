@@ -1,8 +1,10 @@
 import { useStore } from '@/core/zustand';
 import { createSlice } from '@/core/zustand-helpers/slices';
 
+export type ChartView = 'graph' | 'sankey' | 'depot';
+
 export interface ChartsSlice {
-  selected: 'graph' | 'sankey';
+  selected: ChartView;
   settings: {
     widthMatchesInputAmount?: boolean;
     colorizeEdgesByTransport?: boolean;
@@ -18,7 +20,7 @@ export const chartsSlice = createSlice({
     },
   } as ChartsSlice,
   actions: {
-    setChartView: (view: 'graph' | 'sankey') => state => {
+    setChartView: (view: ChartView) => state => {
       state.selected = view;
     },
     setChartSetting:
