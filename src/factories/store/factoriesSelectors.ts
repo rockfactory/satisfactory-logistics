@@ -68,7 +68,10 @@ export const useFactoryOutputConsumers = (
       const factory = state.factories.factories[factoryId];
       if (!factory || factory.progress === 'disabled') continue;
 
-      factory.inputs.forEach((input, inputIndex) => {
+      // Defensive `?.`: legacy factories from older saves can persist
+      // without an `inputs` array, even though the type marks it as
+      // required. Treat them as "no inputs" instead of crashing.
+      factory.inputs?.forEach((input, inputIndex) => {
         if (input.factoryId !== id) return;
         if (!input.resource || input.amount == null) return;
 
