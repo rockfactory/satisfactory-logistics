@@ -8,8 +8,19 @@ logger.setLevel('info');
 
 /** Weight bonus for world resources, slightly penalizes extraction vs factory inputs */
 const WORLD_RESOURCE_WEIGHT_OFFSET = 100;
-/** Base weight for non-world factory inputs high enough to be cheaper than most world resources */
-const FACTORY_INPUT_BASE_WEIGHT = 100_000;
+/**
+ * Base weight for non-world factory inputs. The cost coefficient on a declared
+ * input variable is `1 / FACTORY_INPUT_BASE_WEIGHT` and must be smaller than
+ * the marginal recipe-based production cost of any item, so that the solver
+ * always prefers consuming the declared input over producing it from raw
+ * resources. The pure cost-of-production threshold is ~1e-6 (Iron Screw via
+ * raw, the cheapest item in the game), but in practice HIGHS numerical
+ * tolerance swallows differences below ~1e-9 when other objective terms are
+ * larger, so the safe threshold is ~1e10. 1e10 was empirically validated
+ * against a Heavy Modular Frame factory with 6 declared inputs where 1e9 still
+ * leaked ~30/min of raw Wire production despite available declared Wire.
+ */
+const FACTORY_INPUT_BASE_WEIGHT = 10_000_000_000;
 
 export function applySolverObjective(
   ctx: SolverContext,
