@@ -10,6 +10,7 @@ import {
 import {
   IconBuildingFactory2,
   IconExternalLink,
+  IconHandStop,
   IconWorld,
 } from '@tabler/icons-react';
 import { useReactFlow } from '@xyflow/react';
@@ -17,7 +18,7 @@ import { Link } from 'react-router-dom';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
 import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
-import { WORLD_SOURCE_ID } from '@/factories/Factory';
+import { MANUAL_SOURCE_ID, WORLD_SOURCE_ID } from '@/factories/Factory';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import type { IResourceNodeData } from './ResourceNode';
 
@@ -27,6 +28,7 @@ export interface IResourceNodeInputProps {
   data: IResourceNodeData;
   sourceFactory?:
     | typeof WORLD_SOURCE_ID
+    | typeof MANUAL_SOURCE_ID
     | {
         id?: string | null;
         name?: string | null;
@@ -63,11 +65,15 @@ export function ResourceNodeInput(props: IResourceNodeInputProps) {
             </Badge>
             {sourceFactory === WORLD_SOURCE_ID ? (
               <IconWorld size={16} />
+            ) : sourceFactory === MANUAL_SOURCE_ID ? (
+              <IconHandStop size={16} />
             ) : (
               <IconBuildingFactory2 size={16} />
             )}
             {sourceFactory === WORLD_SOURCE_ID ? (
               'World'
+            ) : sourceFactory === MANUAL_SOURCE_ID ? (
+              'Manual'
             ) : sourceFactory ? (
               <Anchor
                 component={Link}
@@ -105,14 +111,15 @@ export function ResourceNodeInput(props: IResourceNodeInputProps) {
             <FactoryItemImage id={resource.id} size={16} highRes />
             {resource.displayName}
           </Group>
-          {sourceFactory !== WORLD_SOURCE_ID && (
-            <Group gap={4} align="center">
-              <span>Usage</span>
-              <BaseFactoryUsage
-                percentage={value / (sourceFactory?.outputAmount ?? 0)}
-              />
-            </Group>
-          )}
+          {sourceFactory !== WORLD_SOURCE_ID &&
+            sourceFactory !== MANUAL_SOURCE_ID && (
+              <Group gap={4} align="center">
+                <span>Usage</span>
+                <BaseFactoryUsage
+                  percentage={value / (sourceFactory?.outputAmount ?? 0)}
+                />
+              </Group>
+            )}
         </Group>
       </Text>
     </Box>

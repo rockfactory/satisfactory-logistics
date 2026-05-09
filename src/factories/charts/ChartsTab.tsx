@@ -4,10 +4,11 @@ import { useStore } from '@/core/zustand';
 import { useGameFactories } from '@/games/store/gameFactoriesSelectors';
 import { AfterHeaderSticky } from '@/layout/AfterHeaderSticky';
 import { FullHeightContainer } from '@/layout/FullHeightContainer';
+import { DepotOverviewTab } from './depot/DepotOverviewTab';
 import { FactoriesGraphContainer } from './graph/FactoriesGraphContainer';
 import { FactoriesGraphSettingsModal } from './graph/settings/FactoriesGraphSettingsModal';
 import { FactoriesSankeyChart } from './sankey/FactoriesSankeyChart';
-import { useChartsView } from './store/chartsSlice';
+import { type ChartView, useChartsView } from './store/chartsSlice';
 
 export interface IChartsTabProps {}
 
@@ -38,10 +39,13 @@ export function ChartsTab(_props: IChartsTabProps) {
             data-tutorial-id="charts-view-switcher"
             value={view}
             radius="md"
-            onChange={value => useStore.getState().setChartView(value as any)}
+            onChange={value =>
+              useStore.getState().setChartView(value as ChartView)
+            }
             data={[
               { value: 'graph', label: 'Graph' },
               { value: 'sankey', label: 'Sankey' },
+              { value: 'depot', label: 'Dimensional Depot' },
             ]}
           />
           {view === 'graph' && <FactoriesGraphSettingsModal />}
@@ -50,6 +54,7 @@ export function ChartsTab(_props: IChartsTabProps) {
       <FullHeightContainer>
         {view === 'graph' && <FactoriesGraphContainer />}
         {view === 'sankey' && <FactoriesSankeyChart />}
+        {view === 'depot' && <DepotOverviewTab />}
       </FullHeightContainer>
     </>
   );

@@ -189,6 +189,10 @@ export const solverFactoriesActions = createActions({
       if (output.objective !== undefined) {
         factoryOutput.objective = output.objective;
       }
+
+      if (output.destination !== undefined) {
+        factoryOutput.destination = output.destination;
+      }
     },
   /**
    * Automatically set the inputs from the solver solution.

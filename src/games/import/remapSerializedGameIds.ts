@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { WORLD_SOURCE_ID } from '@/factories/Factory';
+import { MANUAL_SOURCE_ID, WORLD_SOURCE_ID } from '@/factories/Factory';
 import type { SerializedGame } from '@/games/store/gameFactoriesActions';
 
 export interface RemapSerializedGameIdsOptions {
@@ -32,7 +32,7 @@ export function remapSerializedGameIds(
   }
 
   const mapFactoryId = (id: string | null | undefined) => {
-    if (!id || id === WORLD_SOURCE_ID) return id;
+    if (!id || id === WORLD_SOURCE_ID || id === MANUAL_SOURCE_ID) return id;
     return factoryIdMap.get(id) ?? id;
   };
 

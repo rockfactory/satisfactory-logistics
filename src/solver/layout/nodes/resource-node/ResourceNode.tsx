@@ -7,7 +7,11 @@ import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { useShallowStore } from '@/core/zustand';
 import { useFactoryContext } from '@/FactoryContext';
 import { FactoryInputIcon } from '@/factories/components/peek/icons/OutputInputIcons';
-import { type FactoryInput, WORLD_SOURCE_ID } from '@/factories/Factory';
+import {
+  type FactoryInput,
+  MANUAL_SOURCE_ID,
+  WORLD_SOURCE_ID,
+} from '@/factories/Factory';
 import type { FactoryItem } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import { isWorldResource } from '@/recipes/WorldResources';
@@ -62,6 +66,7 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
   const sourceFactory = useShallowStore(state => {
     if (!input) return undefined;
     if (input.factoryId === WORLD_SOURCE_ID) return WORLD_SOURCE_ID;
+    if (input.factoryId === MANUAL_SOURCE_ID) return MANUAL_SOURCE_ID;
     const factory = state.factories.factories[input.factoryId ?? ''];
     return {
       id: factory?.id,
@@ -116,7 +121,11 @@ export const ResourceNode = memo((props: IResourceNodeProps) => {
               <Group gap={4} align="center">
                 {sourceFactory != null && (
                   <Tooltip
-                    label="Input from another factory"
+                    label={
+                      sourceFactory === MANUAL_SOURCE_ID
+                        ? 'Manual input'
+                        : 'Input from another factory'
+                    }
                     disabled={sourceFactory === WORLD_SOURCE_ID}
                   >
                     <FactoryInputIcon size={16} stroke={2} />
