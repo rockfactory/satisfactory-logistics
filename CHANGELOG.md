@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.14.0](https://github.com/rockfactory/satisfactory-logistics/compare/v0.13.1...v0.14.0) (2026-05-09)
+
+### Features
+
+* add manual inputs and dimensional depot ([4cd60d4](https://github.com/rockfactory/satisfactory-logistics/commit/4cd60d4d2cbbee0d68eb7d58ff6a2b06a899d141))
+* add node to factory link ([16df75d](https://github.com/rockfactory/satisfactory-logistics/commit/16df75d040b21501283064389d923a9a740cc8c0))
+
+### Bug Fixes
+
+* [solver] increase inputs usage factor ([1e072bf](https://github.com/rockfactory/satisfactory-logistics/commit/1e072bfe3b7b5f96644b3411df384732834c9db9))
+* defensive factory inputs usage ([0de777d](https://github.com/rockfactory/satisfactory-logistics/commit/0de777d50e927b9f16ebbf3ac1141297b8993159))
+* enhance exports with new assigned nodes ([f38503f](https://github.com/rockfactory/satisfactory-logistics/commit/f38503ff1b984a005173624dd0fa83a426dad318))
+* remove alerts if two outputs are present ([5ef9074](https://github.com/rockfactory/satisfactory-logistics/commit/5ef9074606785b64e9e68cb5088be13e589d1107))
+* update tutorial for depot ([77bb6d1](https://github.com/rockfactory/satisfactory-logistics/commit/77bb6d1923301f44c40eae28bd08c48ce3ac0076))
+
 ## [0.13.1](https://github.com/rockfactory/satisfactory-logistics/compare/v0.13.0...v0.13.1) (2026-05-09)
 
 ### Bug Fixes
