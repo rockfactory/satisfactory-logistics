@@ -235,9 +235,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
                     </Group>
                     <Text size="xs" c="dimmed">
                       {[
-                        purityCounts.pure
-                          ? `${purityCounts.pure} pure`
-                          : null,
+                        purityCounts.pure ? `${purityCounts.pure} pure` : null,
                         purityCounts.normal
                           ? `${purityCounts.normal} normal`
                           : null,

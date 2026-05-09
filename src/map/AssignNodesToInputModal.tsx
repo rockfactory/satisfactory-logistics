@@ -251,9 +251,7 @@ export function AssignNodesToInputModal({
               <Table withRowBorders={false} verticalSpacing={4}>
                 <Table.Tbody>
                   {existingAssignments.map(entry => (
-                    <Table.Tr
-                      key={`${entry.factoryId}::${entry.inputIndex}`}
-                    >
+                    <Table.Tr key={`${entry.factoryId}::${entry.inputIndex}`}>
                       <Table.Td>
                         <Text size="sm" truncate="end">
                           {entry.factoryName ?? 'Unnamed factory'}
@@ -265,7 +263,10 @@ export function AssignNodesToInputModal({
                         </Badge>
                       </Table.Td>
                       <Table.Td
-                        style={{ width: 70, color: 'var(--mantine-color-dimmed)' }}
+                        style={{
+                          width: 70,
+                          color: 'var(--mantine-color-dimmed)',
+                        }}
                       >
                         {totalNodes > 1 ? (
                           <Text size="xs" c="dimmed">
