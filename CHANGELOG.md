@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.14.2](https://github.com/rockfactory/satisfactory-logistics/compare/v0.14.1...v0.14.2) (2026-05-10)
+
+### Bug Fixes
+
+* display vehicle paths and hypertubes as splines ([7fe0962](https://github.com/rockfactory/satisfactory-logistics/commit/7fe0962c0ca54bbe559b11dad85fd2cf3e6f7895))
+
 ## [0.14.1](https://github.com/rockfactory/satisfactory-logistics/compare/v0.14.0...v0.14.1) (2026-05-10)
 
 ### Bug Fixes
