@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.1](https://github.com/rockfactory/satisfactory-logistics/compare/v0.14.0...v0.14.1) (2026-05-10)
+
+### Bug Fixes
+
+* reduce egress size ([da4f868](https://github.com/rockfactory/satisfactory-logistics/commit/da4f868d96122131812a982fe5a567a049138d76))
+* shorten update prompt ([436b08a](https://github.com/rockfactory/satisfactory-logistics/commit/436b08a90501434065e2cb7f8c2ad44ad3da3534))
+
 ## [0.14.0](https://github.com/rockfactory/satisfactory-logistics/compare/v0.13.1...v0.14.0) (2026-05-09)
 
 ### Features
