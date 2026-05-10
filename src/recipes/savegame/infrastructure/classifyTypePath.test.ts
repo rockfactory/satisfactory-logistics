@@ -32,10 +32,30 @@ describe('classifyTypePath', () => {
     ).toEqual({ mode: 'spline', kind: 'pipe', tier: 1 });
   });
 
-  it('classifies hyper tubes before falling through to the generic pipe regex', () => {
+  it('classifies the hyper tube spline segment', () => {
     expect(
-      classifyTypePath('/Game/.../Build_PipelineHyper.Build_PipelineHyper_C'),
+      classifyTypePath(
+        '/Game/FactoryGame/Buildable/Factory/PipeHyper/Build_PipeHyper.Build_PipeHyper_C',
+      ),
     ).toEqual({ mode: 'spline', kind: 'hyper', tier: 0 });
+  });
+
+  it('leaves hyper tube fittings (start, support, t-junction) classified as buildings', () => {
+    expect(
+      classifyTypePath(
+        '/Game/FactoryGame/Buildable/Factory/PipeHyperStart/Build_PipeHyperStart.Build_PipeHyperStart_C',
+      ),
+    ).toEqual({ mode: 'building' });
+    expect(
+      classifyTypePath(
+        '/Game/FactoryGame/Buildable/Factory/PipeHyperSupport/Build_PipeHyperSupport.Build_PipeHyperSupport_C',
+      ),
+    ).toEqual({ mode: 'building' });
+    expect(
+      classifyTypePath(
+        '/Game/FactoryGame/Buildable/Factory/PipeHyperTJunction/Build_HypertubeTJunction.Build_HypertubeTJunction_C',
+      ),
+    ).toEqual({ mode: 'building' });
   });
 
   it('classifies railroad tracks (regular and integrated)', () => {
@@ -47,6 +67,32 @@ describe('classifyTypePath', () => {
         '/Game/.../Build_RailroadTrackIntegrated.Build_RailroadTrackIntegrated_C',
       ),
     ).toEqual({ mode: 'spline', kind: 'rail', tier: 0 });
+  });
+
+  it('classifies vehicle path segments and reads the mSplinePoints property', () => {
+    expect(
+      classifyTypePath(
+        '/Game/FactoryGame/Buildable/Vehicle/VehiclePath/Build_VehiclePath_Universal.Build_VehiclePath_Universal_C',
+      ),
+    ).toEqual({
+      mode: 'spline',
+      kind: 'vehicle',
+      tier: 0,
+      splineProperty: 'mSplinePoints',
+    });
+  });
+
+  it('leaves vehicle path nodes classified as buildings', () => {
+    expect(
+      classifyTypePath(
+        '/Game/FactoryGame/Buildable/Vehicle/VehiclePath/Build_VehiclePathNode_Default.Build_VehiclePathNode_Default_C',
+      ),
+    ).toEqual({ mode: 'building' });
+    expect(
+      classifyTypePath(
+        '/Game/FactoryGame/Buildable/Vehicle/VehiclePath/Build_VehiclePathNode_DockingStation.Build_VehiclePathNode_DockingStation_C',
+      ),
+    ).toEqual({ mode: 'building' });
   });
 
   it('classifies power lines', () => {

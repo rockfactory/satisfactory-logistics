@@ -16,7 +16,15 @@ export interface Vec4 extends Vec3 {
  * extract power-line wires, or treat as a footprinted building).
  */
 export type Classification =
-  | { mode: 'spline'; kind: SplineKind; tier: number }
+  | {
+      mode: 'spline';
+      kind: SplineKind;
+      tier: number;
+      /** Property name on the entity carrying the SplinePointData array.
+       * Defaults to `mSplineData` for belts / pipes / rails / hypertubes;
+       * vehicle paths store the same struct shape under `mSplinePoints`. */
+      splineProperty?: string;
+    }
   | { mode: 'powerline' }
   | { mode: 'building' };
 

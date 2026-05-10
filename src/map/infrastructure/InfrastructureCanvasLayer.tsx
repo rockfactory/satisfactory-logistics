@@ -7,6 +7,7 @@ import { useStore } from '@/core/zustand';
 import {
   INFRASTRUCTURE_CATEGORIES,
   type InfrastructureCategory,
+  type InfrastructureSplinesBlock,
   type ParsedInfrastructure,
   SPLINE_KINDS,
   type SplineKind,
@@ -336,6 +337,81 @@ function paintTileBuildings(
   ctx.globalAlpha = 1;
 }
 
+/**
+ * Appends a single polyline to `path`. When `step === 1` and the block
+ * has Hermite tangents (`block.tangentsXY`) the segments are emitted
+ * as `bezierCurveTo` so curved track / belt sections render as actual
+ * curves. Otherwise a straight `lineTo` chain is used, with sub-pixel
+ * points skipped to keep the tile-paint fast at low zoom.
+ *
+ * Shared between `paintTileSplines` (tile-batched main render) and
+ * `drawHighlight` (single-polyline hover stroke) so both paths use the
+ * same curve geometry — keeping the hover accent on top of the curve
+ * rather than collapsing it to chords.
+ */
+function appendPolylineToPath(
+  path: Path2D,
+  block: InfrastructureSplinesBlock,
+  polylineIndex: number,
+  a: AffineGameToContainer,
+  step: number,
+): void {
+  const start = block.offsets[polylineIndex];
+  const end = block.offsets[polylineIndex + 1];
+  if (end - start < 2) return;
+
+  const { pointsXY, tangentsXY } = block;
+  const sx = a.ox + pointsXY[start * 2] * a.ax;
+  const sy = a.oy + pointsXY[start * 2 + 1] * a.by;
+  path.moveTo(sx, sy);
+
+  if (step === 1 && tangentsXY != null) {
+    const t = tangentsXY;
+    let p0x = sx;
+    let p0y = sy;
+    for (let j = start + 1; j < end; j++) {
+      const p1x = a.ox + pointsXY[j * 2] * a.ax;
+      const p1y = a.oy + pointsXY[j * 2 + 1] * a.by;
+      const leaveX = (t[(j - 1) * 4 + 2] * a.ax) / 3;
+      const leaveY = (t[(j - 1) * 4 + 3] * a.by) / 3;
+      const arriveX = (t[j * 4] * a.ax) / 3;
+      const arriveY = (t[j * 4 + 1] * a.by) / 3;
+      path.bezierCurveTo(
+        p0x + leaveX,
+        p0y + leaveY,
+        p1x - arriveX,
+        p1y - arriveY,
+        p1x,
+        p1y,
+      );
+      p0x = p1x;
+      p0y = p1y;
+    }
+    return;
+  }
+
+  let lastDX = sx;
+  let lastDY = sy;
+  const lastIdx = end - 1;
+  for (let j = start + step; j < lastIdx; j += step) {
+    const px = a.ox + pointsXY[j * 2] * a.ax;
+    const py = a.oy + pointsXY[j * 2 + 1] * a.by;
+    const dx = px - lastDX;
+    const dy = py - lastDY;
+    if (dx * dx + dy * dy < 1) continue;
+    path.lineTo(px, py);
+    lastDX = px;
+    lastDY = py;
+  }
+  const lx = a.ox + pointsXY[lastIdx * 2] * a.ax;
+  const ly = a.oy + pointsXY[lastIdx * 2 + 1] * a.by;
+  const ldx = lx - lastDX;
+  const ldy = ly - lastDY;
+  if (ldx * ldx + ldy * ldy >= 1 || end - start === 2) {
+    path.lineTo(lx, ly);
+  }
+}
+
 function paintTileSplines(
   ctx: CanvasRenderingContext2D,
   infra: ParsedInfrastructure,
@@ -353,6 +429,7 @@ function paintTileSplines(
     hyper: 1,
     rail: 1.8,
     power: 0.75,
+    vehicle: 1,
   };
 
   const step = splineStepForZoom(zoom);
@@ -369,67 +446,13 @@ function paintTileSplines(
     if (!SPLINE_KINDS.includes(block.kind)) continue;
     if ((state.splineVisibility?.[block.kind] ?? true) === false) continue;
 
-    const start = block.offsets[polyIdx];
-    const end = block.offsets[polyIdx + 1];
-    if (end - start < 2) continue;
-
     let path = pathsByBlock.get(blockIdx);
     if (!path) {
       path = new Path2D();
       pathsByBlock.set(blockIdx, path);
     }
 
-    const { pointsXY, tangentsXY } = block;
-    const useBezier = step === 1 && tangentsXY != null;
-    const sx = a.ox + pointsXY[start * 2] * a.ax;
-    const sy = a.oy + pointsXY[start * 2 + 1] * a.by;
-    path.moveTo(sx, sy);
-
-    if (useBezier) {
-      const t = tangentsXY;
-      let p0x = sx;
-      let p0y = sy;
-      for (let j = start + 1; j < end; j++) {
-        const p1x = a.ox + pointsXY[j * 2] * a.ax;
-        const p1y = a.oy + pointsXY[j * 2 + 1] * a.by;
-        const leaveX = (t[(j - 1) * 4 + 2] * a.ax) / 3;
-        const leaveY = (t[(j - 1) * 4 + 3] * a.by) / 3;
-        const arriveX = (t[j * 4] * a.ax) / 3;
-        const arriveY = (t[j * 4 + 1] * a.by) / 3;
-        path.bezierCurveTo(
-          p0x + leaveX,
-          p0y + leaveY,
-          p1x - arriveX,
-          p1y - arriveY,
-          p1x,
-          p1y,
-        );
-        p0x = p1x;
-        p0y = p1y;
-      }
-      continue;
-    }
-
-    let lastDX = sx;
-    let lastDY = sy;
-    const lastIdx = end - 1;
-    for (let j = start + step; j < lastIdx; j += step) {
-      const px = a.ox + pointsXY[j * 2] * a.ax;
-      const py = a.oy + pointsXY[j * 2 + 1] * a.by;
-      const dx = px - lastDX;
-      const dy = py - lastDY;
-      if (dx * dx + dy * dy < 1) continue;
-      path.lineTo(px, py);
-      lastDX = px;
-      lastDY = py;
-    }
-    const lx = a.ox + pointsXY[lastIdx * 2] * a.ax;
-    const ly = a.oy + pointsXY[lastIdx * 2 + 1] * a.by;
-    const ldx = lx - lastDX;
-    const ldy = ly - lastDY;
-    if (ldx * ldx + ldy * ldy >= 1 || end - start === 2) {
-      path.lineTo(lx, ly);
-    }
+    appendPolylineToPath(path, block, polyIdx, a, step);
   }
 
   ctx.lineCap = 'round';
@@ -489,21 +512,11 @@ function drawHighlight(
     ctx.restore();
     return;
   }
-  const start = block.offsets[hit.polylineIndex];
-  const end = block.offsets[hit.polylineIndex + 1];
-  if (end - start < 2) {
-    ctx.restore();
-    return;
-  }
   const path = new Path2D();
-  const sx = a.ox + block.pointsXY[start * 2] * a.ax;
-  const sy = a.oy + block.pointsXY[start * 2 + 1] * a.by;
-  path.moveTo(sx, sy);
-  for (let j = start + 1; j < end; j++) {
-    const px = a.ox + block.pointsXY[j * 2] * a.ax;
-    const py = a.oy + block.pointsXY[j * 2 + 1] * a.by;
-    path.lineTo(px, py);
-  }
+  // step=1 forces the full point sequence; combined with tangentsXY it
+  // selects the bezier branch so the hover accent traces the curve
+  // instead of collapsing to straight chords on top of it.
+  appendPolylineToPath(path, block, hit.polylineIndex, a, 1);
 
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
   ctx.lineWidth = 6;

@@ -26,10 +26,33 @@ const HARDCODED_CLEARANCE_CM: Record<string, ClearanceCm> = {
   Build_ConveyorPoleStackable_C: { width: 100, length: 100, height: 400 },
   Build_ConveyorPoleWall_C: { width: 100, length: 100, height: 100 },
   Build_ConveyorCeilingAttachment_C: { width: 100, length: 100, height: 100 },
+  // Conveyor lifts are 2x2m in-game but ship with `null` clearance in
+  // the catalog, so without an override they fall back to the 8x8m
+  // factory default. Height varies by tier (Mk1 ~4m, taller tiers
+  // longer), but the visible footprint is identical: a 2x2m vertical
+  // shaft. Pick 4m as a shared height since the map only uses it for
+  // topmost-under-cursor stacking.
+  Build_ConveyorLiftMk1_C: { width: 200, length: 200, height: 400 },
+  Build_ConveyorLiftMk2_C: { width: 200, length: 200, height: 400 },
+  Build_ConveyorLiftMk3_C: { width: 200, length: 200, height: 400 },
+  Build_ConveyorLiftMk4_C: { width: 200, length: 200, height: 400 },
+  Build_ConveyorLiftMk5_C: { width: 200, length: 200, height: 400 },
+  Build_ConveyorLiftMk6_C: { width: 200, length: 200, height: 400 },
   Build_PipelineSupport_C: { width: 100, length: 100, height: 200 },
   Build_PipelineSupportWall_C: { width: 100, length: 100, height: 100 },
   Build_PipelineSupportWallHole_C: { width: 100, length: 100, height: 100 },
   Build_PipelineFlowIndicator_C: { width: 100, length: 100, height: 100 },
+  // Vehicle path waypoints: invisible markers in-game that just anchor
+  // the recorded route. The 8x8m fallback paints them as big squares
+  // sitting on top of the path spline. Render them as 1x1m so they
+  // read as discreet dots at path joints instead of competing with the
+  // spline itself.
+  Build_VehiclePathNode_Default_C: { width: 100, length: 100, height: 100 },
+  Build_VehiclePathNode_DockingStation_C: {
+    width: 400,
+    length: 400,
+    height: 200,
+  },
 };
 
 const SMALL_CLEARANCE_PATTERNS = [/Pole/, /Support/, /FlowIndicator/];

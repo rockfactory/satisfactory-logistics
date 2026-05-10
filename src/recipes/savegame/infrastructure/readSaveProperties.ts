@@ -20,19 +20,25 @@ export interface SplinePoint {
 }
 
 /**
- * Reads `properties.mSplineData` (an `ArrayProperty<StructProperty>` of
- * `SplinePointData`) into a flat list of points + tangents relative to
- * the entity's transform. The worker is expected to rotate/translate
- * them into world space afterwards. Returns null if the field is
- * absent or contains fewer than 2 valid points (a single-point
- * "polyline" can't be drawn).
+ * Reads a `SplinePointData` array (an `ArrayProperty<StructProperty>`)
+ * into a flat list of points + tangents relative to the entity's
+ * transform. The worker is expected to rotate/translate them into
+ * world space afterwards. Returns null if the field is absent or
+ * contains fewer than 2 valid points (a single-point "polyline" can't
+ * be drawn).
+ *
+ * Different buildables store the array under different property names:
+ * conveyor belts, pipelines, railroad tracks, and hypertubes use
+ * `mSplineData`; vehicle path segments (`Build_VehiclePath_Universal_C`)
+ * use `mSplinePoints`. The struct shape inside is identical.
  */
 export function readSplineLocations(
   properties: Record<string, unknown> | undefined,
+  propertyName: string = 'mSplineData',
 ): SplinePoint[] | null {
   const sd = (
-    properties as { mSplineData?: { values?: unknown[] } } | undefined
-  )?.mSplineData;
+    properties as Record<string, { values?: unknown[] } | undefined>
+  )?.[propertyName];
   if (!sd || !Array.isArray(sd.values)) return null;
   const out: SplinePoint[] = [];
   for (const sp of sd.values) {

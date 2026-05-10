@@ -25,7 +25,13 @@ export const INFRASTRUCTURE_CATEGORIES: InfrastructureCategory[] = [
   'other',
 ];
 
-export type SplineKind = 'belt' | 'pipe' | 'hyper' | 'rail' | 'power';
+export type SplineKind =
+  | 'belt'
+  | 'pipe'
+  | 'hyper'
+  | 'rail'
+  | 'power'
+  | 'vehicle';
 
 export const SPLINE_KINDS: SplineKind[] = [
   'belt',
@@ -33,6 +39,7 @@ export const SPLINE_KINDS: SplineKind[] = [
   'hyper',
   'rail',
   'power',
+  'vehicle',
 ];
 
 /**

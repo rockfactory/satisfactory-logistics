@@ -119,6 +119,7 @@ const INFRA_SPLINE_ICONS: Record<SplineKind, ReactNode> = {
   hyper: <IconRoute size={14} />,
   rail: <IconTrain size={14} />,
   power: <IconBolt size={14} />,
+  vehicle: <IconTruck size={14} />,
 };
 
 export interface MapFiltersPanelProps {

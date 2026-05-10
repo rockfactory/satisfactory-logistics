@@ -289,7 +289,7 @@ export function ingestEntity(
   const cls = classifyTypePath(typePath);
 
   if (cls.mode === 'spline') {
-    const points = readSplineLocations(obj.properties);
+    const points = readSplineLocations(obj.properties, cls.splineProperty);
     if (points) {
       const bucket = getOrCreateBucket(acc, cls.kind, cls.tier);
       const built = buildRotatedPolyline(tx, ty, yaw, points);

@@ -143,6 +143,9 @@ export const SplineColor: Record<SplineKind, Record<number, string>> = {
   power: {
     0: '#fde68a',
   },
+  vehicle: {
+    0: '#06b6d4',
+  },
 };
 
 export const SplineLabel: Record<SplineKind, string> = {
@@ -151,6 +154,7 @@ export const SplineLabel: Record<SplineKind, string> = {
   hyper: 'Hyper tubes',
   rail: 'Railroads',
   power: 'Power lines',
+  vehicle: 'Vehicle paths',
 };
 
 export function splineColor(kind: SplineKind, tier: number): string {
