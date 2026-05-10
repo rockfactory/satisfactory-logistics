@@ -155,9 +155,7 @@ async function doLoadRemoteGamesList(): Promise<void> {
  * device that registered the game pre-sync still pulls authoritative
  * state.
  */
-function collectFullFetchTargets(
-  remoteGames: RemoteLoadedGamesList,
-): string[] {
+function collectFullFetchTargets(remoteGames: RemoteLoadedGamesList): string[] {
   const state = useStore.getState();
   const targets: string[] = [];
   const localBySavedId = new Map(

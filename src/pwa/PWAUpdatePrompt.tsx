@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 
 const UPDATE_NOTIFICATION_ID = 'pwa-update-available';
 const OFFLINE_READY_NOTIFICATION_ID = 'pwa-offline-ready';
+const UPDATE_CHECK_INTERVAL_MS = 15 * 60 * 1000;
 
 export function PWAUpdatePrompt() {
   const {
@@ -13,20 +14,45 @@ export function PWAUpdatePrompt() {
     offlineReady: [offlineReady, setOfflineReady],
     updateServiceWorker,
   } = useRegisterSW({
-    onRegisteredSW(swUrl, registration) {
-      if (!registration) return;
-      // Re-check every hour while the tab stays open so long-running sessions pick up new deploys.
-      setInterval(
-        () => {
-          registration.update().catch(() => {});
-        },
-        60 * 60 * 1000,
-      );
-    },
     onRegisterError(error) {
       console.error('SW registration failed', error);
     },
   });
+
+  // Trigger registration.update() aggressively so long-running tabs pick up new
+  // deploys quickly: once on mount, on every interval tick, and whenever the
+  // tab becomes visible again (typical when alt-tabbing back from the game).
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+
+    let cancelled = false;
+    let interval: ReturnType<typeof setInterval> | null = null;
+    let activeRegistration: ServiceWorkerRegistration | null = null;
+
+    const onVisible = () => {
+      if (document.visibilityState !== 'visible') return;
+      activeRegistration?.update().catch(() => {});
+    };
+
+    navigator.serviceWorker.ready
+      .then(registration => {
+        if (cancelled) return;
+        activeRegistration = registration;
+        registration.update().catch(() => {});
+        interval = setInterval(() => {
+          registration.update().catch(() => {});
+        }, UPDATE_CHECK_INTERVAL_MS);
+      })
+      .catch(() => {});
+
+    document.addEventListener('visibilitychange', onVisible);
+
+    return () => {
+      cancelled = true;
+      if (interval) clearInterval(interval);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, []);
 
   useEffect(() => {
     if (!needRefresh) return;
