@@ -21,6 +21,12 @@ export const gameRemoteActions = createActions({
   // those cases would force the next `saveRemoteGame` to insert a
   // duplicate row (see issue #127 audit, vector #5). When in doubt,
   // leave the savedId alone; the next successful refresh will reconcile.
+  //
+  // The incoming list is metadata-only: the full `data` blob is fetched
+  // lazily by `loadRemoteGamesList` for the games that actually need it.
+  // This action only refreshes pointer/timestamp fields — it never
+  // mutates `factories`/`solvers`. Full-state application goes through
+  // `loadRemoteGame` for those games.
   setRemoteGames:
     (games: RemoteLoadedGamesList, opts?: { authoritative?: boolean }) =>
     state => {
@@ -39,9 +45,30 @@ export const gameRemoteActions = createActions({
         }
       }
 
-      for (const data of games) {
-        const serialized = data.data as unknown as SerializedGame;
-        loadSerializedGameIntoState(serialized, data, state);
+      for (const remote of games) {
+        const local = Object.values(state.games.games).find(
+          g => g.savedId === remote.id,
+        );
+        if (!local) continue;
+        // Only refresh metadata when the remote stamp is NOT strictly
+        // newer than local. Bumping `updatedAt` past local while leaving
+        // the data stale would let the next save's optimistic-locking
+        // check (`eq.updated_at = lastKnown`) pass and overwrite a
+        // newer remote — exactly what the lazy full-fetch path is
+        // about to handle. So skip those rows here; the lazy path
+        // applies the data and refreshes metadata coherently.
+        if (remote.updated_at && local.updatedAt) {
+          const remoteTs = new Date(remote.updated_at).getTime();
+          const localTs = new Date(local.updatedAt).getTime();
+          if (remoteTs > localTs) continue;
+        } else if (remote.updated_at && !local.updatedAt) {
+          // Local has never been synced — let the lazy path handle it.
+          continue;
+        }
+        local.authorId = remote.author_id;
+        local.createdAt = remote.created_at;
+        local.shareToken = remote.share_token;
+        if (remote.updated_at) local.updatedAt = remote.updated_at;
       }
     },
   loadRemoteGame:

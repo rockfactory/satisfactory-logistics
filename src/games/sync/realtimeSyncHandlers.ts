@@ -212,12 +212,14 @@ export function requestFullStateWithFallback(
       const savedId = localGame?.savedId;
       if (!savedId) return;
 
-      // Read both `updated_at` (used for the local-vs-DB winner choice)
-      // and the remote `factoriesIds` (used for the shrink guard before
-      // we let a stale leader overwrite the DB).
+      // Read `updated_at` (winner choice) plus a JSONB-projected
+      // `factoriesIds` (used for the leader-path shrink guard). Projecting
+      // through PostgREST instead of pulling the full `data` blob is what
+      // keeps Postgres egress in check: a single typical save's `data`
+      // weighs hundreds of KB, while `factoriesIds` is at most a few KB.
       const { data, error } = await supabaseClient
         .from('games')
-        .select('updated_at, data')
+        .select('updated_at, factory_ids:data->game->factoriesIds')
         .eq('id', savedId)
         .single();
 
@@ -247,8 +249,7 @@ export function requestFullStateWithFallback(
       // failure mode) — abort the save, snapshot the DB row for safety,
       // and reload the remote instead of clobbering it.
       const remoteFactoryIds =
-        ((data?.data as { game?: { factoriesIds?: string[] } } | null)?.game
-          ?.factoriesIds as string[] | undefined) ?? [];
+        (data?.factory_ids as unknown as string[] | null | undefined) ?? [];
       const localSerialized = serializeGame(gameId);
       const verdict = assessLocalVsRemote(localSerialized, remoteFactoryIds);
 

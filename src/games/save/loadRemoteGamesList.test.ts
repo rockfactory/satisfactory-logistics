@@ -16,6 +16,10 @@ vi.mock('@/core/zustand', () => ({
   useStore: { getState: () => useStoreGetState() },
 }));
 
+vi.mock('@/games/save/loadRemoteGame', () => ({
+  loadRemoteGameBySavedId: vi.fn(),
+}));
+
 vi.mock('@/games/save/snapshotRemoteGame', () => ({
   snapshotRemote: (...args: unknown[]) => snapshotRemoteMock(...args),
 }));
@@ -43,11 +47,6 @@ function row(overrides: Partial<RemoteRow> = {}): RemoteRow {
     created_at: '2026-05-01T00:00:00Z',
     updated_at: '2026-05-06T11:00:00Z',
     share_token: null,
-    data: {
-      game: { id: 'g1' },
-      factories: [],
-      solvers: [],
-    },
     ...overrides,
   } as RemoteRow;
 }

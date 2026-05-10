@@ -12,6 +12,19 @@ const logger = loglev.getLogger('games:save');
 
 const SELECT_REMOTE_DATA = 'id, author_id, created_at, updated_at, share_token';
 
+// Inflight INSERTs by local game id. The INSERT path runs when
+// `game.savedId` is still undefined; the `savedId` only lands after the
+// `.insert(...).select(...)` round-trip completes. In that window any
+// concurrent caller (login auto-save + edit debounce, manual click +
+// flush-on-unload, ...) would also see `savedId === undefined` and fire
+// a SECOND INSERT, producing two cloud rows whose blobs share the same
+// internal `serialized.game.id`. Coalescing concurrent callers onto the
+// same Promise keeps the cloud row count to one per local game, and
+// later callers fall through to the UPDATE path against the now-known
+// savedId. Multi-tab races (separate tabs, separate process) still
+// need the load-side id remap as a second line of defense.
+const inflightInserts = new Map<string, Promise<unknown>>();
+
 export interface SaveRemoteGameOptions {
   silent?: boolean;
   /**
@@ -57,24 +70,46 @@ export async function saveRemoteGame(
     };
 
     if (!game.savedId) {
+      // Coalesce concurrent INSERTs for the same local game (see
+      // `inflightInserts` docblock above). If one is already running,
+      // wait for it: by the time it resolves, `savedId` is set and the
+      // duplicate cloud row is avoided. We then return because that
+      // first INSERT already wrote our same payload — the latest local
+      // edits will be picked up by the next debounced save against the
+      // now-known savedId.
+      const pending = inflightInserts.get(game.id);
+      if (pending) {
+        logger.info(
+          `Insert already in flight for game ${game.id}, awaiting it`,
+        );
+        await pending.catch(() => {});
+        return;
+      }
+
       // First save for this game: insert a brand-new row. The server fills
       // `updated_at` via default + trigger so we don't send it.
-      const { data, error } = await supabaseClient
-        .from('games')
-        .insert({
-          author_id: game.authorId ?? auth.session.user.id,
-          ...payload,
-        })
-        .select(SELECT_REMOTE_DATA)
-        .single();
+      const authorId = game.authorId ?? auth.session.user.id;
+      const insertPromise = (async () => {
+        const { data, error } = await supabaseClient
+          .from('games')
+          .insert({ author_id: authorId, ...payload })
+          .select(SELECT_REMOTE_DATA)
+          .single();
 
-      if (error) throw error;
+        if (error) throw error;
 
-      logger.info(`Inserted new remote game: ${data.id}`);
-      withSuppressedBroadcast(() => {
-        useStore.getState().setRemoteGameData(game.id, data);
-      });
-      maybeSnapshotRemote(gameId, { reason: 'auto' }).catch(() => {});
+        logger.info(`Inserted new remote game: ${data.id}`);
+        withSuppressedBroadcast(() => {
+          useStore.getState().setRemoteGameData(game.id, data);
+        });
+        maybeSnapshotRemote(gameId, { reason: 'auto' }).catch(() => {});
+      })();
+      inflightInserts.set(game.id, insertPromise);
+      try {
+        await insertPromise;
+      } finally {
+        inflightInserts.delete(game.id);
+      }
       return;
     }
 

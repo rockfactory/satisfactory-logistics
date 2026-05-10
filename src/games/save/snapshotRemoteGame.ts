@@ -51,6 +51,10 @@ export async function snapshotRemote(
     return false;
   }
   try {
+    // We never need the body — only the error flag tells us whether the
+    // snapshot landed. Migration 0003 trims the function to `returns uuid`
+    // so PostgREST stops echoing the full game_versions row (which would
+    // include the `data` jsonb blob we just uploaded, doubling the I/O).
     const { error } = await supabaseClient.rpc('snapshot_game', {
       p_saved_id: savedId,
       p_data: data,
