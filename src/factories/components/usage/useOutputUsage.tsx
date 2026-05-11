@@ -1,63 +1,71 @@
-import { useStore } from '@/core/zustand';
+import { type RootState, useShallowStore } from '@/core/zustand';
 import { MANUAL_SOURCE_ID, WORLD_SOURCE_ID } from '@/factories/Factory';
 import { getWorldResourceMax } from '@/recipes/WorldResources';
 import type { IFactoryUsageProps } from './FactoryUsage';
 
-export function useOutputUsage(
+export interface OutputUsage {
+  percentage: number;
+  producedAmount: number;
+  usedAmount: number;
+  depotAmount: number;
+}
+
+/**
+ * Pure computation of how much of `output` is produced, depot-routed, and
+ * consumed for a given source `factoryId`. Shared by hooks that need to
+ * surface insufficient-supply state (e.g. `useOutputUsage`,
+ * `useFactoryHasMissingInputs`).
+ */
+export function computeOutputUsage(
+  state: RootState,
   options: Pick<IFactoryUsageProps, 'factoryId' | 'output'>,
-) {
-  const producedAmount = useStore(state => {
-    if (options.factoryId === WORLD_SOURCE_ID) {
-      return getWorldResourceMax(options.output);
-    }
-    if (options.factoryId === MANUAL_SOURCE_ID) {
-      // Manual inputs are user-supplied: no producer-side cap to enforce.
-      return Number.POSITIVE_INFINITY;
-    }
-    const source = state.factories.factories[options.factoryId ?? ''];
-    if (source?.progress === 'disabled') return 0;
-    return Math.max(
-      source?.outputs
-        ?.filter(
-          o => o?.resource === options.output && o?.destination !== 'depot',
-        )
-        .reduce((sum, o) => sum + (o?.amount ?? 0), 0) ?? 0,
-      0,
-    );
-  });
+): OutputUsage {
+  const { factoryId, output } = options;
 
-  const depotAmount = useStore(state => {
-    if (
-      options.factoryId === WORLD_SOURCE_ID ||
-      options.factoryId === MANUAL_SOURCE_ID
-    ) {
-      return 0;
+  let producedAmount: number;
+  if (factoryId === WORLD_SOURCE_ID) {
+    producedAmount = getWorldResourceMax(output);
+  } else if (factoryId === MANUAL_SOURCE_ID) {
+    // Manual inputs are user-supplied: no producer-side cap to enforce.
+    producedAmount = Number.POSITIVE_INFINITY;
+  } else {
+    const source = state.factories.factories[factoryId ?? ''];
+    if (source?.progress === 'disabled') {
+      producedAmount = 0;
+    } else {
+      producedAmount = Math.max(
+        source?.outputs
+          ?.filter(o => o?.resource === output && o?.destination !== 'depot')
+          .reduce((sum, o) => sum + (o?.amount ?? 0), 0) ?? 0,
+        0,
+      );
     }
-    const source = state.factories.factories[options.factoryId ?? ''];
-    if (source?.progress === 'disabled') return 0;
-    return Math.max(
-      source?.outputs
-        ?.filter(
-          o => o?.resource === options.output && o?.destination === 'depot',
-        )
-        .reduce((sum, o) => sum + (o?.amount ?? 0), 0) ?? 0,
-      0,
-    );
-  });
+  }
 
-  const usedAmount = useStore(
-    state =>
-      state.games.games[state.games.selected ?? '']?.factoriesIds
-        .map(id => state.factories.factories[id])
-        .filter(f => f && f.progress !== 'disabled')
-        .flatMap(f => f!.inputs)
-        .filter(
-          i =>
-            i?.resource === options.output &&
-            i?.factoryId === options.factoryId,
-        )
-        .reduce((sum, i) => sum + Math.max(i?.amount ?? 0, 0), 0) ?? 0,
-  );
+  let depotAmount: number;
+  if (factoryId === WORLD_SOURCE_ID || factoryId === MANUAL_SOURCE_ID) {
+    depotAmount = 0;
+  } else {
+    const source = state.factories.factories[factoryId ?? ''];
+    if (source?.progress === 'disabled') {
+      depotAmount = 0;
+    } else {
+      depotAmount = Math.max(
+        source?.outputs
+          ?.filter(o => o?.resource === output && o?.destination === 'depot')
+          .reduce((sum, o) => sum + (o?.amount ?? 0), 0) ?? 0,
+        0,
+      );
+    }
+  }
+
+  const usedAmount =
+    state.games.games[state.games.selected ?? '']?.factoriesIds
+      .map(id => state.factories.factories[id])
+      .filter(f => f && f.progress !== 'disabled')
+      .flatMap(f => f!.inputs)
+      .filter(i => i?.resource === output && i?.factoryId === factoryId)
+      .reduce((sum, i) => sum + Math.max(i?.amount ?? 0, 0), 0) ?? 0;
 
   let percentage = usedAmount / producedAmount;
   if (producedAmount === 0 && usedAmount !== 0) {
@@ -68,4 +76,10 @@ export function useOutputUsage(
   }
 
   return { percentage, producedAmount, usedAmount, depotAmount };
+}
+
+export function useOutputUsage(
+  options: Pick<IFactoryUsageProps, 'factoryId' | 'output'>,
+) {
+  return useShallowStore(state => computeOutputUsage(state, options));
 }
