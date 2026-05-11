@@ -19,6 +19,7 @@ import {
   FactoryInputIcon,
   FactoryOutputIcon,
 } from '@/factories/components/peek/icons/OutputInputIcons';
+import { useFactoryHasMissingInputs } from '@/factories/components/usage/useFactoryHasMissingInputs';
 import type { Factory } from '@/factories/Factory';
 import { FactoryInputRow } from '@/factories/inputs/input-row/FactoryInputRow';
 import { FactoryOutputRow } from '@/factories/inputs/output-row/FactoryOutputRow';
@@ -55,6 +56,7 @@ export function FactoryRow(props: IFactoryRowProps) {
 
   const isVisible = useIsFactoryVisible(id, true);
   const isCollapsed = useGameFactoryIsCollapsed(id);
+  const hasMissingInputs = useFactoryHasMissingInputs(id);
   if (!isVisible) return null;
 
   if (!factory) {
@@ -70,8 +72,12 @@ export function FactoryRow(props: IFactoryRowProps) {
     >
       <Group gap="sm" align="flex-start" justify="space-between">
         <Group gap="sm" align="flex-start">
-          <Group gap={2}>
-            <FactoryExpandActionIcon isCollapsed={isCollapsed} factoryId={id} />
+          <Group gap={4}>
+            <FactoryExpandActionIcon
+              isCollapsed={isCollapsed}
+              factoryId={id}
+              hasMissingInputs={hasMissingInputs}
+            />
             <TextInput
               variant="unstyled"
               placeholder="Factory..."
