@@ -40,6 +40,7 @@ import { FactorySelectInput } from '@/factories/inputs/FactorySelectInput';
 import { useFactoryOnChangeHandler } from '@/factories/store/factoriesSelectors';
 import { useFactoryInputAssignedNodes } from '@/factories/store/factoryNodeAssignmentsSelectors';
 import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
+import { AllFactoryItemsMap, FactoryItemForm } from '@/recipes/FactoryItem';
 import { LogisticTypeSelect } from '@/recipes/logistics/LogisticTypeSelect';
 import { WorldResourcesList } from '@/recipes/WorldResources';
 import { FactoryInputConstraintSelect } from './FactoryInputConstraintSelect';
@@ -148,6 +149,25 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
       }
     },
     [onChangeHandler, index, input.resource, factoryId],
+  );
+
+  const handleResourceChange = useCallback(
+    (selectedResource: string | null) => {
+      onChangeHandler(`inputs.${index}.resource`)(selectedResource);
+
+      // If the resource changes from a fluid to a solid and the transport type is set to pipe,
+      // unselect pipe since it is not a valid transport type for solids.
+      if (
+        selectedResource &&
+        input.transport === 'Pipe' &&
+        ![FactoryItemForm.Liquid, FactoryItemForm.Gas].includes(
+          AllFactoryItemsMap[selectedResource].form,
+        )
+      ) {
+        onChangeHandler(`inputs.${index}.transport`)(null);
+      }
+    },
+    [onChangeHandler, index, input.resource, input.transport],
   );
 
   const isVisible = useIsFactoryVisible(factoryId, false, input.resource);
@@ -325,7 +345,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
         allowedItems={allowedItems}
         size="sm"
         width={320}
-        onChange={onChangeHandler(`inputs.${index}.resource`)}
+        onChange={handleResourceChange}
       />
       <Tooltip
         label={
@@ -393,6 +413,13 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
       {displayMode === 'factory' && (
         <LogisticTypeSelect
           allowDeselect
+          isFluid={
+            input.resource
+              ? [FactoryItemForm.Liquid, FactoryItemForm.Gas].includes(
+                  AllFactoryItemsMap[input.resource].form,
+                )
+              : false
+          }
           value={input.transport}
           onChange={onChangeHandler(`inputs.${index}.transport`)}
           w={120}
