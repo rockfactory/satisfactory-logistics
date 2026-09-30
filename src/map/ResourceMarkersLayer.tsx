@@ -93,7 +93,7 @@ function buildPopupHtml(
   const tableRows = extractors
     .map(building => {
       const cells = OVERCLOCK_STEPS.map(step => {
-        const rate = getExtractionRate(building, node.purity, step);
+        const rate = Math.round(getExtractionRate(building, node.purity, step));
         return `<td>${formatNumber(rate)} <span class="map-marker-popup__rates-unit">${escapeHtml(unit)}</span></td>`;
       }).join('');
       return `<tr><th>${escapeHtml(building.name)}</th>${cells}</tr>`;

@@ -1,4 +1,5 @@
 import type {
+  AdditionalBuildingDetails,
   ParsedInfrastructure,
   SplineKind,
 } from '@/recipes/savegame/ParseSavegameMessages';
@@ -31,6 +32,12 @@ export interface BuildingHit {
    * which won't resolve in the static node dataset; the popover
    * falls back on the building's typePath in that case. */
   extractedNode: string;
+  /**
+   * Additional details related to this building if available. For
+   * example, the name of the train that is being hovered over and
+   * where it is headed.
+   */
+  additionalDetails: AdditionalBuildingDetails;
 }
 
 export interface SplineHit {
@@ -73,6 +80,7 @@ export function hitTestBuildings(
     somersloops,
     recipes,
     extractedNodes,
+    additionalDetails,
   } = infra.buildings;
   let bestTopZ = -Infinity;
   let bestArea = Infinity;
@@ -131,6 +139,7 @@ export function hitTestBuildings(
     somersloop: somersloops[bestIdx],
     recipe: recipes[bestIdx],
     extractedNode: extractedNodes[bestIdx],
+    additionalDetails: additionalDetails[bestIdx],
   };
 }
 

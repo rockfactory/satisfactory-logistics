@@ -125,11 +125,11 @@ export function getExtractionMethodLabel(
 export function getExtractionRate(
   building: FactoryBuilding,
   purity: Purity,
-  overclock: OverclockStep,
+  overclock: number,
 ): number {
   const base = building.extractor?.itemsPerMinute ?? 0;
   const rate = base * PURITY_MULTIPLIER[purity] * (overclock / 100);
-  return Math.round(rate);
+  return rate;
 }
 
 /**

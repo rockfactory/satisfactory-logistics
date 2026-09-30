@@ -29,7 +29,7 @@ export interface SplinePoint {
  *
  * Different buildables store the array under different property names:
  * conveyor belts, pipelines, railroad tracks, and hypertubes use
- * `mSplineData`; vehicle path segments (`Build_VehiclePath_Universal_C`)
+ * `mSplineData`; vehicle path segments (ie. `Build_VehiclePath_Universal_C`)
  * use `mSplinePoints`. The struct shape inside is identical.
  */
 export function readSplineLocations(

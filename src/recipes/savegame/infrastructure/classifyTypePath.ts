@@ -5,7 +5,7 @@ const RE_HYPER = /Build_PipeHyper(?:Mk\d+)?_C$/;
 const RE_PIPE = /Build_Pipeline(?:MK(\d+))?(?:_NoIndicator)?_C$/;
 const RE_RAIL = /Build_RailroadTrack(?:Integrated)?_C$/;
 const RE_POWER_LINE = /Build_PowerLine.*_C$/;
-const RE_VEHICLE_PATH = /Build_VehiclePath_Universal(?:_.*)?_C$/;
+const RE_VEHICLE_PATH = /Build_VehiclePath_.*_C$/;
 
 /**
  * Decides how the worker should treat an entity given its `typePath`.
