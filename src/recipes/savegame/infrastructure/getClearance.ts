@@ -42,6 +42,8 @@ const HARDCODED_CLEARANCE_CM: Record<string, ClearanceCm> = {
   Build_PipelineSupportWall_C: { width: 100, length: 100, height: 100 },
   Build_PipelineSupportWallHole_C: { width: 100, length: 100, height: 100 },
   Build_PipelineFlowIndicator_C: { width: 100, length: 100, height: 100 },
+  Build_PipelineJunction_Cross_C: { width: 400, length: 400, height: 200 },
+  Build_PipelineJunction_T_C: { width: 300, length: 400, height: 200 },
   // Vehicle path waypoints: invisible markers in-game that just anchor
   // the recorded route. The 8x8m fallback paints them as big squares
   // sitting on top of the path spline. Render them as 1x1m so they
@@ -57,6 +59,44 @@ const HARDCODED_CLEARANCE_CM: Record<string, ClearanceCm> = {
     width: 400,
     length: 400,
     height: 200,
+  },
+  // Train visual fixes
+  BP_Locomotive_C: {
+    width: 1600,
+    length: 600,
+    height: 600,
+  },
+  BP_FreightWagon_C: {
+    width: 1400,
+    length: 600,
+    height: 600,
+  },
+  Build_RailroadBlockSignal_C: {
+    width: 200,
+    length: 500,
+    height: 600,
+  },
+  Build_RailroadPathSignal_C: {
+    width: 200,
+    length: 500,
+    height: 600,
+  },
+  Build_RailroadSwitchControl_C: {
+    width: 200,
+    length: 500,
+    height: 400,
+  },
+  // Hypertube entrence fix
+  Build_PipeHyperStart_C: {
+    width: 100,
+    length: 100,
+    height: 200,
+  },
+  // Space elevator fix
+  Build_SpaceElevator_C: {
+    width: 4800,
+    length: 5400,
+    height: 11800,
   },
 };
 

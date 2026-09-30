@@ -37,6 +37,7 @@ export type Classification =
 export interface SaveEntityLike {
   type?: string;
   typePath?: unknown;
+  instanceName?: string;
   transform?: {
     translation?: Partial<Vec3>;
     rotation?: Partial<Vec4>;

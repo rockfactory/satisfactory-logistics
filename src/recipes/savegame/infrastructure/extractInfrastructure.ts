@@ -1,7 +1,9 @@
 import type { SatisfactorySave } from '@etothepii/satisfactory-file-parser';
+import { loglev } from '@/core/logger/log';
 import { categoryFor } from '@/map/infrastructure/infrastructureCategories';
 import { quaternionToYaw } from '@/map/infrastructure/quaternion';
 import {
+  type AdditionalBuildingDetails,
   INFRASTRUCTURE_CATEGORIES,
   type InfrastructureBuildingsBlock,
   type InfrastructureCategory,
@@ -9,6 +11,10 @@ import {
   type ParsedInfrastructure,
   SPLINE_KINDS,
   type SplineKind,
+  type Train,
+  type TrainStation,
+  type TrainStationId,
+  type TrainTimetable,
 } from '../ParseSavegameMessages';
 import { classifyTypePath } from './classifyTypePath';
 import { getClearance } from './getClearance';
@@ -54,6 +60,7 @@ export interface InfrastructureAccumulator {
   bSizesL: number[];
   bHeights: number[];
   bTypePaths: string[];
+  bInstanceNames: string[];
   /** Overclock multiplier per building (NaN when not applicable). */
   bOverclocks: number[];
   /** Somersloop count per building (0 when not applicable). */
@@ -64,6 +71,14 @@ export interface InfrastructureAccumulator {
    * the entity isn't an extractor). */
   bExtractedNodes: string[];
 }
+
+export interface AdditionalDetailsAccumulator {
+  bTrainDetails: Train[];
+  bTrainTimetables: Map<string, TrainTimetable>;
+  bTrainStationIds: Map<string, TrainStationId>;
+}
+
+const logger = loglev.getLogger('parse-savegame');
 
 function emptyCategoryCounts(): Record<InfrastructureCategory, number> {
   const counts = {} as Record<InfrastructureCategory, number>;
@@ -91,10 +106,19 @@ export function createInfrastructureAccumulator(): InfrastructureAccumulator {
     bSizesL: [],
     bHeights: [],
     bTypePaths: [],
+    bInstanceNames: [],
     bOverclocks: [],
     bSomersloops: [],
     bRecipes: [],
     bExtractedNodes: [],
+  };
+}
+
+export function createAdditionalDetailsAccumulator(): AdditionalDetailsAccumulator {
+  return {
+    bTrainDetails: [],
+    bTrainTimetables: new Map(),
+    bTrainStationIds: new Map(),
   };
 }
 
@@ -115,6 +139,7 @@ function getOrCreateBucket(
 function pushBuilding(
   acc: InfrastructureAccumulator,
   typePath: string,
+  instanceName: string,
   tx: number,
   ty: number,
   tz: number,
@@ -132,6 +157,7 @@ function pushBuilding(
   acc.bSizesL.push(length);
   acc.bHeights.push(height);
   acc.bTypePaths.push(typePath);
+  acc.bInstanceNames.push(instanceName);
   acc.bOverclocks.push(machine?.overclock ?? Number.NaN);
   acc.bSomersloops.push(machine?.somersloop ?? 0);
   acc.bRecipes.push(machine?.recipe ?? '');
@@ -162,6 +188,11 @@ function readNumberProperty(value: unknown): number | null {
 
 function readObjectPathName(value: unknown): string | null {
   const v = (value as { value?: { pathName?: unknown } })?.value?.pathName;
+  return typeof v === 'string' && v.length > 0 ? v : null;
+}
+
+function readObjectValueProperty(value: unknown): string | null {
+  const v = (value as { value?: { value?: unknown } })?.value?.value;
   return typeof v === 'string' && v.length > 0 ? v : null;
 }
 
@@ -220,6 +251,87 @@ function readMachineDetails(
   }
   return { overclock, somersloop, recipe, extractedNode };
 }
+/**
+ * Match a entity that was specifically created to store extra data that
+ * is affiliated with other buildings so that it can be displayed on the map
+ * @returns If a entity was ingested properly, in which case {@link ingestEntity} can end early
+ */
+function matchInfoEntity(
+  additionalDetailsAcc: AdditionalDetailsAccumulator,
+  obj: SaveEntityLike,
+  typePath: string,
+  instanceName: string,
+): boolean {
+  try {
+    switch (typePath) {
+      case '/Script/FactoryGame.FGTrainStationIdentifier':
+        additionalDetailsAcc.bTrainStationIds.set(instanceName, {
+          type: 'TrainStationId',
+          instanceName: instanceName,
+          name: readObjectValueProperty(obj.properties?.mStationName) ?? '',
+          stationInstanceName:
+            readObjectPathName(obj.properties?.mStation) ?? '',
+        });
+        return true;
+
+      case '/Game/FactoryGame/Buildable/Vehicle/Train/-Shared/BP_Train.BP_Train_C':
+        additionalDetailsAcc.bTrainDetails.push({
+          type: 'Train',
+          name: readObjectValueProperty(obj.properties?.mTrainName) ?? '',
+          timetableInstanceName:
+            readObjectPathName(obj.properties?.TimeTable) ?? '',
+          timetable: null,
+          trainId1: readObjectPathName(obj.properties?.FirstVehicle) ?? '',
+          trainId2: readObjectPathName(obj.properties?.LastVehicle) ?? '',
+        });
+        return true;
+
+      case '/Script/FactoryGame.FGRailroadTimeTable': {
+        const props = obj.properties as {
+          mCurrentStop?: {
+            value: number;
+          };
+          mStops: {
+            values: {
+              properties: {
+                Station: {
+                  value: {
+                    pathName: string;
+                  };
+                };
+              };
+            }[];
+          };
+        };
+
+        additionalDetailsAcc.bTrainTimetables.set(instanceName, {
+          type: 'TrainTimetable',
+          instanceName: instanceName,
+          currentStop: props.mCurrentStop?.value ?? -1,
+          stops:
+            props.mStops.values.map(stop => {
+              return {
+                stationId: stop.properties.Station.value.pathName,
+                stationData: null,
+              };
+            }) ?? [],
+        });
+        return true;
+      }
+      default:
+        return false;
+    }
+  } catch (e: any) {
+    if (e instanceof TypeError) {
+      logger.warn(
+        "The following object's typePath matched a decoder, but it failed to decode properly (possibly due to malformed data):",
+        obj,
+        e,
+      );
+    }
+    return false;
+  }
+}
 
 /**
  * Processes a single object from the save (a `SaveEntity` or
@@ -235,12 +347,15 @@ function readMachineDetails(
  */
 export function ingestEntity(
   acc: InfrastructureAccumulator,
+  additionalDetailsAcc: AdditionalDetailsAccumulator,
   rawObj: unknown,
 ): void {
   const obj = rawObj as SaveEntityLike;
   if (obj.type !== 'SaveEntity') return;
   const typePath = obj.typePath;
   if (typeof typePath !== 'string') return;
+  const instanceName = obj.instanceName;
+  if (typeof instanceName !== 'string') return;
 
   if (typePath === LIGHTWEIGHT_SUBSYSTEM_TYPEPATH) {
     const sp = obj.specialProperties as BuildableSubsystemLike | undefined;
@@ -262,13 +377,21 @@ export function ingestEntity(
             typeof irot.w === 'number'
               ? quaternionToYaw(irot as Vec4)
               : 0;
-          pushBuilding(acc, groupTypePath, itx, ity, itz, iyaw);
+          pushBuilding(acc, groupTypePath, instanceName, itx, ity, itz, iyaw);
         }
       }
     }
     return;
   }
 
+  const didIngestEntity = matchInfoEntity(
+    additionalDetailsAcc,
+    obj,
+    typePath,
+    instanceName,
+  );
+
+  if (didIngestEntity) return;
   if (!typePath.includes('/Buildable/')) return;
 
   const tr = obj.transform?.translation;
@@ -321,7 +444,91 @@ export function ingestEntity(
   // these — `readMachineDetails(undefined)` returns null and
   // pushBuilding falls back to the defaults.
   const machine = readMachineDetails(obj.properties);
-  pushBuilding(acc, typePath, tx, ty, tz, yaw, machine);
+  pushBuilding(acc, typePath, instanceName, tx, ty, tz, yaw, machine);
+}
+
+function linkAdditionalDetails(
+  acc: InfrastructureAccumulator,
+  additionalDetailsAcc: AdditionalDetailsAccumulator,
+): AdditionalBuildingDetails[] {
+  const additionalDetailsSorted: AdditionalBuildingDetails[] = [];
+
+  additionalDetailsAcc.bTrainTimetables.forEach(timetable => {
+    timetable.stops.forEach((station, stationIndex) => {
+      timetable.stops[stationIndex].stationData =
+        additionalDetailsAcc.bTrainStationIds.get(station.stationId) ?? null;
+    });
+  });
+
+  // The first time around, the station object is built, then it can be matched to the right index
+  const stationIndicies: number[] = [];
+  const trainStations: Map<string, TrainStation> = new Map();
+
+  acc.bInstanceNames.forEach((infraInstanceName, i) => {
+    switch (acc.bTypePaths[i]) {
+      case '/Game/FactoryGame/Buildable/Vehicle/Train/Locomotive/BP_Locomotive.BP_Locomotive_C': {
+        const trainId = additionalDetailsAcc.bTrainDetails.findIndex(
+          details => {
+            return (
+              infraInstanceName == details.trainId1 ||
+              infraInstanceName == details.trainId2
+            );
+          },
+        );
+        if (trainId !== -1) {
+          const train = additionalDetailsAcc.bTrainDetails[trainId];
+          const timetable = additionalDetailsAcc.bTrainTimetables.get(
+            train.timetableInstanceName,
+          );
+          if (timetable) {
+            train.timetable = timetable;
+            train.timetable.stops.forEach(stop => {
+              if (!stop.stationData) return;
+              const trainStation =
+                trainStations.get(stop.stationData.stationInstanceName) ??
+                ({
+                  type: 'TrainStation',
+                  name: stop.stationData?.name,
+                  trains: [],
+                } as TrainStation);
+
+              if (
+                trainStation.trains.find(
+                  otherTrain => otherTrain.trainId === trainId,
+                )
+              ) {
+                return;
+              }
+
+              trainStation.trains.push({
+                name: train.name,
+                locomotiveInstanceName: infraInstanceName,
+                trainId: trainId,
+              });
+              trainStations.set(
+                stop.stationData.stationInstanceName,
+                trainStation,
+              );
+            });
+          }
+          additionalDetailsSorted.push(train);
+          return;
+        }
+        break;
+      }
+      case '/Game/FactoryGame/Buildable/Factory/Train/Station/Build_TrainStation.Build_TrainStation_C':
+        stationIndicies.push(i);
+    }
+    additionalDetailsSorted.push(null);
+  });
+
+  stationIndicies.forEach(index => {
+    const station = trainStations.get(acc.bInstanceNames[index]);
+    if (!station) return;
+    additionalDetailsSorted[index] = station;
+  });
+
+  return additionalDetailsSorted;
 }
 
 /**
@@ -331,6 +538,7 @@ export function ingestEntity(
  */
 export function finalizeInfrastructure(
   acc: InfrastructureAccumulator,
+  additionalDetailsAcc: AdditionalDetailsAccumulator,
 ): ParsedInfrastructure {
   const count = acc.bYaws.length;
   const positionsXY = new Float32Array(count * 2);
@@ -341,6 +549,12 @@ export function finalizeInfrastructure(
     sizeWL[i * 2] = acc.bSizesW[i];
     sizeWL[i * 2 + 1] = acc.bSizesL[i];
   }
+
+  const additionalDetails: AdditionalBuildingDetails[] = linkAdditionalDetails(
+    acc,
+    additionalDetailsAcc,
+  );
+
   const buildings: InfrastructureBuildingsBlock = {
     count,
     categories: Uint8Array.from(acc.bCategories),
@@ -354,6 +568,7 @@ export function finalizeInfrastructure(
     somersloops: Uint8Array.from(acc.bSomersloops),
     recipes: acc.bRecipes,
     extractedNodes: acc.bExtractedNodes,
+    additionalDetails: additionalDetails,
   };
 
   const splines: InfrastructureSplinesBlock[] = [];
@@ -444,10 +659,11 @@ export function extractInfrastructure(
   save: SatisfactorySave,
 ): ParsedInfrastructure {
   const acc = createInfrastructureAccumulator();
+  const additionalDetailsAcc = createAdditionalDetailsAccumulator();
   for (const level of Object.values(save.levels)) {
     for (const obj of level.objects) {
-      ingestEntity(acc, obj);
+      ingestEntity(acc, additionalDetailsAcc, obj);
     }
   }
-  return finalizeInfrastructure(acc);
+  return finalizeInfrastructure(acc, additionalDetailsAcc);
 }

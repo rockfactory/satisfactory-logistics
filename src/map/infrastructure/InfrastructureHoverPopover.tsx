@@ -1,4 +1,4 @@
-import { Group, Image, Stack, Text } from '@mantine/core';
+import { Divider, Group, Image, Stack, Text } from '@mantine/core';
 import { useMemo } from 'react';
 import { RepeatingNumber } from '@/core/intl/NumberFormatter';
 import { useStore } from '@/core/zustand';
@@ -66,7 +66,10 @@ export function InfrastructureHoverPopover({
 
   if (hit.kind === 'building') {
     const id = buildingIdFromTypePath(hit.typePath);
-    const known = id ? AllFactoryBuildingsMap[id] : null;
+    const known = id
+      ? (AllFactoryBuildingsMap[id] ??
+        AllFactoryItemsMap[id.replace('BP_', 'Desc_')])
+      : null;
     const displayName = known?.name ?? id ?? 'Unknown building';
     const buildingImage = known?.imagePath || null;
     const category = INFRASTRUCTURE_CATEGORIES[
@@ -141,6 +144,12 @@ export function InfrastructureHoverPopover({
       }
     }
 
+    // Sometimes the currentStop equals -1 so assume its the first index
+    const nextTrainStopIndex =
+      hit.additionalDetails?.type === 'Train'
+        ? Math.max(0, hit.additionalDetails?.timetable?.currentStop ?? 0)
+        : 0;
+
     return (
       <PopoverShell mousePx={mousePx}>
         <Stack gap={2}>
@@ -198,6 +207,63 @@ export function InfrastructureHoverPopover({
                 </>
               ) : null}
             </Text>
+          ) : null}
+          {hit.additionalDetails?.type === 'Train' ? (
+            <>
+              <Text size="xs">Name: {hit.additionalDetails.name}</Text>
+              {hit.additionalDetails.timetable ? (
+                <>
+                  <Text size="xs">
+                    {`Next: ${hit.additionalDetails.timetable.stops[nextTrainStopIndex].stationData?.name ?? 'Unknown Stop'}`}
+                  </Text>
+                  <Text size="xs" fw={600}>
+                    Timetable
+                  </Text>
+                  <Divider />
+                  {hit.additionalDetails.timetable.stops.length > 0 ? (
+                    hit.additionalDetails.timetable.stops.map((stop, i) => {
+                      return (
+                        <Text
+                          size="xs"
+                          c={i === nextTrainStopIndex ? 'green' : ''}
+                          key={stop.stationId}
+                        >
+                          {i === nextTrainStopIndex && '>> '}
+                          {stop.stationData?.name}
+                        </Text>
+                      );
+                    })
+                  ) : (
+                    <Text size="xs" fs="italic">
+                      No Stops
+                    </Text>
+                  )}
+                </>
+              ) : null}
+            </>
+          ) : null}
+          {hit.additionalDetails?.type === 'TrainStation' ? (
+            <>
+              <Text size="xs">Name: {hit.additionalDetails.name}</Text>
+
+              <Text size="xs" fw={600}>
+                Visiting Trains
+              </Text>
+              <Divider />
+              {hit.additionalDetails.trains.length > 0 ? (
+                hit.additionalDetails.trains.map(train => {
+                  return (
+                    <Text size="xs" key={train.trainId}>
+                      {train.name}
+                    </Text>
+                  );
+                })
+              ) : (
+                <Text size="xs" fs="italic">
+                  No Trains
+                </Text>
+              )}
+            </>
           ) : null}
           <Text size="xs" c="dimmed">
             {CategoryLabel[category]} · {widthM.toFixed(1)}m ×{' '}

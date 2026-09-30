@@ -2,6 +2,7 @@ import { ReadableStreamParser } from '@etothepii/satisfactory-file-parser';
 import { JSONParser } from '@streamparser/json';
 import { loglev } from '@/core/logger/log';
 import {
+  createAdditionalDetailsAccumulator,
   createInfrastructureAccumulator,
   finalizeInfrastructure,
   ingestEntity,
@@ -67,6 +68,9 @@ async function parseSavegame(
     const infraAcc = wantInfrastructure
       ? createInfrastructureAccumulator()
       : null;
+    const additionalDetailsAcc = wantInfrastructure
+      ? createAdditionalDetailsAccumulator()
+      : null;
 
     // Consume the parser library's `ReadableStream<string>` directly and
     // feed each chunk into a `JSONParser` (the non-WHATWG variant). The
@@ -94,7 +98,8 @@ async function parseSavegame(
         return;
       }
       inspectObject(inspectAcc, value);
-      if (infraAcc) ingestEntity(infraAcc, value);
+      if (infraAcc && additionalDetailsAcc)
+        ingestEntity(infraAcc, additionalDetailsAcc, value);
     };
 
     const reader = (stream as ReadableStream<string>).getReader();
@@ -135,13 +140,16 @@ async function parseSavegame(
     };
 
     let transfer: ArrayBuffer[] = [];
-    if (infraAcc) {
+    if (infraAcc && additionalDetailsAcc) {
       postMessage({
         type: 'progress',
         progress: 0.99,
         message: 'Finalising infrastructure...',
       } as IParseSavegameResponse);
-      save.infrastructure = finalizeInfrastructure(infraAcc);
+      save.infrastructure = finalizeInfrastructure(
+        infraAcc,
+        additionalDetailsAcc,
+      );
       transfer = collectInfrastructureTransferables(save.infrastructure);
       logger.log(
         'Infrastructure extracted:',

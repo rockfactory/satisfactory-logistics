@@ -42,6 +42,49 @@ export const SPLINE_KINDS: SplineKind[] = [
   'vehicle',
 ];
 
+export interface TrainStationId {
+  type: 'TrainStationId';
+  instanceName: string;
+  stationInstanceName: string;
+  name: string;
+}
+
+export interface TrainTimetable {
+  type: 'TrainTimetable';
+  instanceName: string;
+  currentStop: number;
+  stops: {
+    stationId: string;
+    stationData: TrainStationId | null;
+  }[];
+}
+
+export interface Train {
+  type: 'Train';
+  // Name of the train
+  name: string;
+  // The timetable instance id for the train
+  timetableInstanceName: string;
+  // The timetable, unavailable before linking and after if not found
+  timetable: TrainTimetable | null;
+  // The id of the first locomotive
+  trainId1: string;
+  // The id of the second locomotive
+  trainId2: string;
+}
+
+export interface TrainStation {
+  type: 'TrainStation';
+  name: string;
+  trains: {
+    name: string;
+    locomotiveInstanceName: string;
+    trainId: number;
+  }[];
+}
+
+export type AdditionalBuildingDetails = Train | TrainStation | null;
+
 /**
  * Parallel arrays representing all standalone buildings (anything with a
  * footprint that is not a spline-shaped connector). Indexed 0..count-1.
@@ -105,6 +148,11 @@ export interface InfrastructureBuildingsBlock {
    * trying to resolve the id.
    */
   extractedNodes: string[];
+  /**
+   * Per-building additional details related to specific buildings
+   * which have additional details that are useful to display in the popover.
+   */
+  additionalDetails: AdditionalBuildingDetails[];
 }
 
 /**
