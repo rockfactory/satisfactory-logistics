@@ -17,7 +17,10 @@ import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '@/core/zustand';
 import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
-import { useOutputUsage } from '@/factories/components/usage/useOutputUsage';
+import {
+  isOverused,
+  useOutputUsage,
+} from '@/factories/components/usage/useOutputUsage';
 import type { Factory, FactoryInput, FactoryOutput } from '@/factories/Factory';
 import { AllFactoryItemsMap } from '@/recipes/FactoryItem';
 import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
@@ -252,7 +255,7 @@ function FactoryOutputFlowRow({
   const isDepot = output.destination === 'depot';
   const surplus = producedAmount - usedAmount;
   const hasSurplus = producedAmount > 0 && surplus > 0.001;
-  const isMissing = usedAmount > producedAmount + 0.001;
+  const isMissing = isOverused(percentage);
 
   return (
     <Table.Tr>
