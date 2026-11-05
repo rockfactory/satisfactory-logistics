@@ -1,14 +1,16 @@
 import { type Path, setByPath } from '@clickbar/dot-diver';
 import { Card, Flex, Group, Stack, Text } from '@mantine/core';
+import { IconAlertTriangle } from '@tabler/icons-react';
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useStore } from '@/core/zustand';
 import { ProgressChip } from '@/factories/components/ProgressChip';
+import { useFactoryHasOverusedInput } from '@/factories/components/usage/useOutputUsage';
 import type { Factory } from '@/factories/Factory';
 import { FactoryActionsMenu } from '@/factories/list/FactoryActionsMenu';
+import { FactoryOutputChip } from '@/factories/list/FactoryOutputChip';
 import { useIsFactoryVisible } from '@/factories/useIsFactoryVisible';
 import { FactoryPeers } from '@/games/sync/ui/FactoryPeers';
-import { FactoryItemImage } from '@/recipes/ui/FactoryItemImage';
 import classes from './FactoryGridCard.module.css';
 
 export interface IFactoryGridCard {
@@ -29,6 +31,7 @@ export function FactoryGridCard(props: IFactoryGridCard) {
   );
 
   const isVisible = useIsFactoryVisible(id, true);
+  const hasOverusedInput = useFactoryHasOverusedInput(id);
 
   if (!isVisible) return null;
 
@@ -46,60 +49,66 @@ export function FactoryGridCard(props: IFactoryGridCard) {
       className={classes.card}
       style={{ opacity: factory.progress === 'disabled' ? 0.55 : 1 }}
     >
-      <Group justify="space-between" align="center" wrap="nowrap">
-        <Stack
-          justify="space-between"
-          align="stretch"
-          className={classes.cardContent}
-        >
-          <Group gap="xs" wrap="nowrap">
-            <Text fw={500} size="lg">
-              {factory.name ?? 'Unnamed'}
-            </Text>
-            <FactoryPeers factoryId={id} />
-          </Group>
+      <Stack gap="md">
+        <Group gap="xs" wrap="nowrap">
+          <Text fw={500} size="lg" c={hasOverusedInput ? 'red.6' : undefined}>
+            {factory.name ?? 'Unnamed'}
+          </Text>
+          {hasOverusedInput && (
+            <IconAlertTriangle
+              size={18}
+              color="var(--mantine-color-red-6)"
+              aria-label="Overused input"
+            >
+              <title>One or more inputs are overused</title>
+            </IconAlertTriangle>
+          )}
+          <FactoryPeers factoryId={id} />
+        </Group>
+        <Group justify="space-between" align="center" wrap="nowrap">
           <Flex
             align="center"
             wrap="nowrap"
-            gap="sm"
+            gap="xs"
             className={classes.outputsList}
           >
             {factory.outputs.map((output, outputIndex) => (
-              <Group gap={6} wrap={'nowrap'} key={outputIndex}>
-                <FactoryItemImage id={output.resource} size={24} />
-                <Text size="xs">&times;</Text>
-                <Text size="xs">{output.amount}</Text>
-              </Group>
+              <FactoryOutputChip
+                key={outputIndex}
+                factoryId={id}
+                output={output}
+                disabled={factory.progress === 'disabled'}
+              />
             ))}
           </Flex>
-        </Stack>
-        <Group gap={4} wrap="nowrap" className={classes.progressChip}>
-          {showProgressStatus && (
-            <ProgressChip
-              status={factory.progress ?? undefined}
-              size="md"
-              variant="light"
-            />
-          )}
-          {/* The card itself is a <Link>; stop propagation here so opening
+          <Group gap={4} wrap="nowrap" className={classes.progressChip}>
+            {showProgressStatus && (
+              <ProgressChip
+                status={factory.progress ?? undefined}
+                size="md"
+                variant="light"
+              />
+            )}
+            {/* The card itself is a <Link>; stop propagation here so opening
               the menu and clicking its items don't navigate to the detail
               page. The Mantine menu still receives the click on its
               target via React's bubble phase before this handler runs. */}
-          {/* biome-ignore lint/a11y/useKeyWithClickEvents: pure event-stop wrapper, no semantic interaction */}
-          {/* biome-ignore lint/a11y/noStaticElementInteractions: pure event-stop wrapper, no semantic interaction */}
-          <span
-            onClick={e => {
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-            onMouseDown={e => {
-              e.stopPropagation();
-            }}
-          >
-            <FactoryActionsMenu factoryId={id} showOpen />
-          </span>
+            {/* biome-ignore lint/a11y/useKeyWithClickEvents: pure event-stop wrapper, no semantic interaction */}
+            {/* biome-ignore lint/a11y/noStaticElementInteractions: pure event-stop wrapper, no semantic interaction */}
+            <span
+              onClick={e => {
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+              onMouseDown={e => {
+                e.stopPropagation();
+              }}
+            >
+              <FactoryActionsMenu factoryId={id} showOpen />
+            </span>
+          </Group>
         </Group>
-      </Group>
+      </Stack>
     </Card>
   );
 }

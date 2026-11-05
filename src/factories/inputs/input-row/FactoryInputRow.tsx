@@ -27,7 +27,10 @@ import {
   FactoryOutputIcon,
 } from '@/factories/components/peek/icons/OutputInputIcons';
 import { BaseFactoryUsage } from '@/factories/components/usage/FactoryUsage';
-import { useOutputUsage } from '@/factories/components/usage/useOutputUsage';
+import {
+  isOverused,
+  useOutputUsage,
+} from '@/factories/components/usage/useOutputUsage';
 import {
   type Factory,
   type FactoryInput,
@@ -340,7 +343,7 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
                 <span>N/A (Choose factory & resource)</span>
               )}
               <Group gap="sm" align="center">
-                {usage.percentage > 1 && (
+                {isOverused(usage.percentage) && (
                   <span>
                     Missing{' '}
                     {Math.round(
@@ -370,7 +373,8 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
             <FactoryInputIcon
               size={16}
               color={
-                input.factoryId !== MANUAL_SOURCE_ID && usage.percentage > 1
+                input.factoryId !== MANUAL_SOURCE_ID &&
+                isOverused(usage.percentage)
                   ? 'red'
                   : undefined
               }
@@ -379,7 +383,8 @@ export function FactoryInputRow(props: IFactoryInputRowProps) {
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           error={
-            input.factoryId !== MANUAL_SOURCE_ID && usage.percentage > 1 ? (
+            input.factoryId !== MANUAL_SOURCE_ID &&
+            isOverused(usage.percentage) ? (
               <span>
                 Missing{' '}
                 {Math.round((usage.usedAmount - usage.producedAmount) * 100) /
